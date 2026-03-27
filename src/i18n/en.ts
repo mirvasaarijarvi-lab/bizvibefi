@@ -15,6 +15,19 @@ const en = {
     ctaJoin: "Join the Vibe",
     ctaGo: "Get Going",
   },
+  market: {
+    title: "What the market",
+    titleHighlight: "gets from us",
+    subtitle: "Fast thinkers who realize development, tooling, and business needs at speed. Your ideas, shipped.",
+    benefits: [
+      { icon: "⚡", title: "Rapid Prototyping", desc: "From concept to working product in days, not months. We move fast and build what matters." },
+      { icon: "🛠", title: "Tool Development", desc: "Custom tools built to solve real problems. No bloat, no waiting, just solutions that work." },
+      { icon: "🚀", title: "MVP to Market", desc: "Get your minimum viable product in front of users quickly. Validate fast, iterate faster." },
+      { icon: "🤝", title: "On-Demand Talent", desc: "Access a collective of builders ready to jump in. The right skills, right when you need them." },
+      { icon: "💡", title: "Innovation Sprints", desc: "Hackathon-tested builders who thrive under pressure. Complex problems solved in focused bursts." },
+      { icon: "📈", title: "Growth Engineering", desc: "Technical solutions designed to scale. We build with growth in mind from day one." },
+    ],
+  },
   tiers: {
     title: "Two ways to",
     titleHighlight: "vibe",
