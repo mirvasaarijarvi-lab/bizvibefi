@@ -27,6 +27,7 @@ const fi = {
       { icon: "🚀", title: "Ideasta tuotteeksi", desc: "Lautasliinaluonnoksesta julkaistuun tuotteeseen. Validoimme, rakennamme ja julkaisemme, jotta pääset testaamaan oikeilla käyttäjillä nopeasti." },
       { icon: "📈", title: "Kasvua ilman kiinteitä kuluja", desc: "Ei tarvitse palkata kokonaista tiimiä. Hyödynnä kollektiivin osaamista juuri silloin kun tarvitset." },
     ],
+    cta: "Otetaan yhteyttä",
   },
   tiers: {
     title: "Kaksi tapaa",
