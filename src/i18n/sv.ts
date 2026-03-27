@@ -27,6 +27,7 @@ const sv = {
       { icon: "🚀", title: "Idé till live-produkt", desc: "Från servettskiss till skeppad produkt. Vi validerar, bygger och lanserar så du kan testa med riktiga användare, snabbt." },
       { icon: "📈", title: "Tillväxt utan overhead", desc: "Inget behov av att anställa ett helt team. Nyttja kollektivets expertis exakt när du behöver den." },
     ],
+    cta: "Låt oss prata",
   },
   tiers: {
     title: "Två sätt att",

@@ -27,6 +27,7 @@ const en = {
       { icon: "🚀", title: "Idea to Live Product", desc: "From napkin sketch to shipped product. We validate, build, and launch so you can test with real users, fast." },
       { icon: "📈", title: "Growth Without the Overhead", desc: "No need to hire a full team. Tap into the collective for the expertise you need, exactly when you need it." },
     ],
+    cta: "Let's talk",
   },
   tiers: {
     title: "Two ways to",
