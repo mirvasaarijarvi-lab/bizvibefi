@@ -15,6 +15,19 @@ const fi = {
     ctaJoin: "Liity mukaan",
     ctaGo: "Aloita",
   },
+  market: {
+    title: "Mitä markkina",
+    titleHighlight: "saa meiltä",
+    subtitle: "Nopeita ajattelijoita jotka toteuttavat kehitys-, työkalu- ja liiketoimintatarpeet vauhdilla. Ideasi, julkaistuna.",
+    benefits: [
+      { icon: "⚡", title: "Nopea prototyyppaus", desc: "Konseptista toimivaksi tuotteeksi päivissä, ei kuukausissa. Liikumme nopeasti ja rakennamme oleellisen." },
+      { icon: "🛠", title: "Työkalujen kehitys", desc: "Räätälöityjä työkaluja oikeisiin ongelmiin. Ei turhaa, ei odottelua, vain toimivia ratkaisuja." },
+      { icon: "🚀", title: "MVP markkinoille", desc: "Saat minimituotteesi käyttäjien eteen nopeasti. Validoi nopeasti, iteroi nopeammin." },
+      { icon: "🤝", title: "Osaajia tarvittaessa", desc: "Kollektiivin rakentajat valmiina hyppäämään mukaan. Oikeat taidot juuri silloin kun tarvitset." },
+      { icon: "💡", title: "Innovaatiosprintit", desc: "Hackathon-testattuja rakentajia jotka kukoistavat paineen alla. Monimutkaiset ongelmat ratkaistaan keskitetysti." },
+      { icon: "📈", title: "Kasvuinsinöörit", desc: "Tekniset ratkaisut suunniteltu skaalautumaan. Rakennamme kasvumielessä alusta asti." },
+    ],
+  },
   tiers: {
     title: "Kaksi tapaa",
     titleHighlight: "vibettää",

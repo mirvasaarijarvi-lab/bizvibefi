@@ -15,6 +15,19 @@ const sv = {
     ctaJoin: "Häng med",
     ctaGo: "Kom igång",
   },
+  market: {
+    title: "Vad marknaden",
+    titleHighlight: "får av oss",
+    subtitle: "Snabbtänkare som realiserar utvecklings-, verktygs- och affärsbehov i hög fart. Dina idéer, skeppade.",
+    benefits: [
+      { icon: "⚡", title: "Snabb prototypning", desc: "Från koncept till fungerande produkt på dagar, inte månader. Vi rör oss snabbt och bygger det som räknas." },
+      { icon: "🛠", title: "Verktygsutveckling", desc: "Skräddarsydda verktyg för riktiga problem. Ingen uppsvällning, ingen väntan, bara lösningar som fungerar." },
+      { icon: "🚀", title: "MVP till marknad", desc: "Få din minimala produkt framför användare snabbt. Validera snabbt, iterera snabbare." },
+      { icon: "🤝", title: "Talang på begäran", desc: "Tillgång till ett kollektiv av byggare redo att hoppa in. Rätt kompetens, precis när du behöver den." },
+      { icon: "💡", title: "Innovationssprinter", desc: "Hackathon-testade byggare som frodas under press. Komplexa problem lösta i fokuserade spurter." },
+      { icon: "📈", title: "Tillväxtingenjörer", desc: "Tekniska lösningar designade för att skala. Vi bygger med tillväxt i åtanke från dag ett." },
+    ],
+  },
   tiers: {
     title: "Två sätt att",
     titleHighlight: "vibba",
