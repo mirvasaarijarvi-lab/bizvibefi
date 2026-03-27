@@ -84,6 +84,12 @@ const Index = () => {
               </motion.div>
             ))}
           </div>
+
+          <div className="mt-12 text-center">
+            <Button variant="hero" size="lg" asChild>
+              <Link to="/contact">{t("market.cta")} <ArrowRight className="ml-2 h-4 w-4" /></Link>
+            </Button>
+          </div>
         </div>
       </section>
       <section className="py-20 md:py-28">
