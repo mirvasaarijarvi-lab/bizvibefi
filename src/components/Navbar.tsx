@@ -1,20 +1,26 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Menu, X } from "lucide-react";
+import { Menu, X, Globe } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
+import { useTranslation, type Language } from "@/i18n/TranslationContext";
 
-const links = [
-  { to: "/", label: "Home" },
-  { to: "/community", label: "Community" },
-  { to: "/get-going", label: "Get Going" },
-  { to: "/about", label: "About" },
-  { to: "/contact", label: "Contact" },
-];
+const langLabels: Record<Language, string> = { en: "EN", fi: "FI", sv: "SV" };
+const langOptions: Language[] = ["en", "fi", "sv"];
 
 const Navbar = () => {
   const [open, setOpen] = useState(false);
+  const [langOpen, setLangOpen] = useState(false);
   const location = useLocation();
+  const { t, lang, setLang } = useTranslation();
+
+  const links = [
+    { to: "/", label: t("nav.home") },
+    { to: "/community", label: t("nav.community") },
+    { to: "/get-going", label: t("nav.getGoing") },
+    { to: "/about", label: t("nav.about") },
+    { to: "/contact", label: t("nav.contact") },
+  ];
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-xl border-b border-border">
@@ -36,15 +42,82 @@ const Navbar = () => {
               {link.label}
             </Link>
           ))}
+
+          {/* Language Switcher */}
+          <div className="relative">
+            <button
+              onClick={() => setLangOpen(!langOpen)}
+              className="flex items-center gap-1.5 text-sm font-body font-medium text-silver hover:text-foreground transition-colors"
+            >
+              <Globe className="h-4 w-4" />
+              {langLabels[lang]}
+            </button>
+            <AnimatePresence>
+              {langOpen && (
+                <motion.div
+                  initial={{ opacity: 0, y: -4 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -4 }}
+                  className="absolute top-full right-0 mt-2 bg-card border border-border rounded-lg overflow-hidden shadow-lg"
+                >
+                  {langOptions.map((l) => (
+                    <button
+                      key={l}
+                      onClick={() => { setLang(l); setLangOpen(false); }}
+                      className={`block w-full px-4 py-2 text-sm font-body text-left transition-colors hover:bg-muted ${
+                        lang === l ? "text-purple-vivid" : "text-foreground"
+                      }`}
+                    >
+                      {langLabels[l]}
+                    </button>
+                  ))}
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+
           <Button variant="hero" size="sm" asChild>
-            <Link to="/community">Join the Vibe</Link>
+            <Link to="/community">{t("nav.joinCta")}</Link>
           </Button>
         </div>
 
         {/* Mobile toggle */}
-        <button className="md:hidden text-foreground" onClick={() => setOpen(!open)}>
-          {open ? <X size={24} /> : <Menu size={24} />}
-        </button>
+        <div className="flex items-center gap-3 md:hidden">
+          <div className="relative">
+            <button
+              onClick={() => setLangOpen(!langOpen)}
+              className="flex items-center gap-1 text-sm font-body text-silver"
+            >
+              <Globe className="h-4 w-4" />
+              {langLabels[lang]}
+            </button>
+            <AnimatePresence>
+              {langOpen && (
+                <motion.div
+                  initial={{ opacity: 0, y: -4 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -4 }}
+                  className="absolute top-full right-0 mt-2 bg-card border border-border rounded-lg overflow-hidden shadow-lg z-50"
+                >
+                  {langOptions.map((l) => (
+                    <button
+                      key={l}
+                      onClick={() => { setLang(l); setLangOpen(false); }}
+                      className={`block w-full px-4 py-2 text-sm font-body text-left hover:bg-muted ${
+                        lang === l ? "text-purple-vivid" : "text-foreground"
+                      }`}
+                    >
+                      {langLabels[l]}
+                    </button>
+                  ))}
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+          <button className="text-foreground" onClick={() => setOpen(!open)}>
+            {open ? <X size={24} /> : <Menu size={24} />}
+          </button>
+        </div>
       </div>
 
       {/* Mobile menu */}
@@ -70,7 +143,7 @@ const Navbar = () => {
                 </Link>
               ))}
               <Button variant="hero" size="sm" asChild>
-                <Link to="/community" onClick={() => setOpen(false)}>Join the Vibe</Link>
+                <Link to="/community" onClick={() => setOpen(false)}>{t("nav.joinCta")}</Link>
               </Button>
             </div>
           </motion.div>

@@ -6,16 +6,18 @@ import { motion } from "framer-motion";
 import { Mail, MessageCircle } from "lucide-react";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
+import { useTranslation } from "@/i18n/TranslationContext";
 
 const Contact = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
   const { toast } = useToast();
+  const { t } = useTranslation();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    toast({ title: "Message sent!", description: "We'll get back to you soon." });
+    toast({ title: t("contact.toast.title"), description: t("contact.toast.desc") });
     setName("");
     setEmail("");
     setMessage("");
@@ -30,13 +32,11 @@ const Contact = () => {
             animate={{ opacity: 1, y: 0 }}
             className="text-center mb-16"
           >
-            <p className="font-body text-sm font-semibold text-turquoise tracking-widest uppercase mb-4">Contact</p>
+            <p className="font-body text-sm font-semibold text-turquoise tracking-widest uppercase mb-4">{t("contact.tag")}</p>
             <h1 className="font-display text-4xl md:text-6xl font-extrabold tracking-[-0.03em]">
-              Let's <span className="text-gradient-surge">talk</span>
+              {t("contact.title")} <span className="text-gradient-surge">{t("contact.titleHighlight")}</span>
             </h1>
-            <p className="mt-6 text-lg text-muted-foreground font-body max-w-xl mx-auto">
-              Got an idea, question, or just want to say hi? We're all ears.
-            </p>
+            <p className="mt-6 text-lg text-muted-foreground font-body max-w-xl mx-auto">{t("contact.subtitle")}</p>
           </motion.div>
 
           <div className="grid md:grid-cols-2 gap-12">
@@ -48,40 +48,18 @@ const Contact = () => {
               className="space-y-6"
             >
               <div>
-                <label className="font-body text-sm font-medium text-foreground mb-2 block">Name</label>
-                <Input
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  placeholder="Your name"
-                  required
-                  className="bg-card border-border font-body"
-                />
+                <label className="font-body text-sm font-medium text-foreground mb-2 block">{t("contact.form.name")}</label>
+                <Input value={name} onChange={(e) => setName(e.target.value)} placeholder={t("contact.form.namePlaceholder")} required className="bg-card border-border font-body" />
               </div>
               <div>
-                <label className="font-body text-sm font-medium text-foreground mb-2 block">Email</label>
-                <Input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="you@example.com"
-                  required
-                  className="bg-card border-border font-body"
-                />
+                <label className="font-body text-sm font-medium text-foreground mb-2 block">{t("contact.form.email")}</label>
+                <Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder={t("contact.form.emailPlaceholder")} required className="bg-card border-border font-body" />
               </div>
               <div>
-                <label className="font-body text-sm font-medium text-foreground mb-2 block">Message</label>
-                <Textarea
-                  value={message}
-                  onChange={(e) => setMessage(e.target.value)}
-                  placeholder="What's on your mind?"
-                  rows={5}
-                  required
-                  className="bg-card border-border font-body"
-                />
+                <label className="font-body text-sm font-medium text-foreground mb-2 block">{t("contact.form.message")}</label>
+                <Textarea value={message} onChange={(e) => setMessage(e.target.value)} placeholder={t("contact.form.messagePlaceholder")} rows={5} required className="bg-card border-border font-body" />
               </div>
-              <Button variant="hero" size="lg" type="submit" className="w-full">
-                Send Message
-              </Button>
+              <Button variant="hero" size="lg" type="submit" className="w-full">{t("contact.form.submit")}</Button>
             </motion.form>
 
             <motion.div
@@ -92,13 +70,13 @@ const Contact = () => {
             >
               <div className="bg-card border border-border rounded-xl p-6">
                 <Mail className="h-6 w-6 text-electric mb-3" />
-                <h3 className="font-display text-lg font-semibold">Email us</h3>
-                <p className="text-sm text-muted-foreground font-body mt-1">hello@bizvibe.co</p>
+                <h3 className="font-display text-lg font-semibold">{t("contact.emailTitle")}</h3>
+                <p className="text-sm text-muted-foreground font-body mt-1">{t("contact.emailAddr")}</p>
               </div>
               <div className="bg-card border border-border rounded-xl p-6">
                 <MessageCircle className="h-6 w-6 text-turquoise mb-3" />
-                <h3 className="font-display text-lg font-semibold">WhatsApp</h3>
-                <p className="text-sm text-muted-foreground font-body mt-1">Join our community group for instant access.</p>
+                <h3 className="font-display text-lg font-semibold">{t("contact.whatsappTitle")}</h3>
+                <p className="text-sm text-muted-foreground font-body mt-1">{t("contact.whatsappDesc")}</p>
               </div>
             </motion.div>
           </div>

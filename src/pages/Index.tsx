@@ -3,13 +3,16 @@ import { Button } from "@/components/ui/button";
 import Layout from "@/components/Layout";
 import { motion } from "framer-motion";
 import { Rocket, Users, Zap, ArrowRight } from "lucide-react";
+import { useTranslation } from "@/i18n/TranslationContext";
 
 const Index = () => {
+  const { t } = useTranslation();
+  const freeBenefits = JSON.parse(t("tiers.free.benefits") === "tiers.free.benefits" ? "[]" : JSON.stringify([]));
+
   return (
     <Layout>
       {/* Hero */}
       <section className="relative overflow-hidden py-24 md:py-36">
-        {/* Background glow */}
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-purple-vivid/10 blur-[120px] pointer-events-none" />
         <div className="absolute top-1/3 right-1/4 w-[400px] h-[400px] rounded-full bg-electric/10 blur-[100px] pointer-events-none" />
 
@@ -21,23 +24,22 @@ const Index = () => {
             className="max-w-4xl mx-auto text-center"
           >
             <p className="font-body text-sm font-semibold text-turquoise tracking-widest uppercase mb-4">
-              The Collective
+              {t("hero.tag")}
             </p>
             <h1 className="font-display text-5xl md:text-7xl lg:text-[80px] font-extrabold tracking-[-0.03em] leading-[1.05]">
-              <span className="text-gradient-prism">Shoot first.</span>
+              <span className="text-gradient-prism">{t("hero.line1")}</span>
               <br />
-              <span className="text-foreground">Fail spectacularly.</span>
+              <span className="text-foreground">{t("hero.line2")}</span>
             </h1>
             <p className="mt-6 text-lg md:text-xl text-muted-foreground font-body max-w-2xl mx-auto leading-relaxed">
-              Try until something breaks. Get stuck in a corner… <em>then</em> ask for help like a genius. 
-              Where vibecoding meets real pipeline — build, ship, and grow together.
+              {t("hero.desc")}
             </p>
             <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
               <Button variant="hero" size="lg" asChild>
-                <Link to="/community">Join the Vibe <ArrowRight className="ml-2 h-4 w-4" /></Link>
+                <Link to="/community">{t("hero.ctaJoin")} <ArrowRight className="ml-2 h-4 w-4" /></Link>
               </Button>
               <Button variant="heroOutline" size="lg" asChild>
-                <Link to="/get-going">Get Going</Link>
+                <Link to="/get-going">{t("hero.ctaGo")}</Link>
               </Button>
             </div>
           </motion.div>
@@ -54,63 +56,16 @@ const Index = () => {
             className="text-center mb-16"
           >
             <h2 className="font-display text-3xl md:text-5xl font-bold tracking-[-0.02em]">
-              Two ways to <span className="text-gradient-storm">vibe</span>
+              {t("tiers.title")} <span className="text-gradient-storm">{t("tiers.titleHighlight")}</span>
             </h2>
             <p className="mt-4 text-muted-foreground font-body text-lg max-w-xl mx-auto">
-              Start free, level up when you're ready.
+              {t("tiers.subtitle")}
             </p>
           </motion.div>
 
           <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-            {/* Free Tier */}
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              className="bg-card border border-border rounded-2xl p-8 hover:border-purple-vivid/40 transition-all duration-300"
-            >
-              <div className="w-12 h-12 rounded-xl bg-gradient-surge flex items-center justify-center mb-6">
-                <Users className="h-6 w-6 text-accent-foreground" />
-              </div>
-              <h3 className="font-display text-2xl font-bold tracking-[-0.01em]">Free Tier</h3>
-              <p className="text-turquoise font-display text-lg font-semibold mt-1">€0 / forever</p>
-              <ul className="mt-6 space-y-3 font-body text-sm text-muted-foreground">
-                <li className="flex items-start gap-2"><Zap className="h-4 w-4 text-turquoise mt-0.5 shrink-0" /> WhatsApp community with guidance</li>
-                <li className="flex items-start gap-2"><Zap className="h-4 w-4 text-turquoise mt-0.5 shrink-0" /> Free events & meetups</li>
-                <li className="flex items-start gap-2"><Zap className="h-4 w-4 text-turquoise mt-0.5 shrink-0" /> #shiphappens hackathons</li>
-                <li className="flex items-start gap-2"><Zap className="h-4 w-4 text-turquoise mt-0.5 shrink-0" /> Meet likeminded builders</li>
-              </ul>
-              <Button variant="heroOutline" className="mt-8 w-full" asChild>
-                <Link to="/community">Join Free</Link>
-              </Button>
-            </motion.div>
-
-            {/* Pro Tier */}
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              className="bg-card border-2 border-purple-vivid rounded-2xl p-8 relative overflow-hidden glow-purple"
-            >
-              <div className="absolute top-0 right-0 bg-gradient-storm text-primary-foreground text-xs font-display font-semibold px-4 py-1.5 rounded-bl-xl">
-                PRO
-              </div>
-              <div className="w-12 h-12 rounded-xl bg-gradient-storm flex items-center justify-center mb-6">
-                <Rocket className="h-6 w-6 text-primary-foreground" />
-              </div>
-              <h3 className="font-display text-2xl font-bold tracking-[-0.01em]">Pro Tier</h3>
-              <p className="text-purple-soft font-display text-lg font-semibold mt-1">Paid membership</p>
-              <ul className="mt-6 space-y-3 font-body text-sm text-muted-foreground">
-                <li className="flex items-start gap-2"><Zap className="h-4 w-4 text-purple-soft mt-0.5 shrink-0" /> Everything in Free</li>
-                <li className="flex items-start gap-2"><Zap className="h-4 w-4 text-purple-soft mt-0.5 shrink-0" /> Lead generation access</li>
-                <li className="flex items-start gap-2"><Zap className="h-4 w-4 text-purple-soft mt-0.5 shrink-0" /> Exclusive courses & workshops</li>
-                <li className="flex items-start gap-2"><Zap className="h-4 w-4 text-purple-soft mt-0.5 shrink-0" /> Investor & market events</li>
-                <li className="flex items-start gap-2"><Zap className="h-4 w-4 text-purple-soft mt-0.5 shrink-0" /> Pro WhatsApp group with leads</li>
-              </ul>
-              <Button variant="hero" className="mt-8 w-full" asChild>
-                <Link to="/community">Go Pro</Link>
-              </Button>
-            </motion.div>
+            <FreeTierCard />
+            <ProTierCard />
           </div>
         </div>
       </section>
@@ -122,19 +77,80 @@ const Index = () => {
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_50%,hsl(173_100%_45%/0.15),transparent_60%)]" />
             <div className="relative">
               <h2 className="font-display text-3xl md:text-5xl font-bold tracking-[-0.02em] text-primary-foreground">
-                Ready to ship?
+                {t("ctaSection.title")}
               </h2>
               <p className="mt-4 text-primary-foreground/80 font-body text-lg max-w-lg mx-auto">
-                Join a collective of builders who don't wait for permission.
+                {t("ctaSection.desc")}
               </p>
               <Button variant="accent" size="lg" className="mt-8" asChild>
-                <Link to="/community">Get Started <ArrowRight className="ml-2 h-4 w-4" /></Link>
+                <Link to="/community">{t("ctaSection.cta")} <ArrowRight className="ml-2 h-4 w-4" /></Link>
               </Button>
             </div>
           </div>
         </div>
       </section>
     </Layout>
+  );
+};
+
+const FreeTierCard = () => {
+  const { t } = useTranslation();
+  return (
+    <motion.div
+      initial={{ opacity: 0, x: -20 }}
+      whileInView={{ opacity: 1, x: 0 }}
+      viewport={{ once: true }}
+      className="bg-card border border-border rounded-2xl p-8 hover:border-purple-vivid/40 transition-all duration-300"
+    >
+      <div className="w-12 h-12 rounded-xl bg-gradient-surge flex items-center justify-center mb-6">
+        <Users className="h-6 w-6 text-accent-foreground" />
+      </div>
+      <h3 className="font-display text-2xl font-bold tracking-[-0.01em]">{t("tiers.free.name")}</h3>
+      <p className="text-turquoise font-display text-lg font-semibold mt-1">{t("tiers.free.price")}</p>
+      <ul className="mt-6 space-y-3 font-body text-sm text-muted-foreground">
+        {[0, 1, 2, 3].map((i) => (
+          <li key={i} className="flex items-start gap-2">
+            <Zap className="h-4 w-4 text-turquoise mt-0.5 shrink-0" />
+            {t(`tiers.free.benefits.${i}`)}
+          </li>
+        ))}
+      </ul>
+      <Button variant="heroOutline" className="mt-8 w-full" asChild>
+        <Link to="/community">{t("tiers.free.cta")}</Link>
+      </Button>
+    </motion.div>
+  );
+};
+
+const ProTierCard = () => {
+  const { t } = useTranslation();
+  return (
+    <motion.div
+      initial={{ opacity: 0, x: 20 }}
+      whileInView={{ opacity: 1, x: 0 }}
+      viewport={{ once: true }}
+      className="bg-card border-2 border-purple-vivid rounded-2xl p-8 relative overflow-hidden glow-purple"
+    >
+      <div className="absolute top-0 right-0 bg-gradient-storm text-primary-foreground text-xs font-display font-semibold px-4 py-1.5 rounded-bl-xl">
+        {t("tiers.pro.label")}
+      </div>
+      <div className="w-12 h-12 rounded-xl bg-gradient-storm flex items-center justify-center mb-6">
+        <Rocket className="h-6 w-6 text-primary-foreground" />
+      </div>
+      <h3 className="font-display text-2xl font-bold tracking-[-0.01em]">{t("tiers.pro.name")}</h3>
+      <p className="text-purple-soft font-display text-lg font-semibold mt-1">{t("tiers.pro.price")}</p>
+      <ul className="mt-6 space-y-3 font-body text-sm text-muted-foreground">
+        {[0, 1, 2, 3, 4].map((i) => (
+          <li key={i} className="flex items-start gap-2">
+            <Zap className="h-4 w-4 text-purple-soft mt-0.5 shrink-0" />
+            {t(`tiers.pro.benefits.${i}`)}
+          </li>
+        ))}
+      </ul>
+      <Button variant="hero" className="mt-8 w-full" asChild>
+        <Link to="/community">{t("tiers.pro.cta")}</Link>
+      </Button>
+    </motion.div>
   );
 };
 
