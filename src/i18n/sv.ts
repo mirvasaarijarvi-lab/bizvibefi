@@ -119,9 +119,9 @@ const sv = {
     titleHighlight: "Ett kollektiv.",
     desc: "Vi startade BizVibe för att vi var trötta på att bygga ensamma. De bästa sakerna händer när man kombinerar kompletterande kaos, så vi byggde ett kollektiv kring det.",
     founders: [
-      { name: "Grundare 1", role: "Byggare", bio: "Skjuter först, frågar sedan. Full-stack-kaosmotor." },
-      { name: "Grundare 2", role: "Kopplare", bio: "Känner alla. Bygger broar mellan idéer och människor." },
-      { name: "Grundare 3", role: "Strateg", bio: "Förvandlar vibes till pipelines. Den som får allt att hänga ihop." },
+      { name: "Minna Blomster", role: "Superconnector, Strateg, Byggare", bio: "Kopplar ihop prickarna andra inte ser. Öppnar dörrar, bygger broar och gör det omöjliga självklart.", linkedin: "https://www.linkedin.com/in/minnablomster/" },
+      { name: "Mirva Saarijärvi", role: "Strateg, Byggare, Kopplare", bio: "Förvandlar kaos till klarhet. Kartlägger vägen från idé till genomförande och ser till att det faktiskt blir gjort.", linkedin: "https://www.linkedin.com/in/mirvasaarijarvi/" },
+      { name: "Vesa Mattila", role: "Byggare, Strateg, Kopplare", bio: "Bygger först, optimerar sedan. Förvandlar koncept till fungerande produkter innan de flesta hunnit planera.", linkedin: "https://www.linkedin.com/in/vesa-mattila/" },
     ],
     valuesTitle: "Vad vi",
     valuesTitleHighlight: "tror på",
