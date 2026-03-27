@@ -148,7 +148,7 @@ const fi = {
     },
     toast: { title: "Viesti lähetetty!", desc: "Palaamme sinulle pian." },
     emailTitle: "Sähköposti",
-    emailAddr: "hello@bizvibe.co",
+    emailAddr: "shipping@bizvibe.fi",
     whatsappTitle: "WhatsApp",
     whatsappDesc: "Liity yhteisöryhmäämme ja pääset heti mukaan.",
   },

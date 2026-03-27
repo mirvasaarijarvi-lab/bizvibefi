@@ -148,7 +148,7 @@ const sv = {
     },
     toast: { title: "Meddelande skickat!", desc: "Vi återkommer snart." },
     emailTitle: "Maila oss",
-    emailAddr: "hello@bizvibe.co",
+    emailAddr: "shipping@bizvibe.fi",
     whatsappTitle: "WhatsApp",
     whatsappDesc: "Gå med i vår gemenskapsgrupp för direkt tillgång.",
   },
