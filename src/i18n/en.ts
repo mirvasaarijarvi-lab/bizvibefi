@@ -18,14 +18,14 @@ const en = {
   market: {
     title: "What the market",
     titleHighlight: "gets from us",
-    subtitle: "Fast thinkers who realize development, tooling, and business needs at speed. Your ideas, shipped.",
+    subtitle: "A collective of fast thinkers who spot what you need and make it real. Development, tools, strategy, all at the speed of now.",
     benefits: [
-      { icon: "⚡", title: "Rapid Prototyping", desc: "From concept to working product in days, not months. We move fast and build what matters." },
-      { icon: "🛠", title: "Tool Development", desc: "Custom tools built to solve real problems. No bloat, no waiting, just solutions that work." },
-      { icon: "🚀", title: "MVP to Market", desc: "Get your minimum viable product in front of users quickly. Validate fast, iterate faster." },
-      { icon: "🤝", title: "On-Demand Talent", desc: "Access a collective of builders ready to jump in. The right skills, right when you need them." },
-      { icon: "💡", title: "Innovation Sprints", desc: "Hackathon-tested builders who thrive under pressure. Complex problems solved in focused bursts." },
-      { icon: "📈", title: "Growth Engineering", desc: "Technical solutions designed to scale. We build with growth in mind from day one." },
+      { icon: "⚡", title: "Speed to Solution", desc: "We don't do months of planning. You describe the problem, we start building. Working solutions in days, not quarters." },
+      { icon: "🛠", title: "Custom Tools That Fit", desc: "Off-the-shelf doesn't cut it? We build tools tailored to your workflow, your team, and your actual bottlenecks." },
+      { icon: "🔍", title: "Need Spotting", desc: "Sometimes you know something is broken but can't name it. We come in, find the gap, and close it before it costs you." },
+      { icon: "🤝", title: "Collective Firepower", desc: "Not one freelancer. A collective. Connectors, strategists, and builders working as one unit on your challenge." },
+      { icon: "🚀", title: "Idea to Live Product", desc: "From napkin sketch to shipped product. We validate, build, and launch so you can test with real users, fast." },
+      { icon: "📈", title: "Growth Without the Overhead", desc: "No need to hire a full team. Tap into the collective for the expertise you need, exactly when you need it." },
     ],
   },
   tiers: {

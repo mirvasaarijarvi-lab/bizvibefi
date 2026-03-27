@@ -18,14 +18,14 @@ const fi = {
   market: {
     title: "Mitä markkina",
     titleHighlight: "saa meiltä",
-    subtitle: "Nopeita ajattelijoita jotka toteuttavat kehitys-, työkalu- ja liiketoimintatarpeet vauhdilla. Ideasi, julkaistuna.",
+    subtitle: "Nopeita ajattelijoita jotka tunnistavat tarpeesi ja tekevät siitä totta. Kehitys, työkalut ja strategia, kaikki nyt-vauhdilla.",
     benefits: [
-      { icon: "⚡", title: "Nopea prototyyppaus", desc: "Konseptista toimivaksi tuotteeksi päivissä, ei kuukausissa. Liikumme nopeasti ja rakennamme oleellisen." },
-      { icon: "🛠", title: "Työkalujen kehitys", desc: "Räätälöityjä työkaluja oikeisiin ongelmiin. Ei turhaa, ei odottelua, vain toimivia ratkaisuja." },
-      { icon: "🚀", title: "MVP markkinoille", desc: "Saat minimituotteesi käyttäjien eteen nopeasti. Validoi nopeasti, iteroi nopeammin." },
-      { icon: "🤝", title: "Osaajia tarvittaessa", desc: "Kollektiivin rakentajat valmiina hyppäämään mukaan. Oikeat taidot juuri silloin kun tarvitset." },
-      { icon: "💡", title: "Innovaatiosprintit", desc: "Hackathon-testattuja rakentajia jotka kukoistavat paineen alla. Monimutkaiset ongelmat ratkaistaan keskitetysti." },
-      { icon: "📈", title: "Kasvuinsinöörit", desc: "Tekniset ratkaisut suunniteltu skaalautumaan. Rakennamme kasvumielessä alusta asti." },
+      { icon: "⚡", title: "Nopeasti ratkaisuun", desc: "Emme tee kuukausien suunnitelmia. Kerrot ongelman, me alamme rakentaa. Toimivia ratkaisuja päivissä, ei kvartaaleissa." },
+      { icon: "🛠", title: "Työkalut jotka sopivat", desc: "Valmisratkaisut eivät riitä? Rakennamme työkalut sinun työnkulkuusi, tiimiisi ja oikeisiin pullonkauloihin." },
+      { icon: "🔍", title: "Tarpeiden tunnistaminen", desc: "Joskus tiedät että jokin on rikki, mutta et osaa nimetä sitä. Me tulemme, löydämme aukon ja paikaamme sen ennen kuin se maksaa." },
+      { icon: "🤝", title: "Kollektiivin voima", desc: "Ei yhtä freelanceria. Kollektiivi. Yhdistäjiä, strategeja ja rakentajia, jotka toimivat yhtenä yksikkönä haasteeseesi." },
+      { icon: "🚀", title: "Ideasta tuotteeksi", desc: "Lautasliinaluonnoksesta julkaistuun tuotteeseen. Validoimme, rakennamme ja julkaisemme, jotta pääset testaamaan oikeilla käyttäjillä nopeasti." },
+      { icon: "📈", title: "Kasvua ilman kiinteitä kuluja", desc: "Ei tarvitse palkata kokonaista tiimiä. Hyödynnä kollektiivin osaamista juuri silloin kun tarvitset." },
     ],
   },
   tiers: {

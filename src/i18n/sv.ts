@@ -18,14 +18,14 @@ const sv = {
   market: {
     title: "Vad marknaden",
     titleHighlight: "får av oss",
-    subtitle: "Snabbtänkare som realiserar utvecklings-, verktygs- och affärsbehov i hög fart. Dina idéer, skeppade.",
+    subtitle: "Ett kollektiv av snabbtänkare som ser vad du behöver och gör det verkligt. Utveckling, verktyg och strategi, allt i nuets tempo.",
     benefits: [
-      { icon: "⚡", title: "Snabb prototypning", desc: "Från koncept till fungerande produkt på dagar, inte månader. Vi rör oss snabbt och bygger det som räknas." },
-      { icon: "🛠", title: "Verktygsutveckling", desc: "Skräddarsydda verktyg för riktiga problem. Ingen uppsvällning, ingen väntan, bara lösningar som fungerar." },
-      { icon: "🚀", title: "MVP till marknad", desc: "Få din minimala produkt framför användare snabbt. Validera snabbt, iterera snabbare." },
-      { icon: "🤝", title: "Talang på begäran", desc: "Tillgång till ett kollektiv av byggare redo att hoppa in. Rätt kompetens, precis när du behöver den." },
-      { icon: "💡", title: "Innovationssprinter", desc: "Hackathon-testade byggare som frodas under press. Komplexa problem lösta i fokuserade spurter." },
-      { icon: "📈", title: "Tillväxtingenjörer", desc: "Tekniska lösningar designade för att skala. Vi bygger med tillväxt i åtanke från dag ett." },
+      { icon: "⚡", title: "Snabbt till lösning", desc: "Vi planerar inte i månader. Du beskriver problemet, vi börjar bygga. Fungerande lösningar på dagar, inte kvartal." },
+      { icon: "🛠", title: "Verktyg som passar", desc: "Standardlösningar räcker inte? Vi bygger verktyg anpassade för ditt arbetsflöde, ditt team och dina faktiska flaskhalsar." },
+      { icon: "🔍", title: "Behovsidentifiering", desc: "Ibland vet du att något är trasigt men kan inte namnge det. Vi kommer in, hittar gapet och stänger det innan det kostar dig." },
+      { icon: "🤝", title: "Kollektivets eldkraft", desc: "Inte en frilansare. Ett kollektiv. Kopplare, strateger och byggare som arbetar som en enhet på din utmaning." },
+      { icon: "🚀", title: "Idé till live-produkt", desc: "Från servettskiss till skeppad produkt. Vi validerar, bygger och lanserar så du kan testa med riktiga användare, snabbt." },
+      { icon: "📈", title: "Tillväxt utan overhead", desc: "Inget behov av att anställa ett helt team. Nyttja kollektivets expertis exakt när du behöver den." },
     ],
   },
   tiers: {
