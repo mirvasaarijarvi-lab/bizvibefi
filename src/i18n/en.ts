@@ -148,7 +148,7 @@ const en = {
     },
     toast: { title: "Message sent!", desc: "We'll get back to you soon." },
     emailTitle: "Email us",
-    emailAddr: "hello@bizvibe.co",
+    emailAddr: "shipping@bizvibe.fi",
     whatsappTitle: "WhatsApp",
     whatsappDesc: "Join our community group for instant access.",
   },
