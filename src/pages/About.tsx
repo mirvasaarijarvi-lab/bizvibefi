@@ -41,12 +41,20 @@ const About = () => {
               >
                 <div className="w-32 h-32 rounded-full bg-gradient-storm mx-auto mb-6 flex items-center justify-center">
                   <span className="font-display text-3xl font-extrabold text-primary-foreground">
-                    {(i + 1).toString()}
+                    {t(`about.founders.${i}.name`).split(" ").map(n => n[0]).join("")}
                   </span>
                 </div>
                 <h3 className="font-display text-xl font-bold tracking-[-0.01em]">{t(`about.founders.${i}.name`)}</h3>
                 <p className="text-turquoise font-body font-semibold text-sm mt-1">{t(`about.founders.${i}.role`)}</p>
                 <p className="mt-3 text-sm text-muted-foreground font-body">{t(`about.founders.${i}.bio`)}</p>
+                <a
+                  href={t(`about.founders.${i}.linkedin`)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 mt-3 text-sm font-body font-medium text-electric hover:text-electric-light transition-colors"
+                >
+                  <Linkedin className="h-4 w-4" /> LinkedIn
+                </a>
               </motion.div>
             ))}
           </div>
