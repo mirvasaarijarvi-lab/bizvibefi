@@ -17,7 +17,11 @@ export const useTranslation = () => {
 };
 
 const getNestedValue = (obj: Record<string, any>, path: string): string => {
-  const val = path.split(".").reduce((acc, key) => acc?.[key], obj);
+  const val = path.split(".").reduce((acc: any, key: string) => {
+    if (acc === undefined || acc === null) return undefined;
+    const idx = Number(key);
+    return !isNaN(idx) && Array.isArray(acc) ? acc[idx] : acc[key];
+  }, obj);
   return typeof val === "string" ? val : path;
 };
 
