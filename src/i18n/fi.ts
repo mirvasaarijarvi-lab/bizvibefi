@@ -119,9 +119,9 @@ const fi = {
     titleHighlight: "Yksi kollektiivi.",
     desc: "Aloitimme BizViben koska olimme kyllästyneitä rakentamaan yksin. Parhaat asiat syntyvät kun yhdistää toisiaan täydentävää kaaosta, joten rakensimme kollektiivin sen ympärille.",
     founders: [
-      { name: "Perustaja 1", role: "Rakentaja", bio: "Ampuu ensin, kysyy myöhemmin. Full-stack-kaosmoottori." },
-      { name: "Perustaja 2", role: "Yhdistäjä", bio: "Tuntee kaikki. Rakentaa siltoja ideoiden ja ihmisten välille." },
-      { name: "Perustaja 3", role: "Strategi", bio: "Muuttaa vibat liiketoiminnaksi. Se joka saa kaiken toimimaan." },
+      { name: "Minna Blomster", role: "Yhdistäjä, Strategi, Rakentaja", bio: "Yhdistää pisteet joita muut eivät näe. Avaa ovia, rakentaa siltoja ja tekee mahdottomasta itsestään selvää.", linkedin: "https://www.linkedin.com/in/minnablomster/" },
+      { name: "Mirva Saarijärvi", role: "Strategi, Rakentaja, Yhdistäjä", bio: "Muuttaa kaaoksen selkeydeksi. Kartoittaa polun ideasta toteutukseen ja varmistaa että se oikeasti tapahtuu.", linkedin: "https://www.linkedin.com/in/mirvasaarijarvi/" },
+      { name: "Vesa Mattila", role: "Rakentaja, Strategi, Yhdistäjä", bio: "Rakentaa ensin, optimoi sitten. Muuttaa konseptit toimiviksi tuotteiksi ennen kuin useimmat ehtivät suunnitella.", linkedin: "https://www.linkedin.com/in/vesa-mattila/" },
     ],
     valuesTitle: "Mihin me",
     valuesTitleHighlight: "uskomme",
