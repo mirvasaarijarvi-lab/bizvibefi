@@ -35,14 +35,14 @@
     --silver: 248 18% 76%;
 
     /* Semantic tokens - dark theme by default */
-    --background: 240 30% 5%;
-    --foreground: 245 100% 97%;
+    --background: 245 100% 97%;
+    --foreground: 240 30% 5%;
 
-    --card: 250 25% 8%;
-    --card-foreground: 245 100% 97%;
+    --card: 0 0% 100%;
+    --card-foreground: 240 30% 5%;
 
-    --popover: 250 25% 8%;
-    --popover-foreground: 245 100% 97%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 30% 5%;
 
     --primary: 270 95% 58%;
     --primary-foreground: 0 0% 100%;
@@ -50,8 +50,8 @@
     --secondary: 225 100% 57%;
     --secondary-foreground: 0 0% 100%;
 
-    --muted: 250 25% 12%;
-    --muted-foreground: 248 18% 76%;
+    --muted: 245 60% 93%;
+    --muted-foreground: 250 20% 40%;
 
     --accent: 173 100% 45%;
     --accent-foreground: 240 30% 5%;
@@ -59,19 +59,19 @@
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 250 20% 18%;
-    --input: 250 20% 18%;
+    --border: 248 30% 88%;
+    --input: 248 30% 88%;
     --ring: 270 95% 58%;
 
     --radius: 0.75rem;
 
-    --sidebar-background: 250 25% 8%;
-    --sidebar-foreground: 245 100% 97%;
+    --sidebar-background: 0 0% 100%;
+    --sidebar-foreground: 240 30% 5%;
     --sidebar-primary: 270 95% 58%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 250 25% 12%;
-    --sidebar-accent-foreground: 245 100% 97%;
-    --sidebar-border: 250 20% 18%;
+    --sidebar-accent: 245 60% 93%;
+    --sidebar-accent-foreground: 240 30% 5%;
+    --sidebar-border: 248 30% 88%;
     --sidebar-ring: 270 95% 58%;
 
     /* Gradients */
