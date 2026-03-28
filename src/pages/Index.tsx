@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import Layout from "@/components/Layout";
 import { motion } from "framer-motion";
-import { Rocket, Users, Zap, ArrowRight } from "lucide-react";
+import { Rocket, Users, Zap, ArrowRight, Wrench, Search, Handshake, TrendingUp } from "lucide-react";
 import { useTranslation } from "@/i18n/TranslationContext";
 
 const Index = () => {
