@@ -35,8 +35,8 @@
     --silver: 248 18% 76%;
 
     /* Semantic tokens - dark theme by default */
-    --background: 240 30% 5%;
-    --foreground: 245 100% 97%;
+    --background: 245 100% 97%;
+    --foreground: 240 30% 5%;
 
     --card: 250 25% 8%;
     --card-foreground: 245 100% 97%;
