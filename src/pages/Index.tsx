@@ -67,22 +67,27 @@ const Index = () => {
           </motion.div>
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
-            {[0, 1, 2, 3, 4, 5].map((i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.08 }}
-                className="bg-card border border-border rounded-xl p-6 hover:border-turquoise/40 transition-colors"
-              >
-                <div className="w-10 h-10 rounded-lg bg-gradient-surge flex items-center justify-center mb-4 text-accent-foreground font-display font-bold text-sm">
-                  {t(`market.benefits.${i}.icon`)}
-                </div>
-                <h3 className="font-display text-lg font-semibold tracking-[-0.01em]">{t(`market.benefits.${i}.title`)}</h3>
-                <p className="mt-2 text-sm text-muted-foreground font-body">{t(`market.benefits.${i}.desc`)}</p>
-              </motion.div>
-            ))}
+            {[0, 1, 2, 3, 4, 5].map((i) => {
+              const iconMap: Record<string, React.ElementType> = { Zap, Wrench, Search, Handshake, Rocket, TrendingUp };
+              const iconName = t(`market.benefits.${i}.icon`);
+              const IconComponent = iconMap[iconName] || Zap;
+              return (
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.08 }}
+                  className="bg-card border border-border rounded-xl p-6 hover:border-turquoise/40 transition-colors"
+                >
+                  <div className="w-10 h-10 rounded-lg bg-gradient-surge flex items-center justify-center mb-4">
+                    <IconComponent className="h-5 w-5 text-primary-foreground" />
+                  </div>
+                  <h3 className="font-display text-lg font-semibold tracking-[-0.01em]">{t(`market.benefits.${i}.title`)}</h3>
+                  <p className="mt-2 text-sm text-muted-foreground font-body">{t(`market.benefits.${i}.desc`)}</p>
+                </motion.div>
+              );
+            })}
           </div>
 
           <div className="mt-12 text-center">
