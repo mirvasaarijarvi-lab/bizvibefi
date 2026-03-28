@@ -179,7 +179,7 @@ const ProTierCard = () => {
       initial={{ opacity: 0, x: 20 }}
       whileInView={{ opacity: 1, x: 0 }}
       viewport={{ once: true }}
-      className="bg-card border-2 border-purple-vivid rounded-2xl p-8 relative overflow-hidden glow-purple"
+      className="group bg-card border-2 border-purple-vivid rounded-2xl p-8 relative overflow-hidden glow-purple hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
     >
       <div className="absolute top-0 right-0 bg-gradient-storm text-primary-foreground text-xs font-display font-semibold px-4 py-1.5 rounded-bl-xl">
         {t("tiers.pro.label")}
