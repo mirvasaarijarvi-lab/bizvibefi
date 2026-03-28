@@ -150,7 +150,7 @@ const FreeTierCard = () => {
       initial={{ opacity: 0, x: -20 }}
       whileInView={{ opacity: 1, x: 0 }}
       viewport={{ once: true }}
-      className="bg-card border border-border rounded-2xl p-8 hover:border-purple-vivid/40 transition-all duration-300"
+      className="group bg-card border border-border rounded-2xl p-8 hover:border-purple-vivid/40 hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
     >
       <div className="w-12 h-12 rounded-xl bg-gradient-surge flex items-center justify-center mb-6">
         <Users className="h-6 w-6 text-accent-foreground" />
