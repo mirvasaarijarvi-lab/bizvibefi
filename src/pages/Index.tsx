@@ -150,9 +150,9 @@ const FreeTierCard = () => {
       initial={{ opacity: 0, x: -20 }}
       whileInView={{ opacity: 1, x: 0 }}
       viewport={{ once: true }}
-      className="bg-card border border-border rounded-2xl p-8 hover:border-purple-vivid/40 transition-all duration-300"
+      className="group bg-card border border-border rounded-2xl p-8 hover:border-purple-vivid/40 hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
     >
-      <div className="w-12 h-12 rounded-xl bg-gradient-surge flex items-center justify-center mb-6">
+      <div className="w-12 h-12 rounded-xl bg-gradient-surge flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
         <Users className="h-6 w-6 text-accent-foreground" />
       </div>
       <h3 className="font-display text-2xl font-bold tracking-[-0.01em]">{t("tiers.free.name")}</h3>
@@ -179,12 +179,12 @@ const ProTierCard = () => {
       initial={{ opacity: 0, x: 20 }}
       whileInView={{ opacity: 1, x: 0 }}
       viewport={{ once: true }}
-      className="bg-card border-2 border-purple-vivid rounded-2xl p-8 relative overflow-hidden glow-purple"
+      className="group bg-card border-2 border-purple-vivid rounded-2xl p-8 relative overflow-hidden glow-purple hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
     >
       <div className="absolute top-0 right-0 bg-gradient-storm text-primary-foreground text-xs font-display font-semibold px-4 py-1.5 rounded-bl-xl">
         {t("tiers.pro.label")}
       </div>
-      <div className="w-12 h-12 rounded-xl bg-gradient-storm flex items-center justify-center mb-6">
+      <div className="w-12 h-12 rounded-xl bg-gradient-storm flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
         <Rocket className="h-6 w-6 text-primary-foreground" />
       </div>
       <h3 className="font-display text-2xl font-bold tracking-[-0.01em]">{t("tiers.pro.name")}</h3>
