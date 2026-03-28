@@ -65,13 +65,13 @@
 
     --radius: 0.75rem;
 
-    --sidebar-background: 250 25% 8%;
-    --sidebar-foreground: 245 100% 97%;
+    --sidebar-background: 0 0% 100%;
+    --sidebar-foreground: 240 30% 5%;
     --sidebar-primary: 270 95% 58%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 250 25% 12%;
-    --sidebar-accent-foreground: 245 100% 97%;
-    --sidebar-border: 250 20% 18%;
+    --sidebar-accent: 245 60% 93%;
+    --sidebar-accent-foreground: 240 30% 5%;
+    --sidebar-border: 248 30% 88%;
     --sidebar-ring: 270 95% 58%;
 
     /* Gradients */
