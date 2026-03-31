@@ -128,8 +128,8 @@ const fi = {
     valuesTitle: "Mihin me",
     valuesTitleHighlight: "uskomme",
     values: [
-      { title: "Julkaise > Täydellinen", desc: "Valmis voittaa täydellisen. Aina. Julkaise ja iteroi." },
-      { title: "Epäonnistu tyylillä", desc: "Pienet epäonnistumiset eivät opeta mitään. Tähtää isosti, opi nopeasti ja pivotoi kovaa." },
+      { title: "Toimita > Täydellinen", desc: "Valmis voittaa täydellisen. Aina. Julkaise ja iteroi." },
+      { title: "Uskalla mokata", desc: "Pienet epäonnistumiset eivät opeta mitään. Tähtää isosti, opi nopeasti ja pivotoi kovaa." },
       { title: "Rakenna yhdessä", desc: "Yksinäiset nerot ovat myytti. Kollektiivi on kerroin." },
     ],
     cta: "Liity kollektiiviin",
