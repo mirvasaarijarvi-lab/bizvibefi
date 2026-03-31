@@ -23,13 +23,13 @@ const Index = () => {
             transition={{ duration: 0.7 }}
             className="max-w-4xl mx-auto text-center"
           >
-            <h1 className="font-display text-6xl md:text-8xl lg:text-[96px] font-extrabold tracking-[-0.03em] leading-[1.05] text-gradient-storm">
+            <h1 className="font-display text-5xl md:text-8xl lg:text-[96px] font-extrabold tracking-[-0.03em] leading-[1.05] text-gradient-storm">
               BizVibe
             </h1>
             <p className="font-body text-sm font-semibold text-turquoise tracking-widest uppercase mt-3 mb-6">
               {t("hero.tag")}
             </p>
-            <h2 className="font-display text-3xl md:text-5xl lg:text-6xl font-extrabold tracking-[-0.02em] leading-[1.1]">
+            <h2 className="font-display text-2xl sm:text-3xl md:text-5xl lg:text-6xl font-extrabold tracking-[-0.02em] leading-[1.15]">
               <span className="text-gradient-prism">{t("hero.line1")}</span>
               <br />
               <span className="text-foreground">{t("hero.line2")}</span>
