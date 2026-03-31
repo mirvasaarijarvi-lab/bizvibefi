@@ -11,7 +11,7 @@ const fi = {
     tag: "Kollektiivi",
     line1: "Ammu ensin.",
     line2: "Epäonnistu tyylillä.",
-    line3: "Toimita laatua.",
+    line3: "Toimita timanttia.",
     desc: "Kokeile kunnes jokin hajoaa. Joudu umpikujaan ja pyydä sitten apua kuin nero. Täällä vibecoding kohtaa oikean liiketoiminnan. Rakenna, julkaise ja kasva yhdessä.",
     ctaJoin: "Liity mukaan",
     ctaGo: "Aloita",
