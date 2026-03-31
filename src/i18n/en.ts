@@ -11,6 +11,7 @@ const en = {
     tag: "The Collective",
     line1: "Shoot first.",
     line2: "Fail spectacularly.",
+    line3: "Ship solid.",
     desc: "Try until something breaks. Get stuck in a corner, then ask for help like a genius. Where vibecoding meets real pipeline. Build, ship, and grow together.",
     ctaJoin: "Join the Vibe",
     ctaGo: "Get Going",

@@ -11,6 +11,7 @@ const sv = {
     tag: "Kollektivet",
     line1: "Skjut först.",
     line2: "Misslyckas storslaget.",
+    line3: "Skeppa stabilt.",
     desc: "Testa tills något går sönder. Kör fast i ett hörn och be sedan om hjälp som ett geni. Där vibecoding möter riktig pipeline. Bygg, skeppa och väx tillsammans.",
     ctaJoin: "Häng med",
     ctaGo: "Kom igång",

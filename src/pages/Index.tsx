@@ -33,6 +33,8 @@ const Index = () => {
               <span className="text-gradient-prism">{t("hero.line1")}</span>
               <br />
               <span className="text-foreground">{t("hero.line2")}</span>
+              <br />
+              <span className="text-gradient-surge">{t("hero.line3")}</span>
             </h2>
             <p className="mt-6 text-lg md:text-xl text-muted-foreground font-body max-w-2xl mx-auto leading-relaxed">
               {t("hero.desc")}
