@@ -29,7 +29,7 @@ const Index = () => {
             <p className="font-body text-sm font-semibold text-turquoise tracking-widest uppercase mt-3 mb-6">
               {t("hero.tag")}
             </p>
-            <h2 className="font-display text-3xl md:text-5xl lg:text-6xl font-extrabold tracking-[-0.02em] leading-[1.1]">
+            <h2 className="font-display text-2xl sm:text-3xl md:text-5xl lg:text-6xl font-extrabold tracking-[-0.02em] leading-[1.15]">
               <span className="text-gradient-prism">{t("hero.line1")}</span>
               <br />
               <span className="text-foreground">{t("hero.line2")}</span>
