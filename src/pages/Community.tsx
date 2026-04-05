@@ -1,4 +1,5 @@
 import Layout from "@/components/Layout";
+import PageMeta from "@/components/PageMeta";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { Users, Rocket, Zap, MessageCircle, Calendar, TrendingUp, GraduationCap, Handshake, ArrowRight } from "lucide-react";
