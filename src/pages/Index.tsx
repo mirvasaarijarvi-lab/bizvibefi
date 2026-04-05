@@ -222,4 +222,103 @@ const ProTierCard = () => {
   );
 };
 
+
+const useCountUp = (target: number, duration = 2000) => {
+  const [count, setCount] = useState(0);
+  const ref = useRef<HTMLDivElement>(null);
+  const inView = useInView(ref, { once: true, margin: "-100px" });
+
+  useEffect(() => {
+    if (!inView || target === 0) return;
+    const start = performance.now();
+    const step = (now: number) => {
+      const progress = Math.min((now - start) / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      setCount(Math.floor(eased * target));
+      if (progress < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  }, [inView, target, duration]);
+
+  return { count, ref };
+};
+
+const MetricsCounter = () => {
+  const { data: memberCount } = useQuery({
+    queryKey: ["metrics-members"],
+    queryFn: async () => {
+      const { count, error } = await supabase
+        .from("profiles")
+        .select("*", { count: "exact", head: true });
+      if (error) throw error;
+      return count ?? 0;
+    },
+    staleTime: 60_000,
+  });
+
+  const { data: eventCount } = useQuery({
+    queryKey: ["metrics-events"],
+    queryFn: async () => {
+      const { count, error } = await supabase
+        .from("events")
+        .select("*", { count: "exact", head: true })
+        .eq("is_published", true);
+      if (error) throw error;
+      return count ?? 0;
+    },
+    staleTime: 60_000,
+  });
+
+  const { data: topicCount } = useQuery({
+    queryKey: ["metrics-topics"],
+    queryFn: async () => {
+      const { count, error } = await supabase
+        .from("forum_topics")
+        .select("*", { count: "exact", head: true });
+      if (error) throw error;
+      return count ?? 0;
+    },
+    staleTime: 60_000,
+  });
+
+  const metrics = [
+    { label: "Members", value: memberCount ?? 0, icon: Users, color: "text-turquoise" },
+    { label: "Events Hosted", value: eventCount ?? 0, icon: CalendarCheck, color: "text-purple-soft" },
+    { label: "Forum Topics", value: topicCount ?? 0, icon: Code2, color: "text-electric" },
+  ];
+
+  return (
+    <section className="py-16 md:py-20 border-t border-border">
+      <div className="container">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 max-w-4xl mx-auto">
+          {metrics.map((m, i) => {
+            const { count, ref } = useCountUp(m.value);
+            return (
+              <motion.div
+                key={m.label}
+                ref={ref}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.15 }}
+                className="text-center"
+              >
+                <div className={`inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-card border border-border mb-4 ${m.color}`}>
+                  <m.icon className="h-7 w-7" />
+                </div>
+                <p className="font-display text-4xl md:text-5xl font-extrabold tracking-tight">
+                  {count}+
+                </p>
+                <p className="mt-1 text-sm text-muted-foreground font-body font-medium">
+                  {m.label}
+                </p>
+              </motion.div>
+            );
+          })}
+        </div>
+      </div>
+    </section>
+  );
+};
+
 export default Index;
