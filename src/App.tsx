@@ -16,6 +16,7 @@ const Contact = lazy(() => import("./pages/Contact.tsx"));
 const Auth = lazy(() => import("./pages/Auth.tsx"));
 const ResetPassword = lazy(() => import("./pages/ResetPassword.tsx"));
 const Profile = lazy(() => import("./pages/Profile.tsx"));
+const Events = lazy(() => import("./pages/Events.tsx"));
 const Forum = lazy(() => import("./pages/Forum.tsx"));
 const ForumCategory = lazy(() => import("./pages/ForumCategory.tsx"));
 const ForumTopic = lazy(() => import("./pages/ForumTopic.tsx"));
@@ -41,6 +42,7 @@ const App = () => (
                 <Route path="/auth" element={<Auth />} />
                 <Route path="/reset-password" element={<ResetPassword />} />
                 <Route path="/profile" element={<Profile />} />
+                <Route path="/events" element={<Events />} />
                 <Route path="/forum" element={<Forum />} />
                 <Route path="/forum/:slug" element={<ForumCategory />} />
                 <Route path="/forum/:slug/:topicId" element={<ForumTopic />} />
