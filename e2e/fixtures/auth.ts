@@ -27,18 +27,17 @@ async function login(page: Page, email: string, password: string) {
 }
 
 export const test = base.extend<{ authenticatedPage: Page }>({
-  authenticatedPage: async ({ page }, use) => {
+  authenticatedPage: async ({ page }, useFixture) => {
     const email = process.env.E2E_USER_EMAIL;
     const password = process.env.E2E_USER_PASSWORD;
 
     if (!email || !password) {
-      // Skip test when credentials are not available
       test.skip(true, "E2E_USER_EMAIL and E2E_USER_PASSWORD must be set");
       return;
     }
 
     await login(page, email, password);
-    await use(page);
+    await useFixture(page);
   },
 });
 
