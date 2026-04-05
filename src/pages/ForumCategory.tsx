@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useParams, Link } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
@@ -11,24 +11,8 @@ import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
-import { useQueryClient } from "@tanstack/react-query";
 import { formatDistanceToNow } from "date-fns";
-
-interface TopicWithAuthor {
-  id: string;
-  title: string;
-  content: string;
-  is_pinned: boolean;
-  is_locked: boolean;
-  reply_count: number;
-  last_reply_at: string | null;
-  created_at: string;
-  user_id: string;
-  profiles: {
-    display_name: string | null;
-    avatar_url: string | null;
-  } | null;
-}
+import type { Profile } from "@/hooks/useProfile";
 
 const ForumCategory = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -46,7 +30,7 @@ const ForumCategory = () => {
       const { data, error } = await supabase
         .from("forum_categories")
         .select("*")
-        .eq("slug", slug)
+        .eq("slug", slug!)
         .single();
       if (error) throw error;
       return data;
@@ -57,15 +41,27 @@ const ForumCategory = () => {
   const { data: topics, isLoading } = useQuery({
     queryKey: ["forum-topics", category?.id],
     queryFn: async () => {
-      const { data, error } = await supabase
+      const { data: topicsData, error } = await supabase
         .from("forum_topics")
-        .select("*, profiles(display_name, avatar_url)")
+        .select("*")
         .eq("category_id", category!.id)
         .order("is_pinned", { ascending: false })
-        .order("last_reply_at", { ascending: false, nullsFirst: false })
         .order("created_at", { ascending: false });
       if (error) throw error;
-      return data as unknown as TopicWithAuthor[];
+
+      // Fetch profiles for all topic authors
+      const userIds = [...new Set(topicsData.map((t) => t.user_id))];
+      const { data: profiles } = await supabase
+        .from("profiles")
+        .select("user_id, display_name, avatar_url")
+        .in("user_id", userIds);
+
+      const profileMap = new Map(profiles?.map((p) => [p.user_id, p]) ?? []);
+
+      return topicsData.map((t) => ({
+        ...t,
+        profile: profileMap.get(t.user_id) as Pick<Profile, "display_name" | "avatar_url"> | undefined,
+      }));
     },
     enabled: !!category?.id,
   });
@@ -169,9 +165,9 @@ const ForumCategory = () => {
                 >
                   <div className="flex items-start gap-3">
                     <Avatar className="h-9 w-9 mt-0.5">
-                      <AvatarImage src={topic.profiles?.avatar_url ?? undefined} />
+                      <AvatarImage src={topic.profile?.avatar_url ?? undefined} />
                       <AvatarFallback className="bg-muted text-xs font-display">
-                        {topic.profiles?.display_name?.charAt(0)?.toUpperCase() || "?"}
+                        {topic.profile?.display_name?.charAt(0)?.toUpperCase() || "?"}
                       </AvatarFallback>
                     </Avatar>
                     <div className="flex-1 min-w-0">
@@ -181,7 +177,7 @@ const ForumCategory = () => {
                         <h3 className="font-display font-semibold text-foreground truncate">{topic.title}</h3>
                       </div>
                       <div className="flex items-center gap-3 mt-1 text-xs text-muted-foreground font-body">
-                        <span>{topic.profiles?.display_name || "Anonymous"}</span>
+                        <span>{topic.profile?.display_name || "Anonymous"}</span>
                         <span>·</span>
                         <span>{formatDistanceToNow(new Date(topic.created_at), { addSuffix: true })}</span>
                         <span>·</span>

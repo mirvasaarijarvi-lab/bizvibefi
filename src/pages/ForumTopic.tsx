@@ -11,16 +11,14 @@ import { ArrowLeft, MessageSquare, Send } from "lucide-react";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { formatDistanceToNow } from "date-fns";
+import type { Profile } from "@/hooks/useProfile";
 
-interface ReplyWithAuthor {
+interface ReplyWithProfile {
   id: string;
   content: string;
   created_at: string;
   user_id: string;
-  profiles: {
-    display_name: string | null;
-    avatar_url: string | null;
-  } | null;
+  profile?: Pick<Profile, "display_name" | "avatar_url">;
 }
 
 const ForumTopic = () => {
@@ -36,11 +34,18 @@ const ForumTopic = () => {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("forum_topics")
-        .select("*, profiles(display_name, avatar_url)")
-        .eq("id", topicId)
+        .select("*")
+        .eq("id", topicId!)
         .single();
       if (error) throw error;
-      return data;
+
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("display_name, avatar_url")
+        .eq("user_id", data.user_id)
+        .single();
+
+      return { ...data, profile };
     },
     enabled: !!topicId,
   });
@@ -48,13 +53,25 @@ const ForumTopic = () => {
   const { data: replies, isLoading } = useQuery({
     queryKey: ["forum-replies", topicId],
     queryFn: async () => {
-      const { data, error } = await supabase
+      const { data: repliesData, error } = await supabase
         .from("forum_replies")
-        .select("*, profiles(display_name, avatar_url)")
+        .select("*")
         .eq("topic_id", topicId!)
         .order("created_at");
       if (error) throw error;
-      return data as unknown as ReplyWithAuthor[];
+
+      const userIds = [...new Set(repliesData.map((r) => r.user_id))];
+      const { data: profiles } = await supabase
+        .from("profiles")
+        .select("user_id, display_name, avatar_url")
+        .in("user_id", userIds);
+
+      const profileMap = new Map(profiles?.map((p) => [p.user_id, p]) ?? []);
+
+      return repliesData.map((r) => ({
+        ...r,
+        profile: profileMap.get(r.user_id),
+      })) as ReplyWithProfile[];
     },
     enabled: !!topicId,
   });
@@ -82,8 +99,6 @@ const ForumTopic = () => {
     }
   };
 
-  const topicAuthor = topic?.profiles as { display_name: string | null; avatar_url: string | null } | null;
-
   return (
     <Layout>
       <PageMeta
@@ -101,13 +116,13 @@ const ForumTopic = () => {
               <h1 className="font-display text-2xl font-bold text-foreground mb-4">{topic.title}</h1>
               <div className="flex items-center gap-3 mb-4">
                 <Avatar className="h-8 w-8">
-                  <AvatarImage src={topicAuthor?.avatar_url ?? undefined} />
+                  <AvatarImage src={topic.profile?.avatar_url ?? undefined} />
                   <AvatarFallback className="bg-muted text-xs font-display">
-                    {topicAuthor?.display_name?.charAt(0)?.toUpperCase() || "?"}
+                    {topic.profile?.display_name?.charAt(0)?.toUpperCase() || "?"}
                   </AvatarFallback>
                 </Avatar>
                 <div className="text-sm font-body">
-                  <span className="font-medium text-foreground">{topicAuthor?.display_name || "Anonymous"}</span>
+                  <span className="font-medium text-foreground">{topic.profile?.display_name || "Anonymous"}</span>
                   <span className="text-muted-foreground ml-2">
                     {formatDistanceToNow(new Date(topic.created_at), { addSuffix: true })}
                   </span>
@@ -134,13 +149,13 @@ const ForumTopic = () => {
                   <div key={reply.id} className="bg-card border border-border rounded-xl p-4">
                     <div className="flex items-center gap-3 mb-3">
                       <Avatar className="h-7 w-7">
-                        <AvatarImage src={reply.profiles?.avatar_url ?? undefined} />
+                        <AvatarImage src={reply.profile?.avatar_url ?? undefined} />
                         <AvatarFallback className="bg-muted text-xs font-display">
-                          {reply.profiles?.display_name?.charAt(0)?.toUpperCase() || "?"}
+                          {reply.profile?.display_name?.charAt(0)?.toUpperCase() || "?"}
                         </AvatarFallback>
                       </Avatar>
                       <div className="text-sm font-body">
-                        <span className="font-medium text-foreground">{reply.profiles?.display_name || "Anonymous"}</span>
+                        <span className="font-medium text-foreground">{reply.profile?.display_name || "Anonymous"}</span>
                         <span className="text-muted-foreground ml-2">
                           {formatDistanceToNow(new Date(reply.created_at), { addSuffix: true })}
                         </span>
