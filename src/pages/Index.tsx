@@ -291,30 +291,9 @@ const MetricsCounter = () => {
     <section className="py-16 md:py-20 border-t border-border">
       <div className="container">
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 max-w-4xl mx-auto">
-          {metrics.map((m, i) => {
-            const { count, ref } = useCountUp(m.value);
-            return (
-              <motion.div
-                key={m.label}
-                ref={ref}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.15 }}
-                className="text-center"
-              >
-                <div className={`inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-card border border-border mb-4 ${m.color}`}>
-                  <m.icon className="h-7 w-7" />
-                </div>
-                <p className="font-display text-4xl md:text-5xl font-extrabold tracking-tight">
-                  {count}+
-                </p>
-                <p className="mt-1 text-sm text-muted-foreground font-body font-medium">
-                  {m.label}
-                </p>
-              </motion.div>
-            );
-          })}
+          {metrics.map((m, i) => (
+            <MetricCard key={m.label} metric={m} index={i} />
+          ))}
         </div>
       </div>
     </section>

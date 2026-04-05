@@ -114,7 +114,7 @@ const AccessibilityWidget = () => {
 
     // Toggle classes
     const toggleClass = (cls: string, on: boolean) => {
-      on ? root.classList.add(cls) : root.classList.remove(cls);
+      if (on) { root.classList.add(cls); } else { root.classList.remove(cls); }
     };
 
     toggleClass("a11y-highlight-titles", settings.highlightTitles);
