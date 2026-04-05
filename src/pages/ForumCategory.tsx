@@ -59,7 +59,7 @@ const ForumCategory = () => {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("forum_topics")
-        .select("*, profiles:user_id(display_name, avatar_url)")
+        .select("*, profiles(display_name, avatar_url)")
         .eq("category_id", category!.id)
         .order("is_pinned", { ascending: false })
         .order("last_reply_at", { ascending: false, nullsFirst: false })

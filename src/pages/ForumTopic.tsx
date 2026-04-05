@@ -36,7 +36,7 @@ const ForumTopic = () => {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("forum_topics")
-        .select("*, profiles:user_id(display_name, avatar_url)")
+        .select("*, profiles(display_name, avatar_url)")
         .eq("id", topicId)
         .single();
       if (error) throw error;
@@ -50,7 +50,7 @@ const ForumTopic = () => {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("forum_replies")
-        .select("*, profiles:user_id(display_name, avatar_url)")
+        .select("*, profiles(display_name, avatar_url)")
         .eq("topic_id", topicId!)
         .order("created_at");
       if (error) throw error;
