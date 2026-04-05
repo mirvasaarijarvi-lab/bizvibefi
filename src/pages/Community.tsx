@@ -1,4 +1,5 @@
 import Layout from "@/components/Layout";
+import PageMeta from "@/components/PageMeta";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { Users, Rocket, Zap, MessageCircle, Calendar, TrendingUp, GraduationCap, Handshake, ArrowRight } from "lucide-react";
@@ -12,6 +13,7 @@ const Community = () => {
 
   return (
     <Layout>
+      <PageMeta title="Community — BizVibe" description="Join the BizVibe community. Free and Pro tiers for builders who want to connect, learn, and ship together." />
       <section className="py-24 md:py-32">
         <div className="container">
           <motion.div

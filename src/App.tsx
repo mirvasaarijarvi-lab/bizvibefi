@@ -5,12 +5,14 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { TranslationProvider } from "@/i18n/TranslationContext";
 import { translations } from "@/i18n";
-import Index from "./pages/Index.tsx";
-import Community from "./pages/Community.tsx";
-import GetGoing from "./pages/GetGoing.tsx";
-import About from "./pages/About.tsx";
-import Contact from "./pages/Contact.tsx";
-import NotFound from "./pages/NotFound.tsx";
+import { lazy, Suspense } from "react";
+
+const Index = lazy(() => import("./pages/Index.tsx"));
+const Community = lazy(() => import("./pages/Community.tsx"));
+const GetGoing = lazy(() => import("./pages/GetGoing.tsx"));
+const About = lazy(() => import("./pages/About.tsx"));
+const Contact = lazy(() => import("./pages/Contact.tsx"));
+const NotFound = lazy(() => import("./pages/NotFound.tsx"));
 
 const queryClient = new QueryClient();
 
@@ -21,14 +23,16 @@ const App = () => (
         <Toaster />
         <Sonner />
         <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/community" element={<Community />} />
-            <Route path="/get-going" element={<GetGoing />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/contact" element={<Contact />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
+          <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="animate-spin h-8 w-8 border-4 border-primary border-t-transparent rounded-full" /></div>}>
+            <Routes>
+              <Route path="/" element={<Index />} />
+              <Route path="/community" element={<Community />} />
+              <Route path="/get-going" element={<GetGoing />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/contact" element={<Contact />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </Suspense>
         </BrowserRouter>
       </TooltipProvider>
     </TranslationProvider>

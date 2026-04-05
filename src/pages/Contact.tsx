@@ -1,4 +1,5 @@
 import Layout from "@/components/Layout";
+import PageMeta from "@/components/PageMeta";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -35,12 +36,16 @@ const Contact = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
+  const [honeypot, setHoneypot] = useState("");
   const [errors, setErrors] = useState<FieldErrors>({});
   const { toast } = useToast();
   const { t } = useTranslation();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Honeypot check — bots fill this hidden field, humans don't
+    if (honeypot) return;
 
     const result = contactSchema.safeParse({ name, email, message });
 
@@ -63,6 +68,7 @@ const Contact = () => {
 
   return (
     <Layout>
+      <PageMeta title="Contact — BizVibe" description="Got an idea, question, or just want to say hi? Reach out to the BizVibe collective." />
       <section className="py-24 md:py-32">
         <div className="container max-w-4xl">
           <motion.div
@@ -86,6 +92,19 @@ const Contact = () => {
               className="space-y-6"
               noValidate
             >
+              {/* Honeypot — hidden from humans, traps bots */}
+              <div className="absolute opacity-0 -z-10 h-0 overflow-hidden" aria-hidden="true">
+                <label htmlFor="website">Website</label>
+                <input
+                  id="website"
+                  name="website"
+                  type="text"
+                  value={honeypot}
+                  onChange={(e) => setHoneypot(e.target.value)}
+                  tabIndex={-1}
+                  autoComplete="off"
+                />
+              </div>
               <div>
                 <label className="font-body text-sm font-medium text-foreground mb-2 block">{t("contact.form.name")}</label>
                 <Input

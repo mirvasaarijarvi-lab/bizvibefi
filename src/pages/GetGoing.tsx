@@ -1,4 +1,5 @@
 import Layout from "@/components/Layout";
+import PageMeta from "@/components/PageMeta";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { Wrench, MessageCircle, BookOpen, Headphones, ExternalLink } from "lucide-react";
@@ -11,6 +12,7 @@ const GetGoing = () => {
 
   return (
     <Layout>
+      <PageMeta title="Get Going — BizVibe" description="Tools, templates, and resources to start building and never stop. From no-code to full-stack." />
       <section className="py-24 md:py-32">
         <div className="container">
           <motion.div
