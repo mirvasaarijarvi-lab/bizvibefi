@@ -35,12 +35,16 @@ const Contact = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
+  const [honeypot, setHoneypot] = useState("");
   const [errors, setErrors] = useState<FieldErrors>({});
   const { toast } = useToast();
   const { t } = useTranslation();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Honeypot check — bots fill this hidden field, humans don't
+    if (honeypot) return;
 
     const result = contactSchema.safeParse({ name, email, message });
 
