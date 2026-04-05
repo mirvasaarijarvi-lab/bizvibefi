@@ -93,6 +93,19 @@ const en = {
         { title: "Exclusive Events", desc: "Market-facing events, demo days, and investor meetups." },
       ],
     },
+    testimonials: {
+      title: "Success",
+      titleHighlight: "stories",
+      subtitle: "Real builders. Real results. Here's what our community members have achieved.",
+      items: [
+        { quote: "I joined BizVibe with just an idea and a half-built prototype. Within three months, the collective helped me validate, rebuild, and launch to 1,200 users. I couldn't have done it alone.", name: "Antti K.", role: "SaaS Founder", tier: "Pro" },
+        { quote: "The WhatsApp community alone is worth it. I posted a quick question about pricing strategy and got five thoughtful replies within an hour — from people who've actually done it.", name: "Sara L.", role: "Freelance Developer", tier: "Free" },
+        { quote: "Through a BizVibe investor event, I connected with the angel who ended up funding my seed round. The network effect here is real.", name: "Mikael R.", role: "Startup CEO", tier: "Pro" },
+        { quote: "The #ShipHappens hackathon pushed me to build and launch a tool I'd been procrastinating on for months. 48 hours, done. Now it has paying customers.", name: "Liisa T.", role: "Product Builder", tier: "Free" },
+        { quote: "I went from solo freelancer to running a small agency, largely thanks to the leads and partnerships I found through BizVibe Pro.", name: "Janne H.", role: "Agency Owner", tier: "Pro" },
+        { quote: "As a non-technical founder, the builder network was a game-changer. I found my technical co-founder at a BizVibe meetup.", name: "Emma V.", role: "Co-Founder", tier: "Free" },
+      ],
+    },
   },
   getGoing: {
     tag: "Get Going",

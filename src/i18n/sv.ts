@@ -93,6 +93,19 @@ const sv = {
         { title: "Exklusiva event", desc: "Marknadsevent, demodagar och investorträffar." },
       ],
     },
+    testimonials: {
+      title: "Framgångs",
+      titleHighlight: "historier",
+      subtitle: "Riktiga byggare. Riktiga resultat. Här är vad våra gemenskapsmedlemmar har uppnått.",
+      items: [
+        { quote: "Jag gick med i BizVibe med bara en idé och en halvfärdig prototyp. Inom tre månader hjälpte kollektivet mig att validera, bygga om och lansera till 1 200 användare.", name: "Antti K.", role: "SaaS-grundare", tier: "Pro" },
+        { quote: "Bara WhatsApp-gemenskapen är värd det. Jag postade en snabb fråga om prissättningsstrategi och fick fem genomtänkta svar inom en timme.", name: "Sara L.", role: "Frilansutvecklare", tier: "Free" },
+        { quote: "Genom ett BizVibe-investorevent hittade jag ängeln som slutade med att finansiera min seedrunda. Nätverkseffekten här är verklig.", name: "Mikael R.", role: "Startup-VD", tier: "Pro" },
+        { quote: "#ShipHappens-hackathon pressade mig att bygga och lansera ett verktyg jag hade skjutit upp i månader. 48 timmar, klart.", name: "Liisa T.", role: "Produktbyggare", tier: "Free" },
+        { quote: "Jag gick från ensam frilansare till att driva en liten byrå, till stor del tack vare leads och partnerskap jag hittade genom BizVibe Pro.", name: "Janne H.", role: "Byråägare", tier: "Pro" },
+        { quote: "Som icke-teknisk grundare var byggarnätverket en spelväxlare. Jag hittade min tekniska medgrundare på ett BizVibe-meetup.", name: "Emma V.", role: "Medgrundare", tier: "Free" },
+      ],
+    },
   },
   getGoing: {
     tag: "Sätt igång",
