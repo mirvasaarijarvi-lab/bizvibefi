@@ -2,8 +2,9 @@ import Layout from "@/components/Layout";
 import PageMeta from "@/components/PageMeta";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
-import { Users, Rocket, Zap, MessageCircle, Calendar, TrendingUp, GraduationCap, Handshake, ArrowRight } from "lucide-react";
+import { Users, Rocket, Zap, MessageCircle, Calendar, TrendingUp, GraduationCap, Handshake, ArrowRight, Quote } from "lucide-react";
 import { useTranslation } from "@/i18n/TranslationContext";
+import { Badge } from "@/components/ui/badge";
 
 const freeIcons = [MessageCircle, Calendar, Rocket, Users];
 const proIcons = [TrendingUp, GraduationCap, Handshake, MessageCircle, Calendar];
@@ -85,6 +86,60 @@ const Community = () => {
               {t("community.pro.cta")} <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
           </motion.div>
+        </div>
+      </section>
+
+      {/* Testimonials */}
+      <section className="pb-24 md:pb-32">
+        <div className="container">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center max-w-2xl mx-auto mb-14"
+          >
+            <h2 className="font-display text-3xl md:text-5xl font-extrabold tracking-[-0.03em]">
+              {t("community.testimonials.title")}{" "}
+              <span className="text-gradient-storm">{t("community.testimonials.titleHighlight")}</span>
+            </h2>
+            <p className="mt-4 text-muted-foreground font-body">{t("community.testimonials.subtitle")}</p>
+          </motion.div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {[0, 1, 2, 3, 4, 5].map((i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 16 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.08 }}
+                className="bg-card border border-border rounded-xl p-6 flex flex-col justify-between hover:border-purple-vivid/30 transition-colors"
+              >
+                <div>
+                  <Quote className="h-5 w-5 text-purple-soft mb-3 opacity-60" />
+                  <p className="font-body text-sm text-foreground/90 leading-relaxed italic">
+                    "{t(`community.testimonials.items.${i}.quote`)}"
+                  </p>
+                </div>
+                <div className="mt-5 flex items-center justify-between">
+                  <div>
+                    <p className="font-display text-sm font-semibold text-foreground">
+                      {t(`community.testimonials.items.${i}.name`)}
+                    </p>
+                    <p className="font-body text-xs text-muted-foreground">
+                      {t(`community.testimonials.items.${i}.role`)}
+                    </p>
+                  </div>
+                  <Badge
+                    variant={t(`community.testimonials.items.${i}.tier`) === "Pro" ? "default" : "secondary"}
+                    className="text-xs"
+                  >
+                    {t(`community.testimonials.items.${i}.tier`)}
+                  </Badge>
+                </div>
+              </motion.div>
+            ))}
+          </div>
         </div>
       </section>
     </Layout>
