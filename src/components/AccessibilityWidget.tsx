@@ -166,11 +166,11 @@ const AccessibilityWidget = () => {
               onClick={() => setOpen(false)}
             />
             <motion.div
-              initial={{ x: 320 }}
+              initial={{ x: -320 }}
               animate={{ x: 0 }}
-              exit={{ x: 320 }}
+              exit={{ x: -320 }}
               transition={{ type: "spring", damping: 25, stiffness: 300 }}
-              className="fixed top-0 right-0 bottom-0 z-[90] w-80 max-w-[90vw] bg-background border-l border-border overflow-y-auto"
+              className="fixed top-0 left-0 bottom-0 z-[90] w-80 max-w-[90vw] bg-background border-r border-border overflow-y-auto"
             >
               {/* Header */}
               <div className="flex items-center justify-between p-4 bg-primary text-primary-foreground">
