@@ -20,6 +20,7 @@ const Events = lazy(() => import("./pages/Events.tsx"));
 const Forum = lazy(() => import("./pages/Forum.tsx"));
 const ForumCategory = lazy(() => import("./pages/ForumCategory.tsx"));
 const ForumTopic = lazy(() => import("./pages/ForumTopic.tsx"));
+const AccessibilityStatement = lazy(() => import("./pages/AccessibilityStatement.tsx"));
 const NotFound = lazy(() => import("./pages/NotFound.tsx"));
 
 const queryClient = new QueryClient();
@@ -46,6 +47,7 @@ const App = () => (
                 <Route path="/forum" element={<Forum />} />
                 <Route path="/forum/:slug" element={<ForumCategory />} />
                 <Route path="/forum/:slug/:topicId" element={<ForumTopic />} />
+                <Route path="/accessibility" element={<AccessibilityStatement />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </Suspense>
