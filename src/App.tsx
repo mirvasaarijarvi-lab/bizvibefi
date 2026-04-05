@@ -21,6 +21,7 @@ const Forum = lazy(() => import("./pages/Forum.tsx"));
 const ForumCategory = lazy(() => import("./pages/ForumCategory.tsx"));
 const ForumTopic = lazy(() => import("./pages/ForumTopic.tsx"));
 const AccessibilityStatement = lazy(() => import("./pages/AccessibilityStatement.tsx"));
+const PrivacyPolicy = lazy(() => import("./pages/PrivacyPolicy.tsx"));
 const NotFound = lazy(() => import("./pages/NotFound.tsx"));
 
 const queryClient = new QueryClient();
