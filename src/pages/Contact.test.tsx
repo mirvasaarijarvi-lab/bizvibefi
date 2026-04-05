@@ -1,18 +1,25 @@
 import { describe, it, expect } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
 import { BrowserRouter } from "react-router-dom";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { TranslationProvider } from "@/i18n/TranslationContext";
 import { translations } from "@/i18n";
 import Contact from "./Contact";
 
-const renderContact = () =>
-  render(
-    <BrowserRouter>
-      <TranslationProvider translations={translations}>
-        <Contact />
-      </TranslationProvider>
-    </BrowserRouter>
+const renderContact = () => {
+  const queryClient = new QueryClient({
+    defaultOptions: { queries: { retry: false } },
+  });
+  return render(
+    <QueryClientProvider client={queryClient}>
+      <BrowserRouter>
+        <TranslationProvider translations={translations}>
+          <Contact />
+        </TranslationProvider>
+      </BrowserRouter>
+    </QueryClientProvider>
   );
+};
 
 const submitForm = () => fireEvent.click(screen.getByText("Send Message"));
 
@@ -72,24 +79,20 @@ describe("Contact Form Validation", () => {
     fillField("you@example.com", "jane@example.com");
     fillField("What's on your mind?", "Hello there");
     submitForm();
-    // No errors shown
     expect(screen.queryByText("Name is required")).not.toBeInTheDocument();
     expect(screen.queryByText("Please enter a valid email")).not.toBeInTheDocument();
     expect(screen.queryByText("Message is required")).not.toBeInTheDocument();
-    // Fields cleared after submit
     expect(screen.getByPlaceholderText("Your name")).toHaveValue("");
   });
 
   it("silently discards honeypot submissions", () => {
     renderContact();
-    // Fill honeypot
     const honeypotInput = document.getElementById("website") as HTMLInputElement;
     fireEvent.change(honeypotInput, { target: { value: "spam" } });
     fillField("Your name", "Bot");
     fillField("you@example.com", "bot@spam.com");
     fillField("What's on your mind?", "Buy now");
     submitForm();
-    // No errors, no clearing — silently ignored
     expect(screen.queryByText("Name is required")).not.toBeInTheDocument();
     expect(screen.getByPlaceholderText("Your name")).toHaveValue("Bot");
   });

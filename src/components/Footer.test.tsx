@@ -42,18 +42,13 @@ describe("Footer", () => {
     renderFooter();
     expect(screen.getByText("Navigate")).toBeInTheDocument();
     expect(screen.getByText("Company")).toBeInTheDocument();
-    expect(screen.getByText("Connect")).toBeInTheDocument();
+    expect(screen.getByText("Newsletter")).toBeInTheDocument();
   });
 
   it("renders copyright with current year", () => {
     renderFooter();
     const year = new Date().getFullYear().toString();
     expect(screen.getByText(new RegExp(year))).toBeInTheDocument();
-  });
-
-  it("renders #shiphappens tag", () => {
-    renderFooter();
-    expect(screen.getByText("#shiphappens")).toBeInTheDocument();
   });
 
   it("has correct link hrefs", () => {

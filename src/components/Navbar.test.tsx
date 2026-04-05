@@ -1,18 +1,25 @@
 import { describe, it, expect } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
 import { BrowserRouter } from "react-router-dom";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { TranslationProvider } from "@/i18n/TranslationContext";
 import { translations } from "@/i18n";
 import Navbar from "./Navbar";
 
-const renderNavbar = () =>
-  render(
-    <BrowserRouter>
-      <TranslationProvider translations={translations}>
-        <Navbar />
-      </TranslationProvider>
-    </BrowserRouter>
+const renderNavbar = () => {
+  const queryClient = new QueryClient({
+    defaultOptions: { queries: { retry: false } },
+  });
+  return render(
+    <QueryClientProvider client={queryClient}>
+      <BrowserRouter>
+        <TranslationProvider translations={translations}>
+          <Navbar />
+        </TranslationProvider>
+      </BrowserRouter>
+    </QueryClientProvider>
   );
+};
 
 describe("Navbar", () => {
   it("renders the BizVibe logo", () => {
