@@ -211,3 +211,83 @@
     box-shadow: var(--shadow-glow-teal);
   }
 }
+
+/* ===== Accessibility Widget Overrides ===== */
+@import url('https://fonts.googleapis.com/css2?family=OpenDyslexic&display=swap');
+
+.a11y-dyslexia * {
+  font-family: 'OpenDyslexic', sans-serif !important;
+}
+
+.a11y-bold * {
+  font-weight: bold !important;
+}
+
+.a11y-align-left * {
+  text-align: left !important;
+}
+
+.a11y-highlight-titles h1,
+.a11y-highlight-titles h2,
+.a11y-highlight-titles h3,
+.a11y-highlight-titles h4,
+.a11y-highlight-titles h5,
+.a11y-highlight-titles h6 {
+  outline: 2px solid hsl(var(--primary)) !important;
+  outline-offset: 2px;
+  padding: 2px 4px;
+}
+
+.a11y-highlight-links a {
+  outline: 2px solid hsl(var(--primary)) !important;
+  outline-offset: 1px;
+  text-decoration: underline !important;
+}
+
+.a11y-stop-animations *,
+.a11y-stop-animations *::before,
+.a11y-stop-animations *::after {
+  animation-duration: 0s !important;
+  animation-delay: 0s !important;
+  transition-duration: 0s !important;
+  transition-delay: 0s !important;
+}
+
+.a11y-big-cursor,
+.a11y-big-cursor * {
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32'%3E%3Cpath d='M5 2l20 14-9 2 5 10-4 2-5-10-7 7z' fill='black' stroke='white' stroke-width='1'/%3E%3C/svg%3E") 4 2, auto !important;
+}
+
+/* Contrast modes */
+.a11y-dark {
+  filter: invert(1) hue-rotate(180deg);
+}
+.a11y-dark img,
+.a11y-dark video {
+  filter: invert(1) hue-rotate(180deg);
+}
+
+.a11y-light {
+  filter: brightness(1.3) contrast(0.85);
+}
+
+.a11y-high-contrast {
+  filter: contrast(1.75);
+}
+
+/* Saturation modes */
+.a11y-high-sat {
+  filter: saturate(2);
+}
+.a11y-low-sat {
+  filter: saturate(0.4);
+}
+.a11y-mono {
+  filter: grayscale(1);
+}
+
+/* Reading guide - horizontal bar follows cursor via JS in widget */
+.a11y-reading-guide body {
+  position: relative;
+}
+
