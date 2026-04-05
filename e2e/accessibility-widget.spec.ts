@@ -90,8 +90,8 @@ test.describe("Accessibility Widget", () => {
     await page.getByRole("button", { name: /dyslexia font/i }).click();
     await page.getByLabel("Increase font size").click();
 
-    // Reset
-    await page.getByRole("button", { name: /reset settings/i }).click();
+    // Reset via the bottom button with visible text
+    await page.getByRole("button", { name: /reset settings/i, exact: false }).last().click();
 
     // Font size back to 100%
     await expect(page.getByText("100%")).toBeVisible();
@@ -137,15 +137,17 @@ test.describe("Accessibility Widget", () => {
     await page.getByLabel("Close").click();
     await page.goto("/about");
 
-    // Verify classes are still applied on the new page
-    const classes = await page.evaluate(() => ({
-      highlightLinks: document.documentElement.classList.contains("a11y-highlight-links"),
-      bigCursor: document.documentElement.classList.contains("a11y-big-cursor"),
-      fontSize: document.documentElement.style.fontSize,
-    }));
-    expect(classes.highlightLinks).toBe(true);
-    expect(classes.bigCursor).toBe(true);
-    expect(classes.fontSize).toBe("110%");
+    // Wait for accessibility widget to apply settings from localStorage
+    await expect(async () => {
+      const classes = await page.evaluate(() => ({
+        highlightLinks: document.documentElement.classList.contains("a11y-highlight-links"),
+        bigCursor: document.documentElement.classList.contains("a11y-big-cursor"),
+        fontSize: document.documentElement.style.fontSize,
+      }));
+      expect(classes.highlightLinks).toBe(true);
+      expect(classes.bigCursor).toBe(true);
+      expect(classes.fontSize).toBe("110%");
+    }).toPass({ timeout: 5000 });
 
     // Open widget and verify UI state matches
     await page.getByLabel("Open accessibility menu").click();

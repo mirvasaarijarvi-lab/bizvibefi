@@ -12,10 +12,8 @@ test.describe("Support Chat Widget", () => {
     await trigger.click();
     await expect(page.getByText("BizVibe Support")).toBeVisible();
 
-    // Trigger should be hidden when chat is open
     await expect(trigger).not.toBeVisible();
 
-    // Close via X button
     await page.getByLabel("Close chat").click();
     await expect(page.getByText("BizVibe Support")).not.toBeVisible();
     await expect(trigger).toBeVisible();
@@ -33,7 +31,8 @@ test.describe("Support Chat Widget", () => {
   test("send button is disabled when input is empty", async ({ page }) => {
     await page.getByLabel("Open support chat").click();
 
-    const sendBtn = page.locator('button[type="submit"]');
+    const chatWindow = page.locator(".fixed.bottom-4.left-4");
+    const sendBtn = chatWindow.locator('button[type="submit"]');
     await expect(sendBtn).toBeDisabled();
   });
 
@@ -43,15 +42,13 @@ test.describe("Support Chat Widget", () => {
     const input = page.getByPlaceholder("Type a message...");
     await input.fill("Hello there");
 
-    const sendBtn = page.locator('button[type="submit"]');
+    const chatWindow = page.locator(".fixed.bottom-4.left-4");
+    const sendBtn = chatWindow.locator('button[type="submit"]');
     await expect(sendBtn).toBeEnabled();
 
     await sendBtn.click();
 
-    // User message should appear in the chat
     await expect(page.getByText("Hello there")).toBeVisible();
-
-    // Input should be cleared after sending
     await expect(input).toHaveValue("");
   });
 
@@ -60,7 +57,6 @@ test.describe("Support Chat Widget", () => {
 
     await page.getByRole("button", { name: "What is BizVibe?" }).click();
 
-    // The suggestion text should appear as a user message
     await expect(page.getByText("What is BizVibe?").last()).toBeVisible({ timeout: 5000 });
   });
 
@@ -76,9 +72,9 @@ test.describe("Support Chat Widget", () => {
 
     const input = page.getByPlaceholder("Type a message...");
     await input.fill("Test message");
-    await page.locator('button[type="submit"]').click();
+    const chatWindow = page.locator(".fixed.bottom-4.left-4");
+    await chatWindow.locator('button[type="submit"]').click();
 
-    // Input should be disabled while waiting for response
     await expect(input).toBeDisabled({ timeout: 3000 });
   });
 });
