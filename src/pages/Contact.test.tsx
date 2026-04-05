@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render, screen, fireEvent, within } from "@testing-library/react";
 import { BrowserRouter } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { TranslationProvider } from "@/i18n/TranslationContext";
@@ -21,10 +21,16 @@ const renderContact = () => {
   );
 };
 
+const getForm = () => {
+  const submitBtn = screen.getByText("Send Message");
+  return submitBtn.closest("form")!;
+};
+
 const submitForm = () => fireEvent.click(screen.getByText("Send Message"));
 
 const fillField = (placeholder: string, value: string) => {
-  const el = screen.getByPlaceholderText(placeholder);
+  const form = getForm();
+  const el = within(form as HTMLElement).getByPlaceholderText(placeholder);
   fireEvent.change(el, { target: { value } });
 };
 
@@ -82,7 +88,8 @@ describe("Contact Form Validation", () => {
     expect(screen.queryByText("Name is required")).not.toBeInTheDocument();
     expect(screen.queryByText("Please enter a valid email")).not.toBeInTheDocument();
     expect(screen.queryByText("Message is required")).not.toBeInTheDocument();
-    expect(screen.getByPlaceholderText("Your name")).toHaveValue("");
+    const form = getForm();
+    expect(within(form as HTMLElement).getByPlaceholderText("Your name")).toHaveValue("");
   });
 
   it("silently discards honeypot submissions", () => {
@@ -94,6 +101,7 @@ describe("Contact Form Validation", () => {
     fillField("What's on your mind?", "Buy now");
     submitForm();
     expect(screen.queryByText("Name is required")).not.toBeInTheDocument();
-    expect(screen.getByPlaceholderText("Your name")).toHaveValue("Bot");
+    const form = getForm();
+    expect(within(form as HTMLElement).getByPlaceholderText("Your name")).toHaveValue("Bot");
   });
 });
