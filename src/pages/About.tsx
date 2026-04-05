@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ArrowRight, Linkedin } from "lucide-react";
-import { useTranslation } from "@/i18n/TranslationContext";
+import { useTranslation } from "@/i18n/useTranslation";
 
 const About = () => {
   const { t } = useTranslation();

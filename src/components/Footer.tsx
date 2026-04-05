@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { useTranslation } from "@/i18n/TranslationContext";
+import { useTranslation } from "@/i18n/useTranslation";
 import NewsletterSignup from "@/components/NewsletterSignup";
 
 const Footer = () => {

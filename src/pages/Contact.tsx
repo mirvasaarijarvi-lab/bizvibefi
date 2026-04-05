@@ -7,7 +7,7 @@ import { motion } from "framer-motion";
 import { Mail, MessageCircle } from "lucide-react";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
-import { useTranslation } from "@/i18n/TranslationContext";
+import { useTranslation } from "@/i18n/useTranslation";
 import { z } from "zod";
 
 const contactSchema = z.object({

@@ -3,7 +3,7 @@ import PageMeta from "@/components/PageMeta";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { Wrench, MessageCircle, BookOpen, Headphones, ExternalLink } from "lucide-react";
-import { useTranslation } from "@/i18n/TranslationContext";
+import { useTranslation } from "@/i18n/useTranslation";
 
 const toolIcons = [Wrench, MessageCircle, BookOpen, Headphones];
 

@@ -1,20 +1,5 @@
-import { createContext, useContext, useState, ReactNode } from "react";
-
-export type Language = "en" | "fi" | "sv";
-
-type TranslationContextType = {
-  lang: Language;
-  setLang: (lang: Language) => void;
-  t: (key: string) => string;
-};
-
-const TranslationContext = createContext<TranslationContextType | null>(null);
-
-export const useTranslation = () => {
-  const ctx = useContext(TranslationContext);
-  if (!ctx) throw new Error("useTranslation must be used within TranslationProvider");
-  return ctx;
-};
+import { useState, ReactNode } from "react";
+import { TranslationContext, type Language } from "./TranslationContextDef";
 
 const getNestedValue = (obj: Record<string, unknown>, path: string): string => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
