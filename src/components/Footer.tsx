@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { useTranslation } from "@/i18n/TranslationContext";
+import NewsletterSignup from "@/components/NewsletterSignup";
 
 const Footer = () => {
   const { t } = useTranslation();
@@ -18,6 +19,7 @@ const Footer = () => {
               <Link to="/" className="text-sm text-muted-foreground hover:text-purple-soft font-body">{t("nav.home")}</Link>
               <Link to="/community" className="text-sm text-muted-foreground hover:text-purple-soft font-body">{t("nav.community")}</Link>
               <Link to="/get-going" className="text-sm text-muted-foreground hover:text-purple-soft font-body">{t("nav.getGoing")}</Link>
+              <Link to="/forum" className="text-sm text-muted-foreground hover:text-purple-soft font-body">Forum</Link>
             </div>
           </div>
           <div>
@@ -28,8 +30,9 @@ const Footer = () => {
             </div>
           </div>
           <div>
-            <h4 className="font-display text-sm font-semibold text-foreground mb-3">{t("footer.connect")}</h4>
-            <p className="text-sm text-muted-foreground font-body">#shiphappens</p>
+            <h4 className="font-display text-sm font-semibold text-foreground mb-3">Newsletter</h4>
+            <p className="text-sm text-muted-foreground font-body mb-3">Updates, no spam.</p>
+            <NewsletterSignup variant="inline" />
           </div>
         </div>
         <div className="mt-8 pt-8 border-t border-border text-center">
