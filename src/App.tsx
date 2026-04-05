@@ -5,7 +5,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { TranslationProvider } from "@/i18n/TranslationContext";
 import { translations } from "@/i18n";
-import { AuthProvider } from "@/hooks/useAuth";
+import { AuthProvider } from "@/hooks/AuthProvider";
 import { lazy, Suspense } from "react";
 
 const Index = lazy(() => import("./pages/Index.tsx"));

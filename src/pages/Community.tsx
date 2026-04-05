@@ -3,7 +3,7 @@ import PageMeta from "@/components/PageMeta";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { Users, Rocket, Zap, MessageCircle, Calendar, TrendingUp, GraduationCap, Handshake, ArrowRight, Quote } from "lucide-react";
-import { useTranslation } from "@/i18n/TranslationContext";
+import { useTranslation } from "@/i18n/useTranslation";
 import { Badge } from "@/components/ui/badge";
 
 const freeIcons = [MessageCircle, Calendar, Rocket, Users];

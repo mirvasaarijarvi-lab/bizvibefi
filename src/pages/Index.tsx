@@ -5,7 +5,7 @@ import PageMeta from "@/components/PageMeta";
 import NewsletterSignup from "@/components/NewsletterSignup";
 import { motion, useInView } from "framer-motion";
 import { Rocket, Users, Zap, ArrowRight, Wrench, Search, Handshake, TrendingUp, CalendarCheck, Code2 } from "lucide-react";
-import { useTranslation } from "@/i18n/TranslationContext";
+import { useTranslation } from "@/i18n/useTranslation";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useRef, useEffect, useState } from "react";
