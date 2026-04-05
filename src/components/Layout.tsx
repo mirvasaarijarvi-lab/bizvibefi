@@ -3,6 +3,7 @@ import Navbar from "./Navbar";
 import Footer from "./Footer";
 import CookieConsent from "./CookieConsent";
 import AccessibilityWidget from "./AccessibilityWidget";
+import SupportChat from "./SupportChat";
 
 const Layout = ({ children }: { children: ReactNode }) => (
   <div className="min-h-screen flex flex-col">
@@ -14,6 +15,7 @@ const Layout = ({ children }: { children: ReactNode }) => (
     <Footer />
     <CookieConsent />
     <AccessibilityWidget />
+    <SupportChat />
   </div>
 );
 
