@@ -9,8 +9,8 @@ test.describe("Authentication", () => {
 
   test("auth page has email and password fields", async ({ page }) => {
     await page.goto("/auth");
-    await expect(page.getByLabel(/email/i)).toBeVisible();
-    await expect(page.getByLabel(/password/i)).toBeVisible();
+    await expect(page.getByRole("textbox", { name: "Email", exact: true })).toBeVisible();
+    await expect(page.getByLabel("Password", { exact: true })).toBeVisible();
   });
 
   test("auth page shows signup toggle", async ({ page }) => {
