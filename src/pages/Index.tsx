@@ -243,6 +243,30 @@ const useCountUp = (target: number, duration = 2000) => {
   return { count, ref };
 };
 
+const MetricCard = ({ metric, index }: { metric: { label: string; value: number; icon: React.ElementType; color: string }; index: number }) => {
+  const { count, ref } = useCountUp(metric.value);
+  return (
+    <motion.div
+      ref={ref}
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ delay: index * 0.15 }}
+      className="text-center"
+    >
+      <div className={`inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-card border border-border mb-4 ${metric.color}`}>
+        <metric.icon className="h-7 w-7" />
+      </div>
+      <p className="font-display text-4xl md:text-5xl font-extrabold tracking-tight">
+        {count}+
+      </p>
+      <p className="mt-1 text-sm text-muted-foreground font-body font-medium">
+        {metric.label}
+      </p>
+    </motion.div>
+  );
+};
+
 const MetricsCounter = () => {
   const { data: memberCount } = useQuery({
     queryKey: ["metrics-members"],
