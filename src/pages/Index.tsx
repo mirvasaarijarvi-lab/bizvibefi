@@ -57,6 +57,9 @@ const Index = () => {
         </div>
       </section>
 
+      {/* Success Metrics */}
+      <MetricsCounter />
+
       {/* Market Benefits */}
       <section className="py-20 md:py-28 border-t border-border">
         <div className="container">
