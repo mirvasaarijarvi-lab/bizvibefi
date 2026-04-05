@@ -1,12 +1,13 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Menu, X, Globe, User, LogOut, MessageSquare } from "lucide-react";
+import { Menu, X, Globe, User, LogOut, MessageSquare, Sun, Moon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTranslation, type Language } from "@/i18n/TranslationContext";
 import { useAuth } from "@/hooks/useAuth";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useProfile } from "@/hooks/useProfile";
+import useTheme from "@/hooks/useTheme";
 
 const langLabels: Record<Language, string> = { en: "EN", fi: "FI", sv: "SV" };
 const langOptions: Language[] = ["en", "fi", "sv"];
@@ -19,6 +20,7 @@ const Navbar = () => {
   const { t, lang, setLang } = useTranslation();
   const { user, signOut } = useAuth();
   const { data: profile } = useProfile();
+  const { theme, toggleTheme } = useTheme();
 
   const links = [
     { to: "/", label: t("nav.home") },
@@ -52,6 +54,15 @@ const Navbar = () => {
               {link.label}
             </Link>
           ))}
+
+          {/* Theme Toggle */}
+          <button
+            onClick={toggleTheme}
+            className="text-silver hover:text-foreground transition-colors"
+            aria-label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+          >
+            {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+          </button>
 
           {/* Language Switcher */}
           <div className="relative">
@@ -149,6 +160,13 @@ const Navbar = () => {
 
         {/* Mobile toggle */}
         <div className="flex items-center gap-3 md:hidden">
+          <button
+            onClick={toggleTheme}
+            className="text-silver hover:text-foreground transition-colors"
+            aria-label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+          >
+            {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+          </button>
           <div className="relative">
             <button
               onClick={() => setLangOpen(!langOpen)}
