@@ -13,6 +13,7 @@ const Community = () => {
 
   return (
     <Layout>
+      <PageMeta title="Community — BizVibe" description="Join the BizVibe community. Free and Pro tiers for builders who want to connect, learn, and ship together." />
       <section className="py-24 md:py-32">
         <div className="container">
           <motion.div

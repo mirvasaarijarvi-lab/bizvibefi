@@ -12,6 +12,7 @@ const GetGoing = () => {
 
   return (
     <Layout>
+      <PageMeta title="Get Going — BizVibe" description="Tools, templates, and resources to start building and never stop. From no-code to full-stack." />
       <section className="py-24 md:py-32">
         <div className="container">
           <motion.div

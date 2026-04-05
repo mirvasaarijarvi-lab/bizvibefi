@@ -11,6 +11,7 @@ const About = () => {
 
   return (
     <Layout>
+      <PageMeta title="About — BizVibe" description="Three builders, one collective. Meet the founders behind BizVibe and our values." />
       <section className="py-24 md:py-32">
         <div className="container">
           <motion.div
