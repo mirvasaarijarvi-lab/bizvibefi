@@ -46,7 +46,7 @@ const Contact = () => {
 
     if (!result.success) {
       const fieldErrors: FieldErrors = {};
-      result.error.errors.forEach((err) => {
+      result.error.issues.forEach((err) => {
         const field = err.path[0] as keyof FieldErrors;
         if (!fieldErrors[field]) fieldErrors[field] = err.message;
       });
