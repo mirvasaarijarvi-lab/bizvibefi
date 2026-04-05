@@ -16,7 +16,9 @@ export const useTranslation = () => {
   return ctx;
 };
 
-const getNestedValue = (obj: Record<string, any>, path: string): string => {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const getNestedValue = (obj: Record<string, unknown>, path: string): string => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const val = path.split(".").reduce((acc: any, key: string) => {
     if (acc === undefined || acc === null) return undefined;
     const idx = Number(key);
@@ -30,7 +32,7 @@ export const TranslationProvider = ({
   translations,
 }: {
   children: ReactNode;
-  translations: Record<Language, Record<string, any>>;
+  translations: Record<Language, Record<string, unknown>>;
 }) => {
   const [lang, setLang] = useState<Language>("en");
 
