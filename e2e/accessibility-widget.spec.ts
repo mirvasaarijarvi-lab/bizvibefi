@@ -200,7 +200,7 @@ test.describe("Accessibility Widget", () => {
 
     // Enable dark contrast
     await page.getByRole("button", { name: /dark contrast/i }).click();
-    let hasDark = await page.evaluate(() => document.documentElement.classList.contains("a11y-dark"));
+    const hasDark = await page.evaluate(() => document.documentElement.classList.contains("a11y-dark"));
     expect(hasDark).toBe(true);
 
     // Switch to light contrast - dark should be removed
@@ -217,7 +217,7 @@ test.describe("Accessibility Widget", () => {
     await page.getByLabel("Open accessibility menu").click();
 
     await page.getByRole("button", { name: /high saturation/i }).click();
-    let hasHigh = await page.evaluate(() => document.documentElement.classList.contains("a11y-high-sat"));
+    const hasHigh = await page.evaluate(() => document.documentElement.classList.contains("a11y-high-sat"));
     expect(hasHigh).toBe(true);
 
     // Switch to monochrome

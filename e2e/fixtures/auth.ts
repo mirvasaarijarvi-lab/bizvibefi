@@ -27,7 +27,7 @@ async function login(page: Page, email: string, password: string) {
 }
 
 export const test = base.extend<{ authenticatedPage: Page }>({
-  authenticatedPage: async ({ page }, useFixture) => {
+  authenticatedPage: async ({ page }, provideAuthenticatedPage) => {
     const email = process.env.E2E_USER_EMAIL;
     const password = process.env.E2E_USER_PASSWORD;
 
@@ -37,7 +37,7 @@ export const test = base.extend<{ authenticatedPage: Page }>({
     }
 
     await login(page, email, password);
-    await useFixture(page);
+    await provideAuthenticatedPage(page);
   },
 });
 
