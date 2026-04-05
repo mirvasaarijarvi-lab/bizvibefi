@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import Layout from "@/components/Layout";
 import PageMeta from "@/components/PageMeta";
+import NewsletterSignup from "@/components/NewsletterSignup";
 import { motion } from "framer-motion";
 import { Rocket, Users, Zap, ArrowRight, Wrench, Search, Handshake, TrendingUp } from "lucide-react";
 import { useTranslation } from "@/i18n/TranslationContext";
@@ -121,6 +122,13 @@ const Index = () => {
             <FreeTierCard />
             <ProTierCard />
           </div>
+        </div>
+      </section>
+
+      {/* Newsletter */}
+      <section className="py-16 md:py-20 border-t border-border">
+        <div className="container max-w-2xl">
+          <NewsletterSignup variant="card" />
         </div>
       </section>
 
