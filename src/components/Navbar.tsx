@@ -4,7 +4,7 @@ import { Menu, X, Globe, User, LogOut, MessageSquare, Users, Sun, Moon } from "l
 import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTranslation } from "@/i18n/useTranslation";
-import type { Language } from "@/i18n/TranslationContext";
+import type { Language } from "@/i18n/TranslationContextDef";
 import { useAuth } from "@/hooks/useAuth";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useProfile } from "@/hooks/useProfile";
