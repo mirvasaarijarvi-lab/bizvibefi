@@ -47,6 +47,7 @@ const App = () => (
                 <Route path="/forum" element={<Forum />} />
                 <Route path="/forum/:slug" element={<ForumCategory />} />
                 <Route path="/forum/:slug/:topicId" element={<ForumTopic />} />
+                <Route path="/accessibility" element={<AccessibilityStatement />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </Suspense>
