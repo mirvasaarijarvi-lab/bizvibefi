@@ -16,7 +16,6 @@ export const useTranslation = () => {
   return ctx;
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const getNestedValue = (obj: Record<string, unknown>, path: string): string => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const val = path.split(".").reduce((acc: any, key: string) => {
