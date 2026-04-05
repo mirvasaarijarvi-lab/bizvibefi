@@ -36,9 +36,9 @@ describe("Navbar", () => {
     expect(screen.getAllByText("Contact").length).toBeGreaterThanOrEqual(1);
   });
 
-  it("renders the Join CTA button", () => {
+  it("renders the Sign In CTA button", () => {
     renderNavbar();
-    expect(screen.getAllByText("Join the Vibe").length).toBeGreaterThanOrEqual(1);
+    expect(screen.getAllByText("Sign In").length).toBeGreaterThanOrEqual(1);
   });
 
   it("shows current language as EN by default", () => {
