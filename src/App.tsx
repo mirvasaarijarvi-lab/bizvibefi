@@ -23,6 +23,7 @@ const ForumTopic = lazy(() => import("./pages/ForumTopic.tsx"));
 const Members = lazy(() => import("./pages/Members.tsx"));
 const AccessibilityStatement = lazy(() => import("./pages/AccessibilityStatement.tsx"));
 const PrivacyPolicy = lazy(() => import("./pages/PrivacyPolicy.tsx"));
+const TermsOfService = lazy(() => import("./pages/TermsOfService.tsx"));
 const NotFound = lazy(() => import("./pages/NotFound.tsx"));
 
 const queryClient = new QueryClient();
@@ -52,6 +53,7 @@ const App = () => (
                 <Route path="/members" element={<Members />} />
                 <Route path="/accessibility" element={<AccessibilityStatement />} />
                 <Route path="/privacy" element={<PrivacyPolicy />} />
+                <Route path="/terms" element={<TermsOfService />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </Suspense>
