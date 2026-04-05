@@ -32,6 +32,6 @@ test.describe("Navigation", () => {
 
   test("404 page shows for unknown routes", async ({ page }) => {
     await page.goto("/nonexistent-page");
-    await expect(page.getByText(/404|not found/i)).toBeVisible();
+    await expect(page.getByRole("heading", { name: "404" })).toBeVisible();
   });
 });
