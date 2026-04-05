@@ -83,6 +83,52 @@
     --shadow-glow-purple: 0 0 40px hsl(270 95% 58% / 0.3);
     --shadow-glow-teal: 0 0 40px hsl(173 100% 45% / 0.2);
   }
+
+  .dark {
+    --background: 240 30% 5%;
+    --foreground: 245 100% 97%;
+
+    --card: 250 25% 8%;
+    --card-foreground: 245 100% 97%;
+
+    --popover: 250 25% 8%;
+    --popover-foreground: 245 100% 97%;
+
+    --primary: 270 95% 58%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 225 100% 57%;
+    --secondary-foreground: 0 0% 100%;
+
+    --muted: 250 20% 15%;
+    --muted-foreground: 248 18% 65%;
+
+    --accent: 173 100% 45%;
+    --accent-foreground: 245 100% 97%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 250 20% 18%;
+    --input: 250 20% 18%;
+    --ring: 270 95% 58%;
+
+    --sidebar-background: 250 25% 8%;
+    --sidebar-foreground: 245 100% 97%;
+    --sidebar-primary: 270 95% 58%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 250 20% 15%;
+    --sidebar-accent-foreground: 245 100% 97%;
+    --sidebar-border: 250 20% 18%;
+    --sidebar-ring: 270 95% 58%;
+
+    --gradient-storm: linear-gradient(135deg, hsl(270 95% 65%), hsl(225 100% 65%));
+    --gradient-surge: linear-gradient(135deg, hsl(225 100% 65%), hsl(173 100% 50%));
+    --gradient-prism: linear-gradient(135deg, hsl(270 95% 65%), hsl(173 100% 50%));
+
+    --shadow-glow-purple: 0 0 40px hsl(270 95% 58% / 0.4);
+    --shadow-glow-teal: 0 0 40px hsl(173 100% 45% / 0.3);
+  }
 }
 
 @layer base {
