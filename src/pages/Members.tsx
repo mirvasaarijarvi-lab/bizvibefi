@@ -9,10 +9,16 @@ import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Search, Users, Linkedin, Building2, ExternalLink } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Link, Navigate } from "react-router-dom";
+import { Navigate } from "react-router-dom";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 interface MemberProfile {
   id: string;
@@ -23,18 +29,24 @@ interface MemberProfile {
   company: string | null;
   linkedin_url: string | null;
   membership_tier: "free" | "pro";
+  created_at: string;
 }
+
+type TierFilter = "all" | "free" | "pro";
+type SortOption = "newest" | "alphabetical";
 
 const Members = () => {
   const { user, loading: authLoading } = useAuth();
   const [search, setSearch] = useState("");
+  const [tierFilter, setTierFilter] = useState<TierFilter>("all");
+  const [sortBy, setSortBy] = useState<SortOption>("newest");
 
   const { data: members, isLoading } = useQuery({
     queryKey: ["members"],
     queryFn: async () => {
       const { data, error } = await supabase
         .from("profiles")
-        .select("id, user_id, display_name, avatar_url, bio, company, linkedin_url, membership_tier")
+        .select("id, user_id, display_name, avatar_url, bio, company, linkedin_url, membership_tier, created_at")
         .order("created_at", { ascending: false });
       if (error) throw error;
       return data as MemberProfile[];
@@ -56,15 +68,23 @@ const Members = () => {
     return <Navigate to="/auth" replace />;
   }
 
-  const filtered = members?.filter((m) => {
-    if (!search) return true;
-    const q = search.toLowerCase();
-    return (
-      m.display_name?.toLowerCase().includes(q) ||
-      m.company?.toLowerCase().includes(q) ||
-      m.bio?.toLowerCase().includes(q)
-    );
-  });
+  const filtered = members
+    ?.filter((m) => {
+      if (tierFilter !== "all" && m.membership_tier !== tierFilter) return false;
+      if (!search) return true;
+      const q = search.toLowerCase();
+      return (
+        m.display_name?.toLowerCase().includes(q) ||
+        m.company?.toLowerCase().includes(q) ||
+        m.bio?.toLowerCase().includes(q)
+      );
+    })
+    .sort((a, b) => {
+      if (sortBy === "alphabetical") {
+        return (a.display_name ?? "").localeCompare(b.display_name ?? "");
+      }
+      return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+    });
 
   const initials = (name: string | null) => {
     if (!name) return "?";
@@ -100,14 +120,35 @@ const Members = () => {
             </p>
           </motion.div>
 
-          <div className="relative max-w-md mx-auto mb-10">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <Input
-              placeholder="Search by name, company, or bio..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              className="pl-10"
-            />
+          <div className="flex flex-col sm:flex-row gap-3 max-w-2xl mx-auto mb-10">
+            <div className="relative flex-1">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input
+                placeholder="Search by name, company, or bio..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className="pl-10"
+              />
+            </div>
+            <Select value={tierFilter} onValueChange={(v) => setTierFilter(v as TierFilter)}>
+              <SelectTrigger className="w-full sm:w-[140px]">
+                <SelectValue placeholder="Tier" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Tiers</SelectItem>
+                <SelectItem value="free">Free</SelectItem>
+                <SelectItem value="pro">Pro</SelectItem>
+              </SelectContent>
+            </Select>
+            <Select value={sortBy} onValueChange={(v) => setSortBy(v as SortOption)}>
+              <SelectTrigger className="w-full sm:w-[160px]">
+                <SelectValue placeholder="Sort" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="newest">Newest First</SelectItem>
+                <SelectItem value="alphabetical">A → Z</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
 
           {isLoading ? (
@@ -196,7 +237,7 @@ const Members = () => {
             <div className="text-center py-16">
               <Users className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
               <p className="text-muted-foreground">
-                {search ? "No members match your search." : "No members yet."}
+                {search || tierFilter !== "all" ? "No members match your filters." : "No members yet."}
               </p>
             </div>
           )}
