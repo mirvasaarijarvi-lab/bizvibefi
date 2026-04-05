@@ -25,6 +25,7 @@ const Navbar = () => {
     { to: "/community", label: t("nav.community") },
     { to: "/get-going", label: t("nav.getGoing") },
     { to: "/forum", label: "Forum" },
+    { to: "/events", label: "Events" },
     { to: "/about", label: t("nav.about") },
     { to: "/contact", label: t("nav.contact") },
   ];
