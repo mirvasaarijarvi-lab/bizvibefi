@@ -35,7 +35,7 @@ const CookieConsent = () => {
             <p className="text-sm font-body text-muted-foreground flex-1">
               We use essential cookies to make BizVibe work. We'd also like to use analytics cookies to improve your experience.
               Read our{" "}
-              <a href="/about" className="text-primary underline hover:text-primary/80">
+              <a href="/privacy" className="text-primary underline hover:text-primary/80">
                 privacy policy
               </a>.
             </p>
