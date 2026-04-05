@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Menu, X, Globe, User, LogOut, MessageSquare, Sun, Moon } from "lucide-react";
+import { Menu, X, Globe, User, LogOut, MessageSquare, Users, Sun, Moon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTranslation, type Language } from "@/i18n/TranslationContext";
@@ -133,6 +133,13 @@ const Navbar = () => {
                       className="flex items-center gap-2 px-4 py-2.5 text-sm font-body text-foreground hover:bg-muted transition-colors"
                     >
                       <User className="h-4 w-4" /> Profile
+                    </Link>
+                    <Link
+                      to="/members"
+                      onClick={() => setUserMenuOpen(false)}
+                      className="flex items-center gap-2 px-4 py-2.5 text-sm font-body text-foreground hover:bg-muted transition-colors"
+                    >
+                      <Users className="h-4 w-4" /> Members
                     </Link>
                     <Link
                       to="/forum"
