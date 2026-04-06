@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { useProfile, useUpdateProfile, type WebsiteLink } from "@/hooks/useProfile";
+import { useUserRole } from "@/hooks/useAdminShowcase";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -17,6 +18,8 @@ import { Camera, Linkedin, Building, User, Globe, Mail, Phone, Plus, Trash2 } fr
 const Profile = () => {
   const { user, loading: authLoading } = useAuth();
   const { data: profile, isLoading } = useProfile();
+  const { data: roles } = useUserRole();
+  const isSuperAdmin = roles?.includes("superadmin") ?? false;
   const updateProfile = useUpdateProfile();
   const { toast } = useToast();
   const navigate = useNavigate();
