@@ -113,8 +113,13 @@ const Members = () => {
     return <Navigate to="/auth" replace />;
   }
 
+  const myTier = myProfile?.membership_tier ?? "starter";
+  const canSeeVibetors = isAdmin || myTier === "viber" || myTier === "vibetor";
+
   const filtered = members
     ?.filter((m) => {
+      // Tier visibility: starters see starters + vibers; vibers/vibetors/admins see all
+      if (!canSeeVibetors && m.membership_tier === "vibetor") return false;
       if (tierFilter !== "all" && m.membership_tier !== tierFilter) return false;
       if (!search) return true;
       const q = search.toLowerCase();
