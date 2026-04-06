@@ -43,7 +43,7 @@ const eventTypeConfig: Record<string, { label: string; icon: React.ElementType; 
 interface EventFormData {
   title: string;
   description: string;
-  event_type: string;
+  event_type: "meetup" | "webinar" | "workshop" | "hackathon";
   starts_at: string;
   ends_at: string;
   location: string;
@@ -56,7 +56,7 @@ interface EventFormData {
 const emptyForm: EventFormData = {
   title: "",
   description: "",
-  event_type: "meetup",
+  event_type: "meetup" as const,
   starts_at: "",
   ends_at: "",
   location: "",
@@ -121,7 +121,7 @@ const EventFormDialog = ({
       } else {
         const { error } = await supabase
           .from("events")
-          .insert({ ...payload, created_by: user!.id });
+          .insert([{ ...payload, created_by: user!.id }] as any);
         if (error) throw error;
       }
     },
