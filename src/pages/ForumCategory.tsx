@@ -1,22 +1,25 @@
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useParams, Link } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
+import { useIsAdmin } from "@/hooks/useAdminShowcase";
 import Layout from "@/components/Layout";
 import PageMeta from "@/components/PageMeta";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Plus, Pin, Lock, MessageSquare, ArrowLeft } from "lucide-react";
+import { Plus, Pin, Lock, MessageSquare, ArrowLeft, Clock, CheckCircle2, XCircle } from "lucide-react";
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { formatDistanceToNow } from "date-fns";
 import type { Profile } from "@/hooks/useProfile";
+import { Badge } from "@/components/ui/badge";
 
 const ForumCategory = () => {
   const { slug } = useParams<{ slug: string }>();
   const { user } = useAuth();
+  const isAdmin = useIsAdmin();
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const [showNewTopic, setShowNewTopic] = useState(false);
@@ -37,6 +40,8 @@ const ForumCategory = () => {
     },
     enabled: !!slug,
   });
+
+  const requiresApproval = (category as any)?.requires_approval === true;
 
   const { data: topics, isLoading } = useQuery({
     queryKey: ["forum-topics", category?.id],
@@ -66,23 +71,62 @@ const ForumCategory = () => {
     enabled: !!category?.id,
   });
 
+  const approveMutation = useMutation({
+    mutationFn: async (topicId: string) => {
+      const { error } = await supabase
+        .from("forum_topics")
+        .update({ is_approved: true } as any)
+        .eq("id", topicId);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["forum-topics", category?.id] });
+      toast({ title: "Lead approved!" });
+    },
+  });
+
+  const rejectMutation = useMutation({
+    mutationFn: async (topicId: string) => {
+      const { error } = await supabase
+        .from("forum_topics")
+        .delete()
+        .eq("id", topicId);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["forum-topics", category?.id] });
+      toast({ title: "Lead rejected and removed." });
+    },
+  });
+
   const handleCreateTopic = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!user || !category) return;
     setSubmitting(true);
     try {
-      const { error } = await supabase.from("forum_topics").insert({
+      const insertData: any = {
         category_id: category.id,
         user_id: user.id,
         title: newTitle.trim(),
         content: newContent.trim(),
-      });
+      };
+      if (requiresApproval && !isAdmin) {
+        insertData.is_approved = false;
+      }
+      const { error } = await supabase.from("forum_topics").insert(insertData);
       if (error) throw error;
       setNewTitle("");
       setNewContent("");
       setShowNewTopic(false);
       queryClient.invalidateQueries({ queryKey: ["forum-topics", category.id] });
-      toast({ title: "Topic created!" });
+      toast({
+        title: requiresApproval && !isAdmin
+          ? "Lead submitted for approval!"
+          : "Topic created!",
+        description: requiresApproval && !isAdmin
+          ? "An admin will review your submission before it becomes visible."
+          : undefined,
+      });
     } catch (error: unknown) {
       const message = error instanceof Error ? error.message : "Failed to create topic";
       toast({ title: "Error", description: message, variant: "destructive" });
@@ -104,14 +148,21 @@ const ForumCategory = () => {
           </Link>
 
           <div className="flex items-center justify-between mb-6">
-            <h1 className="font-display text-2xl font-bold text-foreground">{category?.name}</h1>
+            <div>
+              <h1 className="font-display text-2xl font-bold text-foreground">{category?.name}</h1>
+              {requiresApproval && (
+                <p className="text-xs text-muted-foreground font-body mt-1">
+                  Posts in this section require admin approval before becoming visible.
+                </p>
+              )}
+            </div>
             {user && (
               <Button
                 onClick={() => setShowNewTopic(!showNewTopic)}
                 className="bg-gradient-storm hover:opacity-90 font-body"
                 size="sm"
               >
-                <Plus className="h-4 w-4 mr-1" /> New Topic
+                <Plus className="h-4 w-4 mr-1" /> {requiresApproval ? "Submit Lead" : "New Topic"}
               </Button>
             )}
           </div>
@@ -119,7 +170,7 @@ const ForumCategory = () => {
           {showNewTopic && (
             <form onSubmit={handleCreateTopic} className="bg-card border border-border rounded-xl p-5 mb-6 space-y-4">
               <Input
-                placeholder="Topic title"
+                placeholder={requiresApproval ? "Lead title" : "Topic title"}
                 value={newTitle}
                 onChange={(e) => setNewTitle(e.target.value)}
                 required
@@ -127,7 +178,7 @@ const ForumCategory = () => {
                 className="font-body"
               />
               <Textarea
-                placeholder="What's on your mind?"
+                placeholder={requiresApproval ? "Describe the lead..." : "What's on your mind?"}
                 value={newContent}
                 onChange={(e) => setNewContent(e.target.value)}
                 required
@@ -137,7 +188,7 @@ const ForumCategory = () => {
               />
               <div className="flex gap-2">
                 <Button type="submit" size="sm" className="bg-gradient-storm font-body" disabled={submitting}>
-                  {submitting ? "Posting..." : "Post Topic"}
+                  {submitting ? "Posting..." : requiresApproval ? "Submit for Approval" : "Post Topic"}
                 </Button>
                 <Button type="button" size="sm" variant="ghost" onClick={() => setShowNewTopic(false)} className="font-body">
                   Cancel
@@ -153,42 +204,86 @@ const ForumCategory = () => {
           ) : topics?.length === 0 ? (
             <div className="text-center py-12">
               <MessageSquare className="h-12 w-12 text-muted-foreground mx-auto mb-3" />
-              <p className="text-muted-foreground font-body">No topics yet. Be the first to start a discussion!</p>
+              <p className="text-muted-foreground font-body">
+                {requiresApproval ? "No leads yet. Be the first to submit one!" : "No topics yet. Be the first to start a discussion!"}
+              </p>
             </div>
           ) : (
             <div className="space-y-2">
-              {topics?.map((topic) => (
-                <Link
-                  key={topic.id}
-                  to={`/forum/${slug}/${topic.id}`}
-                  className="block bg-card border border-border rounded-xl p-4 hover:border-primary/40 transition-colors"
-                >
-                  <div className="flex items-start gap-3">
-                    <Avatar className="h-9 w-9 mt-0.5">
-                      <AvatarImage src={topic.profile?.avatar_url ?? undefined} />
-                      <AvatarFallback className="bg-muted text-xs font-display">
-                        {topic.profile?.display_name?.charAt(0)?.toUpperCase() || "?"}
-                      </AvatarFallback>
-                    </Avatar>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2">
-                        {topic.is_pinned && <Pin className="h-3.5 w-3.5 text-primary flex-shrink-0" />}
-                        {topic.is_locked && <Lock className="h-3.5 w-3.5 text-muted-foreground flex-shrink-0" />}
-                        <h3 className="font-display font-semibold text-foreground truncate">{topic.title}</h3>
+              {topics?.map((topic) => {
+                const topicApproved = (topic as any).is_approved !== false;
+                const isOwn = topic.user_id === user?.id;
+                const pendingForUser = !topicApproved && isOwn && !isAdmin;
+                const pendingForAdmin = !topicApproved && isAdmin;
+
+                return (
+                  <div key={topic.id} className={`bg-card border rounded-xl p-4 transition-colors ${
+                    !topicApproved ? "border-amber-500/30" : "border-border hover:border-primary/40"
+                  }`}>
+                    <Link
+                      to={topicApproved || isAdmin ? `/forum/${slug}/${topic.id}` : "#"}
+                      className={`block ${!topicApproved && !isAdmin ? "pointer-events-none" : ""}`}
+                    >
+                      <div className="flex items-start gap-3">
+                        <Avatar className="h-9 w-9 mt-0.5">
+                          <AvatarImage src={topic.profile?.avatar_url ?? undefined} />
+                          <AvatarFallback className="bg-muted text-xs font-display">
+                            {topic.profile?.display_name?.charAt(0)?.toUpperCase() || "?"}
+                          </AvatarFallback>
+                        </Avatar>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2">
+                            {topic.is_pinned && <Pin className="h-3.5 w-3.5 text-primary flex-shrink-0" />}
+                            {topic.is_locked && <Lock className="h-3.5 w-3.5 text-muted-foreground flex-shrink-0" />}
+                            <h3 className="font-display font-semibold text-foreground truncate">{topic.title}</h3>
+                            {pendingForUser && (
+                              <Badge variant="outline" className="text-amber-500 border-amber-500/30 text-xs gap-1">
+                                <Clock className="h-3 w-3" /> Pending
+                              </Badge>
+                            )}
+                            {pendingForAdmin && (
+                              <Badge variant="outline" className="text-amber-500 border-amber-500/30 text-xs gap-1">
+                                <Clock className="h-3 w-3" /> Needs Approval
+                              </Badge>
+                            )}
+                          </div>
+                          <div className="flex items-center gap-3 mt-1 text-xs text-muted-foreground font-body">
+                            <span>{topic.profile?.display_name || "Anonymous"}</span>
+                            <span>·</span>
+                            <span>{formatDistanceToNow(new Date(topic.created_at), { addSuffix: true })}</span>
+                            <span>·</span>
+                            <span className="flex items-center gap-1">
+                              <MessageSquare className="h-3 w-3" /> {topic.reply_count}
+                            </span>
+                          </div>
+                        </div>
                       </div>
-                      <div className="flex items-center gap-3 mt-1 text-xs text-muted-foreground font-body">
-                        <span>{topic.profile?.display_name || "Anonymous"}</span>
-                        <span>·</span>
-                        <span>{formatDistanceToNow(new Date(topic.created_at), { addSuffix: true })}</span>
-                        <span>·</span>
-                        <span className="flex items-center gap-1">
-                          <MessageSquare className="h-3 w-3" /> {topic.reply_count}
-                        </span>
+                    </Link>
+                    {pendingForAdmin && (
+                      <div className="flex gap-2 mt-3 ml-12">
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="text-emerald-600 border-emerald-500/30 hover:bg-emerald-500/10 font-body gap-1"
+                          onClick={() => approveMutation.mutate(topic.id)}
+                          disabled={approveMutation.isPending}
+                        >
+                          <CheckCircle2 className="h-3.5 w-3.5" /> Approve
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="text-destructive border-destructive/30 hover:bg-destructive/10 font-body gap-1"
+                          onClick={() => rejectMutation.mutate(topic.id)}
+                          disabled={rejectMutation.isPending}
+                        >
+                          <XCircle className="h-3.5 w-3.5" /> Reject
+                        </Button>
                       </div>
-                    </div>
+                    )}
                   </div>
-                </Link>
-              ))}
+                );
+              })}
             </div>
           )}
         </div>

@@ -140,6 +140,7 @@ export type Database = {
           id: string
           min_tier: Database["public"]["Enums"]["membership_tier"]
           name: string
+          requires_approval: boolean
           slug: string
           sort_order: number
         }
@@ -149,6 +150,7 @@ export type Database = {
           id?: string
           min_tier?: Database["public"]["Enums"]["membership_tier"]
           name: string
+          requires_approval?: boolean
           slug: string
           sort_order?: number
         }
@@ -158,6 +160,7 @@ export type Database = {
           id?: string
           min_tier?: Database["public"]["Enums"]["membership_tier"]
           name?: string
+          requires_approval?: boolean
           slug?: string
           sort_order?: number
         }
@@ -204,6 +207,7 @@ export type Database = {
           content: string
           created_at: string
           id: string
+          is_approved: boolean
           is_locked: boolean
           is_pinned: boolean
           last_reply_at: string | null
@@ -217,6 +221,7 @@ export type Database = {
           content: string
           created_at?: string
           id?: string
+          is_approved?: boolean
           is_locked?: boolean
           is_pinned?: boolean
           last_reply_at?: string | null
@@ -230,6 +235,7 @@ export type Database = {
           content?: string
           created_at?: string
           id?: string
+          is_approved?: boolean
           is_locked?: boolean
           is_pinned?: boolean
           last_reply_at?: string | null
