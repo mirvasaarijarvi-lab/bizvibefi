@@ -1,14 +1,19 @@
 import { useParams, Navigate, Link } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import Layout from "@/components/Layout";
 import PageMeta from "@/components/PageMeta";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Building2, Linkedin, ExternalLink, Globe, Mail, Phone, ArrowLeft } from "lucide-react";
+import { Textarea } from "@/components/ui/textarea";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
+import { Building2, Linkedin, ExternalLink, Globe, Mail, Phone, ArrowLeft, MessageSquare, Send } from "lucide-react";
 import { motion } from "framer-motion";
+import { useState } from "react";
+import { useToast } from "@/hooks/use-toast";
 
 interface Visibility {
   bio?: boolean;
@@ -31,6 +36,9 @@ const defaultVisibility: Visibility = {
 const MemberProfile = () => {
   const { userId } = useParams<{ userId: string }>();
   const { user, loading: authLoading } = useAuth();
+  const { toast } = useToast();
+  const [contactOpen, setContactOpen] = useState(false);
+  const [message, setMessage] = useState("");
 
   const { data: member, isLoading } = useQuery({
     queryKey: ["member-profile", userId],
@@ -88,6 +96,25 @@ const MemberProfile = () => {
 
   const vis: Visibility = { ...defaultVisibility, ...(member.profile_visibility ?? {}) };
   const isOwnProfile = user.id === member.user_id;
+
+  const sendContactRequest = useMutation({
+    mutationFn: async (msg: string) => {
+      const { error } = await supabase.from("contact_requests").insert({
+        from_user_id: user.id,
+        to_user_id: member.user_id,
+        message: msg,
+      } as any);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      toast({ title: "Message sent!", description: `Your contact request has been sent to ${member.display_name || "this member"}.` });
+      setContactOpen(false);
+      setMessage("");
+    },
+    onError: (err: Error) => {
+      toast({ title: "Error", description: err.message, variant: "destructive" });
+    },
+  });
 
   const initials = (name: string | null) => {
     if (!name) return "?";
@@ -148,6 +175,15 @@ const MemberProfile = () => {
                         {member.company}
                         {!vis.company && <Badge variant="outline" className="text-[9px] ml-1">Hidden</Badge>}
                       </p>
+                    )}
+                    {!isOwnProfile && (
+                      <Button
+                        size="sm"
+                        className="mt-3 font-body gap-1.5 bg-gradient-storm"
+                        onClick={() => setContactOpen(true)}
+                      >
+                        <MessageSquare className="h-4 w-4" /> Contact
+                      </Button>
                     )}
                   </div>
                 </div>
@@ -226,6 +262,35 @@ const MemberProfile = () => {
           </motion.div>
         </div>
       </section>
+
+      {/* Contact Request Dialog */}
+      <Dialog open={contactOpen} onOpenChange={setContactOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="font-display">Contact {member.display_name || "Member"}</DialogTitle>
+            <DialogDescription className="font-body">
+              Send a message to introduce yourself or start a conversation. They'll see your name and profile.
+            </DialogDescription>
+          </DialogHeader>
+          <Textarea
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+            placeholder="Hi! I'd love to connect about..."
+            className="font-body min-h-[100px]"
+            maxLength={1000}
+          />
+          <DialogFooter>
+            <Button variant="ghost" onClick={() => setContactOpen(false)} className="font-body">Cancel</Button>
+            <Button
+              onClick={() => sendContactRequest.mutate(message.trim())}
+              disabled={!message.trim() || sendContactRequest.isPending}
+              className="font-body gap-1.5 bg-gradient-storm"
+            >
+              <Send className="h-4 w-4" /> {sendContactRequest.isPending ? "Sending..." : "Send Message"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </Layout>
   );
 };
