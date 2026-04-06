@@ -39,6 +39,7 @@ interface MemberData {
   website_links: { label?: string; url: string }[] | null;
   profile_visibility: Visibility | null;
   created_at: string;
+  role?: string;
 }
 
 const defaultVisibility: Visibility = {
