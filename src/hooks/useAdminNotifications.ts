@@ -1,7 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useIsAdmin } from "./useAdminShowcase";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 
 export interface AdminNotification {
   id: string;
@@ -18,11 +18,21 @@ export const useAdminNotifications = () => {
   const isAdmin = useIsAdmin();
   const queryClient = useQueryClient();
 
-  // Realtime subscription
+  const channelRef = useRef<ReturnType<typeof supabase.channel> | null>(null);
+
   useEffect(() => {
     if (!isAdmin) return;
-    const channel = supabase
-      .channel(`admin-notifications-${Date.now()}`)
+
+    // Clean up any lingering channel before creating a new one
+    if (channelRef.current) {
+      supabase.removeChannel(channelRef.current);
+      channelRef.current = null;
+    }
+
+    const channel = supabase.channel(`admin-notif-${crypto.randomUUID()}`);
+    channelRef.current = channel;
+
+    channel
       .on(
         "postgres_changes",
         { event: "INSERT", schema: "public", table: "admin_notifications" },
@@ -31,7 +41,11 @@ export const useAdminNotifications = () => {
         }
       )
       .subscribe();
-    return () => { supabase.removeChannel(channel); };
+
+    return () => {
+      supabase.removeChannel(channel);
+      channelRef.current = null;
+    };
   }, [isAdmin, queryClient]);
 
   return useQuery({
