@@ -254,7 +254,7 @@ const VibetorTierCard = () => {
         ))}
       </ul>
       <Button variant="hero" className="mt-8 w-full" asChild>
-        <Link to="/community">{t("tiers.vibetor.cta")}</Link>
+        <Link to="/contact">{t("tiers.vibetor.cta")}</Link>
       </Button>
     </motion.div>
   );

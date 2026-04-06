@@ -3,15 +3,17 @@ import Layout from "@/components/Layout";
 import PageMeta from "@/components/PageMeta";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
-import { Search, Users, Linkedin, Building2, ExternalLink } from "lucide-react";
+import { Search, Users, Linkedin, Building2, ExternalLink, ShieldCheck } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Navigate } from "react-router-dom";
+import { useIsAdmin } from "@/hooks/useAdminShowcase";
+import { toast } from "sonner";
 import {
   Select,
   SelectContent,
@@ -37,9 +39,28 @@ type SortOption = "newest" | "alphabetical";
 
 const Members = () => {
   const { user, loading: authLoading } = useAuth();
+  const isAdmin = useIsAdmin();
+  const queryClient = useQueryClient();
   const [search, setSearch] = useState("");
   const [tierFilter, setTierFilter] = useState<TierFilter>("all");
   const [sortBy, setSortBy] = useState<SortOption>("newest");
+
+  const updateTierMutation = useMutation({
+    mutationFn: async ({ userId, tier }: { userId: string; tier: "starter" | "viber" | "vibetor" }) => {
+      const { error } = await supabase
+        .from("profiles")
+        .update({ membership_tier: tier } as any)
+        .eq("user_id", userId);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["members"] });
+      toast.success("Membership tier updated");
+    },
+    onError: (err: Error) => {
+      toast.error(err.message);
+    },
+  });
 
   const { data: members, isLoading } = useQuery({
     queryKey: ["members"],
@@ -233,6 +254,30 @@ const Members = () => {
                           LinkedIn
                           <ExternalLink className="h-3 w-3" />
                         </a>
+                      )}
+
+                      {isAdmin && (
+                        <div className="mt-4 pt-3 border-t border-border">
+                          <div className="flex items-center gap-2">
+                            <ShieldCheck className="h-4 w-4 text-muted-foreground" />
+                            <span className="text-xs text-muted-foreground">Tier:</span>
+                            <Select
+                              value={member.membership_tier}
+                              onValueChange={(val) =>
+                                updateTierMutation.mutate({ userId: member.user_id, tier: val as any })
+                              }
+                            >
+                              <SelectTrigger className="h-7 text-xs w-28">
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="starter">Starter</SelectItem>
+                                <SelectItem value="viber">Viber</SelectItem>
+                                <SelectItem value="vibetor">Vibetor</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </div>
+                        </div>
                       )}
                     </CardContent>
                   </Card>

@@ -70,7 +70,7 @@ const fi = {
         "Etusija deal flow -pääsyyn",
         "Innovaationäyttelytapahtumat",
       ],
-      cta: "Ryhdy Vibetorksi",
+      cta: "Ota yhteyttä",
     },
   },
   ctaSection: {
@@ -110,7 +110,7 @@ const fi = {
     vibetor: {
       name: "Vibetor",
       price: "Sijoittajajäsenyys. Kaikki Viberistä ja lisäksi:",
-      cta: "Ryhdy Vibetorksi",
+      cta: "Ota yhteyttä",
       benefits: [
         { title: "Sijoittajamerkki", desc: "Erotu joukosta vahvistetulla sijoittajamerkillä profiilissasi." },
         { title: "Sijoittajaverkosto", desc: "Yhdistä muihin sijoittajiin ja innovaattoreihin omassa piirissä." },
