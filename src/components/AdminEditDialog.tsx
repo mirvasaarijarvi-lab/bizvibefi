@@ -60,7 +60,7 @@ const AdminEditDialog = ({ item, open, onOpenChange }: AdminEditDialogProps) => 
           challenge: challenge.trim() || null,
           solution: solution.trim() || null,
           benefits: cleanBenefits.length > 0 ? cleanBenefits : null,
-          key_figures: cleanFigures.length > 0 ? cleanFigures : null,
+          key_figures: cleanFigures.length > 0 ? cleanFigures as unknown as Record<string, unknown>[] : null,
           link_url: linkUrl.trim() || null,
           category_tags: tags.split(",").map((t) => t.trim()).filter(Boolean),
           pricing_info: pricingInfo.trim() || null,
