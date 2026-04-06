@@ -1,4 +1,5 @@
 import { useState, useCallback, useMemo } from "react";
+import { Link } from "react-router-dom";
 import { Navigate } from "react-router-dom";
 import Layout from "@/components/Layout";
 import PageMeta from "@/components/PageMeta";
@@ -14,7 +15,7 @@ import {
 import AdminItemCard from "@/components/AdminItemCard";
 import BulkActionBar from "@/components/BulkActionBar";
 import AdminSearchFilter, { filterShowcaseItems, type SortOption } from "@/components/AdminSearchFilter";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, Bell, ScrollText, Users } from "lucide-react";
 
 const ITEMS_PER_PAGE = 12;
 
@@ -98,6 +99,23 @@ const AdminShowcase = () => {
             <p className="mt-4 text-lg text-muted-foreground font-body">
               {t("admin.showcase.subtitle")}
             </p>
+            <div className="flex flex-wrap justify-center gap-3 mt-6">
+              <Link to="/admin/notifications">
+                <Button variant="outline" size="sm" className="font-body gap-1.5">
+                  <Bell className="h-4 w-4" /> Notifications
+                </Button>
+              </Link>
+              <Link to="/admin/audit-log">
+                <Button variant="outline" size="sm" className="font-body gap-1.5">
+                  <ScrollText className="h-4 w-4" /> Audit Log
+                </Button>
+              </Link>
+              <Link to="/admin/users">
+                <Button variant="outline" size="sm" className="font-body gap-1.5">
+                  <Users className="h-4 w-4" /> User Management
+                </Button>
+              </Link>
+            </div>
           </div>
 
           <Tabs value={tab} onValueChange={handleTabChange}>
