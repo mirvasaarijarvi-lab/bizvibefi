@@ -17,10 +17,11 @@ import {
   useUpdateShowcaseImage,
 } from "@/hooks/useAdminShowcase";
 import type { ShowcaseItem, ApprovalStatus } from "@/hooks/useShowcase";
-import { CheckCircle, XCircle, Clock, ExternalLink, Lightbulb, MessageSquare, Wrench, ImagePlus, Trash2, Loader2 } from "lucide-react";
+import { CheckCircle, XCircle, Clock, ExternalLink, Lightbulb, MessageSquare, Wrench, ImagePlus, Trash2, Loader2, Pencil } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import ImageDropZone from "@/components/ImageDropZone";
+import AdminEditDialog from "@/components/AdminEditDialog";
 
 const typeIcons: Record<string, React.ElementType> = {
   case_study: Lightbulb,
