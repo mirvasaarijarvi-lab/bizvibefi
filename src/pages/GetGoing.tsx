@@ -11,12 +11,12 @@ import {
 import { useTranslation } from "@/i18n/useTranslation";
 
 const toolDefs = [
-  { icon: Wrench, tier: "starter" as const },
-  { icon: BookOpen, tier: "viber" as const },
-  { icon: MessageCircle, tier: "starter" as const },
-  { icon: Users, tier: "viber" as const },
-  { icon: Headphones, tier: "viber" as const },
-  { icon: TrendingUp, tier: "viber" as const },
+  { icon: Wrench, tier: "starter" as const, href: "/showcase", external: false },
+  { icon: BookOpen, tier: "viber" as const, href: "/community", external: false },
+  { icon: MessageCircle, tier: "starter" as const, href: "https://chat.whatsapp.com/STARTER_PLACEHOLDER", external: true },
+  { icon: Users, tier: "viber" as const, href: "https://chat.whatsapp.com/VIBER_PLACEHOLDER", external: true },
+  { icon: Headphones, tier: "viber" as const, href: "/contact", external: false },
+  { icon: TrendingUp, tier: "viber" as const, href: "/community", external: false },
 ];
 
 const GetGoing = () => {
@@ -45,9 +45,9 @@ const GetGoing = () => {
       <section className="pb-20">
         <div className="container">
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
-            {toolDefs.map(({ icon: Icon, tier }, i) => {
+            {toolDefs.map(({ icon: Icon, tier, href, external }, i) => {
               const isViber = tier === "viber";
-              return (
+              const cardContent = (
                 <motion.div
                   key={i}
                   initial={{ opacity: 0, y: 20 }}
@@ -81,10 +81,20 @@ const GetGoing = () => {
                   </div>
                   <h3 className="font-display text-xl font-bold tracking-[-0.01em]">{t(`getGoing.tools.${i}.title`)}</h3>
                   <p className="mt-2 text-sm text-muted-foreground font-body">{t(`getGoing.tools.${i}.desc`)}</p>
-                  <Button variant="ghost" className={`mt-4 p-0 font-body text-sm ${isViber ? "text-primary hover:text-primary/80" : "text-electric hover:text-electric-light"}`}>
-                    {t("getGoing.explore")} <ExternalLink className="ml-1 h-3 w-3" />
-                  </Button>
+                  <span className={`mt-4 inline-flex items-center font-body text-sm ${isViber ? "text-primary group-hover:text-primary/80" : "text-electric group-hover:text-electric-light"}`}>
+                    {t("getGoing.explore")} {external ? <ExternalLink className="ml-1 h-3 w-3" /> : <ArrowRight className="ml-1 h-3 w-3" />}
+                  </span>
                 </motion.div>
+              );
+
+              return external ? (
+                <a key={i} href={href} target="_blank" rel="noopener noreferrer" className="block">
+                  {cardContent}
+                </a>
+              ) : (
+                <Link key={i} to={href} className="block">
+                  {cardContent}
+                </Link>
               );
             })}
           </div>
