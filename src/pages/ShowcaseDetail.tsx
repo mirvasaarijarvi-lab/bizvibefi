@@ -189,10 +189,10 @@ const ShowcaseDetail = () => {
           <div className="container">
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
               {item.challenge && (
-                <Card>
+              <Card>
                   <CardContent className="pt-6">
                     <div className="flex items-center gap-2 mb-3">
-                      <Target className="h-5 w-5 text-destructive" />
+                      <Target className="h-5 w-5 text-primary" />
                       <h3 className="font-display text-lg font-bold">{t("showcase.detail.challenge")}</h3>
                     </div>
                     <p className="text-sm text-muted-foreground font-body whitespace-pre-line">{item.challenge}</p>
@@ -216,13 +216,13 @@ const ShowcaseDetail = () => {
                 <Card>
                   <CardContent className="pt-6">
                     <div className="flex items-center gap-2 mb-3">
-                      <CheckCircle2 className="h-5 w-5 text-green-500" />
+                      <CheckCircle2 className="h-5 w-5 text-primary" />
                       <h3 className="font-display text-lg font-bold">{t("showcase.detail.benefits")}</h3>
                     </div>
                     <ul className="space-y-2">
                       {benefits.map((b, i) => (
                         <li key={i} className="flex items-start gap-2 text-sm text-muted-foreground font-body">
-                          <CheckCircle2 className="h-4 w-4 text-green-500 mt-0.5 shrink-0" />
+                          <CheckCircle2 className="h-4 w-4 text-primary mt-0.5 shrink-0" />
                           {b}
                         </li>
                       ))}
