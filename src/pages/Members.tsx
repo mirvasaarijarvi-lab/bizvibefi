@@ -10,7 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
-import { Search, Users, Linkedin, Building2, ExternalLink, ShieldCheck, Zap, Globe, Mail, Phone } from "lucide-react";
+import { Search, Users, Linkedin, Building2, ExternalLink, ShieldCheck, Zap, Globe, Mail, Phone, Briefcase } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Navigate, Link } from "react-router-dom";
@@ -96,18 +96,25 @@ const Members = () => {
         .order("created_at", { ascending: false });
       if (error) throw error;
 
-      // Fetch roles for all members (admin-only query, will return empty for non-admins)
       const userIds = data.map((p: any) => p.user_id);
-      const { data: roles } = await supabase
-        .from("user_roles")
-        .select("user_id, role")
-        .in("user_id", userIds);
 
-      const roleMap = new Map(roles?.map((r: any) => [r.user_id, r.role]) ?? []);
+      // Fetch roles and showcase counts in parallel
+      const [rolesResult, showcaseResult] = await Promise.all([
+        supabase.from("user_roles").select("user_id, role").in("user_id", userIds),
+        supabase.from("showcase_items").select("user_id").eq("status", "approved").in("user_id", userIds),
+      ]);
+
+      const roleMap = new Map(rolesResult.data?.map((r: any) => [r.user_id, r.role]) ?? []);
+
+      const showcaseCounts = new Map<string, number>();
+      for (const item of showcaseResult.data ?? []) {
+        showcaseCounts.set(item.user_id, (showcaseCounts.get(item.user_id) ?? 0) + 1);
+      }
 
       return (data as MemberProfile[]).map((m) => ({
         ...m,
         role: roleMap.get(m.user_id) as string | undefined,
+        showcaseCount: showcaseCounts.get(m.user_id) ?? 0,
       }));
     },
     enabled: !!user,
@@ -301,6 +308,15 @@ const Members = () => {
                         <p className="text-sm text-muted-foreground line-clamp-3 mb-4">
                           {member.bio}
                         </p>
+                      )}
+
+                      {(member as any).showcaseCount > 0 && (
+                        <div className="flex items-center gap-1.5 mb-3">
+                          <Briefcase className="h-3.5 w-3.5 text-primary" />
+                          <span className="text-xs font-medium text-primary font-body">
+                            {(member as any).showcaseCount} showcase item{(member as any).showcaseCount !== 1 ? "s" : ""}
+                          </span>
+                        </div>
                       )}
 
                       <div className="flex flex-col gap-1.5">
