@@ -225,7 +225,7 @@ const en = {
     submitCta: "Submit yours",
     submitTitle: "Submit to Showcase",
     signInToSubmit: "Sign in to submit",
-    tabs: { all: "All", caseStudies: "Case Studies", testimonials: "Testimonials", tools: "Tools" },
+    tabs: { all: "All", caseStudies: "Case Studies", testimonials: "Testimonials", tools: "Tools", guidebooks: "Guidebooks", sampleCode: "Codes & Prompts" },
     by: "by",
     visitLink: "Visit",
     reviews: "Reviews",
