@@ -166,7 +166,6 @@ const SubmitForm = ({ onClose }: { onClose: () => void }) => {
   const { user } = useAuth();
   const createItem = useCreateShowcaseItem();
   const { toast } = useToast();
-  const fileInputRef = useRef<HTMLInputElement>(null);
   const [type, setType] = useState<ShowcaseType>("case_study");
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -178,9 +177,7 @@ const SubmitForm = ({ onClose }: { onClose: () => void }) => {
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
+  const handleFileSelected = (file: File) => {
     if (!file.type.startsWith("image/")) {
       toast({ title: "Please select an image file", variant: "destructive" });
       return;
@@ -196,7 +193,6 @@ const SubmitForm = ({ onClose }: { onClose: () => void }) => {
   const clearImage = () => {
     setImageFile(null);
     setImagePreview(null);
-    if (fileInputRef.current) fileInputRef.current.value = "";
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
