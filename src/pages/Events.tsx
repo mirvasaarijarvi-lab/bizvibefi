@@ -1,15 +1,35 @@
+import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
+import { useIsAdmin } from "@/hooks/useAdminShowcase";
 import Layout from "@/components/Layout";
 import PageMeta from "@/components/PageMeta";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { Link } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import {
   Calendar, MapPin, Globe, Users, Clock, CheckCircle, Zap,
-  Video, Wrench, Rocket
+  Video, Wrench, Rocket, Plus, Pencil, Trash2,
 } from "lucide-react";
 import { format, isPast } from "date-fns";
 
@@ -20,10 +40,256 @@ const eventTypeConfig: Record<string, { label: string; icon: React.ElementType; 
   hackathon: { label: "Hackathon", icon: Rocket, color: "bg-destructive/10 text-destructive" },
 };
 
-const Events = () => {
+interface EventFormData {
+  title: string;
+  description: string;
+  event_type: string;
+  starts_at: string;
+  ends_at: string;
+  location: string;
+  is_online: boolean;
+  online_url: string;
+  max_attendees: string;
+  is_published: boolean;
+}
+
+const emptyForm: EventFormData = {
+  title: "",
+  description: "",
+  event_type: "meetup",
+  starts_at: "",
+  ends_at: "",
+  location: "",
+  is_online: false,
+  online_url: "",
+  max_attendees: "",
+  is_published: true,
+};
+
+const EventFormDialog = ({
+  open,
+  onOpenChange,
+  editEvent,
+}: {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  editEvent?: any;
+}) => {
   const { user } = useAuth();
   const { toast } = useToast();
   const queryClient = useQueryClient();
+
+  const [form, setForm] = useState<EventFormData>(() => {
+    if (editEvent) {
+      return {
+        title: editEvent.title,
+        description: editEvent.description || "",
+        event_type: editEvent.event_type,
+        starts_at: editEvent.starts_at ? format(new Date(editEvent.starts_at), "yyyy-MM-dd'T'HH:mm") : "",
+        ends_at: editEvent.ends_at ? format(new Date(editEvent.ends_at), "yyyy-MM-dd'T'HH:mm") : "",
+        location: editEvent.location || "",
+        is_online: editEvent.is_online,
+        online_url: editEvent.online_url || "",
+        max_attendees: editEvent.max_attendees?.toString() || "",
+        is_published: editEvent.is_published,
+      };
+    }
+    return emptyForm;
+  });
+
+  const saveMutation = useMutation({
+    mutationFn: async () => {
+      const payload = {
+        title: form.title.trim(),
+        description: form.description.trim() || null,
+        event_type: form.event_type,
+        starts_at: new Date(form.starts_at).toISOString(),
+        ends_at: form.ends_at ? new Date(form.ends_at).toISOString() : null,
+        location: form.location.trim() || null,
+        is_online: form.is_online,
+        online_url: form.online_url.trim() || null,
+        max_attendees: form.max_attendees ? parseInt(form.max_attendees) : null,
+        is_published: form.is_published,
+      };
+
+      if (editEvent) {
+        const { error } = await supabase
+          .from("events")
+          .update(payload)
+          .eq("id", editEvent.id);
+        if (error) throw error;
+      } else {
+        const { error } = await supabase
+          .from("events")
+          .insert({ ...payload, created_by: user!.id });
+        if (error) throw error;
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["events"] });
+      toast({ title: editEvent ? "Event updated!" : "Event created!" });
+      onOpenChange(false);
+    },
+    onError: (err: Error) => {
+      toast({ title: "Error", description: err.message, variant: "destructive" });
+    },
+  });
+
+  const set = (field: keyof EventFormData, value: any) =>
+    setForm((prev) => ({ ...prev, [field]: value }));
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
+        <DialogHeader>
+          <DialogTitle className="font-display">
+            {editEvent ? "Edit Event" : "Create Event"}
+          </DialogTitle>
+        </DialogHeader>
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            saveMutation.mutate();
+          }}
+          className="space-y-4"
+        >
+          <div>
+            <Label className="font-body text-sm">Title *</Label>
+            <Input
+              value={form.title}
+              onChange={(e) => set("title", e.target.value)}
+              required
+              maxLength={200}
+              className="font-body"
+            />
+          </div>
+          <div>
+            <Label className="font-body text-sm">Description</Label>
+            <Textarea
+              value={form.description}
+              onChange={(e) => set("description", e.target.value)}
+              rows={3}
+              maxLength={2000}
+              className="font-body"
+            />
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <Label className="font-body text-sm">Type</Label>
+              <Select value={form.event_type} onValueChange={(v) => set("event_type", v)}>
+                <SelectTrigger className="font-body">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="meetup">Meetup</SelectItem>
+                  <SelectItem value="webinar">Webinar</SelectItem>
+                  <SelectItem value="workshop">Workshop</SelectItem>
+                  <SelectItem value="hackathon">Hackathon</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div>
+              <Label className="font-body text-sm">Max Attendees</Label>
+              <Input
+                type="number"
+                value={form.max_attendees}
+                onChange={(e) => set("max_attendees", e.target.value)}
+                min={1}
+                placeholder="Unlimited"
+                className="font-body"
+              />
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <Label className="font-body text-sm">Starts At *</Label>
+              <Input
+                type="datetime-local"
+                value={form.starts_at}
+                onChange={(e) => set("starts_at", e.target.value)}
+                required
+                className="font-body"
+              />
+            </div>
+            <div>
+              <Label className="font-body text-sm">Ends At</Label>
+              <Input
+                type="datetime-local"
+                value={form.ends_at}
+                onChange={(e) => set("ends_at", e.target.value)}
+                className="font-body"
+              />
+            </div>
+          </div>
+          <div>
+            <Label className="font-body text-sm">Location</Label>
+            <Input
+              value={form.location}
+              onChange={(e) => set("location", e.target.value)}
+              placeholder="Venue or address"
+              className="font-body"
+            />
+          </div>
+          <div className="flex items-center gap-3">
+            <Switch
+              checked={form.is_online}
+              onCheckedChange={(v) => set("is_online", v)}
+            />
+            <Label className="font-body text-sm">Online event</Label>
+          </div>
+          {form.is_online && (
+            <div>
+              <Label className="font-body text-sm">Online URL</Label>
+              <Input
+                value={form.online_url}
+                onChange={(e) => set("online_url", e.target.value)}
+                placeholder="https://meet.google.com/..."
+                className="font-body"
+              />
+            </div>
+          )}
+          <div className="flex items-center gap-3">
+            <Switch
+              checked={form.is_published}
+              onCheckedChange={(v) => set("is_published", v)}
+            />
+            <Label className="font-body text-sm">Published (visible to everyone)</Label>
+          </div>
+          <div className="flex gap-2 pt-2">
+            <Button
+              type="submit"
+              className="bg-gradient-storm hover:opacity-90 font-body"
+              disabled={saveMutation.isPending}
+            >
+              {saveMutation.isPending
+                ? "Saving..."
+                : editEvent
+                ? "Update Event"
+                : "Create Event"}
+            </Button>
+            <Button
+              type="button"
+              variant="ghost"
+              onClick={() => onOpenChange(false)}
+              className="font-body"
+            >
+              Cancel
+            </Button>
+          </div>
+        </form>
+      </DialogContent>
+    </Dialog>
+  );
+};
+
+const Events = () => {
+  const { user } = useAuth();
+  const isAdmin = useIsAdmin();
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
+
+  const [createOpen, setCreateOpen] = useState(false);
+  const [editEvent, setEditEvent] = useState<any>(null);
 
   const { data: events, isLoading } = useQuery({
     queryKey: ["events"],
@@ -66,27 +332,17 @@ const Events = () => {
   const rsvpMutation = useMutation({
     mutationFn: async ({ eventId, status }: { eventId: string; status: "going" | "maybe" | "cancelled" }) => {
       if (!user) throw new Error("Not authenticated");
-
       const existing = myRsvps?.find((r) => r.event_id === eventId);
-
       if (existing) {
         if (status === "cancelled") {
-          const { error } = await supabase
-            .from("event_rsvps")
-            .delete()
-            .eq("id", existing.id);
+          const { error } = await supabase.from("event_rsvps").delete().eq("id", existing.id);
           if (error) throw error;
         } else {
-          const { error } = await supabase
-            .from("event_rsvps")
-            .update({ status })
-            .eq("id", existing.id);
+          const { error } = await supabase.from("event_rsvps").update({ status }).eq("id", existing.id);
           if (error) throw error;
         }
       } else {
-        const { error } = await supabase
-          .from("event_rsvps")
-          .insert({ event_id: eventId, user_id: user.id, status });
+        const { error } = await supabase.from("event_rsvps").insert({ event_id: eventId, user_id: user.id, status });
         if (error) throw error;
       }
     },
@@ -100,11 +356,209 @@ const Events = () => {
     },
   });
 
+  const deleteMutation = useMutation({
+    mutationFn: async (eventId: string) => {
+      const { error } = await supabase.from("events").delete().eq("id", eventId);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["events"] });
+      toast({ title: "Event deleted" });
+    },
+    onError: (err: Error) => {
+      toast({ title: "Error", description: err.message, variant: "destructive" });
+    },
+  });
+
   const upcomingEvents = events?.filter((e) => !isPast(new Date(e.starts_at))) ?? [];
   const pastEvents = events?.filter((e) => isPast(new Date(e.starts_at))) ?? [];
 
   const getRsvpStatus = (eventId: string) => {
     return myRsvps?.find((r) => r.event_id === eventId)?.status;
+  };
+
+  const renderEventCard = (event: any, isPastEvent = false) => {
+    const config = eventTypeConfig[event.event_type] || eventTypeConfig.meetup;
+    const Icon = config.icon;
+    const rsvpStatus = getRsvpStatus(event.id);
+    const attendeeCount = rsvpCounts?.[event.id] ?? 0;
+    const isFull = event.max_attendees ? attendeeCount >= event.max_attendees : false;
+
+    return (
+      <div
+        key={event.id}
+        className={`bg-card border border-border rounded-2xl p-6 transition-colors ${
+          isPastEvent ? "" : "hover:border-primary/30"
+        }`}
+      >
+        <div className="flex flex-col md:flex-row gap-6">
+          {/* Date block */}
+          {!isPastEvent && (
+            <div className="flex-shrink-0 w-20 text-center">
+              <div className="bg-muted rounded-xl p-3">
+                <p className="text-xs text-muted-foreground font-body uppercase">
+                  {format(new Date(event.starts_at), "MMM")}
+                </p>
+                <p className="text-2xl font-display font-bold text-foreground">
+                  {format(new Date(event.starts_at), "dd")}
+                </p>
+              </div>
+            </div>
+          )}
+
+          {/* Content */}
+          <div className="flex-1">
+            <div className="flex items-center gap-2 mb-2 flex-wrap">
+              <Badge variant="secondary" className={`${config.color} border-0 font-body text-xs`}>
+                <Icon className="h-3 w-3 mr-1" />
+                {config.label}
+              </Badge>
+              {event.is_online && (
+                <Badge variant="outline" className="font-body text-xs">
+                  <Globe className="h-3 w-3 mr-1" /> Online
+                </Badge>
+              )}
+              {!event.is_published && (
+                <Badge variant="outline" className="font-body text-xs text-muted-foreground">
+                  Draft
+                </Badge>
+              )}
+              {/* Admin actions */}
+              {isAdmin && (
+                <div className="ml-auto flex items-center gap-1">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="h-7 w-7 p-0"
+                    onClick={() => setEditEvent(event)}
+                  >
+                    <Pencil className="h-3.5 w-3.5" />
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="h-7 w-7 p-0 text-destructive hover:text-destructive"
+                    onClick={() => {
+                      if (confirm("Delete this event?")) {
+                        deleteMutation.mutate(event.id);
+                      }
+                    }}
+                    disabled={deleteMutation.isPending}
+                  >
+                    <Trash2 className="h-3.5 w-3.5" />
+                  </Button>
+                </div>
+              )}
+            </div>
+
+            <h2 className={`font-display font-bold text-foreground mb-2 ${isPastEvent ? "text-base" : "text-xl"}`}>
+              {event.title}
+            </h2>
+            {!isPastEvent && event.description && (
+              <p className="text-sm text-muted-foreground font-body mb-4">
+                {event.description}
+              </p>
+            )}
+
+            <div className="flex flex-wrap items-center gap-4 text-xs text-muted-foreground font-body mb-4">
+              <span className="flex items-center gap-1">
+                <Clock className="h-3.5 w-3.5" />
+                {isPastEvent
+                  ? format(new Date(event.starts_at), "MMM dd, yyyy")
+                  : (
+                    <>
+                      {format(new Date(event.starts_at), "HH:mm")}
+                      {event.ends_at && ` – ${format(new Date(event.ends_at), "HH:mm")}`}
+                    </>
+                  )}
+              </span>
+              {event.location && (
+                <span className="flex items-center gap-1">
+                  <MapPin className="h-3.5 w-3.5" />
+                  {event.location}
+                </span>
+              )}
+              {!isPastEvent && (
+                <span className="flex items-center gap-1">
+                  <Users className="h-3.5 w-3.5" />
+                  {attendeeCount} going
+                  {event.max_attendees && ` / ${event.max_attendees} spots`}
+                </span>
+              )}
+            </div>
+
+            {/* RSVP buttons - upcoming only */}
+            {!isPastEvent && (
+              user ? (
+                <div className="flex items-center gap-2">
+                  {rsvpStatus === "going" ? (
+                    <>
+                      <Button size="sm" className="bg-accent text-accent-foreground font-body" disabled>
+                        <CheckCircle className="h-4 w-4 mr-1" /> Going
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        className="font-body text-xs"
+                        onClick={() => rsvpMutation.mutate({ eventId: event.id, status: "cancelled" })}
+                        disabled={rsvpMutation.isPending}
+                      >
+                        Cancel
+                      </Button>
+                    </>
+                  ) : rsvpStatus === "maybe" ? (
+                    <>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        className="font-body"
+                        onClick={() => rsvpMutation.mutate({ eventId: event.id, status: "going" })}
+                        disabled={rsvpMutation.isPending || isFull}
+                      >
+                        <Zap className="h-4 w-4 mr-1" /> Switch to Going
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        className="font-body text-xs"
+                        onClick={() => rsvpMutation.mutate({ eventId: event.id, status: "cancelled" })}
+                        disabled={rsvpMutation.isPending}
+                      >
+                        Cancel
+                      </Button>
+                    </>
+                  ) : (
+                    <>
+                      <Button
+                        size="sm"
+                        className="bg-gradient-storm hover:opacity-90 font-body"
+                        onClick={() => rsvpMutation.mutate({ eventId: event.id, status: "going" })}
+                        disabled={rsvpMutation.isPending || isFull}
+                      >
+                        {isFull ? "Full" : "I'm Going"}
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        className="font-body"
+                        onClick={() => rsvpMutation.mutate({ eventId: event.id, status: "maybe" })}
+                        disabled={rsvpMutation.isPending}
+                      >
+                        Maybe
+                      </Button>
+                    </>
+                  )}
+                </div>
+              ) : (
+                <Button asChild size="sm" className="bg-gradient-storm hover:opacity-90 font-body">
+                  <Link to="/auth">Sign in to RSVP</Link>
+                </Button>
+              )
+            )}
+          </div>
+        </div>
+      </div>
+    );
   };
 
   return (
@@ -125,6 +579,14 @@ const Events = () => {
             <p className="mt-4 text-muted-foreground font-body text-lg max-w-xl mx-auto">
               Meetups, webinars, workshops, and hackathons. Show up, build, connect.
             </p>
+            {isAdmin && (
+              <Button
+                className="mt-6 bg-gradient-storm hover:opacity-90 font-body"
+                onClick={() => setCreateOpen(true)}
+              >
+                <Plus className="h-4 w-4 mr-2" /> Create Event
+              </Button>
+            )}
           </div>
 
           {isLoading ? (
@@ -133,145 +595,9 @@ const Events = () => {
             </div>
           ) : (
             <>
-              {/* Upcoming Events */}
               {upcomingEvents.length > 0 ? (
                 <div className="space-y-4 mb-12">
-                  {upcomingEvents.map((event) => {
-                    const config = eventTypeConfig[event.event_type] || eventTypeConfig.meetup;
-                    const Icon = config.icon;
-                    const rsvpStatus = getRsvpStatus(event.id);
-                    const attendeeCount = rsvpCounts?.[event.id] ?? 0;
-                    const isFull = event.max_attendees ? attendeeCount >= event.max_attendees : false;
-
-                    return (
-                      <div
-                        key={event.id}
-                        className="bg-card border border-border rounded-2xl p-6 hover:border-primary/30 transition-colors"
-                      >
-                        <div className="flex flex-col md:flex-row gap-6">
-                          {/* Date block */}
-                          <div className="flex-shrink-0 w-20 text-center">
-                            <div className="bg-muted rounded-xl p-3">
-                              <p className="text-xs text-muted-foreground font-body uppercase">
-                                {format(new Date(event.starts_at), "MMM")}
-                              </p>
-                              <p className="text-2xl font-display font-bold text-foreground">
-                                {format(new Date(event.starts_at), "dd")}
-                              </p>
-                            </div>
-                          </div>
-
-                          {/* Content */}
-                          <div className="flex-1">
-                            <div className="flex items-center gap-2 mb-2">
-                              <Badge variant="secondary" className={`${config.color} border-0 font-body text-xs`}>
-                                <Icon className="h-3 w-3 mr-1" />
-                                {config.label}
-                              </Badge>
-                              {event.is_online && (
-                                <Badge variant="outline" className="font-body text-xs">
-                                  <Globe className="h-3 w-3 mr-1" /> Online
-                                </Badge>
-                              )}
-                            </div>
-
-                            <h2 className="font-display text-xl font-bold text-foreground mb-2">
-                              {event.title}
-                            </h2>
-                            <p className="text-sm text-muted-foreground font-body mb-4">
-                              {event.description}
-                            </p>
-
-                            <div className="flex flex-wrap items-center gap-4 text-xs text-muted-foreground font-body mb-4">
-                              <span className="flex items-center gap-1">
-                                <Clock className="h-3.5 w-3.5" />
-                                {format(new Date(event.starts_at), "HH:mm")}
-                                {event.ends_at && ` – ${format(new Date(event.ends_at), "HH:mm")}`}
-                              </span>
-                              {event.location && (
-                                <span className="flex items-center gap-1">
-                                  <MapPin className="h-3.5 w-3.5" />
-                                  {event.location}
-                                </span>
-                              )}
-                              <span className="flex items-center gap-1">
-                                <Users className="h-3.5 w-3.5" />
-                                {attendeeCount} going
-                                {event.max_attendees && ` / ${event.max_attendees} spots`}
-                              </span>
-                            </div>
-
-                            {/* RSVP buttons */}
-                            {user ? (
-                              <div className="flex items-center gap-2">
-                                {rsvpStatus === "going" ? (
-                                  <>
-                                    <Button size="sm" className="bg-accent text-accent-foreground font-body" disabled>
-                                      <CheckCircle className="h-4 w-4 mr-1" /> Going
-                                    </Button>
-                                    <Button
-                                      size="sm"
-                                      variant="ghost"
-                                      className="font-body text-xs"
-                                      onClick={() => rsvpMutation.mutate({ eventId: event.id, status: "cancelled" })}
-                                      disabled={rsvpMutation.isPending}
-                                    >
-                                      Cancel
-                                    </Button>
-                                  </>
-                                ) : rsvpStatus === "maybe" ? (
-                                  <>
-                                    <Button
-                                      size="sm"
-                                      variant="outline"
-                                      className="font-body"
-                                      onClick={() => rsvpMutation.mutate({ eventId: event.id, status: "going" })}
-                                      disabled={rsvpMutation.isPending || isFull}
-                                    >
-                                      <Zap className="h-4 w-4 mr-1" /> Switch to Going
-                                    </Button>
-                                    <Button
-                                      size="sm"
-                                      variant="ghost"
-                                      className="font-body text-xs"
-                                      onClick={() => rsvpMutation.mutate({ eventId: event.id, status: "cancelled" })}
-                                      disabled={rsvpMutation.isPending}
-                                    >
-                                      Cancel
-                                    </Button>
-                                  </>
-                                ) : (
-                                  <>
-                                    <Button
-                                      size="sm"
-                                      className="bg-gradient-storm hover:opacity-90 font-body"
-                                      onClick={() => rsvpMutation.mutate({ eventId: event.id, status: "going" })}
-                                      disabled={rsvpMutation.isPending || isFull}
-                                    >
-                                      {isFull ? "Full" : "I'm Going"}
-                                    </Button>
-                                    <Button
-                                      size="sm"
-                                      variant="outline"
-                                      className="font-body"
-                                      onClick={() => rsvpMutation.mutate({ eventId: event.id, status: "maybe" })}
-                                      disabled={rsvpMutation.isPending}
-                                    >
-                                      Maybe
-                                    </Button>
-                                  </>
-                                )}
-                              </div>
-                            ) : (
-                              <Button asChild size="sm" className="bg-gradient-storm hover:opacity-90 font-body">
-                                <Link to="/auth">Sign in to RSVP</Link>
-                              </Button>
-                            )}
-                          </div>
-                        </div>
-                      </div>
-                    );
-                  })}
+                  {upcomingEvents.map((event) => renderEventCard(event))}
                 </div>
               ) : (
                 <div className="text-center py-12 bg-card border border-border rounded-2xl mb-12">
@@ -280,29 +606,11 @@ const Events = () => {
                 </div>
               )}
 
-              {/* Past Events */}
               {pastEvents.length > 0 && (
                 <div>
                   <h2 className="font-display text-xl font-bold text-foreground mb-4">Past Events</h2>
                   <div className="space-y-3 opacity-60">
-                    {pastEvents.map((event) => {
-                      const config = eventTypeConfig[event.event_type] || eventTypeConfig.meetup;
-                      const Icon = config.icon;
-                      return (
-                        <div key={event.id} className="bg-card border border-border rounded-xl p-4">
-                          <div className="flex items-center gap-3">
-                            <Badge variant="secondary" className={`${config.color} border-0 font-body text-xs`}>
-                              <Icon className="h-3 w-3 mr-1" />
-                              {config.label}
-                            </Badge>
-                            <h3 className="font-display font-semibold text-foreground">{event.title}</h3>
-                            <span className="text-xs text-muted-foreground font-body ml-auto">
-                              {format(new Date(event.starts_at), "MMM dd, yyyy")}
-                            </span>
-                          </div>
-                        </div>
-                      );
-                    })}
+                    {pastEvents.map((event) => renderEventCard(event, true))}
                   </div>
                 </div>
               )}
@@ -310,6 +618,20 @@ const Events = () => {
           )}
         </div>
       </section>
+
+      {/* Create dialog */}
+      {createOpen && (
+        <EventFormDialog open={createOpen} onOpenChange={setCreateOpen} />
+      )}
+
+      {/* Edit dialog */}
+      {editEvent && (
+        <EventFormDialog
+          open={!!editEvent}
+          onOpenChange={(open) => { if (!open) setEditEvent(null); }}
+          editEvent={editEvent}
+        />
+      )}
     </Layout>
   );
 };
