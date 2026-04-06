@@ -46,6 +46,7 @@ type SortOption = "newest" | "alphabetical";
 const Members = () => {
   const { user, loading: authLoading } = useAuth();
   const isAdmin = useIsAdmin();
+  const { data: myProfile } = useProfile();
   const queryClient = useQueryClient();
   const [search, setSearch] = useState("");
   const [tierFilter, setTierFilter] = useState<TierFilter>("all");
