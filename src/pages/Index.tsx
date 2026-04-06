@@ -166,6 +166,8 @@ const Index = () => {
   );
 };
 
+const freeTierLinks = ["/contact", "/events", "/events", "/members"];
+
 const FreeTierCard = () => {
   const { t } = useTranslation();
   return (
@@ -182,9 +184,11 @@ const FreeTierCard = () => {
       <p className="text-turquoise font-display text-lg font-semibold mt-1">{t("tiers.free.price")}</p>
       <ul className="mt-6 space-y-3 font-body text-sm text-muted-foreground">
         {[0, 1, 2, 3].map((i) => (
-          <li key={i} className="flex items-start gap-2">
-            <Zap className="h-4 w-4 text-turquoise mt-0.5 shrink-0" />
-            {t(`tiers.free.benefits.${i}`)}
+          <li key={i}>
+            <Link to={freeTierLinks[i]} className="flex items-start gap-2 hover:text-primary transition-colors group/item">
+              <Zap className="h-4 w-4 text-turquoise mt-0.5 shrink-0" />
+              <span className="group-hover/item:underline">{t(`tiers.free.benefits.${i}`)}</span>
+            </Link>
           </li>
         ))}
       </ul>
@@ -194,6 +198,8 @@ const FreeTierCard = () => {
     </motion.div>
   );
 };
+
+const proTierLinks = ["/community", "/get-going", "/get-going", "/events", "/contact"];
 
 const ProTierCard = () => {
   const { t } = useTranslation();
@@ -214,9 +220,11 @@ const ProTierCard = () => {
       <p className="text-purple-soft font-display text-lg font-semibold mt-1">{t("tiers.pro.price")}</p>
       <ul className="mt-6 space-y-3 font-body text-sm text-muted-foreground">
         {[0, 1, 2, 3, 4].map((i) => (
-          <li key={i} className="flex items-start gap-2">
-            <Zap className="h-4 w-4 text-purple-soft mt-0.5 shrink-0" />
-            {t(`tiers.pro.benefits.${i}`)}
+          <li key={i}>
+            <Link to={proTierLinks[i]} className="flex items-start gap-2 hover:text-primary transition-colors group/item">
+              <Zap className="h-4 w-4 text-purple-soft mt-0.5 shrink-0" />
+              <span className="group-hover/item:underline">{t(`tiers.pro.benefits.${i}`)}</span>
+            </Link>
           </li>
         ))}
       </ul>
@@ -227,6 +235,7 @@ const ProTierCard = () => {
   );
 };
 
+const vibetorTierLinks = ["/community", "/profile", "/members", "/showcase", "/events"];
 
 const VibetorTierCard = () => {
   const { t } = useTranslation();
@@ -247,9 +256,11 @@ const VibetorTierCard = () => {
       <p className="text-vibetor font-display text-lg font-semibold mt-1">{t("tiers.vibetor.price")}</p>
       <ul className="mt-6 space-y-3 font-body text-sm text-muted-foreground">
         {[0, 1, 2, 3, 4].map((i) => (
-          <li key={i} className="flex items-start gap-2">
-            <Zap className="h-4 w-4 text-vibetor mt-0.5 shrink-0" />
-            {t(`tiers.vibetor.benefits.${i}`)}
+          <li key={i}>
+            <Link to={vibetorTierLinks[i]} className="flex items-start gap-2 hover:text-primary transition-colors group/item">
+              <Zap className="h-4 w-4 text-vibetor mt-0.5 shrink-0" />
+              <span className="group-hover/item:underline">{t(`tiers.vibetor.benefits.${i}`)}</span>
+            </Link>
           </li>
         ))}
       </ul>
