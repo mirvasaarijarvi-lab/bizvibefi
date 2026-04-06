@@ -19,6 +19,7 @@ import { Link as RouterLink } from "react-router-dom";
 interface Visibility {
   bio?: boolean;
   company?: boolean;
+  company_url?: boolean;
   linkedin_url?: boolean;
   contact_email?: boolean;
   contact_phone?: boolean;
