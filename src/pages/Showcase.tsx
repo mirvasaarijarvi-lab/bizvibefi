@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Link } from "react-router-dom";
 import Layout from "@/components/Layout";
 import PageMeta from "@/components/PageMeta";
@@ -15,7 +15,8 @@ import { motion } from "framer-motion";
 import { useTranslation } from "@/i18n/useTranslation";
 import { useAuth } from "@/hooks/useAuth";
 import { useShowcaseItems, useCreateShowcaseItem, useShowcaseReviews, useCreateReview, type ShowcaseType, type ShowcaseItem } from "@/hooks/useShowcase";
-import { Plus, Star, ExternalLink, Clock, CheckCircle, XCircle, ArrowRight, Lightbulb, MessageSquare, Wrench } from "lucide-react";
+import { Plus, Star, ExternalLink, Clock, CheckCircle, XCircle, ArrowRight, Lightbulb, MessageSquare, Wrench, Upload, X as XIcon } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 
 const typeIcons: Record<ShowcaseType, React.ElementType> = {
@@ -161,28 +162,70 @@ const ReviewDialog = ({ item, open, onOpenChange }: { item: ShowcaseItem; open: 
 
 const SubmitForm = ({ onClose }: { onClose: () => void }) => {
   const { t } = useTranslation();
+  const { user } = useAuth();
   const createItem = useCreateShowcaseItem();
   const { toast } = useToast();
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const [type, setType] = useState<ShowcaseType>("case_study");
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [content, setContent] = useState("");
   const [linkUrl, setLinkUrl] = useState("");
-  const [imageUrl, setImageUrl] = useState("");
   const [tags, setTags] = useState("");
   const [pricingInfo, setPricingInfo] = useState("");
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [uploading, setUploading] = useState(false);
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (!file.type.startsWith("image/")) {
+      toast({ title: "Please select an image file", variant: "destructive" });
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      toast({ title: "Image must be under 5MB", variant: "destructive" });
+      return;
+    }
+    setImageFile(file);
+    setImagePreview(URL.createObjectURL(file));
+  };
+
+  const clearImage = () => {
+    setImageFile(null);
+    setImagePreview(null);
+    if (fileInputRef.current) fileInputRef.current.value = "";
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!title.trim() || !description.trim()) return;
+
+    setUploading(true);
+    let image_url: string | undefined;
+
     try {
+      if (imageFile && user) {
+        const ext = imageFile.name.split(".").pop();
+        const path = `${user.id}/${Date.now()}.${ext}`;
+        const { error: uploadError } = await supabase.storage
+          .from("showcase-images")
+          .upload(path, imageFile);
+        if (uploadError) throw uploadError;
+        const { data: urlData } = supabase.storage
+          .from("showcase-images")
+          .getPublicUrl(path);
+        image_url = urlData.publicUrl;
+      }
+
       await createItem.mutateAsync({
         type,
         title: title.trim(),
         description: description.trim(),
         content: content.trim() || undefined,
         link_url: linkUrl.trim() || undefined,
-        image_url: imageUrl.trim() || undefined,
+        image_url,
         category_tags: tags.split(",").map((t) => t.trim()).filter(Boolean),
         pricing_info: pricingInfo.trim() || undefined,
       });
@@ -190,6 +233,8 @@ const SubmitForm = ({ onClose }: { onClose: () => void }) => {
       onClose();
     } catch {
       toast({ title: t("showcase.submitError"), variant: "destructive" });
+    } finally {
+      setUploading(false);
     }
   };
 
@@ -224,7 +269,34 @@ const SubmitForm = ({ onClose }: { onClose: () => void }) => {
       </div>
       <div>
         <Label>{t("showcase.imageLabel")}</Label>
-        <Input type="url" value={imageUrl} onChange={(e) => setImageUrl(e.target.value)} placeholder="https://..." />
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept="image/*"
+          onChange={handleFileChange}
+          className="hidden"
+        />
+        {imagePreview ? (
+          <div className="relative mt-2">
+            <img src={imagePreview} alt="Preview" className="w-full h-32 object-cover rounded-lg border border-border" />
+            <button
+              type="button"
+              onClick={clearImage}
+              className="absolute top-1 right-1 bg-background/80 rounded-full p-1 hover:bg-destructive hover:text-destructive-foreground transition-colors"
+            >
+              <XIcon className="h-4 w-4" />
+            </button>
+          </div>
+        ) : (
+          <button
+            type="button"
+            onClick={() => fileInputRef.current?.click()}
+            className="mt-1 w-full border-2 border-dashed border-border rounded-lg p-6 flex flex-col items-center gap-2 text-muted-foreground hover:border-primary/40 hover:text-foreground transition-colors"
+          >
+            <Upload className="h-6 w-6" />
+            <span className="text-sm font-body">{t("showcase.uploadImage")}</span>
+          </button>
+        )}
       </div>
       <div>
         <Label>{t("showcase.tagsLabel")}</Label>
@@ -236,8 +308,8 @@ const SubmitForm = ({ onClose }: { onClose: () => void }) => {
           <Input value={pricingInfo} onChange={(e) => setPricingInfo(e.target.value)} placeholder={t("showcase.pricingPlaceholder")} />
         </div>
       )}
-      <Button type="submit" disabled={createItem.isPending} className="w-full">
-        {t("showcase.submitBtn")}
+      <Button type="submit" disabled={createItem.isPending || uploading} className="w-full">
+        {uploading ? t("showcase.uploading") : t("showcase.submitBtn")}
       </Button>
     </form>
   );
