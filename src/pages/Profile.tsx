@@ -32,6 +32,14 @@ const Profile = () => {
   const [contactPhone, setContactPhone] = useState("");
   const [websiteLinks, setWebsiteLinks] = useState<WebsiteLink[]>([]);
   const [uploading, setUploading] = useState(false);
+  const [visibility, setVisibility] = useState({
+    bio: true,
+    company: true,
+    linkedin_url: true,
+    contact_email: true,
+    contact_phone: true,
+    website_links: true,
+  });
 
   useEffect(() => {
     if (!authLoading && !user) navigate("/auth", { replace: true });
@@ -46,6 +54,10 @@ const Profile = () => {
       setContactEmail(profile.contact_email ?? "");
       setContactPhone(profile.contact_phone ?? "");
       setWebsiteLinks(Array.isArray(profile.website_links) ? profile.website_links : []);
+      const vis = (profile as any).profile_visibility;
+      if (vis && typeof vis === "object") {
+        setVisibility((prev) => ({ ...prev, ...vis }));
+      }
     }
   }, [profile]);
 
@@ -89,7 +101,8 @@ const Profile = () => {
         contact_email: contactEmail.trim() || null,
         contact_phone: contactPhone.trim() || null,
         website_links: cleanLinks.length > 0 ? cleanLinks : [],
-      });
+        profile_visibility: visibility,
+      } as any);
       toast({ title: "Profile updated!" });
     } catch (error: unknown) {
       const message = error instanceof Error ? error.message : "Update failed";
