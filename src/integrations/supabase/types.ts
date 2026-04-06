@@ -280,6 +280,7 @@ export type Database = {
           membership_tier: Database["public"]["Enums"]["membership_tier"]
           updated_at: string
           user_id: string
+          viber_access_override: boolean
           website_links: Json | null
         }
         Insert: {
@@ -295,6 +296,7 @@ export type Database = {
           membership_tier?: Database["public"]["Enums"]["membership_tier"]
           updated_at?: string
           user_id: string
+          viber_access_override?: boolean
           website_links?: Json | null
         }
         Update: {
@@ -310,6 +312,7 @@ export type Database = {
           membership_tier?: Database["public"]["Enums"]["membership_tier"]
           updated_at?: string
           user_id?: string
+          viber_access_override?: boolean
           website_links?: Json | null
         }
         Relationships: []
