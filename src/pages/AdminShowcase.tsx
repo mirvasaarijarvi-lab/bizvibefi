@@ -228,6 +228,7 @@ const AdminItemCard = ({ item }: { item: ShowcaseItem }) => {
       </CardFooter>
       <AdminEditDialog item={item} open={editOpen} onOpenChange={setEditOpen} />
       <ImageCropDialog file={cropFile} open={cropOpen} onOpenChange={setCropOpen} onCropComplete={handleCropComplete} />
+      <RejectDialog itemId={item.id} itemTitle={item.title} open={rejectOpen} onOpenChange={setRejectOpen} />
     </Card>
   );
 };
