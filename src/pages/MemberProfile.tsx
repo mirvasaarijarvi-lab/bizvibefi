@@ -152,6 +152,8 @@ const MemberProfile = () => {
 
   const vis: Visibility = { ...defaultVisibility, ...(member.profile_visibility ?? {}) };
   const isOwnProfile = user.id === member.user_id;
+  // For public view, only show fields the user has marked visible (even on own profile)
+  const showField = (field: keyof Visibility) => vis[field] === true;
 
   const initials = (name: string | null) => {
     if (!name) return "?";
