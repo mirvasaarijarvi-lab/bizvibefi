@@ -70,22 +70,27 @@ const About = () => {
             {t("about.valuesTitle")} <span className="text-gradient-storm">{t("about.valuesTitleHighlight")}</span>
           </h2>
           <div className="space-y-6">
-            {[0, 1, 2].map((i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, x: -20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.1 }}
-                className="flex gap-6 items-start bg-card border border-border rounded-xl p-6"
-              >
-                <span className="font-display text-3xl font-extrabold text-gradient-prism">{i + 1}</span>
-                <div>
-                  <h3 className="font-display text-lg font-semibold tracking-[-0.01em]">{t(`about.values.${i}.title`)}</h3>
-                  <p className="mt-1 text-sm text-muted-foreground font-body">{t(`about.values.${i}.desc`)}</p>
-                </div>
-              </motion.div>
-            ))}
+            {[0, 1, 2].map((i) => {
+              const valueLinks = ["/community", "/showcase", "/get-going"];
+              return (
+                <Link to={valueLinks[i]} key={i} className="block">
+                  <motion.div
+                    initial={{ opacity: 0, x: -20 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: i * 0.1 }}
+                    className="flex gap-6 items-start bg-card border border-border rounded-xl p-6 hover:border-primary/40 hover:shadow-md transition-all group"
+                  >
+                    <span className="font-display text-3xl font-extrabold text-gradient-prism">{i + 1}</span>
+                    <div className="flex-1">
+                      <h3 className="font-display text-lg font-semibold tracking-[-0.01em] group-hover:text-primary transition-colors">{t(`about.values.${i}.title`)}</h3>
+                      <p className="mt-1 text-sm text-muted-foreground font-body">{t(`about.values.${i}.desc`)}</p>
+                    </div>
+                    <ArrowRight className="h-4 w-4 mt-1 text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-all shrink-0" />
+                  </motion.div>
+                </Link>
+              );
+            })}
           </div>
 
           <div className="mt-12 text-center">

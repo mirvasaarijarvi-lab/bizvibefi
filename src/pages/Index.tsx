@@ -83,21 +83,24 @@ const Index = () => {
               const iconMap: Record<string, React.ElementType> = { Zap, Wrench, Search, Handshake, Rocket, TrendingUp };
               const iconName = t(`market.benefits.${i}.icon`);
               const IconComponent = iconMap[iconName] || Zap;
+              const marketLinks = ["/contact", "/showcase", "/contact", "/members", "/get-going", "/community"];
               return (
-                <motion.div
-                  key={i}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: i * 0.08 }}
-                  className="bg-card border border-border rounded-xl p-6 hover:border-turquoise/40 hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
-                >
-                  <div className="w-10 h-10 rounded-lg bg-gradient-surge flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
-                    <IconComponent className="h-5 w-5 text-primary-foreground" />
-                  </div>
-                  <h3 className="font-display text-lg font-semibold tracking-[-0.01em]">{t(`market.benefits.${i}.title`)}</h3>
-                  <p className="mt-2 text-sm text-muted-foreground font-body">{t(`market.benefits.${i}.desc`)}</p>
-                </motion.div>
+                <Link to={marketLinks[i]} key={i} className="block">
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: i * 0.08 }}
+                    className="bg-card border border-border rounded-xl p-6 hover:border-turquoise/40 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 h-full group"
+                  >
+                    <div className="w-10 h-10 rounded-lg bg-gradient-surge flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
+                      <IconComponent className="h-5 w-5 text-primary-foreground" />
+                    </div>
+                    <h3 className="font-display text-lg font-semibold tracking-[-0.01em] group-hover:text-primary transition-colors">{t(`market.benefits.${i}.title`)}</h3>
+                    <p className="mt-2 text-sm text-muted-foreground font-body">{t(`market.benefits.${i}.desc`)}</p>
+                    <ArrowRight className="h-4 w-4 mt-3 text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-all" />
+                  </motion.div>
+                </Link>
               );
             })}
           </div>
@@ -166,6 +169,8 @@ const Index = () => {
   );
 };
 
+const freeTierLinks = ["/contact", "/events", "/events", "/members"];
+
 const FreeTierCard = () => {
   const { t } = useTranslation();
   return (
@@ -182,9 +187,11 @@ const FreeTierCard = () => {
       <p className="text-turquoise font-display text-lg font-semibold mt-1">{t("tiers.free.price")}</p>
       <ul className="mt-6 space-y-3 font-body text-sm text-muted-foreground">
         {[0, 1, 2, 3].map((i) => (
-          <li key={i} className="flex items-start gap-2">
-            <Zap className="h-4 w-4 text-turquoise mt-0.5 shrink-0" />
-            {t(`tiers.free.benefits.${i}`)}
+          <li key={i}>
+            <Link to={freeTierLinks[i]} className="flex items-start gap-2 hover:text-primary transition-colors group/item">
+              <Zap className="h-4 w-4 text-turquoise mt-0.5 shrink-0" />
+              <span className="group-hover/item:underline">{t(`tiers.free.benefits.${i}`)}</span>
+            </Link>
           </li>
         ))}
       </ul>
@@ -194,6 +201,8 @@ const FreeTierCard = () => {
     </motion.div>
   );
 };
+
+const proTierLinks = ["/community", "/get-going", "/get-going", "/events", "/contact"];
 
 const ProTierCard = () => {
   const { t } = useTranslation();
@@ -214,9 +223,11 @@ const ProTierCard = () => {
       <p className="text-purple-soft font-display text-lg font-semibold mt-1">{t("tiers.pro.price")}</p>
       <ul className="mt-6 space-y-3 font-body text-sm text-muted-foreground">
         {[0, 1, 2, 3, 4].map((i) => (
-          <li key={i} className="flex items-start gap-2">
-            <Zap className="h-4 w-4 text-purple-soft mt-0.5 shrink-0" />
-            {t(`tiers.pro.benefits.${i}`)}
+          <li key={i}>
+            <Link to={proTierLinks[i]} className="flex items-start gap-2 hover:text-primary transition-colors group/item">
+              <Zap className="h-4 w-4 text-purple-soft mt-0.5 shrink-0" />
+              <span className="group-hover/item:underline">{t(`tiers.pro.benefits.${i}`)}</span>
+            </Link>
           </li>
         ))}
       </ul>
@@ -227,6 +238,7 @@ const ProTierCard = () => {
   );
 };
 
+const vibetorTierLinks = ["/community", "/profile", "/members", "/showcase", "/events"];
 
 const VibetorTierCard = () => {
   const { t } = useTranslation();
@@ -247,9 +259,11 @@ const VibetorTierCard = () => {
       <p className="text-vibetor font-display text-lg font-semibold mt-1">{t("tiers.vibetor.price")}</p>
       <ul className="mt-6 space-y-3 font-body text-sm text-muted-foreground">
         {[0, 1, 2, 3, 4].map((i) => (
-          <li key={i} className="flex items-start gap-2">
-            <Zap className="h-4 w-4 text-vibetor mt-0.5 shrink-0" />
-            {t(`tiers.vibetor.benefits.${i}`)}
+          <li key={i}>
+            <Link to={vibetorTierLinks[i]} className="flex items-start gap-2 hover:text-primary transition-colors group/item">
+              <Zap className="h-4 w-4 text-vibetor mt-0.5 shrink-0" />
+              <span className="group-hover/item:underline">{t(`tiers.vibetor.benefits.${i}`)}</span>
+            </Link>
           </li>
         ))}
       </ul>
