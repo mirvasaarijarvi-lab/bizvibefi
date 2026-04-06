@@ -14,6 +14,39 @@ export type Database = {
   }
   public: {
     Tables: {
+      admin_notifications: {
+        Row: {
+          created_at: string
+          id: string
+          is_read: boolean
+          message: string
+          sender_email: string | null
+          sender_name: string | null
+          title: string
+          type: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          is_read?: boolean
+          message: string
+          sender_email?: string | null
+          sender_name?: string | null
+          title: string
+          type?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          is_read?: boolean
+          message?: string
+          sender_email?: string | null
+          sender_name?: string | null
+          title?: string
+          type?: string
+        }
+        Relationships: []
+      }
       event_rsvps: {
         Row: {
           created_at: string

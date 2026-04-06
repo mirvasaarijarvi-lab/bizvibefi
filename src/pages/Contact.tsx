@@ -9,6 +9,7 @@ import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { useTranslation } from "@/i18n/useTranslation";
 import { z } from "zod";
+import { supabase } from "@/integrations/supabase/client";
 
 const contactSchema = z.object({
   name: z
@@ -41,7 +42,7 @@ const Contact = () => {
   const { toast } = useToast();
   const { t } = useTranslation();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     // Honeypot check — bots fill this hidden field, humans don't
@@ -60,6 +61,23 @@ const Contact = () => {
     }
 
     setErrors({});
+
+    // Detect Vibetor-related requests
+    const lowerMsg = message.toLowerCase();
+    const isVibetorRequest = lowerMsg.includes("vibetor") || lowerMsg.includes("investor") || lowerMsg.includes("viber status") || lowerMsg.includes("viber membership");
+
+    // Create admin notification
+    const notificationType = isVibetorRequest ? "vibetor_request" : "contact";
+    const notificationTitle = isVibetorRequest ? "Vibetor Status Request" : "New Contact Message";
+    
+    await supabase.from("admin_notifications").insert({
+      type: notificationType,
+      title: notificationTitle,
+      message: message.slice(0, 500),
+      sender_name: name,
+      sender_email: email,
+    } as any);
+
     toast({ title: t("contact.toast.title"), description: t("contact.toast.desc") });
     setName("");
     setEmail("");
