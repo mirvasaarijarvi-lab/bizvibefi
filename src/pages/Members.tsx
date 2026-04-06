@@ -9,7 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
-import { Search, Users, Linkedin, Building2, ExternalLink, ShieldCheck, Zap } from "lucide-react";
+import { Search, Users, Linkedin, Building2, ExternalLink, ShieldCheck, Zap, Globe, Mail, Phone } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Navigate } from "react-router-dom";
@@ -33,6 +33,9 @@ interface MemberProfile {
   linkedin_url: string | null;
   membership_tier: "starter" | "viber" | "vibetor";
   viber_access_override: boolean;
+  contact_email: string | null;
+  contact_phone: string | null;
+  website_links: { label: string; url: string }[] | null;
   created_at: string;
 }
 
@@ -86,7 +89,7 @@ const Members = () => {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("profiles")
-        .select("id, user_id, display_name, avatar_url, bio, company, linkedin_url, membership_tier, viber_access_override, created_at")
+        .select("id, user_id, display_name, avatar_url, bio, company, linkedin_url, membership_tier, viber_access_override, contact_email, contact_phone, website_links, created_at")
         .order("created_at", { ascending: false });
       if (error) throw error;
       return data as MemberProfile[];
@@ -267,18 +270,55 @@ const Members = () => {
                         </p>
                       )}
 
-                      {member.linkedin_url && (
-                        <a
-                          href={member.linkedin_url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="inline-flex items-center gap-1.5 text-sm text-primary hover:underline"
-                        >
-                          <Linkedin className="h-4 w-4" />
-                          LinkedIn
-                          <ExternalLink className="h-3 w-3" />
-                        </a>
-                      )}
+                      <div className="flex flex-col gap-1.5">
+                        {member.contact_email && (
+                          <a
+                            href={`mailto:${member.contact_email}`}
+                            className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground"
+                          >
+                            <Mail className="h-3.5 w-3.5 shrink-0" />
+                            <span className="truncate">{member.contact_email}</span>
+                          </a>
+                        )}
+                        {member.contact_phone && (
+                          <a
+                            href={`tel:${member.contact_phone}`}
+                            className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground"
+                          >
+                            <Phone className="h-3.5 w-3.5 shrink-0" />
+                            {member.contact_phone}
+                          </a>
+                        )}
+                        {member.linkedin_url && (
+                          <a
+                            href={member.linkedin_url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-1.5 text-sm text-primary hover:underline"
+                          >
+                            <Linkedin className="h-4 w-4 shrink-0" />
+                            LinkedIn
+                            <ExternalLink className="h-3 w-3" />
+                          </a>
+                        )}
+                        {Array.isArray(member.website_links) && member.website_links.length > 0 && (
+                          <div className="flex flex-col gap-1">
+                            {member.website_links.map((link, idx) => (
+                              <a
+                                key={idx}
+                                href={link.url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="inline-flex items-center gap-1.5 text-sm text-primary hover:underline"
+                              >
+                                <Globe className="h-3.5 w-3.5 shrink-0" />
+                                <span className="truncate">{link.label || link.url}</span>
+                                <ExternalLink className="h-3 w-3 shrink-0" />
+                              </a>
+                            ))}
+                          </div>
+                        )}
+                      </div>
 
                       {isAdmin && (
                         <div className="mt-4 pt-3 border-t border-border">
