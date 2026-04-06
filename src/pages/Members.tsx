@@ -265,7 +265,7 @@ const Members = () => {
                                 SUPERADMIN
                               </Badge>
                             )}
-                            {member.role === "admin" && member.role !== "superadmin" && (
+                            {member.role === "admin" && (
                               <Badge variant="default" className="text-[10px] px-1.5 py-0">
                                 ADMIN
                               </Badge>
