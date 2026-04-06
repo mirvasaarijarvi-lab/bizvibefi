@@ -215,6 +215,21 @@ const fi = {
     sectionHighlight: "parhaat",
     sectionCta: "Katso kaikki",
   },
+  admin: {
+    showcase: {
+      pageTitle: "Hallinta — Näyteikkuna",
+      pageDesc: "Tarkista ja hallitse odottavia näyteikkunan lähetyksiä.",
+      tag: "Hallintapaneeli",
+      title: "Näyteikkunan moderointi",
+      subtitle: "Tarkista, hyväksy tai hylkää yhteisön lähetyksiä.",
+      tabs: { pending: "Odottavat", approved: "Hyväksytyt", rejected: "Hylätyt", all: "Kaikki" },
+      approve: "Hyväksy",
+      reject: "Hylkää",
+      resetPending: "Palauta odottavaksi",
+      empty: "Ei kohteita tässä kategoriassa.",
+      submittedAt: "Lähetetty",
+    },
+  },
 };
 
 export default fi;

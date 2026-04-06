@@ -215,6 +215,21 @@ const sv = {
     sectionHighlight: "skyltfönstret",
     sectionCta: "Visa alla",
   },
+  admin: {
+    showcase: {
+      pageTitle: "Admin — Skyltfönster",
+      pageDesc: "Granska och hantera väntande skyltfönsterinlämningar.",
+      tag: "Adminpanel",
+      title: "Skyltfönstermoderering",
+      subtitle: "Granska, godkänn eller avvisa communityinlämningar.",
+      tabs: { pending: "Väntande", approved: "Godkända", rejected: "Avvisade", all: "Alla" },
+      approve: "Godkänn",
+      reject: "Avvisa",
+      resetPending: "Återställ till väntande",
+      empty: "Inga objekt i denna kategori.",
+      submittedAt: "Inskickat",
+    },
+  },
 };
 
 export default sv;
