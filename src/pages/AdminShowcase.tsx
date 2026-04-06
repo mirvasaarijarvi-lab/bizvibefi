@@ -99,6 +99,23 @@ const AdminShowcase = () => {
             <p className="mt-4 text-lg text-muted-foreground font-body">
               {t("admin.showcase.subtitle")}
             </p>
+            <div className="flex flex-wrap justify-center gap-3 mt-6">
+              <Link to="/admin/notifications">
+                <Button variant="outline" size="sm" className="font-body gap-1.5">
+                  <Bell className="h-4 w-4" /> Notifications
+                </Button>
+              </Link>
+              <Link to="/admin/audit-log">
+                <Button variant="outline" size="sm" className="font-body gap-1.5">
+                  <ScrollText className="h-4 w-4" /> Audit Log
+                </Button>
+              </Link>
+              <Link to="/admin/users">
+                <Button variant="outline" size="sm" className="font-body gap-1.5">
+                  <Users className="h-4 w-4" /> User Management
+                </Button>
+              </Link>
+            </div>
           </div>
 
           <Tabs value={tab} onValueChange={handleTabChange}>
