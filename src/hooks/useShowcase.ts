@@ -75,7 +75,7 @@ export const useShowcaseReviews = (itemId: string) => {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("showcase_reviews")
-        .select("*, profiles!showcase_reviews_user_id_fkey(display_name, avatar_url)")
+        .select("*")
         .eq("showcase_item_id", itemId)
         .order("created_at", { ascending: false });
       if (error) throw error;
