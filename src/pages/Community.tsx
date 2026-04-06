@@ -120,6 +120,25 @@ const Community = () => {
         </div>
       </section>
 
+      {/* Members Directory CTA */}
+      <section className="pb-20">
+        <div className="container">
+          <div className="bg-card border border-border rounded-2xl p-8 md:p-12 flex flex-col md:flex-row items-center gap-6">
+            <div className="flex-1">
+              <h2 className="font-display text-2xl md:text-3xl font-bold tracking-[-0.02em]">
+                Meet the <span className="text-gradient-storm">Members</span>
+              </h2>
+              <p className="mt-3 text-muted-foreground font-body max-w-lg">
+                Discover builders, strategists, and connectors in the BizVibe collective. Browse profiles, find collaborators, and grow your network.
+              </p>
+            </div>
+            <Button variant="hero" size="lg" asChild>
+              <Link to="/members"><Users className="mr-2 h-4 w-4" /> Members Directory <ArrowRight className="ml-2 h-4 w-4" /></Link>
+            </Button>
+          </div>
+        </div>
+      </section>
+
       {/* Showcase CTA */}
       <section className="pb-20">
         <div className="container">

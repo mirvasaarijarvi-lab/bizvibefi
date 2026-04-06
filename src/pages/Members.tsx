@@ -3,6 +3,7 @@ import Layout from "@/components/Layout";
 import PageMeta from "@/components/PageMeta";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
+import { useProfile } from "@/hooks/useProfile";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import { Input } from "@/components/ui/input";
@@ -45,6 +46,7 @@ type SortOption = "newest" | "alphabetical";
 const Members = () => {
   const { user, loading: authLoading } = useAuth();
   const isAdmin = useIsAdmin();
+  const { data: myProfile } = useProfile();
   const queryClient = useQueryClient();
   const [search, setSearch] = useState("");
   const [tierFilter, setTierFilter] = useState<TierFilter>("all");
@@ -111,8 +113,13 @@ const Members = () => {
     return <Navigate to="/auth" replace />;
   }
 
+  const myTier = myProfile?.membership_tier ?? "starter";
+  const canSeeVibetors = isAdmin || myTier === "viber" || myTier === "vibetor";
+
   const filtered = members
     ?.filter((m) => {
+      // Tier visibility: starters see starters + vibers; vibers/vibetors/admins see all
+      if (!canSeeVibetors && m.membership_tier === "vibetor") return false;
       if (tierFilter !== "all" && m.membership_tier !== tierFilter) return false;
       if (!search) return true;
       const q = search.toLowerCase();
@@ -181,7 +188,7 @@ const Members = () => {
                 <SelectItem value="all">All Tiers</SelectItem>
                 <SelectItem value="starter">Starter</SelectItem>
                 <SelectItem value="viber">Viber</SelectItem>
-                <SelectItem value="vibetor">Vibetor</SelectItem>
+                {canSeeVibetors && <SelectItem value="vibetor">Vibetor</SelectItem>}
               </SelectContent>
             </Select>
             <Select value={sortBy} onValueChange={(v) => setSortBy(v as SortOption)}>
