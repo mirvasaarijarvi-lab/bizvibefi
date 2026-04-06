@@ -272,6 +272,15 @@ const fi = {
         success: "{count} kohdetta päivitetty",
         failed: "Joukkopäivitys epäonnistui",
       },
+      search: {
+        placeholder: "Hae otsikon, kuvauksen tai tagin mukaan…",
+        typeAll: "Kaikki tyypit",
+        casestudy: "Tapaustutkimus",
+        testimonial: "Suositus",
+        tool: "Työkalu",
+        tagAll: "Kaikki tagit",
+        noResults: "Haullasi ei löytynyt kohteita.",
+      },
     },
   },
 };
