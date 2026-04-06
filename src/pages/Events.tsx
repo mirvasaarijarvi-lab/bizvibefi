@@ -29,9 +29,12 @@ import { Link } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import {
   Calendar, MapPin, Globe, Users, Clock, CheckCircle, Zap,
-  Video, Wrench, Rocket, Plus, Pencil, Trash2,
+  Video, Wrench, Rocket, Plus, Pencil, Trash2, ImagePlus, ExternalLink, X,
 } from "lucide-react";
 import { format, isPast } from "date-fns";
+
+const googleMapsUrl = (location: string) =>
+  `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(location)}`;
 
 const eventTypeConfig: Record<string, { label: string; icon: React.ElementType; color: string }> = {
   meetup: { label: "Meetup", icon: Users, color: "bg-accent/10 text-accent" },
