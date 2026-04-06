@@ -7,9 +7,25 @@ import { Users, Rocket, Zap, MessageCircle, Calendar, TrendingUp, GraduationCap,
 import { useTranslation } from "@/i18n/useTranslation";
 import { Badge } from "@/components/ui/badge";
 
-const freeIcons = [MessageCircle, Calendar, Rocket, Users];
-const proIcons = [TrendingUp, GraduationCap, Handshake, MessageCircle, Calendar];
-const vibetorIcons = [Gem, Users, TrendingUp, Calendar];
+const freeBenefits = [
+  { icon: MessageCircle, link: "/contact" },
+  { icon: Calendar, link: "/events" },
+  { icon: Rocket, link: "/events" },
+  { icon: Users, link: "/members" },
+];
+const proBenefits = [
+  { icon: TrendingUp, link: "/get-going" },
+  { icon: GraduationCap, link: "/get-going" },
+  { icon: Handshake, link: "/events" },
+  { icon: MessageCircle, link: "/contact" },
+  { icon: Calendar, link: "/events" },
+];
+const vibetorBenefits = [
+  { icon: Gem, link: "/profile" },
+  { icon: Users, link: "/members" },
+  { icon: TrendingUp, link: "/showcase" },
+  { icon: Calendar, link: "/events" },
+];
 
 const Community = () => {
   const { t } = useTranslation();
@@ -47,12 +63,13 @@ const Community = () => {
               </div>
             </div>
             <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-              {freeIcons.map((Icon, i) => (
-                <div key={i} className="bg-card border border-border rounded-xl p-6 hover:border-turquoise/40 transition-colors">
+              {freeBenefits.map(({ icon: Icon, link }, i) => (
+                <Link key={i} to={link} className="bg-card border border-border rounded-xl p-6 hover:border-turquoise/40 hover:shadow-md transition-all group">
                   <Icon className="h-6 w-6 text-turquoise mb-4" />
-                  <h3 className="font-display text-lg font-semibold tracking-[-0.01em]">{t(`community.free.benefits.${i}.title`)}</h3>
+                  <h3 className="font-display text-lg font-semibold tracking-[-0.01em] group-hover:text-primary transition-colors">{t(`community.free.benefits.${i}.title`)}</h3>
                   <p className="mt-2 text-sm text-muted-foreground font-body">{t(`community.free.benefits.${i}.desc`)}</p>
-                </div>
+                  <ArrowRight className="h-4 w-4 mt-3 text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-all" />
+                </Link>
               ))}
             </div>
             <Button variant="heroOutline" size="lg" className="mt-8">
@@ -76,12 +93,13 @@ const Community = () => {
               </div>
             </div>
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {proIcons.map((Icon, i) => (
-                <div key={i} className="bg-card border-2 border-purple-vivid/30 rounded-xl p-6 hover:border-purple-vivid/60 transition-colors">
+              {proBenefits.map(({ icon: Icon, link }, i) => (
+                <Link key={i} to={link} className="bg-card border-2 border-purple-vivid/30 rounded-xl p-6 hover:border-purple-vivid/60 hover:shadow-md transition-all group">
                   <Icon className="h-6 w-6 text-purple-soft mb-4" />
-                  <h3 className="font-display text-lg font-semibold tracking-[-0.01em]">{t(`community.pro.benefits.${i}.title`)}</h3>
+                  <h3 className="font-display text-lg font-semibold tracking-[-0.01em] group-hover:text-primary transition-colors">{t(`community.pro.benefits.${i}.title`)}</h3>
                   <p className="mt-2 text-sm text-muted-foreground font-body">{t(`community.pro.benefits.${i}.desc`)}</p>
-                </div>
+                  <ArrowRight className="h-4 w-4 mt-3 text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-all" />
+                </Link>
               ))}
             </div>
             <Button variant="hero" size="lg" className="mt-8">
@@ -105,12 +123,13 @@ const Community = () => {
               </div>
             </div>
             <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-              {vibetorIcons.map((Icon, i) => (
-                <div key={i} className="bg-card border-2 border-vibetor/30 rounded-xl p-6 hover:border-vibetor/60 transition-colors">
+              {vibetorBenefits.map(({ icon: Icon, link }, i) => (
+                <Link key={i} to={link} className="bg-card border-2 border-vibetor/30 rounded-xl p-6 hover:border-vibetor/60 hover:shadow-md transition-all group">
                   <Icon className="h-6 w-6 text-vibetor mb-4" />
-                  <h3 className="font-display text-lg font-semibold tracking-[-0.01em]">{t(`community.vibetor.benefits.${i}.title`)}</h3>
+                  <h3 className="font-display text-lg font-semibold tracking-[-0.01em] group-hover:text-primary transition-colors">{t(`community.vibetor.benefits.${i}.title`)}</h3>
                   <p className="mt-2 text-sm text-muted-foreground font-body">{t(`community.vibetor.benefits.${i}.desc`)}</p>
-                </div>
+                  <ArrowRight className="h-4 w-4 mt-3 text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-all" />
+                </Link>
               ))}
             </div>
             <Button variant="hero" size="lg" className="mt-8" asChild>
