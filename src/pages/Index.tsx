@@ -4,11 +4,12 @@ import Layout from "@/components/Layout";
 import PageMeta from "@/components/PageMeta";
 import NewsletterSignup from "@/components/NewsletterSignup";
 import { motion, useInView } from "framer-motion";
-import { Rocket, Users, Zap, ArrowRight, Wrench, Search, Handshake, TrendingUp, CalendarCheck, Code2 } from "lucide-react";
+import { Rocket, Users, Zap, ArrowRight, Wrench, Search, Handshake, TrendingUp, CalendarCheck, Code2, Lightbulb, MessageSquare } from "lucide-react";
 import { useTranslation } from "@/i18n/useTranslation";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useRef, useEffect, useState } from "react";
+import { Badge } from "@/components/ui/badge";
 
 const Index = () => {
   const { t } = useTranslation();
@@ -130,6 +131,9 @@ const Index = () => {
           </div>
         </div>
       </section>
+
+      {/* Showcase Preview */}
+      <ShowcasePreview />
 
       {/* Newsletter */}
       <section className="py-16 md:py-20 border-t border-border">
