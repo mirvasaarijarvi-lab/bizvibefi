@@ -128,7 +128,8 @@ const Members = () => {
   }
 
   const myTier = myProfile?.membership_tier ?? "starter";
-  const canSeeVibetors = isAdmin || myTier === "viber" || myTier === "vibetor";
+  const hasViberOverride = (myProfile as any)?.viber_access_override === true;
+  const canSeeVibetors = isAdmin || myTier === "viber" || myTier === "vibetor" || hasViberOverride;
 
   const filtered = members
     ?.filter((m) => {
