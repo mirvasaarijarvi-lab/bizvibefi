@@ -235,7 +235,7 @@ const fi = {
       subtitle: "Tarkista, hyväksy tai hylkää yhteisön lähetyksiä.",
       tabs: { pending: "Odottavat", approved: "Hyväksytyt", rejected: "Hylätyt", all: "Kaikki" },
       approve: "Hyväksy",
-      reject: "Hylkää",
+      rejectBtn: "Hylkää",
       resetPending: "Palauta odottavaksi",
       empty: "Ei kohteita tässä kategoriassa.",
       submittedAt: "Lähetetty",
@@ -253,7 +253,7 @@ const fi = {
         requiredFields: "Otsikko ja kuvaus ovat pakollisia",
         titleTooLong: "Otsikko saa olla enintään 200 merkkiä",
       },
-      reject: {
+      rejection: {
         title: "Hylkää lähetys",
         description: "Anna syy kohteen \"{title}\" hylkäämiselle.",
         reasonLabel: "Hylkäyksen syy",
