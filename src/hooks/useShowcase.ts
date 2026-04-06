@@ -153,9 +153,10 @@ export const useCreateShowcaseItem = () => {
         pricing_info: item.pricing_info,
         user_id: user.id,
       };
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const { data, error } = await supabase
         .from("showcase_items")
-        .insert(payload as unknown as Record<string, unknown>)
+        .insert(payload as never)
         .select()
         .single();
       if (error) throw error;
