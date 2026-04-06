@@ -7,9 +7,25 @@ import { Users, Rocket, Zap, MessageCircle, Calendar, TrendingUp, GraduationCap,
 import { useTranslation } from "@/i18n/useTranslation";
 import { Badge } from "@/components/ui/badge";
 
-const freeIcons = [MessageCircle, Calendar, Rocket, Users];
-const proIcons = [TrendingUp, GraduationCap, Handshake, MessageCircle, Calendar];
-const vibetorIcons = [Gem, Users, TrendingUp, Calendar];
+const freeBenefits = [
+  { icon: MessageCircle, link: "/contact" },
+  { icon: Calendar, link: "/events" },
+  { icon: Rocket, link: "/events" },
+  { icon: Users, link: "/members" },
+];
+const proBenefits = [
+  { icon: TrendingUp, link: "/get-going" },
+  { icon: GraduationCap, link: "/get-going" },
+  { icon: Handshake, link: "/events" },
+  { icon: MessageCircle, link: "/contact" },
+  { icon: Calendar, link: "/events" },
+];
+const vibetorBenefits = [
+  { icon: Gem, link: "/profile" },
+  { icon: Users, link: "/members" },
+  { icon: TrendingUp, link: "/showcase" },
+  { icon: Calendar, link: "/events" },
+];
 
 const Community = () => {
   const { t } = useTranslation();
