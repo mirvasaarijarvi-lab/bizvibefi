@@ -93,12 +93,13 @@ const Community = () => {
               </div>
             </div>
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {proIcons.map((Icon, i) => (
-                <div key={i} className="bg-card border-2 border-purple-vivid/30 rounded-xl p-6 hover:border-purple-vivid/60 transition-colors">
+              {proBenefits.map(({ icon: Icon, link }, i) => (
+                <Link key={i} to={link} className="bg-card border-2 border-purple-vivid/30 rounded-xl p-6 hover:border-purple-vivid/60 hover:shadow-md transition-all group">
                   <Icon className="h-6 w-6 text-purple-soft mb-4" />
-                  <h3 className="font-display text-lg font-semibold tracking-[-0.01em]">{t(`community.pro.benefits.${i}.title`)}</h3>
+                  <h3 className="font-display text-lg font-semibold tracking-[-0.01em] group-hover:text-primary transition-colors">{t(`community.pro.benefits.${i}.title`)}</h3>
                   <p className="mt-2 text-sm text-muted-foreground font-body">{t(`community.pro.benefits.${i}.desc`)}</p>
-                </div>
+                  <ArrowRight className="h-4 w-4 mt-3 text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-all" />
+                </Link>
               ))}
             </div>
             <Button variant="hero" size="lg" className="mt-8">
