@@ -152,6 +152,8 @@ const MemberProfile = () => {
 
   const vis: Visibility = { ...defaultVisibility, ...(member.profile_visibility ?? {}) };
   const isOwnProfile = user.id === member.user_id;
+  // For public view, only show fields the user has marked visible (even on own profile)
+  const showField = (field: keyof Visibility) => vis[field] === true;
 
   const initials = (name: string | null) => {
     if (!name) return "?";
@@ -206,17 +208,16 @@ const MemberProfile = () => {
                         <Badge variant="default" className="text-[10px] px-1.5 py-0">VIBER</Badge>
                       )}
                     </div>
-                    {(vis.company || isOwnProfile) && member.company && (
+                    {showField("company") && member.company && (
                       <p className="text-muted-foreground flex items-center gap-1.5 mt-1">
                         <Building2 className="h-4 w-4 shrink-0" />
-                        {(vis.company_url || isOwnProfile) && member.company_url ? (
+                        {showField("company_url") && member.company_url ? (
                           <a href={member.company_url} target="_blank" rel="noopener noreferrer" className="hover:text-primary hover:underline transition-colors">
                             {member.company}
                           </a>
                         ) : (
                           member.company
                         )}
-                        {!vis.company && <Badge variant="outline" className="text-[9px] ml-1">Hidden</Badge>}
                       </p>
                     )}
                     {!isOwnProfile && (
@@ -232,38 +233,35 @@ const MemberProfile = () => {
                 </div>
 
                 {/* Bio */}
-                {(vis.bio || isOwnProfile) && member.bio && (
+                {showField("bio") && member.bio && (
                   <div className="mb-6">
                     <p className="text-muted-foreground font-body leading-relaxed">
                       {member.bio}
                     </p>
-                    {!vis.bio && <Badge variant="outline" className="text-[9px] mt-1">Hidden from others</Badge>}
                   </div>
                 )}
 
                 {/* Contact & Links */}
                 <div className="space-y-3">
-                  {(vis.contact_email || isOwnProfile) && member.contact_email && (
+                  {showField("contact_email") && member.contact_email && (
                     <a
                       href={`mailto:${member.contact_email}`}
                       className="flex items-center gap-2 text-muted-foreground hover:text-foreground font-body"
                     >
                       <Mail className="h-4 w-4 shrink-0" />
                       <span>{member.contact_email}</span>
-                      {!vis.contact_email && <Badge variant="outline" className="text-[9px] ml-1">Hidden</Badge>}
                     </a>
                   )}
-                  {(vis.contact_phone || isOwnProfile) && member.contact_phone && (
+                  {showField("contact_phone") && member.contact_phone && (
                     <a
                       href={`tel:${member.contact_phone}`}
                       className="flex items-center gap-2 text-muted-foreground hover:text-foreground font-body"
                     >
                       <Phone className="h-4 w-4 shrink-0" />
                       <span>{member.contact_phone}</span>
-                      {!vis.contact_phone && <Badge variant="outline" className="text-[9px] ml-1">Hidden</Badge>}
                     </a>
                   )}
-                  {(vis.linkedin_url || isOwnProfile) && member.linkedin_url && (
+                  {showField("linkedin_url") && member.linkedin_url && (
                     <a
                       href={member.linkedin_url}
                       target="_blank"
@@ -273,10 +271,9 @@ const MemberProfile = () => {
                       <Linkedin className="h-4 w-4 shrink-0" />
                       LinkedIn
                       <ExternalLink className="h-3 w-3" />
-                      {!vis.linkedin_url && <Badge variant="outline" className="text-[9px] ml-1">Hidden</Badge>}
                     </a>
                   )}
-                  {(vis.website_links || isOwnProfile) && websiteLinks.length > 0 && (
+                  {showField("website_links") && websiteLinks.length > 0 && (
                     <div className="space-y-2">
                       {websiteLinks.map((link: { url: string; label?: string }, idx: number) => (
                         <a
@@ -291,7 +288,6 @@ const MemberProfile = () => {
                           <ExternalLink className="h-3 w-3 shrink-0" />
                         </a>
                       ))}
-                      {!vis.website_links && <Badge variant="outline" className="text-[9px]">Hidden from others</Badge>}
                     </div>
                   )}
                 </div>
