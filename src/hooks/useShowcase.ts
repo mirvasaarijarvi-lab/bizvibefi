@@ -56,7 +56,7 @@ export const useShowcaseItems = (type?: ShowcaseType) => {
 
       const { data, error } = await query;
       if (error) throw error;
-      return (data ?? []) as ShowcaseItem[];
+      return (data ?? []) as unknown as ShowcaseItem[];
     },
   });
 };
@@ -71,7 +71,7 @@ export const useShowcaseItem = (id: string) => {
         .eq("id", id)
         .single();
       if (error) throw error;
-      return data as ShowcaseItem;
+      return data as unknown as ShowcaseItem;
     },
     enabled: !!id,
   });
@@ -89,7 +89,7 @@ export const useMyShowcaseItems = () => {
         .eq("user_id", user.id)
         .order("created_at", { ascending: false });
       if (error) throw error;
-      return (data ?? []) as ShowcaseItem[];
+      return (data ?? []) as unknown as ShowcaseItem[];
     },
     enabled: !!user,
   });

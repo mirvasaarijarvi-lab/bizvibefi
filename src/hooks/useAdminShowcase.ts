@@ -36,7 +36,7 @@ export const usePendingShowcaseItems = () => {
         .eq("status", "pending")
         .order("created_at", { ascending: true });
       if (error) throw error;
-      return (data ?? []) as ShowcaseItem[];
+      return (data ?? []) as unknown as ShowcaseItem[];
     },
     enabled: isAdmin,
   });
@@ -52,7 +52,7 @@ export const useAllShowcaseItems = () => {
         .select("*")
         .order("created_at", { ascending: false });
       if (error) throw error;
-      return (data ?? []) as ShowcaseItem[];
+      return (data ?? []) as unknown as ShowcaseItem[];
     },
     enabled: isAdmin,
   });
