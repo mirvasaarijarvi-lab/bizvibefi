@@ -54,6 +54,57 @@ const Profile = () => {
     enabled: !!user,
   });
 
+  const { data: forumTopics } = useQuery({
+    queryKey: ["profile-forum-topics", user?.id],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("forum_topics")
+        .select("id, title, created_at, category_id, reply_count")
+        .eq("user_id", user!.id)
+        .order("created_at", { ascending: false })
+        .limit(5);
+      if (error) throw error;
+
+      const catIds = [...new Set((data ?? []).map((t: any) => t.category_id))];
+      const { data: cats } = await supabase
+        .from("forum_categories")
+        .select("id, slug, name")
+        .in("id", catIds);
+      const catMap = new Map(cats?.map((c) => [c.id, c]) ?? []);
+
+      return (data ?? []).map((t: any) => ({
+        ...t,
+        category: catMap.get(t.category_id),
+      }));
+    },
+    enabled: !!user,
+  });
+
+  const { data: upcomingRsvps } = useQuery({
+    queryKey: ["profile-rsvps", user?.id],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("event_rsvps")
+        .select("id, status, event_id")
+        .eq("user_id", user!.id)
+        .eq("status", "going");
+      if (error) throw error;
+      if (!data?.length) return [];
+
+      const eventIds = data.map((r: any) => r.event_id);
+      const { data: events } = await supabase
+        .from("events")
+        .select("id, title, starts_at, location, is_online")
+        .in("id", eventIds)
+        .gte("starts_at", new Date().toISOString())
+        .order("starts_at")
+        .limit(5);
+
+      return events ?? [];
+    },
+    enabled: !!user,
+  });
+
   const markReadMutation = useMutation({
     mutationFn: async (id: string) => {
       const { error } = await supabase
