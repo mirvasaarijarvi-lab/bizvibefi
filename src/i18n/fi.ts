@@ -70,7 +70,7 @@ const fi = {
         "Etusija deal flow -pääsyyn",
         "Innovaationäyttelytapahtumat",
       ],
-      cta: "Ryhdy Vibetorksi",
+      cta: "Ota yhteyttä",
     },
   },
   ctaSection: {

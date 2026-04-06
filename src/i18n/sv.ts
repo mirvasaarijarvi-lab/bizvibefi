@@ -70,7 +70,7 @@ const sv = {
         "Prioriterad tillgång till deal flow",
         "Innovationsutställningar",
       ],
-      cta: "Bli Vibetor",
+      cta: "Kontakta oss",
     },
   },
   ctaSection: {
