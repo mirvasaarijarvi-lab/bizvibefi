@@ -64,7 +64,23 @@ const Members = () => {
     },
   });
 
-  const { data: members, isLoading } = useQuery({
+  const toggleOverrideMutation = useMutation({
+    mutationFn: async ({ userId, override }: { userId: string; override: boolean }) => {
+      const { error } = await supabase
+        .from("profiles")
+        .update({ viber_access_override: override } as any)
+        .eq("user_id", userId);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["members"] });
+      toast.success("Viber access updated");
+    },
+    onError: (err: Error) => {
+      toast.error(err.message);
+    },
+  });
+
     queryKey: ["members"],
     queryFn: async () => {
       const { data, error } = await supabase
