@@ -132,6 +132,7 @@ const Profile = () => {
   const [visibility, setVisibility] = useState({
     bio: true,
     company: true,
+    company_url: true,
     linkedin_url: true,
     contact_email: true,
     contact_phone: true,
@@ -434,6 +435,7 @@ const Profile = () => {
                 {([
                   { key: "bio", label: "Bio" },
                   { key: "company", label: "Company" },
+                  { key: "company_url", label: "Company Website" },
                   { key: "linkedin_url", label: "LinkedIn" },
                   { key: "contact_email", label: "Contact Email" },
                   { key: "contact_phone", label: "Phone Number" },
