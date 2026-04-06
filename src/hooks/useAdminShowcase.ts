@@ -129,7 +129,7 @@ export interface ShowcaseFieldsUpdate {
   link_url?: string | null;
   category_tags?: string[];
   pricing_info?: string | null;
-  type?: "case_study" | "testimonial" | "tool";
+  type?: "case_study" | "testimonial" | "tool" | "guidebook" | "sample_code";
 }
 
 export const useUpdateShowcaseFields = () => {

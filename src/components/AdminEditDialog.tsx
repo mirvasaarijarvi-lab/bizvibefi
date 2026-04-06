@@ -87,9 +87,11 @@ const AdminEditDialog = ({ item, open, onOpenChange }: AdminEditDialogProps) => 
             <Select value={type} onValueChange={(v) => setType(v as ShowcaseType)}>
               <SelectTrigger><SelectValue /></SelectTrigger>
               <SelectContent>
-                <SelectItem value="case_study">{t("showcase.tabs.caseStudies")}</SelectItem>
-                <SelectItem value="testimonial">{t("showcase.tabs.testimonials")}</SelectItem>
-                <SelectItem value="tool">{t("showcase.tabs.tools")}</SelectItem>
+               <SelectItem value="case_study">{t("showcase.tabs.caseStudies")}</SelectItem>
+               <SelectItem value="testimonial">{t("showcase.tabs.testimonials")}</SelectItem>
+               <SelectItem value="tool">{t("showcase.tabs.tools")}</SelectItem>
+               <SelectItem value="guidebook">Guidebook</SelectItem>
+               <SelectItem value="sample_code">Sample Code / Prompt</SelectItem>
               </SelectContent>
             </Select>
           </div>

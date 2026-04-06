@@ -524,7 +524,12 @@ export type Database = {
       event_type: "meetup" | "webinar" | "workshop" | "hackathon"
       membership_tier: "starter" | "viber" | "vibetor"
       rsvp_status: "going" | "maybe" | "cancelled"
-      showcase_type: "case_study" | "testimonial" | "tool"
+      showcase_type:
+        | "case_study"
+        | "testimonial"
+        | "tool"
+        | "guidebook"
+        | "sample_code"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -657,7 +662,13 @@ export const Constants = {
       event_type: ["meetup", "webinar", "workshop", "hackathon"],
       membership_tier: ["starter", "viber", "vibetor"],
       rsvp_status: ["going", "maybe", "cancelled"],
-      showcase_type: ["case_study", "testimonial", "tool"],
+      showcase_type: [
+        "case_study",
+        "testimonial",
+        "tool",
+        "guidebook",
+        "sample_code",
+      ],
     },
   },
 } as const
