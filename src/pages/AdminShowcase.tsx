@@ -3,6 +3,7 @@ import { Navigate } from "react-router-dom";
 import Layout from "@/components/Layout";
 import PageMeta from "@/components/PageMeta";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Button } from "@/components/ui/button";
 import { useTranslation } from "@/i18n/useTranslation";
 import { useAuth } from "@/hooks/useAuth";
 import {
@@ -13,6 +14,9 @@ import {
 import AdminItemCard from "@/components/AdminItemCard";
 import BulkActionBar from "@/components/BulkActionBar";
 import AdminSearchFilter, { filterShowcaseItems, type SortOption } from "@/components/AdminSearchFilter";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+
+const ITEMS_PER_PAGE = 12;
 
 const AdminShowcase = () => {
   const { t } = useTranslation();
@@ -23,6 +27,7 @@ const AdminShowcase = () => {
   const [search, setSearch] = useState("");
   const [typeFilter, setTypeFilter] = useState("all");
   const [sortBy, setSortBy] = useState<SortOption>("date_desc");
+  const [page, setPage] = useState(1);
 
   const { data: pendingItems, isLoading: pendingLoading } = usePendingShowcaseItems();
   const { data: allItems, isLoading: allLoading } = useAllShowcaseItems();
@@ -30,7 +35,12 @@ const AdminShowcase = () => {
   const handleTabChange = useCallback((value: string) => {
     setTab(value);
     setSelectedIds([]);
+    setPage(1);
   }, []);
+
+  const handleSearchChange = useCallback((v: string) => { setSearch(v); setPage(1); }, []);
+  const handleTypeChange = useCallback((v: string) => { setTypeFilter(v); setPage(1); }, []);
+  const handleSortChange = useCallback((v: SortOption) => { setSortBy(v); setPage(1); }, []);
 
   const toggleSelect = useCallback((id: string, checked: boolean) => {
     setSelectedIds((prev) =>
@@ -46,6 +56,15 @@ const AdminShowcase = () => {
         : allItems?.filter((i) => i.status === tab);
     return filterShowcaseItems(statusFiltered, search, typeFilter, sortBy);
   }, [tab, pendingItems, allItems, search, typeFilter, sortBy]);
+
+  const totalItems = filteredItems?.length ?? 0;
+  const totalPages = Math.max(1, Math.ceil(totalItems / ITEMS_PER_PAGE));
+  const safePage = Math.min(page, totalPages);
+  const paginatedItems = useMemo(() => {
+    if (!filteredItems) return undefined;
+    const start = (safePage - 1) * ITEMS_PER_PAGE;
+    return filteredItems.slice(start, start + ITEMS_PER_PAGE);
+  }, [filteredItems, safePage]);
 
   const isLoading = tab === "pending" ? pendingLoading : allLoading;
 
@@ -93,11 +112,11 @@ const AdminShowcase = () => {
 
             <AdminSearchFilter
               search={search}
-              onSearchChange={setSearch}
+              onSearchChange={handleSearchChange}
               typeFilter={typeFilter}
-              onTypeFilterChange={setTypeFilter}
+              onTypeFilterChange={handleTypeChange}
               sortBy={sortBy}
-              onSortChange={setSortBy}
+              onSortChange={handleSortChange}
               items={allItems}
             />
 
@@ -107,7 +126,7 @@ const AdminShowcase = () => {
                   <div className="animate-spin h-8 w-8 border-4 border-primary border-t-transparent rounded-full" />
                 </div>
               )}
-              {!isLoading && (!filteredItems || filteredItems.length === 0) && (
+              {!isLoading && (!paginatedItems || paginatedItems.length === 0) && (
                 <div className="text-center py-16">
                   <p className="text-muted-foreground font-body">
                     {search.trim() || typeFilter !== "all"
@@ -117,7 +136,7 @@ const AdminShowcase = () => {
                 </div>
               )}
               <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {filteredItems?.map((item) => (
+                {paginatedItems?.map((item) => (
                   <AdminItemCard
                     key={item.id}
                     item={item}
@@ -126,6 +145,42 @@ const AdminShowcase = () => {
                   />
                 ))}
               </div>
+
+              {/* Pagination */}
+              {totalPages > 1 && (
+                <div className="flex items-center justify-center gap-2 mt-8">
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    disabled={safePage <= 1}
+                    onClick={() => setPage(safePage - 1)}
+                  >
+                    <ChevronLeft className="h-4 w-4" />
+                  </Button>
+                  {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
+                    <Button
+                      key={p}
+                      variant={p === safePage ? "default" : "outline"}
+                      size="icon"
+                      onClick={() => setPage(p)}
+                      className="w-9 h-9"
+                    >
+                      {p}
+                    </Button>
+                  ))}
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    disabled={safePage >= totalPages}
+                    onClick={() => setPage(safePage + 1)}
+                  >
+                    <ChevronRight className="h-4 w-4" />
+                  </Button>
+                  <span className="text-sm text-muted-foreground font-body ml-2">
+                    {totalItems} items
+                  </span>
+                </div>
+              )}
             </TabsContent>
           </Tabs>
         </div>
