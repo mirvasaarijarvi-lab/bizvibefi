@@ -175,7 +175,7 @@ const ForumCategory = () => {
       if (requiresApproval && !isAdmin) {
         insertData.is_approved = false;
       }
-      const { error } = await supabase.from("forum_topics").insert(insertData);
+      const { error } = await supabase.from("forum_topics").insert(insertData as never);
       if (error) throw error;
       setNewTitle("");
       setNewContent("");
