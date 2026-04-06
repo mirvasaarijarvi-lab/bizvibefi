@@ -23,6 +23,7 @@ import { supabase } from "@/integrations/supabase/client";
 import ImageDropZone from "@/components/ImageDropZone";
 import ImageCropDialog from "@/components/ImageCropDialog";
 import AdminEditDialog from "@/components/AdminEditDialog";
+import RejectDialog from "@/components/RejectDialog";
 
 const typeIcons: Record<string, React.ElementType> = {
   case_study: Lightbulb,
@@ -45,6 +46,7 @@ const AdminItemCard = ({ item }: { item: ShowcaseItem }) => {
   const [editOpen, setEditOpen] = useState(false);
   const [cropFile, setCropFile] = useState<File | null>(null);
   const [cropOpen, setCropOpen] = useState(false);
+  const [rejectOpen, setRejectOpen] = useState(false);
   const Icon = typeIcons[item.type] || Lightbulb;
   const statusInfo = statusConfig[item.status];
   const StatusIcon = statusInfo.icon;
@@ -173,6 +175,12 @@ const AdminItemCard = ({ item }: { item: ShowcaseItem }) => {
         {item.pricing_info && (
           <p className="mt-2 text-sm font-semibold text-primary font-body">{item.pricing_info}</p>
         )}
+        {item.rejection_reason && item.status === "rejected" && (
+          <div className="mt-2 p-2 bg-destructive/10 rounded-md">
+            <p className="text-xs font-semibold text-destructive">{t("admin.showcase.reject.reasonLabel")}:</p>
+            <p className="text-xs text-destructive/80 font-body">{item.rejection_reason}</p>
+          </div>
+        )}
         <p className="mt-3 text-xs text-muted-foreground font-body">
           {t("admin.showcase.submittedAt")}: {new Date(item.created_at).toLocaleDateString()}
         </p>
@@ -201,10 +209,10 @@ const AdminItemCard = ({ item }: { item: ShowcaseItem }) => {
           <Button
             variant="destructive"
             size="sm"
-            onClick={() => handleStatusChange("rejected")}
+            onClick={() => setRejectOpen(true)}
             disabled={updateStatus.isPending}
           >
-            <XCircle className="mr-1 h-3 w-3" /> {t("admin.showcase.reject")}
+            <XCircle className="mr-1 h-3 w-3" /> {t("admin.showcase.reject.btn")}
           </Button>
         )}
         {item.status !== "pending" && (
