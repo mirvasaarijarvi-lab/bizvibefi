@@ -123,6 +123,7 @@ const Profile = () => {
   const [displayName, setDisplayName] = useState("");
   const [bio, setBio] = useState("");
   const [company, setCompany] = useState("");
+  const [companyUrl, setCompanyUrl] = useState("");
   const [linkedinUrl, setLinkedinUrl] = useState("");
   const [contactEmail, setContactEmail] = useState("");
   const [contactPhone, setContactPhone] = useState("");
@@ -146,6 +147,7 @@ const Profile = () => {
       setDisplayName(profile.display_name ?? "");
       setBio(profile.bio ?? "");
       setCompany(profile.company ?? "");
+      setCompanyUrl((profile as unknown as Record<string, string | null>).company_url ?? "");
       setLinkedinUrl(profile.linkedin_url ?? "");
       setContactEmail(profile.contact_email ?? "");
       setContactPhone(profile.contact_phone ?? "");
@@ -193,6 +195,7 @@ const Profile = () => {
         display_name: displayName.trim(),
         bio: bio.trim(),
         company: company.trim(),
+        company_url: companyUrl.trim() || null,
         linkedin_url: linkedinUrl.trim(),
         contact_email: contactEmail.trim() || null,
         contact_phone: contactPhone.trim() || null,
@@ -314,6 +317,20 @@ const Profile = () => {
                     onChange={(e) => setCompany(e.target.value)}
                     className="font-body"
                     maxLength={100}
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="company-url" className="font-body flex items-center gap-2">
+                    <Globe className="h-4 w-4" /> Company Website
+                  </Label>
+                  <Input
+                    id="company-url"
+                    type="url"
+                    value={companyUrl}
+                    onChange={(e) => setCompanyUrl(e.target.value)}
+                    className="font-body"
+                    placeholder="https://company.com"
                   />
                 </div>
 
