@@ -211,7 +211,7 @@ const AdminItemCard = ({ item, selected, onSelectChange }: AdminItemCardProps) =
             onClick={() => setRejectOpen(true)}
             disabled={updateStatus.isPending}
           >
-            <XCircle className="mr-1 h-3 w-3" /> {t("admin.showcase.reject")}
+            <XCircle className="mr-1 h-3 w-3" /> {t("admin.showcase.rejectBtn")}
           </Button>
         )}
         {item.status !== "pending" && (
