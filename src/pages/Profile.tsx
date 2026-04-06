@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { useProfile, useUpdateProfile, type WebsiteLink } from "@/hooks/useProfile";
+import { useUserRole } from "@/hooks/useAdminShowcase";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -17,6 +18,8 @@ import { Camera, Linkedin, Building, User, Globe, Mail, Phone, Plus, Trash2 } fr
 const Profile = () => {
   const { user, loading: authLoading } = useAuth();
   const { data: profile, isLoading } = useProfile();
+  const { data: roles } = useUserRole();
+  const isSuperAdmin = roles?.includes("superadmin") ?? false;
   const updateProfile = useUpdateProfile();
   const { toast } = useToast();
   const navigate = useNavigate();
@@ -145,17 +148,20 @@ const Profile = () => {
                 />
               </div>
               <div>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 flex-wrap">
                   <p className="font-display font-bold text-foreground">{displayName || "Set your name"}</p>
-                  {profile?.membership_tier === "vibetor" && (
+                  {isSuperAdmin && (
+                    <Badge className="bg-gradient-to-r from-primary to-secondary text-primary-foreground text-[10px] px-1.5 py-0">SUPERADMIN</Badge>
+                  )}
+                  {!isSuperAdmin && profile?.membership_tier === "vibetor" && (
                     <Badge className="bg-vibetor/90 hover:bg-vibetor text-primary-foreground text-[10px] px-1.5 py-0">VIBETOR</Badge>
                   )}
                   {profile?.membership_tier === "viber" && (
                     <Badge variant="default" className="text-[10px] px-1.5 py-0">VIBER</Badge>
                   )}
                 </div>
-                <p className="text-sm text-muted-foreground font-body capitalize">
-                  {profile?.membership_tier} member
+                <p className="text-sm text-muted-foreground font-body">
+                  {isSuperAdmin ? "SuperAdmin" : `${profile?.membership_tier} member`}
                 </p>
               </div>
             </div>
