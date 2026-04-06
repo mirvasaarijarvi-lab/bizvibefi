@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Menu, X, Globe, User, LogOut, MessageSquare, Users, Sun, Moon } from "lucide-react";
+import { Menu, X, Globe, User, LogOut, MessageSquare, Users, Sun, Moon, Shield } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTranslation } from "@/i18n/useTranslation";
@@ -9,6 +9,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useProfile } from "@/hooks/useProfile";
 import useTheme from "@/hooks/useTheme";
+import { useIsAdmin } from "@/hooks/useAdminShowcase";
 
 const langLabels: Record<Language, string> = { en: "EN", fi: "FI", sv: "SV" };
 const langOptions: Language[] = ["en", "fi", "sv"];
@@ -22,6 +23,7 @@ const Navbar = () => {
   const { user, signOut } = useAuth();
   const { data: profile } = useProfile();
   const { theme, toggleTheme } = useTheme();
+  const isAdmin = useIsAdmin();
 
   const links = [
     { to: "/", label: t("nav.home") },
@@ -150,6 +152,15 @@ const Navbar = () => {
                     >
                       <MessageSquare className="h-4 w-4" /> Forum
                     </Link>
+                    {isAdmin && (
+                      <Link
+                        to="/admin/showcase"
+                        onClick={() => setUserMenuOpen(false)}
+                        className="flex items-center gap-2 px-4 py-2.5 text-sm font-body text-primary hover:bg-muted transition-colors"
+                      >
+                        <Shield className="h-4 w-4" /> Admin
+                      </Link>
+                    )}
                     <button
                       onClick={() => { signOut(); setUserMenuOpen(false); }}
                       className="flex items-center gap-2 w-full px-4 py-2.5 text-sm font-body text-destructive hover:bg-muted transition-colors"
