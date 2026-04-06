@@ -209,7 +209,7 @@ const MemberProfile = () => {
                     {(vis.company || isOwnProfile) && member.company && (
                       <p className="text-muted-foreground flex items-center gap-1.5 mt-1">
                         <Building2 className="h-4 w-4 shrink-0" />
-                        {member.company_url ? (
+                        {(vis.company_url || isOwnProfile) && member.company_url ? (
                           <a href={member.company_url} target="_blank" rel="noopener noreferrer" className="hover:text-primary hover:underline transition-colors">
                             {member.company}
                           </a>
