@@ -5,9 +5,33 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ArrowRight, Linkedin } from "lucide-react";
 import { useTranslation } from "@/i18n/useTranslation";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
+
+const FOUNDER_NAMES = ["Minna Blomster", "Mirva Saarijärvi", "Vesa Mattila"];
 
 const About = () => {
   const { t } = useTranslation();
+
+  const { data: founderProfiles } = useQuery({
+    queryKey: ["founder-profiles"],
+    queryFn: async () => {
+      const { data } = await supabase
+        .from("profiles")
+        .select("display_name, avatar_url, user_id")
+        .in("display_name", FOUNDER_NAMES);
+      return data ?? [];
+    },
+    staleTime: 300_000,
+  });
+
+  const getFounderAvatar = (name: string) => {
+    return founderProfiles?.find((p) => p.display_name === name)?.avatar_url ?? null;
+  };
+
+  const getFounderUserId = (name: string) => {
+    return founderProfiles?.find((p) => p.display_name === name)?.user_id ?? null;
+  };
 
   return (
     <Layout>
@@ -32,35 +56,67 @@ const About = () => {
       <section className="pb-20">
         <div className="container">
           <div className="grid md:grid-cols-3 gap-8 max-w-4xl mx-auto">
-            {[0, 1, 2].map((i) => (
-              <a
-                key={i}
-                href={t(`about.founders.${i}.linkedin`)}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="block group"
-              >
+            {[0, 1, 2].map((i) => {
+              const name = t(`about.founders.${i}.name`);
+              const avatarUrl = getFounderAvatar(name);
+              const userId = getFounderUserId(name);
+              const linkedinUrl = t(`about.founders.${i}.linkedin`);
+
+              const cardContent = (
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: i * 0.15 }}
-                  className="text-center bg-card border border-border rounded-2xl p-8 hover:border-primary/40 hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
+                  className="text-center bg-card border border-border rounded-2xl p-8 hover:border-primary/40 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 h-full"
                 >
-                  <div className="w-32 h-32 rounded-full bg-gradient-storm mx-auto mb-6 flex items-center justify-center group-hover:scale-105 transition-transform duration-300">
-                    <span className="font-display text-3xl font-extrabold text-primary-foreground">
-                      {t(`about.founders.${i}.name`).split(" ").map(n => n[0]).join("")}
-                    </span>
+                  <div className="w-32 h-32 rounded-full mx-auto mb-6 overflow-hidden group-hover:scale-105 transition-transform duration-300">
+                    {avatarUrl ? (
+                      <img
+                        src={avatarUrl}
+                        alt={name}
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-gradient-storm flex items-center justify-center">
+                        <span className="font-display text-3xl font-extrabold text-primary-foreground">
+                          {name.split(" ").map(n => n[0]).join("")}
+                        </span>
+                      </div>
+                    )}
                   </div>
-                  <h3 className="font-display text-xl font-bold tracking-[-0.01em] group-hover:text-primary transition-colors">{t(`about.founders.${i}.name`)}</h3>
+                  <h3 className="font-display text-xl font-bold tracking-[-0.01em] group-hover:text-primary transition-colors">{name}</h3>
                   <p className="text-turquoise font-body font-semibold text-sm mt-1">{t(`about.founders.${i}.role`)}</p>
                   <p className="mt-3 text-sm text-muted-foreground font-body">{t(`about.founders.${i}.bio`)}</p>
-                  <span className="inline-flex items-center gap-1.5 mt-4 text-sm font-body font-medium text-electric group-hover:text-electric-light transition-colors">
-                    <Linkedin className="h-4 w-4" /> View LinkedIn Profile <ArrowRight className="h-3 w-3 group-hover:translate-x-1 transition-transform" />
-                  </span>
+                  <div className="flex items-center justify-center gap-3 mt-4">
+                    <span className="inline-flex items-center gap-1.5 text-sm font-body font-medium text-electric group-hover:text-electric-light transition-colors">
+                      <Linkedin className="h-4 w-4" /> LinkedIn <ArrowRight className="h-3 w-3 group-hover:translate-x-1 transition-transform" />
+                    </span>
+                  </div>
+                  {userId && (
+                    <Link
+                      to={`/members/${userId}`}
+                      onClick={(e) => e.stopPropagation()}
+                      className="inline-flex items-center gap-1.5 mt-2 text-xs font-body font-medium text-muted-foreground hover:text-primary transition-colors"
+                    >
+                      View Profile <ArrowRight className="h-3 w-3" />
+                    </Link>
+                  )}
                 </motion.div>
-              </a>
-            ))}
+              );
+
+              return (
+                <a
+                  key={i}
+                  href={linkedinUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block group"
+                >
+                  {cardContent}
+                </a>
+              );
+            })}
           </div>
         </div>
       </section>
