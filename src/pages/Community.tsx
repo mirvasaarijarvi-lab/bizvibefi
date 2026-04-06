@@ -63,12 +63,13 @@ const Community = () => {
               </div>
             </div>
             <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-              {freeIcons.map((Icon, i) => (
-                <div key={i} className="bg-card border border-border rounded-xl p-6 hover:border-turquoise/40 transition-colors">
+              {freeBenefits.map(({ icon: Icon, link }, i) => (
+                <Link key={i} to={link} className="bg-card border border-border rounded-xl p-6 hover:border-turquoise/40 hover:shadow-md transition-all group">
                   <Icon className="h-6 w-6 text-turquoise mb-4" />
-                  <h3 className="font-display text-lg font-semibold tracking-[-0.01em]">{t(`community.free.benefits.${i}.title`)}</h3>
+                  <h3 className="font-display text-lg font-semibold tracking-[-0.01em] group-hover:text-primary transition-colors">{t(`community.free.benefits.${i}.title`)}</h3>
                   <p className="mt-2 text-sm text-muted-foreground font-body">{t(`community.free.benefits.${i}.desc`)}</p>
-                </div>
+                  <ArrowRight className="h-4 w-4 mt-3 text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-all" />
+                </Link>
               ))}
             </div>
             <Button variant="heroOutline" size="lg" className="mt-8">
