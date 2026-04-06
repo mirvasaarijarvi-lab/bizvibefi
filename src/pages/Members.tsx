@@ -13,7 +13,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Search, Users, Linkedin, Building2, ExternalLink, ShieldCheck, Zap, Globe, Mail, Phone } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Navigate } from "react-router-dom";
+import { Navigate, Link } from "react-router-dom";
 import { useIsAdmin } from "@/hooks/useAdminShowcase";
 import { toast } from "sonner";
 import {
@@ -247,7 +247,8 @@ const Members = () => {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: i * 0.05 }}
                 >
-                  <Card className="h-full hover:shadow-md transition-shadow">
+                   <Link to={`/members/${member.user_id}`} className="block">
+                  <Card className="h-full hover:shadow-md transition-shadow cursor-pointer">
                     <CardContent className="p-6">
                       <div className="flex items-center gap-4 mb-4">
                         <Avatar className="h-14 w-14">
@@ -395,6 +396,7 @@ const Members = () => {
                       )}
                     </CardContent>
                   </Card>
+                  </Link>
                 </motion.div>
               ))}
             </motion.div>

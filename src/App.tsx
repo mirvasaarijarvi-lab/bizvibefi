@@ -22,6 +22,7 @@ const Forum = lazy(() => import("./pages/Forum.tsx"));
 const ForumCategory = lazy(() => import("./pages/ForumCategory.tsx"));
 const ForumTopic = lazy(() => import("./pages/ForumTopic.tsx"));
 const Members = lazy(() => import("./pages/Members.tsx"));
+const MemberProfile = lazy(() => import("./pages/MemberProfile.tsx"));
 const AccessibilityStatement = lazy(() => import("./pages/AccessibilityStatement.tsx"));
 const PrivacyPolicy = lazy(() => import("./pages/PrivacyPolicy.tsx"));
 const TermsOfService = lazy(() => import("./pages/TermsOfService.tsx"));
@@ -58,6 +59,7 @@ const App = () => (
                 <Route path="/forum/:slug" element={<ForumCategory />} />
                 <Route path="/forum/:slug/:topicId" element={<ForumTopic />} />
                 <Route path="/members" element={<Members />} />
+                <Route path="/members/:userId" element={<MemberProfile />} />
                 <Route path="/accessibility" element={<AccessibilityStatement />} />
                 <Route path="/privacy" element={<PrivacyPolicy />} />
                 <Route path="/terms" element={<TermsOfService />} />
