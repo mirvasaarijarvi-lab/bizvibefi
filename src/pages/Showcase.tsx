@@ -14,8 +14,8 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { motion } from "framer-motion";
 import { useTranslation } from "@/i18n/useTranslation";
 import { useAuth } from "@/hooks/useAuth";
-import { useShowcaseItems, useCreateShowcaseItem, useShowcaseReviews, useCreateReview, type ShowcaseType, type ShowcaseItem } from "@/hooks/useShowcase";
-import { Plus, Star, ExternalLink, Clock, CheckCircle, XCircle, ArrowRight, Lightbulb, MessageSquare, Wrench, Upload, X as XIcon } from "lucide-react";
+import { useShowcaseItems, useCreateShowcaseItem, type ShowcaseType, type ShowcaseItem, type KeyFigure } from "@/hooks/useShowcase";
+import { Plus, ExternalLink, ArrowRight, Lightbulb, MessageSquare, Wrench, Upload, X as XIcon, Trash2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import ImageDropZone from "@/components/ImageDropZone";
 import ImageCropDialog from "@/components/ImageCropDialog";
@@ -28,7 +28,6 @@ const typeIcons: Record<ShowcaseType, React.ElementType> = {
 };
 
 const ShowcaseCard = ({ item }: { item: ShowcaseItem }) => {
-  const [reviewOpen, setReviewOpen] = useState(false);
   const { t } = useTranslation();
   const Icon = typeIcons[item.type];
 
@@ -38,127 +37,123 @@ const ShowcaseCard = ({ item }: { item: ShowcaseItem }) => {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
     >
-      <Card className="h-full flex flex-col hover:border-primary/40 transition-colors">
-        {item.image_url && (
-          <div className="aspect-video w-full overflow-hidden rounded-t-lg">
-            <img src={item.image_url} alt={item.title} className="w-full h-full object-cover" />
-          </div>
-        )}
-        <CardHeader>
-          <div className="flex items-start justify-between gap-2">
-            <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
-                <Icon className="h-4 w-4 text-primary" />
-              </div>
-              <CardTitle className="text-lg">{item.title}</CardTitle>
+      <Link to={`/showcase/${item.id}`} className="block">
+        <Card className="h-full flex flex-col hover:border-primary/40 transition-colors group">
+          {item.image_url && (
+            <div className="aspect-video w-full overflow-hidden rounded-t-lg">
+              <img src={item.image_url} alt={item.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
             </div>
-          </div>
-          <div className="flex flex-wrap gap-1.5 mt-2">
-            {item.category_tags?.map((tag) => (
-              <Badge key={tag} variant="secondary" className="text-xs">{tag}</Badge>
-            ))}
-          </div>
-        </CardHeader>
-        <CardContent className="flex-1">
-          <p className="text-sm text-muted-foreground font-body">{item.description}</p>
-          {item.pricing_info && (
-            <p className="mt-2 text-sm font-semibold text-primary font-body">{item.pricing_info}</p>
           )}
-          {item.profiles?.display_name && (
-            <p className="mt-3 text-xs text-muted-foreground font-body">
-              {t("showcase.by")} {item.profiles.display_name}
-            </p>
-          )}
-        </CardContent>
-        <CardFooter className="gap-2 flex-wrap">
-          {item.link_url && (
-            <Button variant="outline" size="sm" asChild>
-              <a href={item.link_url} target="_blank" rel="noopener noreferrer">
-                {t("showcase.visitLink")} <ExternalLink className="ml-1 h-3 w-3" />
-              </a>
+          <CardHeader>
+            <div className="flex items-start justify-between gap-2">
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+                  <Icon className="h-4 w-4 text-primary" />
+                </div>
+                <CardTitle className="text-lg">{item.title}</CardTitle>
+              </div>
+            </div>
+            <div className="flex flex-wrap gap-1.5 mt-2">
+              {item.category_tags?.map((tag) => (
+                <Badge key={tag} variant="secondary" className="text-xs">{tag}</Badge>
+              ))}
+            </div>
+          </CardHeader>
+          <CardContent className="flex-1">
+            <p className="text-sm text-muted-foreground font-body line-clamp-3">{item.description}</p>
+            {item.pricing_info && (
+              <p className="mt-2 text-sm font-semibold text-primary font-body">{item.pricing_info}</p>
+            )}
+          </CardContent>
+          <CardFooter className="gap-2 flex-wrap">
+            {item.link_url && (
+              <Button variant="outline" size="sm" asChild onClick={(e) => e.stopPropagation()}>
+                <a href={item.link_url} target="_blank" rel="noopener noreferrer">
+                  {t("showcase.visitLink")} <ExternalLink className="ml-1 h-3 w-3" />
+                </a>
+              </Button>
+            )}
+            <Button variant="ghost" size="sm" className="ml-auto">
+              {t("showcase.detail.readMore")} <ArrowRight className="ml-1 h-3 w-3" />
             </Button>
-          )}
-          {item.type === "tool" && (
-            <ReviewDialog item={item} open={reviewOpen} onOpenChange={setReviewOpen} />
-          )}
-        </CardFooter>
-      </Card>
+          </CardFooter>
+        </Card>
+      </Link>
     </motion.div>
   );
 };
 
-const StarRating = ({ value, onChange }: { value: number; onChange: (v: number) => void }) => (
-  <div className="flex gap-1">
-    {[1, 2, 3, 4, 5].map((star) => (
-      <button key={star} type="button" onClick={() => onChange(star)} className="focus:outline-none">
-        <Star className={`h-5 w-5 ${star <= value ? "text-yellow-500 fill-yellow-500" : "text-muted-foreground"}`} />
-      </button>
-    ))}
-  </div>
-);
-
-const ReviewDialog = ({ item, open, onOpenChange }: { item: ShowcaseItem; open: boolean; onOpenChange: (o: boolean) => void }) => {
-  const { user } = useAuth();
+const KeyFigureInput = ({ figures, onChange }: { figures: KeyFigure[]; onChange: (f: KeyFigure[]) => void }) => {
   const { t } = useTranslation();
-  const { data: reviews } = useShowcaseReviews(item.id);
-  const createReview = useCreateReview();
-  const { toast } = useToast();
-  const [rating, setRating] = useState(0);
-  const [comment, setComment] = useState("");
 
-  const avgRating = reviews?.length
-    ? (reviews.reduce((s, r) => s + r.rating, 0) / reviews.length).toFixed(1)
-    : null;
-
-  const handleSubmit = async () => {
-    if (!rating) return;
-    try {
-      await createReview.mutateAsync({ showcase_item_id: item.id, rating, comment: comment || undefined });
-      toast({ title: t("showcase.reviewSubmitted") });
-      setRating(0);
-      setComment("");
-    } catch {
-      toast({ title: t("showcase.reviewError"), variant: "destructive" });
-    }
+  const addFigure = () => onChange([...figures, { label: "", value: "" }]);
+  const removeFigure = (i: number) => onChange(figures.filter((_, idx) => idx !== i));
+  const updateFigure = (i: number, field: "label" | "value", val: string) => {
+    const updated = [...figures];
+    updated[i] = { ...updated[i], [field]: val };
+    onChange(updated);
   };
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogTrigger asChild>
-        <Button variant="ghost" size="sm">
-          <Star className="mr-1 h-3 w-3" /> {avgRating ?? "—"} ({reviews?.length ?? 0})
-        </Button>
-      </DialogTrigger>
-      <DialogContent className="max-w-md">
-        <DialogHeader>
-          <DialogTitle>{t("showcase.reviews")} — {item.title}</DialogTitle>
-        </DialogHeader>
-        <div className="space-y-4 max-h-60 overflow-y-auto">
-          {reviews?.map((r) => (
-            <div key={r.id} className="border-b pb-3">
-              <div className="flex items-center gap-2">
-                <StarRating value={r.rating} onChange={() => {}} />
-                <span className="text-xs text-muted-foreground">{r.profiles?.display_name ?? "Anonymous"}</span>
-              </div>
-              {r.comment && <p className="text-sm mt-1 font-body">{r.comment}</p>}
-            </div>
-          ))}
-          {(!reviews || reviews.length === 0) && (
-            <p className="text-sm text-muted-foreground">{t("showcase.noReviews")}</p>
-          )}
+    <div className="space-y-2">
+      <Label>{t("showcase.keyFiguresLabel")}</Label>
+      {figures.map((fig, i) => (
+        <div key={i} className="flex gap-2 items-center">
+          <Input
+            value={fig.value}
+            onChange={(e) => updateFigure(i, "value", e.target.value)}
+            placeholder={t("showcase.keyFigureValuePlaceholder")}
+            className="w-1/3"
+          />
+          <Input
+            value={fig.label}
+            onChange={(e) => updateFigure(i, "label", e.target.value)}
+            placeholder={t("showcase.keyFigureLabelPlaceholder")}
+            className="flex-1"
+          />
+          <Button type="button" variant="ghost" size="icon" onClick={() => removeFigure(i)} className="shrink-0">
+            <Trash2 className="h-4 w-4" />
+          </Button>
         </div>
-        {user && (
-          <div className="space-y-3 pt-4 border-t">
-            <Label>{t("showcase.yourRating")}</Label>
-            <StarRating value={rating} onChange={setRating} />
-            <Textarea placeholder={t("showcase.commentPlaceholder")} value={comment} onChange={(e) => setComment(e.target.value)} />
-            <Button onClick={handleSubmit} disabled={!rating || createReview.isPending} className="w-full">
-              {t("showcase.submitReview")}
-            </Button>
-          </div>
-        )}
-      </DialogContent>
-    </Dialog>
+      ))}
+      <Button type="button" variant="outline" size="sm" onClick={addFigure}>
+        <Plus className="mr-1 h-3 w-3" /> {t("showcase.addKeyFigure")}
+      </Button>
+    </div>
+  );
+};
+
+const BenefitsInput = ({ benefits, onChange }: { benefits: string[]; onChange: (b: string[]) => void }) => {
+  const { t } = useTranslation();
+
+  const addBenefit = () => onChange([...benefits, ""]);
+  const removeBenefit = (i: number) => onChange(benefits.filter((_, idx) => idx !== i));
+  const updateBenefit = (i: number, val: string) => {
+    const updated = [...benefits];
+    updated[i] = val;
+    onChange(updated);
+  };
+
+  return (
+    <div className="space-y-2">
+      <Label>{t("showcase.benefitsLabel")}</Label>
+      {benefits.map((b, i) => (
+        <div key={i} className="flex gap-2 items-center">
+          <Input
+            value={b}
+            onChange={(e) => updateBenefit(i, e.target.value)}
+            placeholder={t("showcase.benefitPlaceholder")}
+            className="flex-1"
+          />
+          <Button type="button" variant="ghost" size="icon" onClick={() => removeBenefit(i)} className="shrink-0">
+            <Trash2 className="h-4 w-4" />
+          </Button>
+        </div>
+      ))}
+      <Button type="button" variant="outline" size="sm" onClick={addBenefit}>
+        <Plus className="mr-1 h-3 w-3" /> {t("showcase.addBenefit")}
+      </Button>
+    </div>
   );
 };
 
@@ -171,6 +166,10 @@ const SubmitForm = ({ onClose }: { onClose: () => void }) => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [content, setContent] = useState("");
+  const [challenge, setChallenge] = useState("");
+  const [solution, setSolution] = useState("");
+  const [benefits, setBenefits] = useState<string[]>([]);
+  const [keyFigures, setKeyFigures] = useState<KeyFigure[]>([]);
   const [linkUrl, setLinkUrl] = useState("");
   const [tags, setTags] = useState("");
   const [pricingInfo, setPricingInfo] = useState("");
@@ -224,11 +223,18 @@ const SubmitForm = ({ onClose }: { onClose: () => void }) => {
         image_url = urlData.publicUrl;
       }
 
+      const cleanBenefits = benefits.filter((b) => b.trim());
+      const cleanFigures = keyFigures.filter((f) => f.label.trim() && f.value.trim());
+
       await createItem.mutateAsync({
         type,
         title: title.trim(),
         description: description.trim(),
         content: content.trim() || undefined,
+        challenge: challenge.trim() || undefined,
+        solution: solution.trim() || undefined,
+        benefits: cleanBenefits.length > 0 ? cleanBenefits : undefined,
+        key_figures: cleanFigures.length > 0 ? cleanFigures : undefined,
         link_url: linkUrl.trim() || undefined,
         image_url,
         category_tags: tags.split(",").map((t) => t.trim()).filter(Boolean),
@@ -242,6 +248,8 @@ const SubmitForm = ({ onClose }: { onClose: () => void }) => {
       setUploading(false);
     }
   };
+
+  const showStructuredFields = type === "case_study" || type === "testimonial";
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
@@ -264,6 +272,22 @@ const SubmitForm = ({ onClose }: { onClose: () => void }) => {
         <Label>{t("showcase.descriptionLabel")}</Label>
         <Textarea value={description} onChange={(e) => setDescription(e.target.value)} required />
       </div>
+
+      {showStructuredFields && (
+        <>
+          <div>
+            <Label>{t("showcase.challengeLabel")}</Label>
+            <Textarea value={challenge} onChange={(e) => setChallenge(e.target.value)} placeholder={t("showcase.challengePlaceholder")} rows={3} />
+          </div>
+          <div>
+            <Label>{t("showcase.solutionLabel")}</Label>
+            <Textarea value={solution} onChange={(e) => setSolution(e.target.value)} placeholder={t("showcase.solutionPlaceholder")} rows={3} />
+          </div>
+          <BenefitsInput benefits={benefits} onChange={setBenefits} />
+          <KeyFigureInput figures={keyFigures} onChange={setKeyFigures} />
+        </>
+      )}
+
       <div>
         <Label>{t("showcase.contentLabel")}</Label>
         <Textarea value={content} onChange={(e) => setContent(e.target.value)} placeholder={t("showcase.contentPlaceholder")} />
@@ -322,17 +346,6 @@ const SubmitForm = ({ onClose }: { onClose: () => void }) => {
       </Button>
       <ImageCropDialog file={cropFile} open={cropOpen} onOpenChange={setCropOpen} onCropComplete={handleCropComplete} />
     </form>
-  );
-};
-
-const StatusBadge = ({ status }: { status: string }) => {
-  const icons: Record<string, React.ElementType> = { pending: Clock, approved: CheckCircle, rejected: XCircle };
-  const Icon = icons[status] || Clock;
-  const variant = status === "approved" ? "default" : status === "rejected" ? "destructive" : "secondary";
-  return (
-    <Badge variant={variant} className="text-xs gap-1">
-      <Icon className="h-3 w-3" /> {status}
-    </Badge>
   );
 };
 

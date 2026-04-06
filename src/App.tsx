@@ -26,6 +26,7 @@ const AccessibilityStatement = lazy(() => import("./pages/AccessibilityStatement
 const PrivacyPolicy = lazy(() => import("./pages/PrivacyPolicy.tsx"));
 const TermsOfService = lazy(() => import("./pages/TermsOfService.tsx"));
 const AdminShowcase = lazy(() => import("./pages/AdminShowcase.tsx"));
+const ShowcaseDetail = lazy(() => import("./pages/ShowcaseDetail.tsx"));
 const NotFound = lazy(() => import("./pages/NotFound.tsx"));
 
 const queryClient = new QueryClient();
@@ -43,6 +44,7 @@ const App = () => (
                 <Route path="/" element={<Index />} />
                 <Route path="/community" element={<Community />} />
                 <Route path="/showcase" element={<Showcase />} />
+                <Route path="/showcase/:id" element={<ShowcaseDetail />} />
                 <Route path="/get-going" element={<GetGoing />} />
                 <Route path="/about" element={<About />} />
                 <Route path="/contact" element={<Contact />} />

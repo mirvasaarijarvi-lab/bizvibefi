@@ -5,6 +5,11 @@ import { useAuth } from "./useAuth";
 export type ShowcaseType = "case_study" | "testimonial" | "tool";
 export type ApprovalStatus = "pending" | "approved" | "rejected";
 
+export interface KeyFigure {
+  label: string;
+  value: string;
+}
+
 export interface ShowcaseItem {
   id: string;
   user_id: string;
@@ -12,10 +17,15 @@ export interface ShowcaseItem {
   title: string;
   description: string;
   content: string | null;
+  challenge: string | null;
+  solution: string | null;
+  benefits: string[] | null;
+  key_figures: KeyFigure[] | null; // stored as jsonb, cast from Json
   image_url: string | null;
   link_url: string | null;
   category_tags: string[];
   pricing_info: string | null;
+  rejection_reason: string | null;
   status: ApprovalStatus;
   created_at: string;
   updated_at: string;
@@ -46,8 +56,24 @@ export const useShowcaseItems = (type?: ShowcaseType) => {
 
       const { data, error } = await query;
       if (error) throw error;
-      return (data ?? []) as ShowcaseItem[];
+      return (data ?? []) as unknown as ShowcaseItem[];
     },
+  });
+};
+
+export const useShowcaseItem = (id: string) => {
+  return useQuery({
+    queryKey: ["showcase", "item", id],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("showcase_items")
+        .select("*")
+        .eq("id", id)
+        .single();
+      if (error) throw error;
+      return data as unknown as ShowcaseItem;
+    },
+    enabled: !!id,
   });
 };
 
@@ -63,7 +89,7 @@ export const useMyShowcaseItems = () => {
         .eq("user_id", user.id)
         .order("created_at", { ascending: false });
       if (error) throw error;
-      return (data ?? []) as ShowcaseItem[];
+      return (data ?? []) as unknown as ShowcaseItem[];
     },
     enabled: !!user,
   });
@@ -95,15 +121,35 @@ export const useCreateShowcaseItem = () => {
       title: string;
       description: string;
       content?: string;
+      challenge?: string;
+      solution?: string;
+      benefits?: string[];
+      key_figures?: KeyFigure[];
       image_url?: string;
       link_url?: string;
       category_tags?: string[];
       pricing_info?: string;
     }) => {
       if (!user) throw new Error("Not authenticated");
+      const payload = {
+        type: item.type,
+        title: item.title,
+        description: item.description,
+        content: item.content,
+        challenge: item.challenge,
+        solution: item.solution,
+        benefits: item.benefits,
+        key_figures: item.key_figures as unknown as Record<string, unknown>[],
+        image_url: item.image_url,
+        link_url: item.link_url,
+        category_tags: item.category_tags,
+        pricing_info: item.pricing_info,
+        user_id: user.id,
+      };
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const { data, error } = await supabase
         .from("showcase_items")
-        .insert({ ...item, user_id: user.id })
+        .insert(payload as any)
         .select()
         .single();
       if (error) throw error;

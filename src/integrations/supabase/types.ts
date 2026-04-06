@@ -274,15 +274,19 @@ export type Database = {
       }
       showcase_items: {
         Row: {
+          benefits: string[] | null
           category_tags: string[] | null
+          challenge: string | null
           content: string | null
           created_at: string
           description: string
           id: string
           image_url: string | null
+          key_figures: Json | null
           link_url: string | null
           pricing_info: string | null
           rejection_reason: string | null
+          solution: string | null
           status: Database["public"]["Enums"]["approval_status"]
           title: string
           type: Database["public"]["Enums"]["showcase_type"]
@@ -290,15 +294,19 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          benefits?: string[] | null
           category_tags?: string[] | null
+          challenge?: string | null
           content?: string | null
           created_at?: string
           description: string
           id?: string
           image_url?: string | null
+          key_figures?: Json | null
           link_url?: string | null
           pricing_info?: string | null
           rejection_reason?: string | null
+          solution?: string | null
           status?: Database["public"]["Enums"]["approval_status"]
           title: string
           type: Database["public"]["Enums"]["showcase_type"]
@@ -306,15 +314,19 @@ export type Database = {
           user_id: string
         }
         Update: {
+          benefits?: string[] | null
           category_tags?: string[] | null
+          challenge?: string | null
           content?: string | null
           created_at?: string
           description?: string
           id?: string
           image_url?: string | null
+          key_figures?: Json | null
           link_url?: string | null
           pricing_info?: string | null
           rejection_reason?: string | null
+          solution?: string | null
           status?: Database["public"]["Enums"]["approval_status"]
           title?: string
           type?: Database["public"]["Enums"]["showcase_type"]
