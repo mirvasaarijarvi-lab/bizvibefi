@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import Layout from "@/components/Layout";
 import PageMeta from "@/components/PageMeta";
 import { Button } from "@/components/ui/button";
@@ -86,6 +87,21 @@ const Community = () => {
               {t("community.pro.cta")} <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
           </motion.div>
+        </div>
+      </section>
+
+      {/* Showcase CTA */}
+      <section className="pb-20">
+        <div className="container">
+          <div className="bg-card border border-border rounded-2xl p-8 md:p-12 text-center">
+            <h2 className="font-display text-2xl md:text-3xl font-bold tracking-[-0.02em]">
+              {t("showcase.sectionTitle")} <span className="text-gradient-storm">{t("showcase.sectionHighlight")}</span>
+            </h2>
+            <p className="mt-3 text-muted-foreground font-body max-w-lg mx-auto">{t("showcase.subtitle")}</p>
+            <Button variant="hero" size="lg" className="mt-6" asChild>
+              <Link to="/showcase">{t("showcase.sectionCta")} <ArrowRight className="ml-2 h-4 w-4" /></Link>
+            </Button>
+          </div>
         </div>
       </section>
 
