@@ -93,7 +93,7 @@ const ForumCategory = () => {
     enabled: !!slug,
   });
 
-  const requiresApproval = (category as Tables<"forum_categories"> & { requires_approval?: boolean })?.requires_approval === true;
+  const requiresApproval = (category as Record<string, unknown> | undefined)?.requires_approval === true;
 
   const { data: topics, isLoading } = useQuery({
     queryKey: ["forum-topics", category?.id],
