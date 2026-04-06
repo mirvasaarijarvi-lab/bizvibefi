@@ -38,7 +38,7 @@ export const useShowcaseItems = (type?: ShowcaseType) => {
     queryFn: async () => {
       let query = supabase
         .from("showcase_items")
-        .select("*, profiles!showcase_items_user_id_fkey(display_name, avatar_url)")
+        .select("*")
         .eq("status", "approved")
         .order("created_at", { ascending: false });
 
