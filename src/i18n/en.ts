@@ -70,7 +70,7 @@ const en = {
         "Priority deal flow access",
         "Innovation showcase events",
       ],
-      cta: "Become a Vibetor",
+      cta: "Contact Us",
     },
   },
   ctaSection: {
