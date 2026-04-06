@@ -1,0 +1,1 @@
+ALTER TYPE public.membership_tier ADD VALUE 'vibetor';
