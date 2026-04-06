@@ -10,6 +10,7 @@ import { lazy, Suspense } from "react";
 
 const Index = lazy(() => import("./pages/Index.tsx"));
 const Community = lazy(() => import("./pages/Community.tsx"));
+const Showcase = lazy(() => import("./pages/Showcase.tsx"));
 const GetGoing = lazy(() => import("./pages/GetGoing.tsx"));
 const About = lazy(() => import("./pages/About.tsx"));
 const Contact = lazy(() => import("./pages/Contact.tsx"));
@@ -40,6 +41,7 @@ const App = () => (
               <Routes>
                 <Route path="/" element={<Index />} />
                 <Route path="/community" element={<Community />} />
+                <Route path="/showcase" element={<Showcase />} />
                 <Route path="/get-going" element={<GetGoing />} />
                 <Route path="/about" element={<About />} />
                 <Route path="/contact" element={<Contact />} />
