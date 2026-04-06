@@ -3,18 +3,20 @@ import { useAuth } from "@/hooks/useAuth";
 import { useProfile, useUpdateProfile, type WebsiteLink } from "@/hooks/useProfile";
 import { useUserRole } from "@/hooks/useAdminShowcase";
 import { supabase } from "@/integrations/supabase/client";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import Layout from "@/components/Layout";
 import PageMeta from "@/components/PageMeta";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { Camera, Linkedin, Building, User, Globe, Mail, Phone, Plus, Trash2 } from "lucide-react";
+import { Camera, Linkedin, Building, User, Globe, Mail, Phone, Plus, Trash2, Inbox, CheckCheck } from "lucide-react";
+import { formatDistanceToNow } from "date-fns";
 
 const Profile = () => {
   const { user, loading: authLoading } = useAuth();
