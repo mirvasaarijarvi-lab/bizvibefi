@@ -32,7 +32,7 @@ const fi = {
     cta: "Otetaan yhteyttä",
   },
   tiers: {
-    title: "Kaksi tapaa",
+    title: "Kolme tapaa",
     titleHighlight: "vibettää",
     subtitle: "Aloita ilmaiseksi, päivitä kun olet valmis.",
     free: {
@@ -58,6 +58,19 @@ const fi = {
         "Viber WhatsApp -ryhmä liideillä",
       ],
       cta: "Siirry Viberiin",
+    },
+    vibetor: {
+      name: "Vibetor",
+      label: "VIBETOR",
+      price: "Sijoittajajäsenyys",
+      benefits: [
+        "Kaikki Viberistä",
+        "Sijoittajamerkki profiilissa",
+        "Eksklusiivinen sijoittajaverkosto",
+        "Etusija deal flow -pääsyyn",
+        "Innovaationäyttelytapahtumat",
+      ],
+      cta: "Ryhdy Vibetorksi",
     },
   },
   ctaSection: {

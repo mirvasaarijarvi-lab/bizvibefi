@@ -32,7 +32,7 @@ const sv = {
     cta: "Hör av dig",
   },
   tiers: {
-    title: "Två sätt att",
+    title: "Tre sätt att",
     titleHighlight: "vibba",
     subtitle: "Börja gratis och uppgradera när du är redo.",
     free: {
@@ -58,6 +58,19 @@ const sv = {
         "Viber WhatsApp-grupp med leads",
       ],
       cta: "Bli Viber",
+    },
+    vibetor: {
+      name: "Vibetor",
+      label: "VIBETOR",
+      price: "Investerarmedlemskap",
+      benefits: [
+        "Allt från Viber",
+        "Investoremblem på profilen",
+        "Exklusivt investornätverk",
+        "Prioriterad tillgång till deal flow",
+        "Innovationsutställningar",
+      ],
+      cta: "Bli Vibetor",
     },
   },
   ctaSection: {

@@ -32,7 +32,7 @@ const en = {
     cta: "Let's talk",
   },
   tiers: {
-    title: "Two ways to",
+    title: "Three ways to",
     titleHighlight: "vibe",
     subtitle: "Start free, level up when you're ready.",
     free: {
@@ -58,6 +58,19 @@ const en = {
         "Viber WhatsApp group with leads",
       ],
       cta: "Go Viber",
+    },
+    vibetor: {
+      name: "Vibetor",
+      label: "VIBETOR",
+      price: "Investor membership",
+      benefits: [
+        "Everything in Viber",
+        "Investor badge on profile",
+        "Exclusive investor network",
+        "Priority deal flow access",
+        "Innovation showcase events",
+      ],
+      cta: "Become a Vibetor",
     },
   },
   ctaSection: {
