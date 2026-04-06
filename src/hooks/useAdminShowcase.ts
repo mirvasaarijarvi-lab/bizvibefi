@@ -122,6 +122,10 @@ export interface ShowcaseFieldsUpdate {
   title?: string;
   description?: string;
   content?: string | null;
+  challenge?: string | null;
+  solution?: string | null;
+  benefits?: string[] | null;
+  key_figures?: Record<string, unknown>[] | null;
   link_url?: string | null;
   category_tags?: string[];
   pricing_info?: string | null;
@@ -132,9 +136,10 @@ export const useUpdateShowcaseFields = () => {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: async ({ id, fields }: { id: string; fields: ShowcaseFieldsUpdate }) => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const { error } = await supabase
         .from("showcase_items")
-        .update(fields)
+        .update(fields as any)
         .eq("id", id);
       if (error) throw error;
     },
