@@ -207,6 +207,7 @@ const sv = {
     linkLabel: "Länk",
     imageLabel: "Bild",
     uploadImage: "Klicka eller dra för att ladda upp en bild (max 5MB)",
+    rejectionReason: "Anledning till avvisning",
     dropHere: "Släpp bilden här",
     uploading: "Laddar upp…",
     tagsLabel: "Taggar",

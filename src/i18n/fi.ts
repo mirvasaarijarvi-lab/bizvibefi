@@ -207,6 +207,7 @@ const fi = {
     linkLabel: "Linkki",
     imageLabel: "Kuva",
     uploadImage: "Klikkaa tai vedä kuva tähän (max 5Mt)",
+    rejectionReason: "Hylkäyksen syy",
     dropHere: "Pudota kuva tähän",
     uploading: "Ladataan…",
     tagsLabel: "Tagit",

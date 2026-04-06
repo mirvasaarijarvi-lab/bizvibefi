@@ -207,6 +207,7 @@ const en = {
     linkLabel: "Link URL",
     imageLabel: "Image",
     uploadImage: "Click or drag to upload an image (max 5MB)",
+    rejectionReason: "Rejection reason",
     dropHere: "Drop image here",
     uploading: "Uploading…",
     tagsLabel: "Tags",
