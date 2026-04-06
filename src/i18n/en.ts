@@ -272,6 +272,15 @@ const en = {
         success: "{count} items updated",
         failed: "Bulk update failed",
       },
+      search: {
+        placeholder: "Search by title, description or tag…",
+        typeAll: "All types",
+        casestudy: "Case Study",
+        testimonial: "Testimonial",
+        tool: "Tool",
+        tagAll: "All tags",
+        noResults: "No items match your search.",
+      },
     },
   },
 };

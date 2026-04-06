@@ -272,6 +272,15 @@ const sv = {
         success: "{count} objekt uppdaterade",
         failed: "Massuppdatering misslyckades",
       },
+      search: {
+        placeholder: "Sök efter titel, beskrivning eller tagg…",
+        typeAll: "Alla typer",
+        casestudy: "Fallstudie",
+        testimonial: "Rekommendation",
+        tool: "Verktyg",
+        tagAll: "Alla taggar",
+        noResults: "Inga objekt matchar din sökning.",
+      },
     },
   },
 };
