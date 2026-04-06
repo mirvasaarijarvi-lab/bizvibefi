@@ -41,6 +41,7 @@ const AdminItemCard = ({ item }: { item: ShowcaseItem }) => {
   const updateImage = useUpdateShowcaseImage();
   const { toast } = useToast();
   const [uploading, setUploading] = useState(false);
+  const [editOpen, setEditOpen] = useState(false);
   const Icon = typeIcons[item.type] || Lightbulb;
   const statusInfo = statusConfig[item.status];
   const StatusIcon = statusInfo.icon;
