@@ -15,7 +15,7 @@ import { motion } from "framer-motion";
 import { useTranslation } from "@/i18n/useTranslation";
 import { useAuth } from "@/hooks/useAuth";
 import { useShowcaseItems, useCreateShowcaseItem, type ShowcaseType, type ShowcaseItem, type KeyFigure } from "@/hooks/useShowcase";
-import { Plus, ExternalLink, ArrowRight, Lightbulb, MessageSquare, Wrench, Upload, X as XIcon, Trash2 } from "lucide-react";
+import { Plus, ExternalLink, ArrowRight, Lightbulb, MessageSquare, Wrench, Upload, X as XIcon, Trash2, BookOpen, Code } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import ImageDropZone from "@/components/ImageDropZone";
 import ImageCropDialog from "@/components/ImageCropDialog";
@@ -25,6 +25,8 @@ const typeIcons: Record<ShowcaseType, React.ElementType> = {
   case_study: Lightbulb,
   testimonial: MessageSquare,
   tool: Wrench,
+  guidebook: BookOpen,
+  sample_code: Code,
 };
 
 const ShowcaseCard = ({ item }: { item: ShowcaseItem }) => {
@@ -261,6 +263,8 @@ const SubmitForm = ({ onClose }: { onClose: () => void }) => {
             <SelectItem value="case_study">{t("showcase.tabs.caseStudies")}</SelectItem>
             <SelectItem value="testimonial">{t("showcase.tabs.testimonials")}</SelectItem>
             <SelectItem value="tool">{t("showcase.tabs.tools")}</SelectItem>
+            <SelectItem value="guidebook">Guidebook</SelectItem>
+            <SelectItem value="sample_code">Sample Code / Prompt</SelectItem>
           </SelectContent>
         </Select>
       </div>
@@ -405,6 +409,8 @@ const Showcase = () => {
               <TabsTrigger value="case_study">{t("showcase.tabs.caseStudies")}</TabsTrigger>
               <TabsTrigger value="testimonial">{t("showcase.tabs.testimonials")}</TabsTrigger>
               <TabsTrigger value="tool">{t("showcase.tabs.tools")}</TabsTrigger>
+              <TabsTrigger value="guidebook">Guidebooks</TabsTrigger>
+              <TabsTrigger value="sample_code">Codes & Prompts</TabsTrigger>
             </TabsList>
 
             <TabsContent value={activeTab}>
