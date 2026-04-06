@@ -29,6 +29,7 @@ const AdminShowcase = lazy(() => import("./pages/AdminShowcase.tsx"));
 const ShowcaseDetail = lazy(() => import("./pages/ShowcaseDetail.tsx"));
 const AdminNotifications = lazy(() => import("./pages/AdminNotifications.tsx"));
 const AuditLog = lazy(() => import("./pages/AuditLog.tsx"));
+const AdminUsers = lazy(() => import("./pages/AdminUsers.tsx"));
 const NotFound = lazy(() => import("./pages/NotFound.tsx"));
 
 const queryClient = new QueryClient();
@@ -64,6 +65,7 @@ const App = () => (
                 <Route path="/admin/showcase" element={<AdminShowcase />} />
                 <Route path="/admin/notifications" element={<AdminNotifications />} />
                 <Route path="/admin/audit-log" element={<AuditLog />} />
+                <Route path="/admin/users" element={<AdminUsers />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </Suspense>
