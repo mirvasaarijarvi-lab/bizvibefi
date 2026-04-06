@@ -235,6 +235,16 @@ const sv = {
       imageUpdated: "Bild uppdaterad",
       imageRemoved: "Bild borttagen",
       imageUploadFailed: "Kunde inte ladda upp bild",
+      edit: {
+        editBtn: "Redigera",
+        title: "Redigera skyltfönsterobjekt",
+        save: "Spara ändringar",
+        cancel: "Avbryt",
+        saved: "Ändringar sparade",
+        saveFailed: "Kunde inte spara ändringar",
+        requiredFields: "Titel och beskrivning krävs",
+        titleTooLong: "Titeln får vara högst 200 tecken",
+      },
     },
   },
 };

@@ -235,6 +235,16 @@ const en = {
       imageUpdated: "Image updated",
       imageRemoved: "Image removed",
       imageUploadFailed: "Failed to upload image",
+      edit: {
+        editBtn: "Edit",
+        title: "Edit Showcase Item",
+        save: "Save Changes",
+        cancel: "Cancel",
+        saved: "Changes saved",
+        saveFailed: "Failed to save changes",
+        requiredFields: "Title and description are required",
+        titleTooLong: "Title must be under 200 characters",
+      },
     },
   },
 };

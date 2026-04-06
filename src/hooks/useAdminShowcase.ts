@@ -89,3 +89,29 @@ export const useUpdateShowcaseImage = () => {
     },
   });
 };
+
+export interface ShowcaseFieldsUpdate {
+  title?: string;
+  description?: string;
+  content?: string | null;
+  link_url?: string | null;
+  category_tags?: string[];
+  pricing_info?: string | null;
+  type?: "case_study" | "testimonial" | "tool";
+}
+
+export const useUpdateShowcaseFields = () => {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ id, fields }: { id: string; fields: ShowcaseFieldsUpdate }) => {
+      const { error } = await supabase
+        .from("showcase_items")
+        .update(fields)
+        .eq("id", id);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["showcase"] });
+    },
+  });
+};

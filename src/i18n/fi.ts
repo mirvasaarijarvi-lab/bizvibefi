@@ -235,6 +235,16 @@ const fi = {
       imageUpdated: "Kuva päivitetty",
       imageRemoved: "Kuva poistettu",
       imageUploadFailed: "Kuvan lataus epäonnistui",
+      edit: {
+        editBtn: "Muokkaa",
+        title: "Muokkaa näyteikkunan kohdetta",
+        save: "Tallenna muutokset",
+        cancel: "Peruuta",
+        saved: "Muutokset tallennettu",
+        saveFailed: "Muutosten tallennus epäonnistui",
+        requiredFields: "Otsikko ja kuvaus ovat pakollisia",
+        titleTooLong: "Otsikko saa olla enintään 200 merkkiä",
+      },
     },
   },
 };
