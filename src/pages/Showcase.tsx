@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import Layout from "@/components/Layout";
 import PageMeta from "@/components/PageMeta";
@@ -17,6 +17,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useShowcaseItems, useCreateShowcaseItem, useShowcaseReviews, useCreateReview, type ShowcaseType, type ShowcaseItem } from "@/hooks/useShowcase";
 import { Plus, Star, ExternalLink, Clock, CheckCircle, XCircle, ArrowRight, Lightbulb, MessageSquare, Wrench, Upload, X as XIcon } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import ImageDropZone from "@/components/ImageDropZone";
 import { useToast } from "@/hooks/use-toast";
 
 const typeIcons: Record<ShowcaseType, React.ElementType> = {
@@ -165,7 +166,6 @@ const SubmitForm = ({ onClose }: { onClose: () => void }) => {
   const { user } = useAuth();
   const createItem = useCreateShowcaseItem();
   const { toast } = useToast();
-  const fileInputRef = useRef<HTMLInputElement>(null);
   const [type, setType] = useState<ShowcaseType>("case_study");
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -177,9 +177,7 @@ const SubmitForm = ({ onClose }: { onClose: () => void }) => {
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
+  const handleFileSelected = (file: File) => {
     if (!file.type.startsWith("image/")) {
       toast({ title: "Please select an image file", variant: "destructive" });
       return;
@@ -195,7 +193,6 @@ const SubmitForm = ({ onClose }: { onClose: () => void }) => {
   const clearImage = () => {
     setImageFile(null);
     setImagePreview(null);
-    if (fileInputRef.current) fileInputRef.current.value = "";
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -269,34 +266,38 @@ const SubmitForm = ({ onClose }: { onClose: () => void }) => {
       </div>
       <div>
         <Label>{t("showcase.imageLabel")}</Label>
-        <input
-          ref={fileInputRef}
-          type="file"
-          accept="image/*"
-          onChange={handleFileChange}
-          className="hidden"
-        />
-        {imagePreview ? (
-          <div className="relative mt-2">
-            <img src={imagePreview} alt="Preview" className="w-full h-32 object-cover rounded-lg border border-border" />
-            <button
-              type="button"
-              onClick={clearImage}
-              className="absolute top-1 right-1 bg-background/80 rounded-full p-1 hover:bg-destructive hover:text-destructive-foreground transition-colors"
-            >
-              <XIcon className="h-4 w-4" />
-            </button>
-          </div>
-        ) : (
-          <button
-            type="button"
-            onClick={() => fileInputRef.current?.click()}
-            className="mt-1 w-full border-2 border-dashed border-border rounded-lg p-6 flex flex-col items-center gap-2 text-muted-foreground hover:border-primary/40 hover:text-foreground transition-colors"
-          >
-            <Upload className="h-6 w-6" />
-            <span className="text-sm font-body">{t("showcase.uploadImage")}</span>
-          </button>
-        )}
+        <ImageDropZone onFileSelected={handleFileSelected}>
+          {({ openPicker, isDragging }) => (
+            <>
+              {imagePreview ? (
+                <div className="relative mt-2">
+                  <img src={imagePreview} alt="Preview" className="w-full h-32 object-cover rounded-lg border border-border" />
+                  {isDragging && (
+                    <div className="absolute inset-0 bg-primary/20 flex items-center justify-center rounded-lg">
+                      <p className="text-sm font-medium text-primary-foreground bg-primary/80 px-3 py-1 rounded">{t("showcase.dropHere")}</p>
+                    </div>
+                  )}
+                  <button
+                    type="button"
+                    onClick={clearImage}
+                    className="absolute top-1 right-1 bg-background/80 rounded-full p-1 hover:bg-destructive hover:text-destructive-foreground transition-colors"
+                  >
+                    <XIcon className="h-4 w-4" />
+                  </button>
+                </div>
+              ) : (
+                <button
+                  type="button"
+                  onClick={openPicker}
+                  className={`mt-1 w-full border-2 border-dashed rounded-lg p-6 flex flex-col items-center gap-2 transition-colors ${isDragging ? "border-primary bg-primary/5 text-primary" : "border-border text-muted-foreground hover:border-primary/40 hover:text-foreground"}`}
+                >
+                  <Upload className="h-6 w-6" />
+                  <span className="text-sm font-body">{isDragging ? t("showcase.dropHere") : t("showcase.uploadImage")}</span>
+                </button>
+              )}
+            </>
+          )}
+        </ImageDropZone>
       </div>
       <div>
         <Label>{t("showcase.tagsLabel")}</Label>

@@ -1,7 +1,8 @@
-import { useState, useRef } from "react";
+import { useState } from "react";
 import { Navigate } from "react-router-dom";
 import Layout from "@/components/Layout";
 import PageMeta from "@/components/PageMeta";
+import { cn } from "@/lib/utils";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -19,6 +20,7 @@ import type { ShowcaseItem, ApprovalStatus } from "@/hooks/useShowcase";
 import { CheckCircle, XCircle, Clock, ExternalLink, Lightbulb, MessageSquare, Wrench, ImagePlus, Trash2, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import ImageDropZone from "@/components/ImageDropZone";
 
 const typeIcons: Record<string, React.ElementType> = {
   case_study: Lightbulb,
@@ -37,7 +39,6 @@ const AdminItemCard = ({ item }: { item: ShowcaseItem }) => {
   const updateStatus = useUpdateShowcaseStatus();
   const updateImage = useUpdateShowcaseImage();
   const { toast } = useToast();
-  const fileInputRef = useRef<HTMLInputElement>(null);
   const [uploading, setUploading] = useState(false);
   const Icon = typeIcons[item.type] || Lightbulb;
   const statusInfo = statusConfig[item.status];
@@ -52,9 +53,7 @@ const AdminItemCard = ({ item }: { item: ShowcaseItem }) => {
     }
   };
 
-  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
+  const handleFileSelected = async (file: File) => {
     if (file.size > 5 * 1024 * 1024) {
       toast({ title: t("showcase.fileTooLarge"), variant: "destructive" });
       return;
@@ -83,7 +82,6 @@ const AdminItemCard = ({ item }: { item: ShowcaseItem }) => {
       toast({ title: t("admin.showcase.imageUploadFailed"), variant: "destructive" });
     } finally {
       setUploading(false);
-      if (fileInputRef.current) fileInputRef.current.value = "";
     }
   };
 
@@ -98,55 +96,47 @@ const AdminItemCard = ({ item }: { item: ShowcaseItem }) => {
 
   return (
     <Card className="flex flex-col">
-      <div className="relative aspect-video w-full overflow-hidden rounded-t-lg bg-muted">
-        {item.image_url ? (
-          <>
-            <img src={item.image_url} alt={item.title} className="w-full h-full object-cover" />
-            <div className="absolute top-2 right-2 flex gap-1">
-              <Button
-                variant="secondary"
-                size="icon"
-                className="h-7 w-7"
-                onClick={() => fileInputRef.current?.click()}
+      <ImageDropZone onFileSelected={handleFileSelected} disabled={uploading}>
+        {({ openPicker, isDragging }) => (
+          <div className={cn("relative aspect-video w-full overflow-hidden rounded-t-lg bg-muted", isDragging && "bg-primary/5")}>
+            {item.image_url ? (
+              <>
+                <img src={item.image_url} alt={item.title} className="w-full h-full object-cover" />
+                {isDragging && (
+                  <div className="absolute inset-0 bg-primary/20 flex items-center justify-center">
+                    <p className="text-sm font-medium text-primary-foreground bg-primary/80 px-3 py-1 rounded">{t("showcase.dropHere")}</p>
+                  </div>
+                )}
+                <div className="absolute top-2 right-2 flex gap-1">
+                  <Button variant="secondary" size="icon" className="h-7 w-7" onClick={openPicker} disabled={uploading}>
+                    {uploading ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <ImagePlus className="h-3.5 w-3.5" />}
+                  </Button>
+                  <Button variant="destructive" size="icon" className="h-7 w-7" onClick={handleImageRemove} disabled={updateImage.isPending}>
+                    <Trash2 className="h-3.5 w-3.5" />
+                  </Button>
+                </div>
+              </>
+            ) : (
+              <button
+                className="w-full h-full flex flex-col items-center justify-center gap-2 text-muted-foreground hover:text-primary transition-colors cursor-pointer"
+                onClick={openPicker}
                 disabled={uploading}
               >
-                {uploading ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <ImagePlus className="h-3.5 w-3.5" />}
-              </Button>
-              <Button
-                variant="destructive"
-                size="icon"
-                className="h-7 w-7"
-                onClick={handleImageRemove}
-                disabled={updateImage.isPending}
-              >
-                <Trash2 className="h-3.5 w-3.5" />
-              </Button>
-            </div>
-          </>
-        ) : (
-          <button
-            className="w-full h-full flex flex-col items-center justify-center gap-2 text-muted-foreground hover:text-primary transition-colors cursor-pointer"
-            onClick={() => fileInputRef.current?.click()}
-            disabled={uploading}
-          >
-            {uploading ? (
-              <Loader2 className="h-6 w-6 animate-spin" />
-            ) : (
-              <>
-                <ImagePlus className="h-6 w-6" />
-                <span className="text-xs font-medium">{t("admin.showcase.addImage")}</span>
-              </>
+                {uploading ? (
+                  <Loader2 className="h-6 w-6 animate-spin" />
+                ) : isDragging ? (
+                  <p className="text-sm font-medium text-primary">{t("showcase.dropHere")}</p>
+                ) : (
+                  <>
+                    <ImagePlus className="h-6 w-6" />
+                    <span className="text-xs font-medium">{t("admin.showcase.addImage")}</span>
+                  </>
+                )}
+              </button>
             )}
-          </button>
+          </div>
         )}
-        <input
-          ref={fileInputRef}
-          type="file"
-          accept="image/*"
-          className="hidden"
-          onChange={handleImageUpload}
-        />
-      </div>
+      </ImageDropZone>
       <CardHeader className="pb-3">
         <div className="flex items-start justify-between gap-2">
           <div className="flex items-center gap-2">
