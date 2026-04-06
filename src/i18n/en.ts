@@ -107,6 +107,17 @@ const en = {
         { title: "Exclusive Events", desc: "Market-facing events, demo days, and investor meetups." },
       ],
     },
+    vibetor: {
+      name: "Vibetor",
+      price: "Investor membership. Everything in Viber, plus:",
+      cta: "Become a Vibetor",
+      benefits: [
+        { title: "Investor Badge", desc: "Stand out with a verified investor badge on your profile." },
+        { title: "Investor Network", desc: "Connect with fellow investors and innovators in a dedicated circle." },
+        { title: "Deal Flow Access", desc: "Get priority access to startup pitches and investment opportunities." },
+        { title: "Innovation Showcases", desc: "Exclusive events to discover and fund the next big thing." },
+      ],
+    },
     testimonials: {
       title: "Success",
       titleHighlight: "stories",
