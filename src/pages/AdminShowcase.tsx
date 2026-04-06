@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useMemo } from "react";
 import { Navigate } from "react-router-dom";
 import Layout from "@/components/Layout";
 import PageMeta from "@/components/PageMeta";
@@ -12,6 +12,7 @@ import {
 } from "@/hooks/useAdminShowcase";
 import AdminItemCard from "@/components/AdminItemCard";
 import BulkActionBar from "@/components/BulkActionBar";
+import AdminSearchFilter, { filterShowcaseItems } from "@/components/AdminSearchFilter";
 
 const AdminShowcase = () => {
   const { t } = useTranslation();
@@ -19,6 +20,8 @@ const AdminShowcase = () => {
   const isAdmin = useIsAdmin();
   const [tab, setTab] = useState("pending");
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  const [search, setSearch] = useState("");
+  const [typeFilter, setTypeFilter] = useState("all");
 
   const { data: pendingItems, isLoading: pendingLoading } = usePendingShowcaseItems();
   const { data: allItems, isLoading: allLoading } = useAllShowcaseItems();
@@ -34,6 +37,17 @@ const AdminShowcase = () => {
     );
   }, []);
 
+  const filteredItems = useMemo(() => {
+    const statusFiltered = tab === "pending"
+      ? pendingItems
+      : tab === "all"
+        ? allItems
+        : allItems?.filter((i) => i.status === tab);
+    return filterShowcaseItems(statusFiltered, search, typeFilter);
+  }, [tab, pendingItems, allItems, search, typeFilter]);
+
+  const isLoading = tab === "pending" ? pendingLoading : allLoading;
+
   if (loading) {
     return (
       <Layout>
@@ -47,13 +61,6 @@ const AdminShowcase = () => {
   if (!user || !isAdmin) {
     return <Navigate to="/" replace />;
   }
-
-  const filteredAll = tab === "all"
-    ? allItems
-    : allItems?.filter((i) => i.status === tab);
-
-  const items = tab === "pending" ? pendingItems : filteredAll;
-  const isLoading = tab === "pending" ? pendingLoading : allLoading;
 
   return (
     <Layout>
@@ -83,19 +90,31 @@ const AdminShowcase = () => {
               <TabsTrigger value="all">{t("admin.showcase.tabs.all")}</TabsTrigger>
             </TabsList>
 
+            <AdminSearchFilter
+              search={search}
+              onSearchChange={setSearch}
+              typeFilter={typeFilter}
+              onTypeFilterChange={setTypeFilter}
+              items={allItems}
+            />
+
             <TabsContent value={tab}>
               {isLoading && (
                 <div className="flex justify-center py-12">
                   <div className="animate-spin h-8 w-8 border-4 border-primary border-t-transparent rounded-full" />
                 </div>
               )}
-              {!isLoading && (!items || items.length === 0) && (
+              {!isLoading && (!filteredItems || filteredItems.length === 0) && (
                 <div className="text-center py-16">
-                  <p className="text-muted-foreground font-body">{t("admin.showcase.empty")}</p>
+                  <p className="text-muted-foreground font-body">
+                    {search.trim() || typeFilter !== "all"
+                      ? t("admin.showcase.search.noResults")
+                      : t("admin.showcase.empty")}
+                  </p>
                 </div>
               )}
               <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {items?.map((item) => (
+                {filteredItems?.map((item) => (
                   <AdminItemCard
                     key={item.id}
                     item={item}
