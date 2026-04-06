@@ -96,6 +96,8 @@ const AdminShowcase = () => {
               onSearchChange={setSearch}
               typeFilter={typeFilter}
               onTypeFilterChange={setTypeFilter}
+              sortBy={sortBy}
+              onSortChange={setSortBy}
               items={allItems}
             />
 
