@@ -26,6 +26,48 @@ const Profile = () => {
   const updateProfile = useUpdateProfile();
   const { toast } = useToast();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
+
+  const { data: contactRequests } = useQuery({
+    queryKey: ["contact-requests-inbox", user?.id],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("contact_requests")
+        .select("*")
+        .eq("to_user_id", user!.id)
+        .order("created_at", { ascending: false })
+        .limit(50);
+      if (error) throw error;
+
+      const senderIds = [...new Set((data ?? []).map((r: any) => r.from_user_id))];
+      const { data: profiles } = await supabase
+        .from("profiles")
+        .select("user_id, display_name, avatar_url")
+        .in("user_id", senderIds);
+      const profileMap = new Map(profiles?.map((p) => [p.user_id, p]) ?? []);
+
+      return (data ?? []).map((r: any) => ({
+        ...r,
+        sender: profileMap.get(r.from_user_id),
+      }));
+    },
+    enabled: !!user,
+  });
+
+  const markReadMutation = useMutation({
+    mutationFn: async (id: string) => {
+      const { error } = await supabase
+        .from("contact_requests")
+        .update({ is_read: true } as any)
+        .eq("id", id);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["contact-requests-inbox"] });
+    },
+  });
+
+  const unreadCount = contactRequests?.filter((r: any) => !r.is_read).length ?? 0;
 
   const [displayName, setDisplayName] = useState("");
   const [bio, setBio] = useState("");
