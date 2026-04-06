@@ -97,6 +97,25 @@ const MemberProfile = () => {
   const vis: Visibility = { ...defaultVisibility, ...(member.profile_visibility ?? {}) };
   const isOwnProfile = user.id === member.user_id;
 
+  const sendContactRequest = useMutation({
+    mutationFn: async (msg: string) => {
+      const { error } = await supabase.from("contact_requests").insert({
+        from_user_id: user.id,
+        to_user_id: member.user_id,
+        message: msg,
+      } as any);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      toast({ title: "Message sent!", description: `Your contact request has been sent to ${member.display_name || "this member"}.` });
+      setContactOpen(false);
+      setMessage("");
+    },
+    onError: (err: Error) => {
+      toast({ title: "Error", description: err.message, variant: "destructive" });
+    },
+  });
+
   const initials = (name: string | null) => {
     if (!name) return "?";
     return name.split(" ").map((w: string) => w[0]).join("").toUpperCase().slice(0, 2);
