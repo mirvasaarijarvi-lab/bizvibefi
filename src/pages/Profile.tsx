@@ -4,6 +4,7 @@ import { useProfile, useUpdateProfile, type WebsiteLink } from "@/hooks/useProfi
 import { useUserRole } from "@/hooks/useAdminShowcase";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
+import { Switch } from "@/components/ui/switch";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -310,6 +311,32 @@ const Profile = () => {
                 <Button type="button" variant="outline" size="sm" onClick={addLink}>
                   <Plus className="mr-1 h-3 w-3" /> Add link
                 </Button>
+              </div>
+
+              {/* Visibility Settings */}
+              <div className="border-t border-border pt-6 space-y-4">
+                <h2 className="font-display text-lg font-bold text-foreground">Profile Visibility</h2>
+                <p className="text-sm text-muted-foreground font-body">
+                  Choose which fields are visible to other members on your public profile.
+                </p>
+                {([
+                  { key: "bio", label: "Bio" },
+                  { key: "company", label: "Company" },
+                  { key: "linkedin_url", label: "LinkedIn" },
+                  { key: "contact_email", label: "Contact Email" },
+                  { key: "contact_phone", label: "Phone Number" },
+                  { key: "website_links", label: "Projects & Websites" },
+                ] as const).map(({ key, label }) => (
+                  <div key={key} className="flex items-center justify-between">
+                    <Label className="font-body text-sm">{label}</Label>
+                    <Switch
+                      checked={visibility[key]}
+                      onCheckedChange={(checked) =>
+                        setVisibility((prev) => ({ ...prev, [key]: checked }))
+                      }
+                    />
+                  </div>
+                ))}
               </div>
 
               <Button
