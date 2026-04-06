@@ -157,13 +157,22 @@ const Navbar = () => {
                       <MessageSquare className="h-4 w-4" /> Forum
                     </Link>
                     {isAdmin && (
-                      <Link
-                        to="/admin/showcase"
-                        onClick={() => setUserMenuOpen(false)}
-                        className="flex items-center gap-2 px-4 py-2.5 text-sm font-body text-primary hover:bg-muted transition-colors"
-                      >
-                        <Shield className="h-4 w-4" /> Admin
-                      </Link>
+                      <>
+                        <Link
+                          to="/admin/showcase"
+                          onClick={() => setUserMenuOpen(false)}
+                          className="flex items-center gap-2 px-4 py-2.5 text-sm font-body text-primary hover:bg-muted transition-colors"
+                        >
+                          <Shield className="h-4 w-4" /> Admin Showcase
+                        </Link>
+                        <Link
+                          to="/admin/users"
+                          onClick={() => setUserMenuOpen(false)}
+                          className="flex items-center gap-2 px-4 py-2.5 text-sm font-body text-primary hover:bg-muted transition-colors"
+                        >
+                          <Users className="h-4 w-4" /> User Management
+                        </Link>
+                      </>
                     )}
                     <button
                       onClick={() => { signOut(); setUserMenuOpen(false); }}
