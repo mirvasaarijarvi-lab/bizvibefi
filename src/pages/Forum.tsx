@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import Layout from "@/components/Layout";
 import PageMeta from "@/components/PageMeta";
-import { MessageSquare, Lock, Crown } from "lucide-react";
+import { MessageSquare, Lock, Crown, Gem } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 interface ForumCategory {
@@ -13,7 +13,7 @@ interface ForumCategory {
   description: string | null;
   slug: string;
   sort_order: number;
-  min_tier: "starter" | "viber";
+  min_tier: "starter" | "viber" | "vibetor";
   created_at: string;
 }
 
@@ -64,23 +64,42 @@ const Forum = () => {
                 <Link
                   key={category.id}
                   to={`/forum/${category.slug}`}
-                  className="block bg-card border border-border rounded-xl p-5 hover:border-primary/40 transition-colors group"
+                  className={`block bg-card border rounded-xl p-5 hover:border-primary/40 transition-colors group ${
+                    category.min_tier === "vibetor"
+                      ? "border-amber-500/30 hover:border-amber-500/60"
+                      : "border-border"
+                  }`}
                 >
                   <div className="flex items-start justify-between">
                     <div className="flex items-start gap-4">
-                      <div className="mt-1 p-2 rounded-lg bg-muted group-hover:bg-primary/10 transition-colors">
-                        {category.min_tier === "viber" ? (
+                      <div className={`mt-1 p-2 rounded-lg transition-colors ${
+                        category.min_tier === "vibetor"
+                          ? "bg-amber-500/10 group-hover:bg-amber-500/20"
+                          : "bg-muted group-hover:bg-primary/10"
+                      }`}>
+                        {category.min_tier === "vibetor" ? (
+                          <Gem className="h-5 w-5 text-amber-500" />
+                        ) : category.min_tier === "viber" ? (
                           <Crown className="h-5 w-5 text-primary" />
                         ) : (
                           <MessageSquare className="h-5 w-5 text-muted-foreground group-hover:text-primary" />
                         )}
                       </div>
                       <div>
-                        <h2 className="font-display font-semibold text-foreground group-hover:text-primary transition-colors flex items-center gap-2">
+                        <h2 className={`font-display font-semibold transition-colors flex items-center gap-2 ${
+                          category.min_tier === "vibetor"
+                            ? "text-foreground group-hover:text-amber-500"
+                            : "text-foreground group-hover:text-primary"
+                        }`}>
                           {category.name}
                           {category.min_tier === "viber" && (
                             <span className="text-xs bg-primary/10 text-primary px-2 py-0.5 rounded-full font-body">
                               VIBER
+                            </span>
+                          )}
+                          {category.min_tier === "vibetor" && (
+                            <span className="text-xs bg-amber-500/10 text-amber-500 px-2 py-0.5 rounded-full font-body">
+                              VIBETOR
                             </span>
                           )}
                         </h2>
@@ -89,7 +108,7 @@ const Forum = () => {
                         </p>
                       </div>
                     </div>
-                    {!user && category.min_tier === "viber" && (
+                    {!user && (category.min_tier === "viber" || category.min_tier === "vibetor") && (
                       <Lock className="h-4 w-4 text-muted-foreground mt-2" />
                     )}
                   </div>
