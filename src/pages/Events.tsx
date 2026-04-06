@@ -1,4 +1,5 @@
 import { useState } from "react";
+import type { Tables } from "@/integrations/supabase/types";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
@@ -78,7 +79,7 @@ const EventFormDialog = ({
 }: {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  editEvent?: any;
+  editEvent?: Tables<"events"> | null;
 }) => {
   const { user } = useAuth();
   const { toast } = useToast();
@@ -129,7 +130,7 @@ const EventFormDialog = ({
       } else {
         const { error } = await supabase
           .from("events")
-          .insert([{ ...payload, created_by: user!.id }] as any);
+          .insert([{ ...payload, created_by: user!.id }] as never);
         if (error) throw error;
       }
     },
@@ -143,7 +144,7 @@ const EventFormDialog = ({
     },
   });
 
-  const set = (field: keyof EventFormData, value: any) =>
+  const set = (field: keyof EventFormData, value: string | boolean) =>
     setForm((prev) => ({ ...prev, [field]: value }));
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -162,8 +163,8 @@ const EventFormDialog = ({
         .getPublicUrl(path);
       set("image_url", publicUrl);
       toast({ title: "Image uploaded!" });
-    } catch (err: any) {
-      toast({ title: "Upload failed", description: err.message, variant: "destructive" });
+    } catch (err: unknown) {
+      toast({ title: "Upload failed", description: err instanceof Error ? err.message : "Unknown error", variant: "destructive" });
     } finally {
       setUploading(false);
     }
@@ -356,7 +357,7 @@ const Events = () => {
   const queryClient = useQueryClient();
 
   const [createOpen, setCreateOpen] = useState(false);
-  const [editEvent, setEditEvent] = useState<any>(null);
+  const [editEvent, setEditEvent] = useState<Tables<"events"> | null>(null);
 
   const { data: events, isLoading } = useQuery({
     queryKey: ["events"],
@@ -444,7 +445,7 @@ const Events = () => {
     return myRsvps?.find((r) => r.event_id === eventId)?.status;
   };
 
-  const renderEventCard = (event: any, isPastEvent = false) => {
+  const renderEventCard = (event: Tables<"events">, isPastEvent = false) => {
     const config = eventTypeConfig[event.event_type] || eventTypeConfig.meetup;
     const Icon = config.icon;
     const rsvpStatus = getRsvpStatus(event.id);
