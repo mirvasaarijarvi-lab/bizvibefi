@@ -72,9 +72,9 @@ const fi = {
     titleEnd: "on täällä",
     subtitle: "Kaksi tasoa. Yksi missio. Rakentakaa yhdessä asioita, joilla on merkitystä.",
     free: {
-      name: "Ilmainen taso",
+      name: "Starter",
       price: "€0, hyppää mukaan",
-      cta: "Liity ilmaiseksi",
+      cta: "Liity Starteriin",
       benefits: [
         { title: "WhatsApp-yhteisö", desc: "Saat opastusta kokeneilta rakentajilta aina kun tarvitset." },
         { title: "Ilmaiset tapahtumat", desc: "Tapaa samanmielisiä ihmisiä livenä ja verkossa. Verkostoidu, opi ja rakenna." },
@@ -83,14 +83,14 @@ const fi = {
       ],
     },
     pro: {
-      name: "Pro-taso",
-      price: "Maksullinen jäsenyys. Kaikki ilmaisesta ja lisäksi:",
-      cta: "Siirry Prohon",
+      name: "Viber",
+      price: "Maksullinen jäsenyys. Kaikki Starterista ja lisäksi:",
+      cta: "Siirry Viberiin",
       benefits: [
         { title: "Liidien generointi", desc: "Pääsy laadukkaiden liidien ja liiketoimintamahdollisuuksien äärelle." },
         { title: "Kurssit ja työpajat", desc: "Syväsukelluksia rakentamiseen, myyntiin ja skaalaamiseen." },
         { title: "Sijoittajayhteydet", desc: "Tapahtumia sijoittajien kanssa. Pitchaa, verkostoidu ja saa rahoitusta." },
-        { title: "Pro WhatsApp -ryhmä", desc: "Sisäpiiri liideillä, sijoittajilla ja arvokkailla keskusteluilla." },
+        { title: "Viber WhatsApp -ryhmä", desc: "Sisäpiiri liideillä, sijoittajilla ja arvokkailla keskusteluilla." },
         { title: "Eksklusiiviset tapahtumat", desc: "Markkinatapahtumat, demopäivät ja sijoittajatapaamiset." },
       ],
     },

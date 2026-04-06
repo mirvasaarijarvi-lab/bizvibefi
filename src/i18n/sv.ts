@@ -72,9 +72,9 @@ const sv = {
     titleEnd: "finns här",
     subtitle: "Två nivåer. Ett uppdrag. Bygg saker som betyder något, tillsammans.",
     free: {
-      name: "Gratis nivå",
+      name: "Starter",
       price: "€0, hoppa in direkt",
-      cta: "Gå med gratis",
+      cta: "Gå med Starter",
       benefits: [
         { title: "WhatsApp-gemenskap", desc: "Få vägledning från erfarna byggare när du behöver det." },
         { title: "Gratis event och träffar", desc: "Träffa likasinnade människor live och online. Nätverka, lär dig och bygg." },
@@ -83,14 +83,14 @@ const sv = {
       ],
     },
     pro: {
-      name: "Pro-nivå",
-      price: "Betalt medlemskap. Allt från gratis nivån och dessutom:",
-      cta: "Bli Pro",
+      name: "Viber",
+      price: "Betalt medlemskap. Allt från Starter och dessutom:",
+      cta: "Bli Viber",
       benefits: [
         { title: "Leadgenerering", desc: "Tillgång till kvalificerade leads och affärsmöjligheter från nätverket." },
         { title: "Kurser och workshops", desc: "Djupdykningar i att bygga, sälja och skala dina idéer." },
         { title: "Investorkontakter", desc: "Event med investerare och marknadsaktörer. Pitcha, nätverka och få finansiering." },
-        { title: "Pro WhatsApp-grupp", desc: "Innercirkeln med leads, investerare och värdefulla samtal." },
+        { title: "Viber WhatsApp-grupp", desc: "Innercirkeln med leads, investerare och värdefulla samtal." },
         { title: "Exklusiva event", desc: "Marknadsevent, demodagar och investorträffar." },
       ],
     },
