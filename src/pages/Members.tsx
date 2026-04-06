@@ -296,6 +296,24 @@ const Members = () => {
                               </SelectContent>
                             </Select>
                           </div>
+                          {member.membership_tier === "starter" && (
+                            <div className="flex items-center gap-2 mt-2">
+                              <Zap className="h-4 w-4 text-muted-foreground" />
+                              <span className="text-xs text-muted-foreground">Viber access:</span>
+                              <Switch
+                                checked={member.viber_access_override}
+                                onCheckedChange={(checked) =>
+                                  toggleOverrideMutation.mutate({ userId: member.user_id, override: checked })
+                                }
+                                className="scale-75"
+                              />
+                              {member.viber_access_override && (
+                                <Badge variant="outline" className="text-[9px] px-1.5 py-0 border-primary text-primary">
+                                  GRANTED
+                                </Badge>
+                              )}
+                            </div>
+                          )}
                         </div>
                       )}
                     </CardContent>
