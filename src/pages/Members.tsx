@@ -38,6 +38,7 @@ interface MemberProfile {
   contact_phone: string | null;
   website_links: { label: string; url: string }[] | null;
   created_at: string;
+  role?: string;
 }
 
 type TierFilter = "all" | "starter" | "viber" | "vibetor";
@@ -94,7 +95,20 @@ const Members = () => {
         .select("id, user_id, display_name, avatar_url, bio, company, linkedin_url, membership_tier, viber_access_override, contact_email, contact_phone, website_links, created_at")
         .order("created_at", { ascending: false });
       if (error) throw error;
-      return data as MemberProfile[];
+
+      // Fetch roles for all members (admin-only query, will return empty for non-admins)
+      const userIds = data.map((p: any) => p.user_id);
+      const { data: roles } = await supabase
+        .from("user_roles")
+        .select("user_id, role")
+        .in("user_id", userIds);
+
+      const roleMap = new Map(roles?.map((r: any) => [r.user_id, r.role]) ?? []);
+
+      return (data as MemberProfile[]).map((m) => ({
+        ...m,
+        role: roleMap.get(m.user_id) as string | undefined,
+      }));
     },
     enabled: !!user,
   });
