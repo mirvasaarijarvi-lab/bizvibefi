@@ -13,6 +13,7 @@ import {
   usePendingShowcaseItems,
   useAllShowcaseItems,
   useUpdateShowcaseStatus,
+  useUpdateShowcaseImage,
 } from "@/hooks/useAdminShowcase";
 import type { ShowcaseItem, ApprovalStatus } from "@/hooks/useShowcase";
 import { CheckCircle, XCircle, Clock, ExternalLink, Lightbulb, MessageSquare, Wrench, ImagePlus, Trash2, Loader2 } from "lucide-react";
