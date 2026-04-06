@@ -392,6 +392,72 @@ const Profile = () => {
               </Button>
             </form>
           </div>
+
+          {/* Inbox */}
+          <div className="bg-card border border-border rounded-2xl p-6 mt-8">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="font-display text-lg font-bold text-foreground flex items-center gap-2">
+                <Inbox className="h-5 w-5" /> Inbox
+                {unreadCount > 0 && (
+                  <Badge variant="default" className="text-[10px] px-1.5 py-0 ml-1">{unreadCount}</Badge>
+                )}
+              </h2>
+            </div>
+
+            {!contactRequests || contactRequests.length === 0 ? (
+              <p className="text-muted-foreground text-sm font-body py-6 text-center">
+                No messages yet. When someone contacts you from your profile, their messages will appear here.
+              </p>
+            ) : (
+              <div className="space-y-3">
+                {contactRequests.map((req: any) => (
+                  <div
+                    key={req.id}
+                    className={`p-4 rounded-lg border transition-colors ${
+                      req.is_read ? "border-border bg-muted/20" : "border-primary/30 bg-primary/5"
+                    }`}
+                  >
+                    <div className="flex items-start gap-3">
+                      <Link to={`/members/${req.from_user_id}`}>
+                        <Avatar className="h-9 w-9">
+                          <AvatarImage src={req.sender?.avatar_url ?? undefined} />
+                          <AvatarFallback className="bg-muted text-xs font-display">
+                            {req.sender?.display_name?.charAt(0)?.toUpperCase() || "?"}
+                          </AvatarFallback>
+                        </Avatar>
+                      </Link>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <Link to={`/members/${req.from_user_id}`} className="font-display font-semibold text-sm hover:underline">
+                            {req.sender?.display_name || "A member"}
+                          </Link>
+                          <span className="text-xs text-muted-foreground font-body">
+                            {formatDistanceToNow(new Date(req.created_at), { addSuffix: true })}
+                          </span>
+                          {!req.is_read && (
+                            <Badge variant="default" className="text-[9px] px-1 py-0">NEW</Badge>
+                          )}
+                        </div>
+                        <p className="text-sm text-foreground font-body mt-1 whitespace-pre-wrap">{req.message}</p>
+                      </div>
+                      {!req.is_read && (
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="shrink-0 text-muted-foreground hover:text-primary"
+                          onClick={() => markReadMutation.mutate(req.id)}
+                          disabled={markReadMutation.isPending}
+                          title="Mark as read"
+                        >
+                          <CheckCheck className="h-4 w-4" />
+                        </Button>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
       </section>
     </Layout>
