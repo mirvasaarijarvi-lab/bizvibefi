@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import Layout from "@/components/Layout";
 import PageMeta from "@/components/PageMeta";
@@ -17,6 +17,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useShowcaseItems, useCreateShowcaseItem, useShowcaseReviews, useCreateReview, type ShowcaseType, type ShowcaseItem } from "@/hooks/useShowcase";
 import { Plus, Star, ExternalLink, Clock, CheckCircle, XCircle, ArrowRight, Lightbulb, MessageSquare, Wrench, Upload, X as XIcon } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import ImageDropZone from "@/components/ImageDropZone";
 import { useToast } from "@/hooks/use-toast";
 
 const typeIcons: Record<ShowcaseType, React.ElementType> = {
