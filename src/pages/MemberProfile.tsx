@@ -47,6 +47,7 @@ interface MemberData {
 const defaultVisibility: Visibility = {
   bio: true,
   company: true,
+  company_url: true,
   linkedin_url: true,
   contact_email: true,
   contact_phone: true,
