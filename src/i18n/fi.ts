@@ -155,6 +155,19 @@ const fi = {
       { title: "Rakentamista julkisesti: hackathon-tarina", category: "#ShipHappens", desc: "48 tuntia, 3 rakentajaa, 1 julkaistu tuote. Kollektiivin voima." },
     ],
     blogSoon: "Blogi ja lisää resursseja tulossa pian.",
+    upgradeCta: {
+      title: "Valmis",
+      titleHighlight: "lisään?",
+      desc: "Viber-jäsenet saavat pääsyn syventävään koulutukseen, eksklusiivisiin WhatsApp-ryhmiin, tukikanaviin ja sijoittajatapaamisiin. Viber-status myönnetään tiimimme toimesta lyhyen hakemuksen jälkeen.",
+      howTitle: "Näin haet",
+      howSteps: [
+        "Rekisteröidy ja luo profiilisi",
+        "Tutustu Starter-resursseihin ja ole aktiivinen",
+        "Ota yhteyttä tiimiimme yhteydenottosivun kautta",
+        "Käsittelemme hakemuksesi ja palaamme sinulle",
+      ],
+      cta: "Hae Viber-jäsenyyttä",
+    },
   },
   about: {
     tag: "Meistä",

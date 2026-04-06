@@ -155,6 +155,19 @@ const sv = {
       { title: "Bygga öppet, en hackathon-berättelse", category: "#ShipHappens", desc: "48 timmar, 3 byggare, 1 levererad produkt. Kollektivets kraft." },
     ],
     blogSoon: "Blogg och fler resurser kommer snart.",
+    upgradeCta: {
+      title: "Redo för",
+      titleHighlight: "mer?",
+      desc: "Viber-medlemmar får tillgång till fördjupad utbildning, exklusiva WhatsApp-grupper, prioriterade supportkanaler och investerarträffar. Viber-status beviljas av vårt team efter en kort ansökan.",
+      howTitle: "Så ansöker du",
+      howSteps: [
+        "Registrera dig och skapa din profil",
+        "Utforska Starter-resurser och var aktiv",
+        "Kontakta vårt team via kontaktsidan",
+        "Vi granskar din ansökan och återkommer",
+      ],
+      cta: "Ansök om Viber",
+    },
   },
   about: {
     tag: "Om oss",

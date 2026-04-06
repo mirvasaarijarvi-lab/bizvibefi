@@ -155,6 +155,19 @@ const en = {
       { title: "Building in public: a hackathon story", category: "#ShipHappens", desc: "48 hours, 3 builders, 1 shipped product. The power of the collective." },
     ],
     blogSoon: "Blog and more resources coming soon.",
+    upgradeCta: {
+      title: "Ready for",
+      titleHighlight: "more?",
+      desc: "Viber members get access to in-depth training, exclusive WhatsApp groups, priority support channels, and investor meet-ups. Viber status is granted by our team after a short application.",
+      howTitle: "How to apply",
+      howSteps: [
+        "Sign up and create your profile",
+        "Explore Starter resources and get active",
+        "Reach out to our team via the contact page",
+        "We'll review your application and get back to you",
+      ],
+      cta: "Apply for Viber",
+    },
   },
   about: {
     tag: "About",
