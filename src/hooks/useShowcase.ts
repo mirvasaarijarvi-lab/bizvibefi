@@ -131,9 +131,24 @@ export const useCreateShowcaseItem = () => {
       pricing_info?: string;
     }) => {
       if (!user) throw new Error("Not authenticated");
+      const payload = {
+        type: item.type,
+        title: item.title,
+        description: item.description,
+        content: item.content,
+        challenge: item.challenge,
+        solution: item.solution,
+        benefits: item.benefits,
+        key_figures: item.key_figures as unknown as Record<string, unknown>[],
+        image_url: item.image_url,
+        link_url: item.link_url,
+        category_tags: item.category_tags,
+        pricing_info: item.pricing_info,
+        user_id: user.id,
+      };
       const { data, error } = await supabase
         .from("showcase_items")
-        .insert({ ...item, user_id: user.id })
+        .insert(payload)
         .select()
         .single();
       if (error) throw error;
