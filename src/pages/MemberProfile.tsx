@@ -14,6 +14,7 @@ import { Building2, Linkedin, ExternalLink, Globe, Mail, Phone, ArrowLeft, Messa
 import { motion } from "framer-motion";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
+import { Link as RouterLink } from "react-router-dom";
 
 interface Visibility {
   bio?: boolean;
@@ -58,6 +59,21 @@ const MemberProfile = () => {
       const role = roles?.[0]?.role;
 
       return { ...data, role } as any;
+    },
+    enabled: !!userId && !!user,
+  });
+
+  const { data: showcaseItems } = useQuery({
+    queryKey: ["member-showcase", userId],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("showcase_items")
+        .select("id, title, description, type, image_url, category_tags")
+        .eq("user_id", userId!)
+        .eq("status", "approved")
+        .order("created_at", { ascending: false });
+      if (error) throw error;
+      return data ?? [];
     },
     enabled: !!userId && !!user,
   });
