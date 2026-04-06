@@ -14,6 +14,7 @@ import { Building2, Linkedin, ExternalLink, Globe, Mail, Phone, ArrowLeft, Messa
 import { motion } from "framer-motion";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
+import { Link as RouterLink } from "react-router-dom";
 
 interface Visibility {
   bio?: boolean;
@@ -58,6 +59,21 @@ const MemberProfile = () => {
       const role = roles?.[0]?.role;
 
       return { ...data, role } as any;
+    },
+    enabled: !!userId && !!user,
+  });
+
+  const { data: showcaseItems } = useQuery({
+    queryKey: ["member-showcase", userId],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("showcase_items")
+        .select("id, title, description, type, image_url, category_tags")
+        .eq("user_id", userId!)
+        .eq("status", "approved")
+        .order("created_at", { ascending: false });
+      if (error) throw error;
+      return data ?? [];
     },
     enabled: !!userId && !!user,
   });
@@ -252,6 +268,42 @@ const MemberProfile = () => {
                     </div>
                   )}
                 </div>
+
+                {/* Showcase */}
+                {showcaseItems && showcaseItems.length > 0 && (
+                  <div className="mt-8 pt-6 border-t border-border">
+                    <h2 className="font-display text-lg font-bold mb-4">Showcase</h2>
+                    <div className="grid gap-3">
+                      {showcaseItems.map((item) => (
+                        <Link
+                          key={item.id}
+                          to={`/showcase/${item.id}`}
+                          className="flex items-center gap-3 p-3 rounded-lg border border-border hover:border-primary/40 transition-colors bg-muted/30"
+                        >
+                          {item.image_url && (
+                            <img
+                              src={item.image_url}
+                              alt={item.title}
+                              className="h-12 w-20 object-cover rounded shrink-0"
+                            />
+                          )}
+                          <div className="min-w-0 flex-1">
+                            <div className="flex items-center gap-2">
+                              <p className="font-display font-semibold text-sm truncate">{item.title}</p>
+                              <Badge variant="outline" className="text-[10px] px-1.5 py-0 capitalize shrink-0">
+                                {item.type?.replace("_", " ")}
+                              </Badge>
+                            </div>
+                            <p className="text-xs text-muted-foreground font-body line-clamp-1 mt-0.5">
+                              {item.description}
+                            </p>
+                          </div>
+                          <ExternalLink className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                )}
 
                 {/* Joined */}
                 <p className="text-xs text-muted-foreground font-body mt-8 pt-4 border-t border-border">
