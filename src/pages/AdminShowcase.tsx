@@ -21,6 +21,7 @@ import { CheckCircle, XCircle, Clock, ExternalLink, Lightbulb, MessageSquare, Wr
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import ImageDropZone from "@/components/ImageDropZone";
+import ImageCropDialog from "@/components/ImageCropDialog";
 import AdminEditDialog from "@/components/AdminEditDialog";
 
 const typeIcons: Record<string, React.ElementType> = {
