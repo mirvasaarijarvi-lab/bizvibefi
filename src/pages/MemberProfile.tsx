@@ -36,6 +36,9 @@ const defaultVisibility: Visibility = {
 const MemberProfile = () => {
   const { userId } = useParams<{ userId: string }>();
   const { user, loading: authLoading } = useAuth();
+  const { toast } = useToast();
+  const [contactOpen, setContactOpen] = useState(false);
+  const [message, setMessage] = useState("");
 
   const { data: member, isLoading } = useQuery({
     queryKey: ["member-profile", userId],
