@@ -83,21 +83,24 @@ const Index = () => {
               const iconMap: Record<string, React.ElementType> = { Zap, Wrench, Search, Handshake, Rocket, TrendingUp };
               const iconName = t(`market.benefits.${i}.icon`);
               const IconComponent = iconMap[iconName] || Zap;
+              const marketLinks = ["/contact", "/showcase", "/contact", "/members", "/get-going", "/community"];
               return (
-                <motion.div
-                  key={i}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: i * 0.08 }}
-                  className="bg-card border border-border rounded-xl p-6 hover:border-turquoise/40 hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
-                >
-                  <div className="w-10 h-10 rounded-lg bg-gradient-surge flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
-                    <IconComponent className="h-5 w-5 text-primary-foreground" />
-                  </div>
-                  <h3 className="font-display text-lg font-semibold tracking-[-0.01em]">{t(`market.benefits.${i}.title`)}</h3>
-                  <p className="mt-2 text-sm text-muted-foreground font-body">{t(`market.benefits.${i}.desc`)}</p>
-                </motion.div>
+                <Link to={marketLinks[i]} key={i} className="block">
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: i * 0.08 }}
+                    className="bg-card border border-border rounded-xl p-6 hover:border-turquoise/40 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 h-full group"
+                  >
+                    <div className="w-10 h-10 rounded-lg bg-gradient-surge flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
+                      <IconComponent className="h-5 w-5 text-primary-foreground" />
+                    </div>
+                    <h3 className="font-display text-lg font-semibold tracking-[-0.01em] group-hover:text-primary transition-colors">{t(`market.benefits.${i}.title`)}</h3>
+                    <p className="mt-2 text-sm text-muted-foreground font-body">{t(`market.benefits.${i}.desc`)}</p>
+                    <ArrowRight className="h-4 w-4 mt-3 text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-all" />
+                  </motion.div>
+                </Link>
               );
             })}
           </div>
