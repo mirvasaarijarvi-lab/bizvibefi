@@ -256,18 +256,28 @@ const Members = () => {
                           </AvatarFallback>
                         </Avatar>
                         <div className="min-w-0 flex-1">
-                          <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-2 flex-wrap">
                             <h3 className="font-display font-semibold truncate">
                               {member.display_name || "Anonymous"}
                             </h3>
+                            {member.role === "superadmin" && (
+                              <Badge className="text-[10px] px-1.5 py-0 bg-gradient-to-r from-primary to-secondary text-primary-foreground">
+                                SUPERADMIN
+                              </Badge>
+                            )}
+                            {member.role === "admin" && member.role !== "superadmin" && (
+                              <Badge variant="default" className="text-[10px] px-1.5 py-0">
+                                ADMIN
+                              </Badge>
+                            )}
+                            {member.membership_tier === "vibetor" && member.role !== "superadmin" && (
+                              <Badge variant="default" className="text-[10px] px-1.5 py-0 bg-vibetor/90 hover:bg-vibetor">
+                                VIBETOR
+                              </Badge>
+                            )}
                             {member.membership_tier === "viber" && (
                               <Badge variant="default" className="text-[10px] px-1.5 py-0">
                                 VIBER
-                              </Badge>
-                            )}
-                            {member.membership_tier === "vibetor" && (
-                              <Badge variant="default" className="text-[10px] px-1.5 py-0 bg-vibetor/90 hover:bg-vibetor">
-                                VIBETOR
                               </Badge>
                             )}
                             {member.membership_tier === "starter" && member.viber_access_override && (
