@@ -76,7 +76,7 @@ const Contact = () => {
       message: message.slice(0, 500),
       sender_name: name,
       sender_email: email,
-    } as any);
+    } as never);
 
     toast({ title: t("contact.toast.title"), description: t("contact.toast.desc") });
     setName("");

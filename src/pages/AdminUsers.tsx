@@ -118,19 +118,19 @@ const AdminUsers = () => {
           // Re-insert as 'user'
           const { error: insertErr } = await supabase
             .from("user_roles")
-            .insert({ user_id: userId, role: newRole } as any);
+            .insert({ user_id: userId, role: newRole } as never);
           if (insertErr) throw insertErr;
         } else {
           const { error } = await supabase
             .from("user_roles")
-            .update({ role: newRole } as any)
+            .update({ role: newRole } as never)
             .eq("id", currentRoleId);
           if (error) throw error;
         }
       } else {
         const { error } = await supabase
           .from("user_roles")
-          .insert({ user_id: userId, role: newRole } as any);
+          .insert({ user_id: userId, role: newRole } as never);
         if (error) throw error;
       }
     },

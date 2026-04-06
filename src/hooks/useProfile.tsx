@@ -49,10 +49,9 @@ export const useUpdateProfile = () => {
   return useMutation({
     mutationFn: async (updates: Partial<Pick<Profile, "display_name" | "bio" | "company" | "linkedin_url" | "avatar_url" | "contact_email" | "contact_phone">> & { website_links?: WebsiteLink[] }) => {
       if (!user) throw new Error("Not authenticated");
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const { data, error } = await supabase
         .from("profiles")
-        .update(updates as any)
+        .update(updates as never)
         .eq("user_id", user.id)
         .select()
         .single();
