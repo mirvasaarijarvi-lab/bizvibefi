@@ -114,6 +114,13 @@ const NotificationBell = () => {
                   </div>
                 )}
               </div>
+              <Link
+                to="/admin/notifications"
+                onClick={() => setOpen(false)}
+                className="block text-center text-xs text-primary hover:underline font-body py-2.5 border-t border-border"
+              >
+                View all notifications
+              </Link>
             </motion.div>
           </>
         )}
