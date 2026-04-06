@@ -334,6 +334,7 @@ export type Database = {
           avatar_url: string | null
           bio: string | null
           company: string | null
+          company_url: string | null
           contact_email: string | null
           contact_phone: string | null
           created_at: string
@@ -351,6 +352,7 @@ export type Database = {
           avatar_url?: string | null
           bio?: string | null
           company?: string | null
+          company_url?: string | null
           contact_email?: string | null
           contact_phone?: string | null
           created_at?: string
@@ -368,6 +370,7 @@ export type Database = {
           avatar_url?: string | null
           bio?: string | null
           company?: string | null
+          company_url?: string | null
           contact_email?: string | null
           contact_phone?: string | null
           created_at?: string
