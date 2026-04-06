@@ -58,7 +58,7 @@ const MemberProfile = () => {
 
       const role = roles?.[0]?.role;
 
-      return { ...data, role } as Tables<"profiles"> & { role?: string };
+      return { ...data, role } as Record<string, unknown>;
     },
     enabled: !!userId && !!user,
   });

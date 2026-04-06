@@ -135,7 +135,7 @@ const Members = () => {
   }
 
   const myTier = myProfile?.membership_tier ?? "starter";
-  const hasViberOverride = (myProfile as MemberProfile & { viber_access_override?: boolean })?.viber_access_override === true;
+  const hasViberOverride = (myProfile as unknown as Record<string, unknown>)?.viber_access_override === true;
   const canSeeVibetors = isAdmin || myTier === "viber" || myTier === "vibetor" || hasViberOverride;
 
   const filtered = members
