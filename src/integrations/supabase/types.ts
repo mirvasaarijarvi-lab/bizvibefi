@@ -392,10 +392,10 @@ export type Database = {
       }
     }
     Enums: {
-      app_role: "admin" | "moderator" | "user"
+      app_role: "superadmin" | "admin" | "moderator" | "user"
       approval_status: "pending" | "approved" | "rejected"
       event_type: "meetup" | "webinar" | "workshop" | "hackathon"
-      membership_tier: "free" | "pro"
+      membership_tier: "starter" | "viber"
       rsvp_status: "going" | "maybe" | "cancelled"
       showcase_type: "case_study" | "testimonial" | "tool"
     }
@@ -525,10 +525,10 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
-      app_role: ["admin", "moderator", "user"],
+      app_role: ["superadmin", "admin", "moderator", "user"],
       approval_status: ["pending", "approved", "rejected"],
       event_type: ["meetup", "webinar", "workshop", "hackathon"],
-      membership_tier: ["free", "pro"],
+      membership_tier: ["starter", "viber"],
       rsvp_status: ["going", "maybe", "cancelled"],
       showcase_type: ["case_study", "testimonial", "tool"],
     },
