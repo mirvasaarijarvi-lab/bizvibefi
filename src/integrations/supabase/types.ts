@@ -314,6 +314,7 @@ export type Database = {
           id: string
           linkedin_url: string | null
           membership_tier: Database["public"]["Enums"]["membership_tier"]
+          profile_visibility: Json
           updated_at: string
           user_id: string
           viber_access_override: boolean
@@ -330,6 +331,7 @@ export type Database = {
           id?: string
           linkedin_url?: string | null
           membership_tier?: Database["public"]["Enums"]["membership_tier"]
+          profile_visibility?: Json
           updated_at?: string
           user_id: string
           viber_access_override?: boolean
@@ -346,6 +348,7 @@ export type Database = {
           id?: string
           linkedin_url?: string | null
           membership_tier?: Database["public"]["Enums"]["membership_tier"]
+          profile_visibility?: Json
           updated_at?: string
           user_id?: string
           viber_access_override?: boolean
