@@ -310,6 +310,15 @@ const Members = () => {
                         </p>
                       )}
 
+                      {(member as any).showcaseCount > 0 && (
+                        <div className="flex items-center gap-1.5 mb-3">
+                          <Briefcase className="h-3.5 w-3.5 text-primary" />
+                          <span className="text-xs font-medium text-primary font-body">
+                            {(member as any).showcaseCount} showcase item{(member as any).showcaseCount !== 1 ? "s" : ""}
+                          </span>
+                        </div>
+                      )}
+
                       <div className="flex flex-col gap-1.5">
                         {member.contact_email && (
                           <a
