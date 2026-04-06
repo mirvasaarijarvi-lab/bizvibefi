@@ -263,8 +263,8 @@ const SubmitForm = ({ onClose }: { onClose: () => void }) => {
             <SelectItem value="case_study">{t("showcase.tabs.caseStudies")}</SelectItem>
             <SelectItem value="testimonial">{t("showcase.tabs.testimonials")}</SelectItem>
             <SelectItem value="tool">{t("showcase.tabs.tools")}</SelectItem>
-            <SelectItem value="guidebook">Guidebook</SelectItem>
-            <SelectItem value="sample_code">Sample Code / Prompt</SelectItem>
+            <SelectItem value="guidebook">{t("showcase.tabs.guidebooks")}</SelectItem>
+            <SelectItem value="sample_code">{t("showcase.tabs.sampleCode")}</SelectItem>
           </SelectContent>
         </Select>
       </div>
@@ -409,8 +409,8 @@ const Showcase = () => {
               <TabsTrigger value="case_study">{t("showcase.tabs.caseStudies")}</TabsTrigger>
               <TabsTrigger value="testimonial">{t("showcase.tabs.testimonials")}</TabsTrigger>
               <TabsTrigger value="tool">{t("showcase.tabs.tools")}</TabsTrigger>
-              <TabsTrigger value="guidebook">Guidebooks</TabsTrigger>
-              <TabsTrigger value="sample_code">Codes & Prompts</TabsTrigger>
+              <TabsTrigger value="guidebook">{t("showcase.tabs.guidebooks")}</TabsTrigger>
+              <TabsTrigger value="sample_code">{t("showcase.tabs.sampleCode")}</TabsTrigger>
             </TabsList>
 
             <TabsContent value={activeTab}>
