@@ -279,6 +279,42 @@ const EventFormDialog = ({
               />
             </div>
           )}
+          {/* Cover Image */}
+          <div>
+            <Label className="font-body text-sm">Cover Image</Label>
+            {form.image_url ? (
+              <div className="relative mt-1">
+                <img
+                  src={form.image_url}
+                  alt="Event cover"
+                  className="w-full h-40 object-cover rounded-lg border border-border"
+                />
+                <Button
+                  type="button"
+                  variant="destructive"
+                  size="sm"
+                  className="absolute top-2 right-2 h-7 w-7 p-0"
+                  onClick={() => set("image_url", "")}
+                >
+                  <X className="h-3.5 w-3.5" />
+                </Button>
+              </div>
+            ) : (
+              <label className="flex items-center gap-2 mt-1 px-4 py-3 border border-dashed border-border rounded-lg cursor-pointer hover:bg-muted/50 transition-colors">
+                <ImagePlus className="h-5 w-5 text-muted-foreground" />
+                <span className="text-sm text-muted-foreground font-body">
+                  {uploading ? "Uploading..." : "Click to upload cover image"}
+                </span>
+                <input
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={handleImageUpload}
+                  disabled={uploading}
+                />
+              </label>
+            )}
+          </div>
           <div className="flex items-center gap-3">
             <Switch
               checked={form.is_published}
