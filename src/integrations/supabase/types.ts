@@ -272,6 +272,89 @@ export type Database = {
         }
         Relationships: []
       }
+      showcase_items: {
+        Row: {
+          category_tags: string[] | null
+          content: string | null
+          created_at: string
+          description: string
+          id: string
+          image_url: string | null
+          link_url: string | null
+          pricing_info: string | null
+          status: Database["public"]["Enums"]["approval_status"]
+          title: string
+          type: Database["public"]["Enums"]["showcase_type"]
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          category_tags?: string[] | null
+          content?: string | null
+          created_at?: string
+          description: string
+          id?: string
+          image_url?: string | null
+          link_url?: string | null
+          pricing_info?: string | null
+          status?: Database["public"]["Enums"]["approval_status"]
+          title: string
+          type: Database["public"]["Enums"]["showcase_type"]
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          category_tags?: string[] | null
+          content?: string | null
+          created_at?: string
+          description?: string
+          id?: string
+          image_url?: string | null
+          link_url?: string | null
+          pricing_info?: string | null
+          status?: Database["public"]["Enums"]["approval_status"]
+          title?: string
+          type?: Database["public"]["Enums"]["showcase_type"]
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      showcase_reviews: {
+        Row: {
+          comment: string | null
+          created_at: string
+          id: string
+          rating: number
+          showcase_item_id: string
+          user_id: string
+        }
+        Insert: {
+          comment?: string | null
+          created_at?: string
+          id?: string
+          rating: number
+          showcase_item_id: string
+          user_id: string
+        }
+        Update: {
+          comment?: string | null
+          created_at?: string
+          id?: string
+          rating?: number
+          showcase_item_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "showcase_reviews_showcase_item_id_fkey"
+            columns: ["showcase_item_id"]
+            isOneToOne: false
+            referencedRelation: "showcase_items"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_roles: {
         Row: {
           id: string
@@ -310,9 +393,11 @@ export type Database = {
     }
     Enums: {
       app_role: "admin" | "moderator" | "user"
+      approval_status: "pending" | "approved" | "rejected"
       event_type: "meetup" | "webinar" | "workshop" | "hackathon"
       membership_tier: "free" | "pro"
       rsvp_status: "going" | "maybe" | "cancelled"
+      showcase_type: "case_study" | "testimonial" | "tool"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -441,9 +526,11 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["admin", "moderator", "user"],
+      approval_status: ["pending", "approved", "rejected"],
       event_type: ["meetup", "webinar", "workshop", "hackathon"],
       membership_tier: ["free", "pro"],
       rsvp_status: ["going", "maybe", "cancelled"],
+      showcase_type: ["case_study", "testimonial", "tool"],
     },
   },
 } as const
