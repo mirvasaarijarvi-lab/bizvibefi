@@ -171,6 +171,9 @@ const AdminItemCard = ({ item }: { item: ShowcaseItem }) => {
         </p>
       </CardContent>
       <CardFooter className="gap-2 flex-wrap pt-0">
+        <Button variant="outline" size="sm" onClick={() => setEditOpen(true)}>
+          <Pencil className="mr-1 h-3 w-3" /> {t("admin.showcase.edit.editBtn")}
+        </Button>
         {item.link_url && (
           <Button variant="outline" size="sm" asChild>
             <a href={item.link_url} target="_blank" rel="noopener noreferrer">
@@ -208,6 +211,7 @@ const AdminItemCard = ({ item }: { item: ShowcaseItem }) => {
           </Button>
         )}
       </CardFooter>
+      <AdminEditDialog item={item} open={editOpen} onOpenChange={setEditOpen} />
     </Card>
   );
 };
