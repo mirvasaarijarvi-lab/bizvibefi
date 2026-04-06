@@ -29,9 +29,12 @@ import { Link } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import {
   Calendar, MapPin, Globe, Users, Clock, CheckCircle, Zap,
-  Video, Wrench, Rocket, Plus, Pencil, Trash2,
+  Video, Wrench, Rocket, Plus, Pencil, Trash2, ImagePlus, ExternalLink, X,
 } from "lucide-react";
 import { format, isPast } from "date-fns";
+
+const googleMapsUrl = (location: string) =>
+  `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(location)}`;
 
 const eventTypeConfig: Record<string, { label: string; icon: React.ElementType; color: string }> = {
   meetup: { label: "Meetup", icon: Users, color: "bg-accent/10 text-accent" },
@@ -51,6 +54,7 @@ interface EventFormData {
   online_url: string;
   max_attendees: string;
   is_published: boolean;
+  image_url: string;
 }
 
 const emptyForm: EventFormData = {
@@ -64,6 +68,7 @@ const emptyForm: EventFormData = {
   online_url: "",
   max_attendees: "",
   is_published: true,
+  image_url: "",
 };
 
 const EventFormDialog = ({
@@ -92,10 +97,12 @@ const EventFormDialog = ({
         online_url: editEvent.online_url || "",
         max_attendees: editEvent.max_attendees?.toString() || "",
         is_published: editEvent.is_published,
+        image_url: editEvent.image_url || "",
       };
     }
     return emptyForm;
   });
+  const [uploading, setUploading] = useState(false);
 
   const saveMutation = useMutation({
     mutationFn: async () => {
@@ -110,6 +117,7 @@ const EventFormDialog = ({
         online_url: form.online_url.trim() || null,
         max_attendees: form.max_attendees ? parseInt(form.max_attendees) : null,
         is_published: form.is_published,
+        image_url: form.image_url.trim() || null,
       };
 
       if (editEvent) {
@@ -137,6 +145,29 @@ const EventFormDialog = ({
 
   const set = (field: keyof EventFormData, value: any) =>
     setForm((prev) => ({ ...prev, [field]: value }));
+
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploading(true);
+    try {
+      const ext = file.name.split(".").pop();
+      const path = `${crypto.randomUUID()}.${ext}`;
+      const { error: uploadErr } = await supabase.storage
+        .from("event-images")
+        .upload(path, file, { upsert: true });
+      if (uploadErr) throw uploadErr;
+      const { data: { publicUrl } } = supabase.storage
+        .from("event-images")
+        .getPublicUrl(path);
+      set("image_url", publicUrl);
+      toast({ title: "Image uploaded!" });
+    } catch (err: any) {
+      toast({ title: "Upload failed", description: err.message, variant: "destructive" });
+    } finally {
+      setUploading(false);
+    }
+  };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -248,6 +279,42 @@ const EventFormDialog = ({
               />
             </div>
           )}
+          {/* Cover Image */}
+          <div>
+            <Label className="font-body text-sm">Cover Image</Label>
+            {form.image_url ? (
+              <div className="relative mt-1">
+                <img
+                  src={form.image_url}
+                  alt="Event cover"
+                  className="w-full h-40 object-cover rounded-lg border border-border"
+                />
+                <Button
+                  type="button"
+                  variant="destructive"
+                  size="sm"
+                  className="absolute top-2 right-2 h-7 w-7 p-0"
+                  onClick={() => set("image_url", "")}
+                >
+                  <X className="h-3.5 w-3.5" />
+                </Button>
+              </div>
+            ) : (
+              <label className="flex items-center gap-2 mt-1 px-4 py-3 border border-dashed border-border rounded-lg cursor-pointer hover:bg-muted/50 transition-colors">
+                <ImagePlus className="h-5 w-5 text-muted-foreground" />
+                <span className="text-sm text-muted-foreground font-body">
+                  {uploading ? "Uploading..." : "Click to upload cover image"}
+                </span>
+                <input
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={handleImageUpload}
+                  disabled={uploading}
+                />
+              </label>
+            )}
+          </div>
           <div className="flex items-center gap-3">
             <Switch
               checked={form.is_published}
@@ -387,10 +454,19 @@ const Events = () => {
     return (
       <div
         key={event.id}
-        className={`bg-card border border-border rounded-2xl p-6 transition-colors ${
+        className={`bg-card border border-border rounded-2xl overflow-hidden transition-colors ${
           isPastEvent ? "" : "hover:border-primary/30"
         }`}
       >
+        {/* Cover image */}
+        {event.image_url && !isPastEvent && (
+          <img
+            src={event.image_url}
+            alt={event.title}
+            className="w-full h-48 object-cover"
+          />
+        )}
+        <div className="p-6">
         <div className="flex flex-col md:flex-row gap-6">
           {/* Date block */}
           {!isPastEvent && (
@@ -473,10 +549,16 @@ const Events = () => {
                   )}
               </span>
               {event.location && (
-                <span className="flex items-center gap-1">
+                <a
+                  href={googleMapsUrl(event.location)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-1 hover:text-foreground transition-colors"
+                >
                   <MapPin className="h-3.5 w-3.5" />
                   {event.location}
-                </span>
+                  <ExternalLink className="h-3 w-3" />
+                </a>
               )}
               {!isPastEvent && (
                 <span className="flex items-center gap-1">
@@ -556,6 +638,7 @@ const Events = () => {
               )
             )}
           </div>
+        </div>
         </div>
       </div>
     );
