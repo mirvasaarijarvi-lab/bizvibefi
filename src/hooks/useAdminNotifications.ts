@@ -74,7 +74,7 @@ export const useMarkNotificationRead = () => {
     mutationFn: async (id: string) => {
       const { error } = await supabase
         .from("admin_notifications")
-        .update({ is_read: true } as any)
+        .update({ is_read: true } as never)
         .eq("id", id);
       if (error) throw error;
     },
@@ -90,7 +90,7 @@ export const useMarkAllRead = () => {
     mutationFn: async () => {
       const { error } = await supabase
         .from("admin_notifications")
-        .update({ is_read: true } as any)
+        .update({ is_read: true } as never)
         .eq("is_read", false);
       if (error) throw error;
     },

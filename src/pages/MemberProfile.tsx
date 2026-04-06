@@ -25,6 +25,23 @@ interface Visibility {
   website_links?: boolean;
 }
 
+interface MemberData {
+  id: string;
+  user_id: string;
+  display_name: string | null;
+  avatar_url: string | null;
+  bio: string | null;
+  company: string | null;
+  linkedin_url: string | null;
+  contact_email: string | null;
+  contact_phone: string | null;
+  membership_tier: string;
+  website_links: { label?: string; url: string }[] | null;
+  profile_visibility: Visibility | null;
+  created_at: string;
+  role?: string;
+}
+
 const defaultVisibility: Visibility = {
   bio: true,
   company: true,
@@ -58,7 +75,7 @@ const MemberProfile = () => {
 
       const role = roles?.[0]?.role;
 
-      return { ...data, role } as any;
+      return { ...data, role } as unknown as MemberData;
     },
     enabled: !!userId && !!user,
   });
@@ -76,6 +93,26 @@ const MemberProfile = () => {
       return data ?? [];
     },
     enabled: !!userId && !!user,
+  });
+
+  const sendContactRequest = useMutation({
+    mutationFn: async (msg: string) => {
+      if (!user || !member) throw new Error("Not ready");
+      const { error } = await supabase.from("contact_requests").insert({
+        from_user_id: user.id,
+        to_user_id: member.user_id,
+        message: msg,
+      } as never);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      toast({ title: "Message sent!", description: `Your contact request has been sent to ${member?.display_name || "this member"}.` });
+      setContactOpen(false);
+      setMessage("");
+    },
+    onError: (err: Error) => {
+      toast({ title: "Error", description: err.message, variant: "destructive" });
+    },
   });
 
   if (authLoading) {
@@ -112,25 +149,6 @@ const MemberProfile = () => {
 
   const vis: Visibility = { ...defaultVisibility, ...(member.profile_visibility ?? {}) };
   const isOwnProfile = user.id === member.user_id;
-
-  const sendContactRequest = useMutation({
-    mutationFn: async (msg: string) => {
-      const { error } = await supabase.from("contact_requests").insert({
-        from_user_id: user.id,
-        to_user_id: member.user_id,
-        message: msg,
-      } as any);
-      if (error) throw error;
-    },
-    onSuccess: () => {
-      toast({ title: "Message sent!", description: `Your contact request has been sent to ${member.display_name || "this member"}.` });
-      setContactOpen(false);
-      setMessage("");
-    },
-    onError: (err: Error) => {
-      toast({ title: "Error", description: err.message, variant: "destructive" });
-    },
-  });
 
   const initials = (name: string | null) => {
     if (!name) return "?";
@@ -251,7 +269,7 @@ const MemberProfile = () => {
                   )}
                   {(vis.website_links || isOwnProfile) && websiteLinks.length > 0 && (
                     <div className="space-y-2">
-                      {websiteLinks.map((link: any, idx: number) => (
+                      {websiteLinks.map((link: { url: string; label?: string }, idx: number) => (
                         <a
                           key={idx}
                           href={link.url}

@@ -93,7 +93,7 @@ const ForumCategory = () => {
     enabled: !!slug,
   });
 
-  const requiresApproval = (category as any)?.requires_approval === true;
+  const requiresApproval = (category as Record<string, unknown> | undefined)?.requires_approval === true;
 
   const { data: topics, isLoading } = useQuery({
     queryKey: ["forum-topics", category?.id],
@@ -126,7 +126,7 @@ const ForumCategory = () => {
     mutationFn: async (topicId: string) => {
       const { error } = await supabase
         .from("forum_topics")
-        .update({ is_approved: true } as any)
+        .update({ is_approved: true } as never)
         .eq("id", topicId);
       if (error) throw error;
     },
@@ -166,7 +166,7 @@ const ForumCategory = () => {
         content = newContent.trim();
       }
 
-      const insertData: any = {
+      const insertData: Record<string, unknown> = {
         category_id: category.id,
         user_id: user.id,
         title,
@@ -175,7 +175,7 @@ const ForumCategory = () => {
       if (requiresApproval && !isAdmin) {
         insertData.is_approved = false;
       }
-      const { error } = await supabase.from("forum_topics").insert(insertData);
+      const { error } = await supabase.from("forum_topics").insert(insertData as never);
       if (error) throw error;
       setNewTitle("");
       setNewContent("");
@@ -324,7 +324,7 @@ const ForumCategory = () => {
     </form>
   );
 
-  const renderTopicPreview = (topic: any) => {
+  const renderTopicPreview = (topic: { content: string }) => {
     const lead = parseLeadContent(topic.content);
     if (!lead) return null;
     return (
@@ -428,7 +428,7 @@ const ForumCategory = () => {
           ) : (
             <div className="space-y-2">
               {topics?.map((topic) => {
-                const topicApproved = (topic as any).is_approved !== false;
+                const topicApproved = (topic as Record<string, unknown>).is_approved !== false;
                 const isOwn = topic.user_id === user?.id;
                 const pendingForUser = !topicApproved && isOwn && !isAdmin;
                 const pendingForAdmin = !topicApproved && isAdmin;
