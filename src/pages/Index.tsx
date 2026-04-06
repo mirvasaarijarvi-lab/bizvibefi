@@ -351,8 +351,6 @@ const ShowcasePreview = () => {
     staleTime: 60_000,
   });
 
-  if (!items || items.length === 0) return null;
-
   return (
     <section className="py-20 md:py-28 border-t border-border">
       <div className="container">
@@ -362,40 +360,63 @@ const ShowcasePreview = () => {
           viewport={{ once: true }}
           className="text-center mb-16"
         >
+          <p className="font-body text-sm font-semibold text-turquoise tracking-widest uppercase mb-4">
+            {t("showcase.tag")}
+          </p>
           <h2 className="font-display text-3xl md:text-5xl font-bold tracking-[-0.02em]">
             {t("showcase.sectionTitle")} <span className="text-gradient-storm">{t("showcase.sectionHighlight")}</span>
           </h2>
+          <p className="mt-4 text-muted-foreground font-body text-lg max-w-2xl mx-auto">
+            {t("showcase.subtitle")}
+          </p>
         </motion.div>
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
-          {items.map((item, i) => {
-            const Icon = showcaseTypeIcons[item.type] || Lightbulb;
-            return (
-              <motion.div
-                key={item.id}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.08 }}
-                className="bg-card border border-border rounded-xl p-6 hover:border-primary/40 transition-colors"
-              >
-                <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
-                  <Icon className="h-5 w-5 text-primary" />
-                </div>
-                <h3 className="font-display text-lg font-semibold tracking-[-0.01em]">{item.title}</h3>
-                <p className="mt-2 text-sm text-muted-foreground font-body line-clamp-2">{item.description}</p>
-                <div className="flex flex-wrap gap-1.5 mt-3">
-                  {item.category_tags?.slice(0, 3).map((tag: string) => (
-                    <Badge key={tag} variant="secondary" className="text-xs">{tag}</Badge>
-                  ))}
-                </div>
-              </motion.div>
-            );
-          })}
-        </div>
+        {items && items.length > 0 ? (
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
+            {items.map((item, i) => {
+              const Icon = showcaseTypeIcons[item.type] || Lightbulb;
+              return (
+                <Link to={`/showcase/${item.id}`} key={item.id} className="block">
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: i * 0.08 }}
+                    className="bg-card border border-border rounded-xl overflow-hidden hover:border-primary/40 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 h-full"
+                  >
+                    {item.image_url && (
+                      <div className="aspect-video w-full overflow-hidden">
+                        <img src={item.image_url} alt={item.title} className="w-full h-full object-cover" />
+                      </div>
+                    )}
+                    <div className="p-6">
+                      <div className="flex items-center gap-2 mb-3">
+                        <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+                          <Icon className="h-4 w-4 text-primary" />
+                        </div>
+                        <Badge variant="outline" className="text-xs">{item.type.replace("_", " ")}</Badge>
+                      </div>
+                      <h3 className="font-display text-lg font-semibold tracking-[-0.01em]">{item.title}</h3>
+                      <p className="mt-2 text-sm text-muted-foreground font-body line-clamp-2">{item.description}</p>
+                      <div className="flex flex-wrap gap-1.5 mt-3">
+                        {item.category_tags?.slice(0, 3).map((tag: string) => (
+                          <Badge key={tag} variant="secondary" className="text-xs">{tag}</Badge>
+                        ))}
+                      </div>
+                    </div>
+                  </motion.div>
+                </Link>
+              );
+            })}
+          </div>
+        ) : (
+          <div className="text-center py-8">
+            <p className="text-muted-foreground font-body">{t("showcase.empty")}</p>
+          </div>
+        )}
 
         <div className="mt-12 text-center">
-          <Button variant="heroOutline" size="lg" asChild>
+          <Button variant="hero" size="lg" asChild>
             <Link to="/showcase">{t("showcase.sectionCta")} <ArrowRight className="ml-2 h-4 w-4" /></Link>
           </Button>
         </div>
