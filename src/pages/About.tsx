@@ -33,31 +33,33 @@ const About = () => {
         <div className="container">
           <div className="grid md:grid-cols-3 gap-8 max-w-4xl mx-auto">
             {[0, 1, 2].map((i) => (
-              <motion.div
+              <a
                 key={i}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.15 }}
-                className="text-center"
+                href={t(`about.founders.${i}.linkedin`)}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block group"
               >
-                <div className="w-32 h-32 rounded-full bg-gradient-storm mx-auto mb-6 flex items-center justify-center">
-                  <span className="font-display text-3xl font-extrabold text-primary-foreground">
-                    {t(`about.founders.${i}.name`).split(" ").map(n => n[0]).join("")}
-                  </span>
-                </div>
-                <h3 className="font-display text-xl font-bold tracking-[-0.01em]">{t(`about.founders.${i}.name`)}</h3>
-                <p className="text-turquoise font-body font-semibold text-sm mt-1">{t(`about.founders.${i}.role`)}</p>
-                <p className="mt-3 text-sm text-muted-foreground font-body">{t(`about.founders.${i}.bio`)}</p>
-                <a
-                  href={t(`about.founders.${i}.linkedin`)}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1.5 mt-3 text-sm font-body font-medium text-electric hover:text-electric-light transition-colors"
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.15 }}
+                  className="text-center bg-card border border-border rounded-2xl p-8 hover:border-primary/40 hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
                 >
-                  <Linkedin className="h-4 w-4" /> LinkedIn
-                </a>
-              </motion.div>
+                  <div className="w-32 h-32 rounded-full bg-gradient-storm mx-auto mb-6 flex items-center justify-center group-hover:scale-105 transition-transform duration-300">
+                    <span className="font-display text-3xl font-extrabold text-primary-foreground">
+                      {t(`about.founders.${i}.name`).split(" ").map(n => n[0]).join("")}
+                    </span>
+                  </div>
+                  <h3 className="font-display text-xl font-bold tracking-[-0.01em] group-hover:text-primary transition-colors">{t(`about.founders.${i}.name`)}</h3>
+                  <p className="text-turquoise font-body font-semibold text-sm mt-1">{t(`about.founders.${i}.role`)}</p>
+                  <p className="mt-3 text-sm text-muted-foreground font-body">{t(`about.founders.${i}.bio`)}</p>
+                  <span className="inline-flex items-center gap-1.5 mt-4 text-sm font-body font-medium text-electric group-hover:text-electric-light transition-colors">
+                    <Linkedin className="h-4 w-4" /> View LinkedIn Profile <ArrowRight className="h-3 w-3 group-hover:translate-x-1 transition-transform" />
+                  </span>
+                </motion.div>
+              </a>
             ))}
           </div>
         </div>
