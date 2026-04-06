@@ -188,7 +188,7 @@ const Members = () => {
                 <SelectItem value="all">All Tiers</SelectItem>
                 <SelectItem value="starter">Starter</SelectItem>
                 <SelectItem value="viber">Viber</SelectItem>
-                <SelectItem value="vibetor">Vibetor</SelectItem>
+                {canSeeVibetors && <SelectItem value="vibetor">Vibetor</SelectItem>}
               </SelectContent>
             </Select>
             <Select value={sortBy} onValueChange={(v) => setSortBy(v as SortOption)}>
