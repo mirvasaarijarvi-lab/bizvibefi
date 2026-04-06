@@ -58,7 +58,7 @@ const MemberProfile = () => {
 
       const role = roles?.[0]?.role;
 
-      return { ...data, role } as any;
+      return { ...data, role } as Tables<"profiles"> & { role?: string };
     },
     enabled: !!userId && !!user,
   });
@@ -119,7 +119,7 @@ const MemberProfile = () => {
         from_user_id: user.id,
         to_user_id: member.user_id,
         message: msg,
-      } as any);
+      } as never);
       if (error) throw error;
     },
     onSuccess: () => {
@@ -251,7 +251,7 @@ const MemberProfile = () => {
                   )}
                   {(vis.website_links || isOwnProfile) && websiteLinks.length > 0 && (
                     <div className="space-y-2">
-                      {websiteLinks.map((link: any, idx: number) => (
+                      {websiteLinks.map((link: { url: string; label?: string }, idx: number) => (
                         <a
                           key={idx}
                           href={link.url}

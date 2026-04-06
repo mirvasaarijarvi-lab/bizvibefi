@@ -57,7 +57,7 @@ const Members = () => {
     mutationFn: async ({ userId, tier }: { userId: string; tier: "starter" | "viber" | "vibetor" }) => {
       const { error } = await supabase
         .from("profiles")
-        .update({ membership_tier: tier } as any)
+        .update({ membership_tier: tier } as never)
         .eq("user_id", userId);
       if (error) throw error;
     },
@@ -74,7 +74,7 @@ const Members = () => {
     mutationFn: async ({ userId, override }: { userId: string; override: boolean }) => {
       const { error } = await supabase
         .from("profiles")
-        .update({ viber_access_override: override } as any)
+        .update({ viber_access_override: override } as never)
         .eq("user_id", userId);
       if (error) throw error;
     },
@@ -96,7 +96,7 @@ const Members = () => {
         .order("created_at", { ascending: false });
       if (error) throw error;
 
-      const userIds = data.map((p: any) => p.user_id);
+      const userIds = data.map((p: MemberProfile) => p.user_id);
 
       // Fetch roles and showcase counts in parallel
       const [rolesResult, showcaseResult] = await Promise.all([
@@ -104,7 +104,7 @@ const Members = () => {
         supabase.from("showcase_items").select("user_id").eq("status", "approved").in("user_id", userIds),
       ]);
 
-      const roleMap = new Map(rolesResult.data?.map((r: any) => [r.user_id, r.role]) ?? []);
+      const roleMap = new Map(rolesResult.data?.map((r: { user_id: string; role: string }) => [r.user_id, r.role]) ?? []);
 
       const showcaseCounts = new Map<string, number>();
       for (const item of showcaseResult.data ?? []) {
@@ -135,7 +135,7 @@ const Members = () => {
   }
 
   const myTier = myProfile?.membership_tier ?? "starter";
-  const hasViberOverride = (myProfile as any)?.viber_access_override === true;
+  const hasViberOverride = (myProfile as MemberProfile & { viber_access_override?: boolean })?.viber_access_override === true;
   const canSeeVibetors = isAdmin || myTier === "viber" || myTier === "vibetor" || hasViberOverride;
 
   const filtered = members
@@ -310,11 +310,11 @@ const Members = () => {
                         </p>
                       )}
 
-                      {(member as any).showcaseCount > 0 && (
+                      {(member as MemberProfile & { showcaseCount?: number }).showcaseCount && (member as MemberProfile & { showcaseCount?: number }).showcaseCount! > 0 && (
                         <div className="flex items-center gap-1.5 mb-3">
                           <Briefcase className="h-3.5 w-3.5 text-primary" />
                           <span className="text-xs font-medium text-primary font-body">
-                            {(member as any).showcaseCount} showcase item{(member as any).showcaseCount !== 1 ? "s" : ""}
+                            {(member as MemberProfile & { showcaseCount?: number }).showcaseCount} showcase item{(member as MemberProfile & { showcaseCount?: number }).showcaseCount !== 1 ? "s" : ""}
                           </span>
                         </div>
                       )}
@@ -377,7 +377,7 @@ const Members = () => {
                             <Select
                               value={member.membership_tier}
                               onValueChange={(val) =>
-                                updateTierMutation.mutate({ userId: member.user_id, tier: val as any })
+                                updateTierMutation.mutate({ userId: member.user_id, tier: val as "starter" | "viber" | "vibetor" })
                               }
                             >
                               <SelectTrigger className="h-7 text-xs w-28">
