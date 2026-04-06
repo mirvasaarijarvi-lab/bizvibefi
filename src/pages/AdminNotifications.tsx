@@ -111,12 +111,20 @@ const AdminNotifications = () => {
       />
       <section className="py-20 px-4">
         <div className="max-w-4xl mx-auto">
-          <Link
-            to="/admin/showcase"
-            className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground font-body mb-4"
-          >
-            <ArrowLeft className="h-4 w-4" /> Admin Panel
-          </Link>
+          <div className="flex items-center gap-4 mb-4">
+            <Link
+              to="/admin/showcase"
+              className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground font-body"
+            >
+              <ArrowLeft className="h-4 w-4" /> Admin Panel
+            </Link>
+            <Link
+              to="/admin/audit-log"
+              className="text-sm text-primary hover:underline font-body ml-auto"
+            >
+              Audit Log →
+            </Link>
+          </div>
 
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center gap-3">
