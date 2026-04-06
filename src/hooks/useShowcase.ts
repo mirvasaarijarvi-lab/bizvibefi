@@ -5,6 +5,11 @@ import { useAuth } from "./useAuth";
 export type ShowcaseType = "case_study" | "testimonial" | "tool";
 export type ApprovalStatus = "pending" | "approved" | "rejected";
 
+export interface KeyFigure {
+  label: string;
+  value: string;
+}
+
 export interface ShowcaseItem {
   id: string;
   user_id: string;
@@ -12,10 +17,15 @@ export interface ShowcaseItem {
   title: string;
   description: string;
   content: string | null;
+  challenge: string | null;
+  solution: string | null;
+  benefits: string[] | null;
+  key_figures: KeyFigure[] | null;
   image_url: string | null;
   link_url: string | null;
   category_tags: string[];
   pricing_info: string | null;
+  rejection_reason: string | null;
   status: ApprovalStatus;
   created_at: string;
   updated_at: string;
@@ -48,6 +58,22 @@ export const useShowcaseItems = (type?: ShowcaseType) => {
       if (error) throw error;
       return (data ?? []) as ShowcaseItem[];
     },
+  });
+};
+
+export const useShowcaseItem = (id: string) => {
+  return useQuery({
+    queryKey: ["showcase", "item", id],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("showcase_items")
+        .select("*")
+        .eq("id", id)
+        .single();
+      if (error) throw error;
+      return data as ShowcaseItem;
+    },
+    enabled: !!id,
   });
 };
 
@@ -95,6 +121,10 @@ export const useCreateShowcaseItem = () => {
       title: string;
       description: string;
       content?: string;
+      challenge?: string;
+      solution?: string;
+      benefits?: string[];
+      key_figures?: KeyFigure[];
       image_url?: string;
       link_url?: string;
       category_tags?: string[];
