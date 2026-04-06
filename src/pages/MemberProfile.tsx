@@ -176,6 +176,15 @@ const MemberProfile = () => {
                         {!vis.company && <Badge variant="outline" className="text-[9px] ml-1">Hidden</Badge>}
                       </p>
                     )}
+                    {!isOwnProfile && (
+                      <Button
+                        size="sm"
+                        className="mt-3 font-body gap-1.5 bg-gradient-storm"
+                        onClick={() => setContactOpen(true)}
+                      >
+                        <MessageSquare className="h-4 w-4" /> Contact
+                      </Button>
+                    )}
                   </div>
                 </div>
 
