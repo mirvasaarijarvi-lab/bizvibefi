@@ -54,6 +54,7 @@ interface EventFormData {
   online_url: string;
   max_attendees: string;
   is_published: boolean;
+  image_url: string;
 }
 
 const emptyForm: EventFormData = {
@@ -67,6 +68,7 @@ const emptyForm: EventFormData = {
   online_url: "",
   max_attendees: "",
   is_published: true,
+  image_url: "",
 };
 
 const EventFormDialog = ({
@@ -95,10 +97,12 @@ const EventFormDialog = ({
         online_url: editEvent.online_url || "",
         max_attendees: editEvent.max_attendees?.toString() || "",
         is_published: editEvent.is_published,
+        image_url: editEvent.image_url || "",
       };
     }
     return emptyForm;
   });
+  const [uploading, setUploading] = useState(false);
 
   const saveMutation = useMutation({
     mutationFn: async () => {
