@@ -10,7 +10,7 @@ export interface Profile {
   bio: string | null;
   company: string | null;
   linkedin_url: string | null;
-  membership_tier: "free" | "pro";
+  membership_tier: "starter" | "viber";
   created_at: string;
   updated_at: string;
 }

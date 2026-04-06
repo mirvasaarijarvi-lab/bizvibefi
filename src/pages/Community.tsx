@@ -147,7 +147,7 @@ const Community = () => {
                     </p>
                   </div>
                   <Badge
-                    variant={t(`community.testimonials.items.${i}.tier`) === "Pro" ? "default" : "secondary"}
+                    variant={t(`community.testimonials.items.${i}.tier`) === "Viber" ? "default" : "secondary"}
                     className="text-xs"
                   >
                     {t(`community.testimonials.items.${i}.tier`)}

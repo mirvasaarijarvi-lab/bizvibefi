@@ -13,7 +13,7 @@ interface ForumCategory {
   description: string | null;
   slug: string;
   sort_order: number;
-  min_tier: "free" | "pro";
+  min_tier: "starter" | "viber";
   created_at: string;
 }
 
@@ -69,7 +69,7 @@ const Forum = () => {
                   <div className="flex items-start justify-between">
                     <div className="flex items-start gap-4">
                       <div className="mt-1 p-2 rounded-lg bg-muted group-hover:bg-primary/10 transition-colors">
-                        {category.min_tier === "pro" ? (
+                        {category.min_tier === "viber" ? (
                           <Crown className="h-5 w-5 text-primary" />
                         ) : (
                           <MessageSquare className="h-5 w-5 text-muted-foreground group-hover:text-primary" />
@@ -78,9 +78,9 @@ const Forum = () => {
                       <div>
                         <h2 className="font-display font-semibold text-foreground group-hover:text-primary transition-colors flex items-center gap-2">
                           {category.name}
-                          {category.min_tier === "pro" && (
+                          {category.min_tier === "viber" && (
                             <span className="text-xs bg-primary/10 text-primary px-2 py-0.5 rounded-full font-body">
-                              PRO
+                              VIBER
                             </span>
                           )}
                         </h2>
@@ -89,7 +89,7 @@ const Forum = () => {
                         </p>
                       </div>
                     </div>
-                    {!user && category.min_tier === "pro" && (
+                    {!user && category.min_tier === "viber" && (
                       <Lock className="h-4 w-4 text-muted-foreground mt-2" />
                     )}
                   </div>
