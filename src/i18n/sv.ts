@@ -32,7 +32,7 @@ const sv = {
     cta: "Hör av dig",
   },
   tiers: {
-    title: "Två sätt att",
+    title: "Tre sätt att",
     titleHighlight: "vibba",
     subtitle: "Börja gratis och uppgradera när du är redo.",
     free: {
@@ -58,6 +58,19 @@ const sv = {
         "Viber WhatsApp-grupp med leads",
       ],
       cta: "Bli Viber",
+    },
+    vibetor: {
+      name: "Vibetor",
+      label: "VIBETOR",
+      price: "Investerarmedlemskap",
+      benefits: [
+        "Allt från Viber",
+        "Investoremblem på profilen",
+        "Exklusivt investornätverk",
+        "Prioriterad tillgång till deal flow",
+        "Innovationsutställningar",
+      ],
+      cta: "Bli Vibetor",
     },
   },
   ctaSection: {
@@ -92,6 +105,17 @@ const sv = {
         { title: "Investorkontakter", desc: "Event med investerare och marknadsaktörer. Pitcha, nätverka och få finansiering." },
         { title: "Viber WhatsApp-grupp", desc: "Innercirkeln med leads, investerare och värdefulla samtal." },
         { title: "Exklusiva event", desc: "Marknadsevent, demodagar och investorträffar." },
+      ],
+    },
+    vibetor: {
+      name: "Vibetor",
+      price: "Investerarmedlemskap. Allt från Viber och dessutom:",
+      cta: "Bli Vibetor",
+      benefits: [
+        { title: "Investoremblem", desc: "Sticka ut med ett verifierat investoremblem på din profil." },
+        { title: "Investornätverk", desc: "Anslut till andra investerare och innovatörer i en dedikerad cirkel." },
+        { title: "Deal flow-åtkomst", desc: "Prioriterad tillgång till startup-pitchar och investeringsmöjligheter." },
+        { title: "Innovationsutställningar", desc: "Exklusiva event för att upptäcka och finansiera nästa stora grej." },
       ],
     },
     testimonials: {

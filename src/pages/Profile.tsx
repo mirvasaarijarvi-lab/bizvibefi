@@ -11,6 +11,7 @@ import { useNavigate } from "react-router-dom";
 import Layout from "@/components/Layout";
 import PageMeta from "@/components/PageMeta";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
 import { Camera, Linkedin, Building, User, Globe, Mail, Phone, Plus, Trash2 } from "lucide-react";
 
 const Profile = () => {
@@ -144,7 +145,15 @@ const Profile = () => {
                 />
               </div>
               <div>
-                <p className="font-display font-bold text-foreground">{displayName || "Set your name"}</p>
+                <div className="flex items-center gap-2">
+                  <p className="font-display font-bold text-foreground">{displayName || "Set your name"}</p>
+                  {profile?.membership_tier === "vibetor" && (
+                    <Badge className="bg-amber-500/90 hover:bg-amber-500 text-primary-foreground text-[10px] px-1.5 py-0">VIBETOR</Badge>
+                  )}
+                  {profile?.membership_tier === "viber" && (
+                    <Badge variant="default" className="text-[10px] px-1.5 py-0">VIBER</Badge>
+                  )}
+                </div>
                 <p className="text-sm text-muted-foreground font-body capitalize">
                   {profile?.membership_tier} member
                 </p>

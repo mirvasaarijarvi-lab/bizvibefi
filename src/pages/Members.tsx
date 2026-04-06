@@ -28,11 +28,11 @@ interface MemberProfile {
   bio: string | null;
   company: string | null;
   linkedin_url: string | null;
-  membership_tier: "starter" | "viber";
+  membership_tier: "starter" | "viber" | "vibetor";
   created_at: string;
 }
 
-type TierFilter = "all" | "starter" | "viber";
+type TierFilter = "all" | "starter" | "viber" | "vibetor";
 type SortOption = "newest" | "alphabetical";
 
 const Members = () => {
@@ -138,6 +138,7 @@ const Members = () => {
                 <SelectItem value="all">All Tiers</SelectItem>
                 <SelectItem value="starter">Starter</SelectItem>
                 <SelectItem value="viber">Viber</SelectItem>
+                <SelectItem value="vibetor">Vibetor</SelectItem>
               </SelectContent>
             </Select>
             <Select value={sortBy} onValueChange={(v) => setSortBy(v as SortOption)}>
@@ -198,6 +199,11 @@ const Members = () => {
                             {member.membership_tier === "viber" && (
                               <Badge variant="default" className="text-[10px] px-1.5 py-0">
                                 VIBER
+                              </Badge>
+                            )}
+                            {member.membership_tier === "vibetor" && (
+                              <Badge variant="default" className="text-[10px] px-1.5 py-0 bg-amber-500/90 hover:bg-amber-500">
+                                VIBETOR
                               </Badge>
                             )}
                           </div>

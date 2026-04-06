@@ -18,7 +18,7 @@ export interface Profile {
   website_links: WebsiteLink[] | null;
   contact_email: string | null;
   contact_phone: string | null;
-  membership_tier: "starter" | "viber";
+  membership_tier: "starter" | "viber" | "vibetor";
   created_at: string;
   updated_at: string;
 }

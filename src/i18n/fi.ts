@@ -32,7 +32,7 @@ const fi = {
     cta: "Otetaan yhteyttä",
   },
   tiers: {
-    title: "Kaksi tapaa",
+    title: "Kolme tapaa",
     titleHighlight: "vibettää",
     subtitle: "Aloita ilmaiseksi, päivitä kun olet valmis.",
     free: {
@@ -58,6 +58,19 @@ const fi = {
         "Viber WhatsApp -ryhmä liideillä",
       ],
       cta: "Siirry Viberiin",
+    },
+    vibetor: {
+      name: "Vibetor",
+      label: "VIBETOR",
+      price: "Sijoittajajäsenyys",
+      benefits: [
+        "Kaikki Viberistä",
+        "Sijoittajamerkki profiilissa",
+        "Eksklusiivinen sijoittajaverkosto",
+        "Etusija deal flow -pääsyyn",
+        "Innovaationäyttelytapahtumat",
+      ],
+      cta: "Ryhdy Vibetorksi",
     },
   },
   ctaSection: {
@@ -92,6 +105,17 @@ const fi = {
         { title: "Sijoittajayhteydet", desc: "Tapahtumia sijoittajien kanssa. Pitchaa, verkostoidu ja saa rahoitusta." },
         { title: "Viber WhatsApp -ryhmä", desc: "Sisäpiiri liideillä, sijoittajilla ja arvokkailla keskusteluilla." },
         { title: "Eksklusiiviset tapahtumat", desc: "Markkinatapahtumat, demopäivät ja sijoittajatapaamiset." },
+      ],
+    },
+    vibetor: {
+      name: "Vibetor",
+      price: "Sijoittajajäsenyys. Kaikki Viberistä ja lisäksi:",
+      cta: "Ryhdy Vibetorksi",
+      benefits: [
+        { title: "Sijoittajamerkki", desc: "Erotu joukosta vahvistetulla sijoittajamerkillä profiilissasi." },
+        { title: "Sijoittajaverkosto", desc: "Yhdistä muihin sijoittajiin ja innovaattoreihin omassa piirissä." },
+        { title: "Deal flow -pääsy", desc: "Etusija startup-pitchauksiin ja sijoitusmahdollisuuksiin." },
+        { title: "Innovaationäyttelyt", desc: "Eksklusiivisia tapahtumia seuraavan suuren idean löytämiseen." },
       ],
     },
     testimonials: {
