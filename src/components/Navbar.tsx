@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Menu, X, Globe, User, LogOut, MessageSquare, Users, Sun, Moon, Shield } from "lucide-react";
+import NotificationBell from "@/components/NotificationBell";
 import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTranslation } from "@/i18n/useTranslation";
@@ -58,6 +59,9 @@ const Navbar = () => {
               {link.label}
             </Link>
           ))}
+
+          {/* Admin Notifications */}
+          {isAdmin && <NotificationBell />}
 
           {/* Theme Toggle */}
           <button
