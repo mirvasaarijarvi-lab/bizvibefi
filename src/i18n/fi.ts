@@ -107,6 +107,17 @@ const fi = {
         { title: "Eksklusiiviset tapahtumat", desc: "Markkinatapahtumat, demopäivät ja sijoittajatapaamiset." },
       ],
     },
+    vibetor: {
+      name: "Vibetor",
+      price: "Sijoittajajäsenyys. Kaikki Viberistä ja lisäksi:",
+      cta: "Ryhdy Vibetorksi",
+      benefits: [
+        { title: "Sijoittajamerkki", desc: "Erotu joukosta vahvistetulla sijoittajamerkillä profiilissasi." },
+        { title: "Sijoittajaverkosto", desc: "Yhdistä muihin sijoittajiin ja innovaattoreihin omassa piirissä." },
+        { title: "Deal flow -pääsy", desc: "Etusija startup-pitchauksiin ja sijoitusmahdollisuuksiin." },
+        { title: "Innovaationäyttelyt", desc: "Eksklusiivisia tapahtumia seuraavan suuren idean löytämiseen." },
+      ],
+    },
     testimonials: {
       title: "Menestys",
       titleHighlight: "tarinat",

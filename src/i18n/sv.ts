@@ -107,6 +107,17 @@ const sv = {
         { title: "Exklusiva event", desc: "Marknadsevent, demodagar och investorträffar." },
       ],
     },
+    vibetor: {
+      name: "Vibetor",
+      price: "Investerarmedlemskap. Allt från Viber och dessutom:",
+      cta: "Bli Vibetor",
+      benefits: [
+        { title: "Investoremblem", desc: "Sticka ut med ett verifierat investoremblem på din profil." },
+        { title: "Investornätverk", desc: "Anslut till andra investerare och innovatörer i en dedikerad cirkel." },
+        { title: "Deal flow-åtkomst", desc: "Prioriterad tillgång till startup-pitchar och investeringsmöjligheter." },
+        { title: "Innovationsutställningar", desc: "Exklusiva event för att upptäcka och finansiera nästa stora grej." },
+      ],
+    },
     testimonials: {
       title: "Framgångs",
       titleHighlight: "historier",
