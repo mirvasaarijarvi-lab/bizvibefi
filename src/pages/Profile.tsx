@@ -39,14 +39,14 @@ const Profile = () => {
         .limit(50);
       if (error) throw error;
 
-      const senderIds = [...new Set((data ?? []).map((r: any) => r.from_user_id))];
+      const senderIds = [...new Set((data ?? []).map((r) => r.from_user_id))];
       const { data: profiles } = await supabase
         .from("profiles")
         .select("user_id, display_name, avatar_url")
         .in("user_id", senderIds);
       const profileMap = new Map(profiles?.map((p) => [p.user_id, p]) ?? []);
 
-      return (data ?? []).map((r: any) => ({
+      return (data ?? []).map((r) => ({
         ...r,
         sender: profileMap.get(r.from_user_id),
       }));
@@ -65,14 +65,14 @@ const Profile = () => {
         .limit(5);
       if (error) throw error;
 
-      const catIds = [...new Set((data ?? []).map((t: any) => t.category_id))];
+      const catIds = [...new Set((data ?? []).map((t) => t.category_id))];
       const { data: cats } = await supabase
         .from("forum_categories")
         .select("id, slug, name")
         .in("id", catIds);
       const catMap = new Map(cats?.map((c) => [c.id, c]) ?? []);
 
-      return (data ?? []).map((t: any) => ({
+      return (data ?? []).map((t) => ({
         ...t,
         category: catMap.get(t.category_id),
       }));
@@ -91,7 +91,7 @@ const Profile = () => {
       if (error) throw error;
       if (!data?.length) return [];
 
-      const eventIds = data.map((r: any) => r.event_id);
+      const eventIds = data.map((r) => r.event_id);
       const { data: events } = await supabase
         .from("events")
         .select("id, title, starts_at, location, is_online")
@@ -109,7 +109,7 @@ const Profile = () => {
     mutationFn: async (id: string) => {
       const { error } = await supabase
         .from("contact_requests")
-        .update({ is_read: true } as any)
+        .update({ is_read: true } as never)
         .eq("id", id);
       if (error) throw error;
     },
@@ -118,7 +118,7 @@ const Profile = () => {
     },
   });
 
-  const unreadCount = contactRequests?.filter((r: any) => !r.is_read).length ?? 0;
+  const unreadCount = contactRequests?.filter((r) => !r.is_read).length ?? 0;
 
   const [displayName, setDisplayName] = useState("");
   const [bio, setBio] = useState("");
@@ -150,7 +150,7 @@ const Profile = () => {
       setContactEmail(profile.contact_email ?? "");
       setContactPhone(profile.contact_phone ?? "");
       setWebsiteLinks(Array.isArray(profile.website_links) ? profile.website_links : []);
-      const vis = (profile as any).profile_visibility;
+      const vis = (profile as unknown as Record<string, unknown>).profile_visibility;
       if (vis && typeof vis === "object") {
         setVisibility((prev) => ({ ...prev, ...vis }));
       }
@@ -198,7 +198,7 @@ const Profile = () => {
         contact_phone: contactPhone.trim() || null,
         website_links: cleanLinks.length > 0 ? cleanLinks : [],
         profile_visibility: visibility,
-      } as any);
+      } as never);
       toast({ title: "Profile updated!" });
     } catch (error: unknown) {
       const message = error instanceof Error ? error.message : "Update failed";
