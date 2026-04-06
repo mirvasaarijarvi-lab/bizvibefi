@@ -444,6 +444,66 @@ const Profile = () => {
             </form>
           </div>
 
+          {/* Forum Activity */}
+          <div className="bg-card border border-border rounded-2xl p-6 mt-8">
+            <h2 className="font-display text-lg font-bold text-foreground flex items-center gap-2 mb-4">
+              <MessageSquare className="h-5 w-5" /> Forum Activity
+            </h2>
+            {!forumTopics || forumTopics.length === 0 ? (
+              <p className="text-muted-foreground text-sm font-body py-4 text-center">
+                No forum posts yet.{" "}
+                <Link to="/forum" className="text-primary hover:underline">Start a discussion →</Link>
+              </p>
+            ) : (
+              <div className="space-y-2">
+                {forumTopics.map((topic: any) => (
+                  <Link
+                    key={topic.id}
+                    to={`/forum/${topic.category?.slug ?? "general"}/${topic.id}`}
+                    className="block p-3 rounded-lg border border-border hover:border-primary/30 hover:bg-primary/5 transition-colors"
+                  >
+                    <p className="font-body text-sm font-medium text-foreground">{topic.title}</p>
+                    <div className="flex items-center gap-3 mt-1 text-xs text-muted-foreground font-body">
+                      {topic.category && <span>{topic.category.name}</span>}
+                      <span>{topic.reply_count} replies</span>
+                      <span>{formatDistanceToNow(new Date(topic.created_at), { addSuffix: true })}</span>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Upcoming Events */}
+          <div className="bg-card border border-border rounded-2xl p-6 mt-8">
+            <h2 className="font-display text-lg font-bold text-foreground flex items-center gap-2 mb-4">
+              <Calendar className="h-5 w-5" /> Upcoming Events
+            </h2>
+            {!upcomingRsvps || upcomingRsvps.length === 0 ? (
+              <p className="text-muted-foreground text-sm font-body py-4 text-center">
+                No upcoming RSVPs.{" "}
+                <Link to="/events" className="text-primary hover:underline">Browse events →</Link>
+              </p>
+            ) : (
+              <div className="space-y-2">
+                {upcomingRsvps.map((event: any) => (
+                  <Link
+                    key={event.id}
+                    to="/events"
+                    className="block p-3 rounded-lg border border-border hover:border-primary/30 hover:bg-primary/5 transition-colors"
+                  >
+                    <p className="font-body text-sm font-medium text-foreground">{event.title}</p>
+                    <div className="flex items-center gap-3 mt-1 text-xs text-muted-foreground font-body">
+                      <span>{new Date(event.starts_at).toLocaleDateString()}</span>
+                      {event.location && <span>{event.location}</span>}
+                      {event.is_online && <Badge variant="secondary" className="text-[10px] px-1 py-0">Online</Badge>}
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            )}
+          </div>
+
           {/* Inbox */}
           <div className="bg-card border border-border rounded-2xl p-6 mt-8">
             <div className="flex items-center justify-between mb-4">
