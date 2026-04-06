@@ -9,7 +9,8 @@ import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
-import { Search, Users, Linkedin, Building2, ExternalLink, ShieldCheck } from "lucide-react";
+import { Search, Users, Linkedin, Building2, ExternalLink, ShieldCheck, Zap } from "lucide-react";
+import { Switch } from "@/components/ui/switch";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Navigate } from "react-router-dom";
 import { useIsAdmin } from "@/hooks/useAdminShowcase";
@@ -31,6 +32,7 @@ interface MemberProfile {
   company: string | null;
   linkedin_url: string | null;
   membership_tier: "starter" | "viber" | "vibetor";
+  viber_access_override: boolean;
   created_at: string;
 }
 
@@ -62,12 +64,29 @@ const Members = () => {
     },
   });
 
+  const toggleOverrideMutation = useMutation({
+    mutationFn: async ({ userId, override }: { userId: string; override: boolean }) => {
+      const { error } = await supabase
+        .from("profiles")
+        .update({ viber_access_override: override } as any)
+        .eq("user_id", userId);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["members"] });
+      toast.success("Viber access updated");
+    },
+    onError: (err: Error) => {
+      toast.error(err.message);
+    },
+  });
+
   const { data: members, isLoading } = useQuery({
     queryKey: ["members"],
     queryFn: async () => {
       const { data, error } = await supabase
         .from("profiles")
-        .select("id, user_id, display_name, avatar_url, bio, company, linkedin_url, membership_tier, created_at")
+        .select("id, user_id, display_name, avatar_url, bio, company, linkedin_url, membership_tier, viber_access_override, created_at")
         .order("created_at", { ascending: false });
       if (error) throw error;
       return data as MemberProfile[];
@@ -227,6 +246,11 @@ const Members = () => {
                                 VIBETOR
                               </Badge>
                             )}
+                            {member.membership_tier === "starter" && member.viber_access_override && (
+                              <Badge variant="outline" className="text-[10px] px-1.5 py-0 border-primary text-primary">
+                                VIBER ACCESS
+                              </Badge>
+                            )}
                           </div>
                           {member.company && (
                             <p className="text-sm text-muted-foreground flex items-center gap-1 truncate">
@@ -277,6 +301,24 @@ const Members = () => {
                               </SelectContent>
                             </Select>
                           </div>
+                          {member.membership_tier === "starter" && (
+                            <div className="flex items-center gap-2 mt-2">
+                              <Zap className="h-4 w-4 text-muted-foreground" />
+                              <span className="text-xs text-muted-foreground">Viber access:</span>
+                              <Switch
+                                checked={member.viber_access_override}
+                                onCheckedChange={(checked) =>
+                                  toggleOverrideMutation.mutate({ userId: member.user_id, override: checked })
+                                }
+                                className="scale-75"
+                              />
+                              {member.viber_access_override && (
+                                <Badge variant="outline" className="text-[9px] px-1.5 py-0 border-primary text-primary">
+                                  GRANTED
+                                </Badge>
+                              )}
+                            </div>
+                          )}
                         </div>
                       )}
                     </CardContent>
