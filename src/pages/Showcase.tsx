@@ -30,9 +30,7 @@ const typeIcons: Record<ShowcaseType, React.ElementType> = {
 const ShowcaseCard = ({ item }: { item: ShowcaseItem }) => {
   const [reviewOpen, setReviewOpen] = useState(false);
   const { t } = useTranslation();
-  const { user } = useAuth();
   const Icon = typeIcons[item.type];
-  const isOwn = user?.id === item.user_id;
 
   return (
     <motion.div
@@ -54,7 +52,6 @@ const ShowcaseCard = ({ item }: { item: ShowcaseItem }) => {
               </div>
               <CardTitle className="text-lg">{item.title}</CardTitle>
             </div>
-            {isOwn && item.status !== "approved" && <StatusBadge status={item.status} />}
           </div>
           <div className="flex flex-wrap gap-1.5 mt-2">
             {item.category_tags?.map((tag) => (
@@ -64,12 +61,6 @@ const ShowcaseCard = ({ item }: { item: ShowcaseItem }) => {
         </CardHeader>
         <CardContent className="flex-1">
           <p className="text-sm text-muted-foreground font-body">{item.description}</p>
-          {isOwn && item.status === "rejected" && item.rejection_reason && (
-            <div className="mt-2 p-2 bg-destructive/10 rounded-md">
-              <p className="text-xs font-semibold text-destructive">{t("showcase.rejectionReason")}:</p>
-              <p className="text-xs text-destructive/80 font-body">{item.rejection_reason}</p>
-            </div>
-          )}
           {item.pricing_info && (
             <p className="mt-2 text-sm font-semibold text-primary font-body">{item.pricing_info}</p>
           )}

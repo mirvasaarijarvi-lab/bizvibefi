@@ -5,7 +5,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { useTranslation } from "@/i18n/useTranslation";
 import { useToast } from "@/hooks/use-toast";
-import { useUpdateShowcaseStatus } from "@/hooks/useAdminShowcase";
+import { useUpdateShowcaseStatus, useBulkUpdateShowcaseStatus } from "@/hooks/useAdminShowcase";
 import { Loader2, XCircle } from "lucide-react";
 
 interface RejectDialogProps {
@@ -13,12 +13,16 @@ interface RejectDialogProps {
   itemTitle: string;
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  bulk?: boolean;
+  bulkIds?: string[];
+  onBulkComplete?: () => void;
 }
 
-const RejectDialog = ({ itemId, itemTitle, open, onOpenChange }: RejectDialogProps) => {
+const RejectDialog = ({ itemId, itemTitle, open, onOpenChange, bulk, bulkIds, onBulkComplete }: RejectDialogProps) => {
   const { t } = useTranslation();
   const { toast } = useToast();
   const updateStatus = useUpdateShowcaseStatus();
+  const bulkUpdate = useBulkUpdateShowcaseStatus();
   const [reason, setReason] = useState("");
 
   const handleReject = async () => {
@@ -28,18 +32,30 @@ const RejectDialog = ({ itemId, itemTitle, open, onOpenChange }: RejectDialogPro
     }
 
     try {
-      await updateStatus.mutateAsync({
-        id: itemId,
-        status: "rejected",
-        rejection_reason: reason.trim(),
-      });
-      toast({ title: t("admin.showcase.reject.success") });
+      if (bulk && bulkIds) {
+        await bulkUpdate.mutateAsync({
+          ids: bulkIds,
+          status: "rejected",
+          rejection_reason: reason.trim(),
+        });
+        toast({ title: t("admin.showcase.bulk.success").replace("{count}", String(bulkIds.length)) });
+        onBulkComplete?.();
+      } else {
+        await updateStatus.mutateAsync({
+          id: itemId,
+          status: "rejected",
+          rejection_reason: reason.trim(),
+        });
+        toast({ title: t("admin.showcase.reject.success") });
+      }
       setReason("");
       onOpenChange(false);
     } catch {
       toast({ title: t("admin.showcase.reject.failed"), variant: "destructive" });
     }
   };
+
+  const isPending = bulk ? bulkUpdate.isPending : updateStatus.isPending;
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -66,9 +82,9 @@ const RejectDialog = ({ itemId, itemTitle, open, onOpenChange }: RejectDialogPro
           <Button
             variant="destructive"
             onClick={handleReject}
-            disabled={updateStatus.isPending || !reason.trim()}
+            disabled={isPending || !reason.trim()}
           >
-            {updateStatus.isPending && <Loader2 className="mr-1 h-4 w-4 animate-spin" />}
+            {isPending && <Loader2 className="mr-1 h-4 w-4 animate-spin" />}
             <XCircle className="mr-1 h-3 w-3" />
             {t("admin.showcase.reject.confirm")}
           </Button>

@@ -80,6 +80,28 @@ export const useUpdateShowcaseStatus = () => {
   });
 };
 
+export const useBulkUpdateShowcaseStatus = () => {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ ids, status, rejection_reason }: { ids: string[]; status: ApprovalStatus; rejection_reason?: string }) => {
+      const update: Record<string, unknown> = { status };
+      if (status === "rejected" && rejection_reason) {
+        update.rejection_reason = rejection_reason;
+      } else if (status !== "rejected") {
+        update.rejection_reason = null;
+      }
+      const { error } = await supabase
+        .from("showcase_items")
+        .update(update)
+        .in("id", ids);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["showcase"] });
+    },
+  });
+};
+
 export const useUpdateShowcaseImage = () => {
   const qc = useQueryClient();
   return useMutation({

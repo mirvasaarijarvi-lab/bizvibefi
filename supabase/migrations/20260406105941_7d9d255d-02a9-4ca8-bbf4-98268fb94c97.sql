@@ -1,1 +1,0 @@
-ALTER TABLE public.showcase_items ADD COLUMN rejection_reason text;
