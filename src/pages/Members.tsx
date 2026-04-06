@@ -69,7 +69,7 @@ const Members = () => {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("profiles")
-        .select("id, user_id, display_name, avatar_url, bio, company, linkedin_url, membership_tier, created_at")
+        .select("id, user_id, display_name, avatar_url, bio, company, linkedin_url, membership_tier, viber_access_override, created_at")
         .order("created_at", { ascending: false });
       if (error) throw error;
       return data as MemberProfile[];
