@@ -456,7 +456,7 @@ export type Database = {
       app_role: "superadmin" | "admin" | "moderator" | "user"
       approval_status: "pending" | "approved" | "rejected"
       event_type: "meetup" | "webinar" | "workshop" | "hackathon"
-      membership_tier: "starter" | "viber"
+      membership_tier: "starter" | "viber" | "vibetor"
       rsvp_status: "going" | "maybe" | "cancelled"
       showcase_type: "case_study" | "testimonial" | "tool"
     }
@@ -589,7 +589,7 @@ export const Constants = {
       app_role: ["superadmin", "admin", "moderator", "user"],
       approval_status: ["pending", "approved", "rejected"],
       event_type: ["meetup", "webinar", "workshop", "hackathon"],
-      membership_tier: ["starter", "viber"],
+      membership_tier: ["starter", "viber", "vibetor"],
       rsvp_status: ["going", "maybe", "cancelled"],
       showcase_type: ["case_study", "testimonial", "tool"],
     },
