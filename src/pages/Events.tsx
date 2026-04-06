@@ -549,10 +549,16 @@ const Events = () => {
                   )}
               </span>
               {event.location && (
-                <span className="flex items-center gap-1">
+                <a
+                  href={googleMapsUrl(event.location)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-1 hover:text-foreground transition-colors"
+                >
                   <MapPin className="h-3.5 w-3.5" />
                   {event.location}
-                </span>
+                  <ExternalLink className="h-3 w-3" />
+                </a>
               )}
               {!isPastEvent && (
                 <span className="flex items-center gap-1">
