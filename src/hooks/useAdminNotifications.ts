@@ -22,7 +22,7 @@ export const useAdminNotifications = () => {
   useEffect(() => {
     if (!isAdmin) return;
     const channel = supabase
-      .channel("admin-notifications")
+      .channel(`admin-notifications-${Date.now()}`)
       .on(
         "postgres_changes",
         { event: "INSERT", schema: "public", table: "admin_notifications" },
