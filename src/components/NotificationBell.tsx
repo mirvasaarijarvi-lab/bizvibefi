@@ -87,7 +87,7 @@ const NotificationBell = () => {
                           <div className="flex items-center gap-2">
                             <p className="font-display text-sm font-semibold truncate">{n.title}</p>
                             {n.type === "vibetor_request" && (
-                              <Badge className="bg-amber-500/90 hover:bg-amber-500 text-[9px] px-1 py-0 shrink-0">
+                              <Badge className="bg-vibetor/90 hover:bg-vibetor text-[9px] px-1 py-0 shrink-0">
                                 VIBETOR
                               </Badge>
                             )}

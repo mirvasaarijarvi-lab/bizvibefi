@@ -148,7 +148,7 @@ const Profile = () => {
                 <div className="flex items-center gap-2">
                   <p className="font-display font-bold text-foreground">{displayName || "Set your name"}</p>
                   {profile?.membership_tier === "vibetor" && (
-                    <Badge className="bg-amber-500/90 hover:bg-amber-500 text-primary-foreground text-[10px] px-1.5 py-0">VIBETOR</Badge>
+                    <Badge className="bg-vibetor/90 hover:bg-vibetor text-primary-foreground text-[10px] px-1.5 py-0">VIBETOR</Badge>
                   )}
                   {profile?.membership_tier === "viber" && (
                     <Badge variant="default" className="text-[10px] px-1.5 py-0">VIBER</Badge>

@@ -218,7 +218,7 @@ const ForumCategory = () => {
 
                 return (
                   <div key={topic.id} className={`bg-card border rounded-xl p-4 transition-colors ${
-                    !topicApproved ? "border-amber-500/30" : "border-border hover:border-primary/40"
+                    !topicApproved ? "border-vibetor/30" : "border-border hover:border-primary/40"
                   }`}>
                     <Link
                       to={topicApproved || isAdmin ? `/forum/${slug}/${topic.id}` : "#"}
@@ -237,12 +237,12 @@ const ForumCategory = () => {
                             {topic.is_locked && <Lock className="h-3.5 w-3.5 text-muted-foreground flex-shrink-0" />}
                             <h3 className="font-display font-semibold text-foreground truncate">{topic.title}</h3>
                             {pendingForUser && (
-                              <Badge variant="outline" className="text-amber-500 border-amber-500/30 text-xs gap-1">
+                              <Badge variant="outline" className="text-vibetor border-vibetor/30 text-xs gap-1">
                                 <Clock className="h-3 w-3" /> Pending
                               </Badge>
                             )}
                             {pendingForAdmin && (
-                              <Badge variant="outline" className="text-amber-500 border-amber-500/30 text-xs gap-1">
+                              <Badge variant="outline" className="text-vibetor border-vibetor/30 text-xs gap-1">
                                 <Clock className="h-3 w-3" /> Needs Approval
                               </Badge>
                             )}

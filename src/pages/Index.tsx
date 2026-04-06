@@ -235,20 +235,20 @@ const VibetorTierCard = () => {
       initial={{ opacity: 0, x: 20 }}
       whileInView={{ opacity: 1, x: 0 }}
       viewport={{ once: true }}
-      className="group bg-card border-2 border-amber-500/60 rounded-2xl p-8 relative overflow-hidden hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
+      className="group bg-card border-2 border-vibetor/60 rounded-2xl p-8 relative overflow-hidden hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
     >
-      <div className="absolute top-0 right-0 bg-amber-500/90 text-primary-foreground text-xs font-display font-semibold px-4 py-1.5 rounded-bl-xl">
+      <div className="absolute top-0 right-0 bg-vibetor/90 text-primary-foreground text-xs font-display font-semibold px-4 py-1.5 rounded-bl-xl">
         {t("tiers.vibetor.label")}
       </div>
-      <div className="w-12 h-12 rounded-xl bg-amber-500/90 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+      <div className="w-12 h-12 rounded-xl bg-vibetor/90 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
         <Gem className="h-6 w-6 text-primary-foreground" />
       </div>
       <h3 className="font-display text-2xl font-bold tracking-[-0.01em]">{t("tiers.vibetor.name")}</h3>
-      <p className="text-amber-500 font-display text-lg font-semibold mt-1">{t("tiers.vibetor.price")}</p>
+      <p className="text-vibetor font-display text-lg font-semibold mt-1">{t("tiers.vibetor.price")}</p>
       <ul className="mt-6 space-y-3 font-body text-sm text-muted-foreground">
         {[0, 1, 2, 3, 4].map((i) => (
           <li key={i} className="flex items-start gap-2">
-            <Zap className="h-4 w-4 text-amber-500 mt-0.5 shrink-0" />
+            <Zap className="h-4 w-4 text-vibetor mt-0.5 shrink-0" />
             {t(`tiers.vibetor.benefits.${i}`)}
           </li>
         ))}

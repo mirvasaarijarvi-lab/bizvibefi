@@ -252,7 +252,7 @@ const Members = () => {
                               </Badge>
                             )}
                             {member.membership_tier === "vibetor" && (
-                              <Badge variant="default" className="text-[10px] px-1.5 py-0 bg-amber-500/90 hover:bg-amber-500">
+                              <Badge variant="default" className="text-[10px] px-1.5 py-0 bg-vibetor/90 hover:bg-vibetor">
                                 VIBETOR
                               </Badge>
                             )}

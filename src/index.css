@@ -28,6 +28,12 @@
     --electric-pale: 220 100% 83%;
     --electric-deep: 225 100% 50%;
 
+    /* Vibetor (Amber/Gold) */
+    --vibetor: 38 92% 50%;
+    --vibetor-soft: 38 100% 70%;
+    --vibetor-ghost: 38 100% 92%;
+    --vibetor-deep: 38 80% 40%;
+
     /* Neutrals */
     --void: 240 30% 5%;
     --obsidian: 250 25% 8%;
