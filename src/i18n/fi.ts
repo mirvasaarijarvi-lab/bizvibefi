@@ -6,6 +6,7 @@ const fi = {
     about: "Meistä",
     contact: "Yhteystiedot",
     joinCta: "Liity mukaan",
+    showcase: "Näyteikkuna",
   },
   hero: {
     tag: "Kollektiivi",

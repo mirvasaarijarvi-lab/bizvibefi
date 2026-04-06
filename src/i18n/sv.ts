@@ -6,6 +6,7 @@ const sv = {
     about: "Om oss",
     contact: "Kontakt",
     joinCta: "Häng med",
+    showcase: "Skyltfönster",
   },
   hero: {
     tag: "Kollektivet",
