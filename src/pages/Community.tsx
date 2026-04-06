@@ -96,18 +96,18 @@ const Community = () => {
         <div className="container">
           <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
             <div className="flex items-center gap-3 mb-8">
-              <div className="w-10 h-10 rounded-lg bg-amber-500/90 flex items-center justify-center">
+              <div className="w-10 h-10 rounded-lg bg-vibetor/90 flex items-center justify-center">
                 <Gem className="h-5 w-5 text-primary-foreground" />
               </div>
               <div>
                 <h2 className="font-display text-2xl md:text-3xl font-bold tracking-[-0.02em]">{t("community.vibetor.name")}</h2>
-                <p className="text-amber-500 font-body font-semibold">{t("community.vibetor.price")}</p>
+                <p className="text-vibetor font-body font-semibold">{t("community.vibetor.price")}</p>
               </div>
             </div>
             <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
               {vibetorIcons.map((Icon, i) => (
-                <div key={i} className="bg-card border-2 border-amber-500/30 rounded-xl p-6 hover:border-amber-500/60 transition-colors">
-                  <Icon className="h-6 w-6 text-amber-500 mb-4" />
+                <div key={i} className="bg-card border-2 border-vibetor/30 rounded-xl p-6 hover:border-vibetor/60 transition-colors">
+                  <Icon className="h-6 w-6 text-vibetor mb-4" />
                   <h3 className="font-display text-lg font-semibold tracking-[-0.01em]">{t(`community.vibetor.benefits.${i}.title`)}</h3>
                   <p className="mt-2 text-sm text-muted-foreground font-body">{t(`community.vibetor.benefits.${i}.desc`)}</p>
                 </div>
