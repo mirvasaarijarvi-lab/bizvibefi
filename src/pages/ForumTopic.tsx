@@ -7,11 +7,13 @@ import PageMeta from "@/components/PageMeta";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { ArrowLeft, MessageSquare, Send } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { ArrowLeft, MessageSquare, Send, Building2, Briefcase, CalendarClock, DollarSign, User, Mail, Flag, FileText } from "lucide-react";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { formatDistanceToNow } from "date-fns";
 import type { Profile } from "@/hooks/useProfile";
+import { parseLeadContent } from "@/pages/ForumCategory";
 
 interface ReplyWithProfile {
   id: string;
@@ -128,7 +130,75 @@ const ForumTopic = () => {
                   </span>
                 </div>
               </div>
-              <p className="text-foreground font-body whitespace-pre-wrap">{topic.content}</p>
+              {(() => {
+                const lead = parseLeadContent(topic.content);
+                if (lead) {
+                  const priorityColor = lead.priority === "urgent" ? "text-destructive" : lead.priority === "high" ? "text-vibetor" : "text-muted-foreground";
+                  return (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 font-body">
+                      {lead.customer_name && (
+                        <div className="flex items-start gap-2">
+                          <Building2 className="h-4 w-4 mt-0.5 text-muted-foreground shrink-0" />
+                          <div><p className="text-xs text-muted-foreground">Customer</p><p className="text-sm font-medium">{lead.customer_name}</p></div>
+                        </div>
+                      )}
+                      {lead.industry && (
+                        <div className="flex items-start gap-2">
+                          <Briefcase className="h-4 w-4 mt-0.5 text-muted-foreground shrink-0" />
+                          <div><p className="text-xs text-muted-foreground">Industry</p><p className="text-sm">{lead.industry}</p></div>
+                        </div>
+                      )}
+                      {lead.use_case && (
+                        <div className="sm:col-span-2 flex items-start gap-2">
+                          <FileText className="h-4 w-4 mt-0.5 text-muted-foreground shrink-0" />
+                          <div><p className="text-xs text-muted-foreground">Use Case / Opportunity</p><p className="text-sm whitespace-pre-wrap">{lead.use_case}</p></div>
+                        </div>
+                      )}
+                      {lead.timeline && (
+                        <div className="flex items-start gap-2">
+                          <CalendarClock className="h-4 w-4 mt-0.5 text-muted-foreground shrink-0" />
+                          <div><p className="text-xs text-muted-foreground">Timeline</p><p className="text-sm">{lead.timeline}</p></div>
+                        </div>
+                      )}
+                      {lead.budget && (
+                        <div className="flex items-start gap-2">
+                          <DollarSign className="h-4 w-4 mt-0.5 text-muted-foreground shrink-0" />
+                          <div><p className="text-xs text-muted-foreground">Budget</p><p className="text-sm">{lead.budget}</p></div>
+                        </div>
+                      )}
+                      {lead.priority && (
+                        <div className="flex items-start gap-2">
+                          <Flag className={`h-4 w-4 mt-0.5 shrink-0 ${priorityColor}`} />
+                          <div><p className="text-xs text-muted-foreground">Priority</p>
+                            <Badge variant="outline" className={`text-xs capitalize ${priorityColor}`}>{lead.priority}</Badge>
+                          </div>
+                        </div>
+                      )}
+                      {lead.contact_person && (
+                        <div className="flex items-start gap-2">
+                          <User className="h-4 w-4 mt-0.5 text-muted-foreground shrink-0" />
+                          <div><p className="text-xs text-muted-foreground">Contact Person</p><p className="text-sm">{lead.contact_person}</p></div>
+                        </div>
+                      )}
+                      {lead.contact_email && (
+                        <div className="flex items-start gap-2">
+                          <Mail className="h-4 w-4 mt-0.5 text-muted-foreground shrink-0" />
+                          <div><p className="text-xs text-muted-foreground">Contact Email</p>
+                            <a href={`mailto:${lead.contact_email}`} className="text-sm text-primary hover:underline">{lead.contact_email}</a>
+                          </div>
+                        </div>
+                      )}
+                      {lead.notes && (
+                        <div className="sm:col-span-2 flex items-start gap-2">
+                          <FileText className="h-4 w-4 mt-0.5 text-muted-foreground shrink-0" />
+                          <div><p className="text-xs text-muted-foreground">Additional Notes</p><p className="text-sm whitespace-pre-wrap">{lead.notes}</p></div>
+                        </div>
+                      )}
+                    </div>
+                  );
+                }
+                return <p className="text-foreground font-body whitespace-pre-wrap">{topic.content}</p>;
+              })()}
             </div>
           )}
 
