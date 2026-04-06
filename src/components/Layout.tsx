@@ -4,6 +4,7 @@ import Footer from "./Footer";
 import CookieConsent from "./CookieConsent";
 import AccessibilityWidget from "./AccessibilityWidget";
 import SupportChat from "./SupportChat";
+import Breadcrumbs from "./Breadcrumbs";
 
 const Layout = ({ children }: { children: ReactNode }) => (
   <div className="min-h-screen flex flex-col">
@@ -11,7 +12,10 @@ const Layout = ({ children }: { children: ReactNode }) => (
       Skip to content
     </a>
     <Navbar />
-    <main id="main-content" className="flex-1 pt-16">{children}</main>
+    <main id="main-content" className="flex-1 pt-16">
+      <Breadcrumbs />
+      {children}
+    </main>
     <Footer />
     <CookieConsent />
     <AccessibilityWidget />

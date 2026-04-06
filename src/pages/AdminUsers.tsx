@@ -176,12 +176,6 @@ const AdminUsers = () => {
       />
       <section className="py-24 md:py-32">
         <div className="container max-w-4xl">
-          <Link
-            to="/admin/showcase"
-            className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground font-body mb-6"
-          >
-            <ArrowLeft className="h-4 w-4" /> Admin Panel
-          </Link>
 
           <div className="flex items-center gap-3 mb-2">
             <UserCog className="h-6 w-6 text-primary" />
