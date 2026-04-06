@@ -25,6 +25,22 @@ interface Visibility {
   website_links?: boolean;
 }
 
+interface MemberData {
+  id: string;
+  user_id: string;
+  display_name: string | null;
+  avatar_url: string | null;
+  bio: string | null;
+  company: string | null;
+  linkedin_url: string | null;
+  contact_email: string | null;
+  contact_phone: string | null;
+  membership_tier: string;
+  website_links: { label?: string; url: string }[] | null;
+  profile_visibility: Visibility | null;
+  role?: string;
+}
+
 const defaultVisibility: Visibility = {
   bio: true,
   company: true,
