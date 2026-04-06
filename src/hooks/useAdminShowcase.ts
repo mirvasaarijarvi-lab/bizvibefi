@@ -73,3 +73,19 @@ export const useUpdateShowcaseStatus = () => {
     },
   });
 };
+
+export const useUpdateShowcaseImage = () => {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ id, image_url }: { id: string; image_url: string | null }) => {
+      const { error } = await supabase
+        .from("showcase_items")
+        .update({ image_url })
+        .eq("id", id);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["showcase"] });
+    },
+  });
+};

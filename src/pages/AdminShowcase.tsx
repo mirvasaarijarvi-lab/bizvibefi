@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Navigate } from "react-router-dom";
 import Layout from "@/components/Layout";
 import PageMeta from "@/components/PageMeta";
@@ -13,10 +13,12 @@ import {
   usePendingShowcaseItems,
   useAllShowcaseItems,
   useUpdateShowcaseStatus,
+  useUpdateShowcaseImage,
 } from "@/hooks/useAdminShowcase";
 import type { ShowcaseItem, ApprovalStatus } from "@/hooks/useShowcase";
-import { CheckCircle, XCircle, Clock, ExternalLink, Lightbulb, MessageSquare, Wrench } from "lucide-react";
+import { CheckCircle, XCircle, Clock, ExternalLink, Lightbulb, MessageSquare, Wrench, ImagePlus, Trash2, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 
 const typeIcons: Record<string, React.ElementType> = {
   case_study: Lightbulb,
@@ -33,7 +35,10 @@ const statusConfig: Record<ApprovalStatus, { icon: React.ElementType; variant: "
 const AdminItemCard = ({ item }: { item: ShowcaseItem }) => {
   const { t } = useTranslation();
   const updateStatus = useUpdateShowcaseStatus();
+  const updateImage = useUpdateShowcaseImage();
   const { toast } = useToast();
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [uploading, setUploading] = useState(false);
   const Icon = typeIcons[item.type] || Lightbulb;
   const statusInfo = statusConfig[item.status];
   const StatusIcon = statusInfo.icon;
@@ -47,13 +52,101 @@ const AdminItemCard = ({ item }: { item: ShowcaseItem }) => {
     }
   };
 
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (file.size > 5 * 1024 * 1024) {
+      toast({ title: t("showcase.fileTooLarge"), variant: "destructive" });
+      return;
+    }
+    if (!file.type.startsWith("image/")) {
+      toast({ title: t("showcase.invalidFileType"), variant: "destructive" });
+      return;
+    }
+
+    setUploading(true);
+    try {
+      const ext = file.name.split(".").pop();
+      const path = `admin/${item.id}/${Date.now()}.${ext}`;
+      const { error: uploadError } = await supabase.storage
+        .from("showcase-images")
+        .upload(path, file, { upsert: true });
+      if (uploadError) throw uploadError;
+
+      const { data: urlData } = supabase.storage
+        .from("showcase-images")
+        .getPublicUrl(path);
+
+      await updateImage.mutateAsync({ id: item.id, image_url: urlData.publicUrl });
+      toast({ title: t("admin.showcase.imageUpdated") });
+    } catch {
+      toast({ title: t("admin.showcase.imageUploadFailed"), variant: "destructive" });
+    } finally {
+      setUploading(false);
+      if (fileInputRef.current) fileInputRef.current.value = "";
+    }
+  };
+
+  const handleImageRemove = async () => {
+    try {
+      await updateImage.mutateAsync({ id: item.id, image_url: null });
+      toast({ title: t("admin.showcase.imageRemoved") });
+    } catch {
+      toast({ title: "Failed to remove image", variant: "destructive" });
+    }
+  };
+
   return (
     <Card className="flex flex-col">
-      {item.image_url && (
-        <div className="aspect-video w-full overflow-hidden rounded-t-lg">
-          <img src={item.image_url} alt={item.title} className="w-full h-full object-cover" />
-        </div>
-      )}
+      <div className="relative aspect-video w-full overflow-hidden rounded-t-lg bg-muted">
+        {item.image_url ? (
+          <>
+            <img src={item.image_url} alt={item.title} className="w-full h-full object-cover" />
+            <div className="absolute top-2 right-2 flex gap-1">
+              <Button
+                variant="secondary"
+                size="icon"
+                className="h-7 w-7"
+                onClick={() => fileInputRef.current?.click()}
+                disabled={uploading}
+              >
+                {uploading ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <ImagePlus className="h-3.5 w-3.5" />}
+              </Button>
+              <Button
+                variant="destructive"
+                size="icon"
+                className="h-7 w-7"
+                onClick={handleImageRemove}
+                disabled={updateImage.isPending}
+              >
+                <Trash2 className="h-3.5 w-3.5" />
+              </Button>
+            </div>
+          </>
+        ) : (
+          <button
+            className="w-full h-full flex flex-col items-center justify-center gap-2 text-muted-foreground hover:text-primary transition-colors cursor-pointer"
+            onClick={() => fileInputRef.current?.click()}
+            disabled={uploading}
+          >
+            {uploading ? (
+              <Loader2 className="h-6 w-6 animate-spin" />
+            ) : (
+              <>
+                <ImagePlus className="h-6 w-6" />
+                <span className="text-xs font-medium">{t("admin.showcase.addImage")}</span>
+              </>
+            )}
+          </button>
+        )}
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept="image/*"
+          className="hidden"
+          onChange={handleImageUpload}
+        />
+      </div>
       <CardHeader className="pb-3">
         <div className="flex items-start justify-between gap-2">
           <div className="flex items-center gap-2">
