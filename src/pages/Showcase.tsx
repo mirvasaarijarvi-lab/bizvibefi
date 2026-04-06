@@ -15,6 +15,7 @@ import { motion } from "framer-motion";
 import { useTranslation } from "@/i18n/useTranslation";
 import { useAuth } from "@/hooks/useAuth";
 import { useShowcaseItems, useCreateShowcaseItem, useShowcaseReviews, useCreateReview, type ShowcaseType, type ShowcaseItem } from "@/hooks/useShowcase";
+import { useAuth as useAuthForCard } from "@/hooks/useAuth";
 import { Plus, Star, ExternalLink, Clock, CheckCircle, XCircle, ArrowRight, Lightbulb, MessageSquare, Wrench, Upload, X as XIcon } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import ImageDropZone from "@/components/ImageDropZone";
