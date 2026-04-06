@@ -148,12 +148,12 @@ const Profile = () => {
       setDisplayName(profile.display_name ?? "");
       setBio(profile.bio ?? "");
       setCompany(profile.company ?? "");
-      setCompanyUrl((profile as unknown as Record<string, string | null>).company_url ?? "");
+      setCompanyUrl(profile.company_url ?? "");
       setLinkedinUrl(profile.linkedin_url ?? "");
       setContactEmail(profile.contact_email ?? "");
       setContactPhone(profile.contact_phone ?? "");
       setWebsiteLinks(Array.isArray(profile.website_links) ? profile.website_links : []);
-      const vis = (profile as unknown as Record<string, unknown>).profile_visibility;
+      const vis = profile.profile_visibility;
       if (vis && typeof vis === "object") {
         setVisibility((prev) => ({ ...prev, ...vis }));
       }
