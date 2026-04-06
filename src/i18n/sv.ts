@@ -36,7 +36,7 @@ const sv = {
     titleHighlight: "vibba",
     subtitle: "Börja gratis och uppgradera när du är redo.",
     free: {
-      name: "Gratis nivå",
+      name: "Starter",
       price: "€0 / för alltid",
       benefits: [
         "WhatsApp-gemenskap med vägledning",
@@ -44,20 +44,20 @@ const sv = {
         "#shiphappens hackathons",
         "Träffa likasinnade byggare",
       ],
-      cta: "Gå med gratis",
+      cta: "Gå med Starter",
     },
     pro: {
-      name: "Pro-nivå",
-      label: "PRO",
+      name: "Viber",
+      label: "VIBER",
       price: "Betalt medlemskap",
       benefits: [
-        "Allt från gratis nivån",
+        "Allt från Starter",
         "Leadgenerering",
         "Exklusiva kurser och workshops",
         "Investor- och marknadsevent",
-        "Pro WhatsApp-grupp med leads",
+        "Viber WhatsApp-grupp med leads",
       ],
-      cta: "Bli Pro",
+      cta: "Bli Viber",
     },
   },
   ctaSection: {

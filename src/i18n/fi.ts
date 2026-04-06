@@ -36,7 +36,7 @@ const fi = {
     titleHighlight: "vibettää",
     subtitle: "Aloita ilmaiseksi, päivitä kun olet valmis.",
     free: {
-      name: "Ilmainen taso",
+      name: "Starter",
       price: "€0 / ikuisesti",
       benefits: [
         "WhatsApp-yhteisö ja opastus",
@@ -44,20 +44,20 @@ const fi = {
         "#shiphappens hackathonit",
         "Tapaa samanmielisiä rakentajia",
       ],
-      cta: "Liity ilmaiseksi",
+      cta: "Liity Starteriin",
     },
     pro: {
-      name: "Pro-taso",
-      label: "PRO",
+      name: "Viber",
+      label: "VIBER",
       price: "Maksullinen jäsenyys",
       benefits: [
-        "Kaikki ilmaisesta tasosta",
+        "Kaikki Starterista",
         "Liidien generointi",
         "Eksklusiiviset kurssit ja työpajat",
         "Sijoittaja- ja markkinatapahtumat",
-        "Pro WhatsApp -ryhmä liideillä",
+        "Viber WhatsApp -ryhmä liideillä",
       ],
-      cta: "Siirry Prohon",
+      cta: "Siirry Viberiin",
     },
   },
   ctaSection: {
