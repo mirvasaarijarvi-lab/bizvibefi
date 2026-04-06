@@ -17,6 +17,7 @@ export interface ShowcaseItem {
   category_tags: string[];
   pricing_info: string | null;
   status: ApprovalStatus;
+  rejection_reason: string | null;
   created_at: string;
   updated_at: string;
   profiles?: { display_name: string | null; avatar_url: string | null } | null;
