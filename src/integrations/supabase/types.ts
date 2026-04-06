@@ -282,6 +282,7 @@ export type Database = {
           image_url: string | null
           link_url: string | null
           pricing_info: string | null
+          rejection_reason: string | null
           status: Database["public"]["Enums"]["approval_status"]
           title: string
           type: Database["public"]["Enums"]["showcase_type"]
@@ -297,6 +298,7 @@ export type Database = {
           image_url?: string | null
           link_url?: string | null
           pricing_info?: string | null
+          rejection_reason?: string | null
           status?: Database["public"]["Enums"]["approval_status"]
           title: string
           type: Database["public"]["Enums"]["showcase_type"]
@@ -312,6 +314,7 @@ export type Database = {
           image_url?: string | null
           link_url?: string | null
           pricing_info?: string | null
+          rejection_reason?: string | null
           status?: Database["public"]["Enums"]["approval_status"]
           title?: string
           type?: Database["public"]["Enums"]["showcase_type"]
