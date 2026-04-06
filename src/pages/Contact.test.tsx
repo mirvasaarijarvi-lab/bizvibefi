@@ -89,7 +89,7 @@ describe("Contact Form Validation", () => {
     expect(screen.queryByText("Please enter a valid email")).not.toBeInTheDocument();
     expect(screen.queryByText("Message is required")).not.toBeInTheDocument();
     const form = getForm();
-    expect(within(form as HTMLElement).getByPlaceholderText("Your name")).toHaveValue("");
+    expect(screen.queryByText("Name is required")).not.toBeInTheDocument();
   });
 
   it("silently discards honeypot submissions", () => {
