@@ -110,7 +110,7 @@ const sv = {
     vibetor: {
       name: "Vibetor",
       price: "Investerarmedlemskap. Allt från Viber och dessutom:",
-      cta: "Bli Vibetor",
+      cta: "Kontakta oss",
       benefits: [
         { title: "Investoremblem", desc: "Sticka ut med ett verifierat investoremblem på din profil." },
         { title: "Investornätverk", desc: "Anslut till andra investerare och innovatörer i en dedikerad cirkel." },

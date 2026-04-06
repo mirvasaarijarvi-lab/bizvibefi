@@ -110,7 +110,7 @@ const en = {
     vibetor: {
       name: "Vibetor",
       price: "Investor membership. Everything in Viber, plus:",
-      cta: "Become a Vibetor",
+      cta: "Contact Us",
       benefits: [
         { title: "Investor Badge", desc: "Stand out with a verified investor badge on your profile." },
         { title: "Investor Network", desc: "Connect with fellow investors and innovators in a dedicated circle." },
