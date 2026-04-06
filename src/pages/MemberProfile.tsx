@@ -262,6 +262,35 @@ const MemberProfile = () => {
           </motion.div>
         </div>
       </section>
+
+      {/* Contact Request Dialog */}
+      <Dialog open={contactOpen} onOpenChange={setContactOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="font-display">Contact {member.display_name || "Member"}</DialogTitle>
+            <DialogDescription className="font-body">
+              Send a message to introduce yourself or start a conversation. They'll see your name and profile.
+            </DialogDescription>
+          </DialogHeader>
+          <Textarea
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+            placeholder="Hi! I'd love to connect about..."
+            className="font-body min-h-[100px]"
+            maxLength={1000}
+          />
+          <DialogFooter>
+            <Button variant="ghost" onClick={() => setContactOpen(false)} className="font-body">Cancel</Button>
+            <Button
+              onClick={() => sendContactRequest.mutate(message.trim())}
+              disabled={!message.trim() || sendContactRequest.isPending}
+              className="font-body gap-1.5 bg-gradient-storm"
+            >
+              <Send className="h-4 w-4" /> {sendContactRequest.isPending ? "Sending..." : "Send Message"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </Layout>
   );
 };
