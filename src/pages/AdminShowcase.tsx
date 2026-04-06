@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState } from "react";
 import { Navigate } from "react-router-dom";
 import Layout from "@/components/Layout";
 import PageMeta from "@/components/PageMeta";
@@ -19,6 +19,7 @@ import type { ShowcaseItem, ApprovalStatus } from "@/hooks/useShowcase";
 import { CheckCircle, XCircle, Clock, ExternalLink, Lightbulb, MessageSquare, Wrench, ImagePlus, Trash2, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import ImageDropZone from "@/components/ImageDropZone";
 
 const typeIcons: Record<string, React.ElementType> = {
   case_study: Lightbulb,
