@@ -215,6 +215,21 @@ const en = {
     sectionHighlight: "showcase",
     sectionCta: "View all",
   },
+  admin: {
+    showcase: {
+      pageTitle: "Admin — Showcase",
+      pageDesc: "Review and manage pending showcase submissions.",
+      tag: "Admin Panel",
+      title: "Showcase Moderation",
+      subtitle: "Review, approve, or reject community submissions.",
+      tabs: { pending: "Pending", approved: "Approved", rejected: "Rejected", all: "All" },
+      approve: "Approve",
+      reject: "Reject",
+      resetPending: "Reset to Pending",
+      empty: "No items in this category.",
+      submittedAt: "Submitted",
+    },
+  },
 };
 
 export default en;
