@@ -124,7 +124,7 @@ const ForumTopic = () => {
                   </AvatarFallback>
                 </Avatar>
                 <div className="text-sm font-body">
-                  <span className="font-medium text-foreground">{topic.profile?.display_name || "Anonymous"}</span>
+                  <Link to={`/members/${topic.user_id}`} className="font-medium text-foreground hover:underline">{topic.profile?.display_name || "Anonymous"}</Link>
                   <span className="text-muted-foreground ml-2">
                     {formatDistanceToNow(new Date(topic.created_at), { addSuffix: true })}
                   </span>
@@ -225,7 +225,7 @@ const ForumTopic = () => {
                         </AvatarFallback>
                       </Avatar>
                       <div className="text-sm font-body">
-                        <span className="font-medium text-foreground">{reply.profile?.display_name || "Anonymous"}</span>
+                        <Link to={`/members/${reply.user_id}`} className="font-medium text-foreground hover:underline">{reply.profile?.display_name || "Anonymous"}</Link>
                         <span className="text-muted-foreground ml-2">
                           {formatDistanceToNow(new Date(reply.created_at), { addSuffix: true })}
                         </span>
