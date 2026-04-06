@@ -320,6 +320,7 @@ const SubmitForm = ({ onClose }: { onClose: () => void }) => {
       <Button type="submit" disabled={createItem.isPending || uploading} className="w-full">
         {uploading ? t("showcase.uploading") : t("showcase.submitBtn")}
       </Button>
+      <ImageCropDialog file={cropFile} open={cropOpen} onOpenChange={setCropOpen} onCropComplete={handleCropComplete} />
     </form>
   );
 };
