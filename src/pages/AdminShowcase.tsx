@@ -38,7 +38,6 @@ const AdminItemCard = ({ item }: { item: ShowcaseItem }) => {
   const updateStatus = useUpdateShowcaseStatus();
   const updateImage = useUpdateShowcaseImage();
   const { toast } = useToast();
-  const fileInputRef = useRef<HTMLInputElement>(null);
   const [uploading, setUploading] = useState(false);
   const Icon = typeIcons[item.type] || Lightbulb;
   const statusInfo = statusConfig[item.status];
@@ -53,9 +52,7 @@ const AdminItemCard = ({ item }: { item: ShowcaseItem }) => {
     }
   };
 
-  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
+  const handleFileSelected = async (file: File) => {
     if (file.size > 5 * 1024 * 1024) {
       toast({ title: t("showcase.fileTooLarge"), variant: "destructive" });
       return;
@@ -84,7 +81,6 @@ const AdminItemCard = ({ item }: { item: ShowcaseItem }) => {
       toast({ title: t("admin.showcase.imageUploadFailed"), variant: "destructive" });
     } finally {
       setUploading(false);
-      if (fileInputRef.current) fileInputRef.current.value = "";
     }
   };
 
