@@ -15,7 +15,7 @@ import Layout from "@/components/Layout";
 import PageMeta from "@/components/PageMeta";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { Camera, Linkedin, Building, User, Globe, Mail, Phone, Plus, Trash2, Inbox, CheckCheck } from "lucide-react";
+import { Camera, Linkedin, Building, User, Globe, Mail, Phone, Plus, Trash2, Inbox, CheckCheck, MessageSquare, Calendar } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 
 const Profile = () => {
@@ -50,6 +50,57 @@ const Profile = () => {
         ...r,
         sender: profileMap.get(r.from_user_id),
       }));
+    },
+    enabled: !!user,
+  });
+
+  const { data: forumTopics } = useQuery({
+    queryKey: ["profile-forum-topics", user?.id],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("forum_topics")
+        .select("id, title, created_at, category_id, reply_count")
+        .eq("user_id", user!.id)
+        .order("created_at", { ascending: false })
+        .limit(5);
+      if (error) throw error;
+
+      const catIds = [...new Set((data ?? []).map((t: any) => t.category_id))];
+      const { data: cats } = await supabase
+        .from("forum_categories")
+        .select("id, slug, name")
+        .in("id", catIds);
+      const catMap = new Map(cats?.map((c) => [c.id, c]) ?? []);
+
+      return (data ?? []).map((t: any) => ({
+        ...t,
+        category: catMap.get(t.category_id),
+      }));
+    },
+    enabled: !!user,
+  });
+
+  const { data: upcomingRsvps } = useQuery({
+    queryKey: ["profile-rsvps", user?.id],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("event_rsvps")
+        .select("id, status, event_id")
+        .eq("user_id", user!.id)
+        .eq("status", "going");
+      if (error) throw error;
+      if (!data?.length) return [];
+
+      const eventIds = data.map((r: any) => r.event_id);
+      const { data: events } = await supabase
+        .from("events")
+        .select("id, title, starts_at, location, is_online")
+        .in("id", eventIds)
+        .gte("starts_at", new Date().toISOString())
+        .order("starts_at")
+        .limit(5);
+
+      return events ?? [];
     },
     enabled: !!user,
   });
@@ -391,6 +442,66 @@ const Profile = () => {
                 {updateProfile.isPending ? "Saving..." : "Save Profile"}
               </Button>
             </form>
+          </div>
+
+          {/* Forum Activity */}
+          <div className="bg-card border border-border rounded-2xl p-6 mt-8">
+            <h2 className="font-display text-lg font-bold text-foreground flex items-center gap-2 mb-4">
+              <MessageSquare className="h-5 w-5" /> Forum Activity
+            </h2>
+            {!forumTopics || forumTopics.length === 0 ? (
+              <p className="text-muted-foreground text-sm font-body py-4 text-center">
+                No forum posts yet.{" "}
+                <Link to="/forum" className="text-primary hover:underline">Start a discussion →</Link>
+              </p>
+            ) : (
+              <div className="space-y-2">
+                {forumTopics.map((topic: any) => (
+                  <Link
+                    key={topic.id}
+                    to={`/forum/${topic.category?.slug ?? "general"}/${topic.id}`}
+                    className="block p-3 rounded-lg border border-border hover:border-primary/30 hover:bg-primary/5 transition-colors"
+                  >
+                    <p className="font-body text-sm font-medium text-foreground">{topic.title}</p>
+                    <div className="flex items-center gap-3 mt-1 text-xs text-muted-foreground font-body">
+                      {topic.category && <span>{topic.category.name}</span>}
+                      <span>{topic.reply_count} replies</span>
+                      <span>{formatDistanceToNow(new Date(topic.created_at), { addSuffix: true })}</span>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Upcoming Events */}
+          <div className="bg-card border border-border rounded-2xl p-6 mt-8">
+            <h2 className="font-display text-lg font-bold text-foreground flex items-center gap-2 mb-4">
+              <Calendar className="h-5 w-5" /> Upcoming Events
+            </h2>
+            {!upcomingRsvps || upcomingRsvps.length === 0 ? (
+              <p className="text-muted-foreground text-sm font-body py-4 text-center">
+                No upcoming RSVPs.{" "}
+                <Link to="/events" className="text-primary hover:underline">Browse events →</Link>
+              </p>
+            ) : (
+              <div className="space-y-2">
+                {upcomingRsvps.map((event: any) => (
+                  <Link
+                    key={event.id}
+                    to="/events"
+                    className="block p-3 rounded-lg border border-border hover:border-primary/30 hover:bg-primary/5 transition-colors"
+                  >
+                    <p className="font-body text-sm font-medium text-foreground">{event.title}</p>
+                    <div className="flex items-center gap-3 mt-1 text-xs text-muted-foreground font-body">
+                      <span>{new Date(event.starts_at).toLocaleDateString()}</span>
+                      {event.location && <span>{event.location}</span>}
+                      {event.is_online && <Badge variant="secondary" className="text-[10px] px-1 py-0">Online</Badge>}
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            )}
           </div>
 
           {/* Inbox */}

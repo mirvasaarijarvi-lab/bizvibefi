@@ -71,7 +71,14 @@ export const useShowcaseItem = (id: string) => {
         .eq("id", id)
         .single();
       if (error) throw error;
-      return data as unknown as ShowcaseItem;
+
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("display_name, avatar_url")
+        .eq("user_id", data.user_id)
+        .single();
+
+      return { ...data, profiles: profile } as unknown as ShowcaseItem;
     },
     enabled: !!id,
   });

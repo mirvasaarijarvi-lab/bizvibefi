@@ -225,9 +225,18 @@ const AdminNotifications = () => {
                     )}
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 flex-wrap">
-                        <h3 className="font-display font-semibold text-foreground">
+                        <Link
+                          to={
+                            n.type === "vibetor_request" ? "/admin/users" :
+                            n.type === "showcase_submission" ? "/admin/showcase" :
+                            "#"
+                          }
+                          className={`font-display font-semibold text-foreground ${
+                            n.type === "vibetor_request" || n.type === "showcase_submission" ? "hover:underline hover:text-primary" : ""
+                          }`}
+                        >
                           {n.title}
-                        </h3>
+                        </Link>
                         {typeBadge(n.type)}
                       </div>
                       <p className="text-sm text-muted-foreground font-body mt-1">

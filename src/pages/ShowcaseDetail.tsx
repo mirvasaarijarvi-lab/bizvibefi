@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useParams, Link, Navigate } from "react-router-dom";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import Layout from "@/components/Layout";
 import PageMeta from "@/components/PageMeta";
 import { Badge } from "@/components/ui/badge";
@@ -128,11 +129,25 @@ const ShowcaseDetail = () => {
               <h1 className="font-display text-3xl md:text-4xl font-extrabold tracking-tight mb-4">{item.title}</h1>
               <p className="text-lg text-muted-foreground font-body mb-6">{item.description}</p>
 
-              <div className="flex flex-wrap gap-2 mb-6">
+              <div className="flex flex-wrap gap-2 mb-4">
                 {item.category_tags?.map((tag) => (
                   <Badge key={tag} variant="secondary">{tag}</Badge>
                 ))}
               </div>
+
+              {item.profiles?.display_name && (
+                <Link to={`/members/${item.user_id}`} className="inline-flex items-center gap-2 mb-6 group">
+                  <Avatar className="h-6 w-6">
+                    <AvatarImage src={item.profiles.avatar_url ?? undefined} />
+                    <AvatarFallback className="bg-muted text-[10px] font-display">
+                      {item.profiles.display_name.charAt(0).toUpperCase()}
+                    </AvatarFallback>
+                  </Avatar>
+                  <span className="text-sm text-muted-foreground font-body group-hover:text-primary">
+                    {t("showcase.by")} <span className="font-medium">{item.profiles.display_name}</span>
+                  </span>
+                </Link>
+              )}
 
               {item.pricing_info && (
                 <p className="text-lg font-semibold text-primary font-body mb-6">{item.pricing_info}</p>

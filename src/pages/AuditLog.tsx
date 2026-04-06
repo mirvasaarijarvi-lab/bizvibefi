@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import Layout from "@/components/Layout";
 import PageMeta from "@/components/PageMeta";
 import { useAuth } from "@/hooks/useAuth";
@@ -174,7 +175,9 @@ const AuditLog = () => {
                           </Badge>
                         </TableCell>
                         <TableCell className="font-body text-sm font-medium">
-                          {log.target_name}
+                          <Link to={`/members/${log.target_user_id}`} className="text-primary hover:underline">
+                            {log.target_name}
+                          </Link>
                         </TableCell>
                         <TableCell className="font-body text-sm">
                           <span className="text-muted-foreground">{log.old_value}</span>

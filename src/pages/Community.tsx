@@ -205,6 +205,25 @@ const Community = () => {
               </motion.div>
             ))}
           </div>
+
+          {/* Cross-links */}
+          <div className="flex flex-wrap justify-center gap-4 mt-12">
+            <Link to="/events">
+              <Button variant="outline" size="lg" className="font-body gap-2">
+                <Calendar className="h-4 w-4" /> Browse Events
+              </Button>
+            </Link>
+            <Link to="/showcase">
+              <Button variant="outline" size="lg" className="font-body gap-2">
+                <Rocket className="h-4 w-4" /> Explore Showcase
+              </Button>
+            </Link>
+            <Link to="/members">
+              <Button variant="outline" size="lg" className="font-body gap-2">
+                <Users className="h-4 w-4" /> Meet Members
+              </Button>
+            </Link>
+          </div>
         </div>
       </section>
     </Layout>

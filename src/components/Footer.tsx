@@ -19,7 +19,10 @@ const Footer = () => {
               <Link to="/" className="text-sm text-muted-foreground hover:text-purple-soft font-body">{t("nav.home")}</Link>
               <Link to="/community" className="text-sm text-muted-foreground hover:text-purple-soft font-body">{t("nav.community")}</Link>
               <Link to="/get-going" className="text-sm text-muted-foreground hover:text-purple-soft font-body">{t("nav.getGoing")}</Link>
+              <Link to="/showcase" className="text-sm text-muted-foreground hover:text-purple-soft font-body">Showcase</Link>
               <Link to="/forum" className="text-sm text-muted-foreground hover:text-purple-soft font-body">Forum</Link>
+              <Link to="/events" className="text-sm text-muted-foreground hover:text-purple-soft font-body">Events</Link>
+              <Link to="/members" className="text-sm text-muted-foreground hover:text-purple-soft font-body">Members</Link>
             </div>
           </div>
           <div>

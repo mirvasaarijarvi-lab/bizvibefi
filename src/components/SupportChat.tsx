@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect, useCallback } from "react";
+import { Link } from "react-router-dom";
 import { MessageCircle, X, Send, Bot, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
@@ -226,6 +227,15 @@ const SupportChat = () => {
                       <span className="w-1.5 h-1.5 rounded-full bg-muted-foreground/40 animate-bounce [animation-delay:300ms]" />
                     </div>
                   </div>
+                </div>
+              )}
+
+              {/* Fallback contact link */}
+              {messages.length > 2 && (
+                <div className="text-center pt-2">
+                  <Link to="/contact" className="text-xs text-muted-foreground hover:text-primary font-body underline">
+                    Need more help? Submit a detailed request →
+                  </Link>
                 </div>
               )}
             </div>
