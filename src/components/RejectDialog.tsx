@@ -48,7 +48,7 @@ const RejectDialog = ({ itemId, itemTitle, open, onOpenChange }: RejectDialogPro
           <DialogTitle>{t("admin.showcase.reject.title")}</DialogTitle>
         </DialogHeader>
         <p className="text-sm text-muted-foreground font-body">
-          {t("admin.showcase.reject.description", { title: itemTitle })}
+          {t("admin.showcase.reject.description").replace("{title}", itemTitle)}
         </p>
         <div className="space-y-2">
           <Label>{t("admin.showcase.reject.reasonLabel")}</Label>
