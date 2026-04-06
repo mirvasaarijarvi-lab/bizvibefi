@@ -454,10 +454,19 @@ const Events = () => {
     return (
       <div
         key={event.id}
-        className={`bg-card border border-border rounded-2xl p-6 transition-colors ${
+        className={`bg-card border border-border rounded-2xl overflow-hidden transition-colors ${
           isPastEvent ? "" : "hover:border-primary/30"
         }`}
       >
+        {/* Cover image */}
+        {event.image_url && !isPastEvent && (
+          <img
+            src={event.image_url}
+            alt={event.title}
+            className="w-full h-48 object-cover"
+          />
+        )}
+        <div className="p-6">
         <div className="flex flex-col md:flex-row gap-6">
           {/* Date block */}
           {!isPastEvent && (
