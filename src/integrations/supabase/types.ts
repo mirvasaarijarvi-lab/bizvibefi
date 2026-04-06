@@ -238,6 +238,8 @@ export type Database = {
           avatar_url: string | null
           bio: string | null
           company: string | null
+          contact_email: string | null
+          contact_phone: string | null
           created_at: string
           display_name: string | null
           id: string
@@ -245,11 +247,14 @@ export type Database = {
           membership_tier: Database["public"]["Enums"]["membership_tier"]
           updated_at: string
           user_id: string
+          website_links: Json | null
         }
         Insert: {
           avatar_url?: string | null
           bio?: string | null
           company?: string | null
+          contact_email?: string | null
+          contact_phone?: string | null
           created_at?: string
           display_name?: string | null
           id?: string
@@ -257,11 +262,14 @@ export type Database = {
           membership_tier?: Database["public"]["Enums"]["membership_tier"]
           updated_at?: string
           user_id: string
+          website_links?: Json | null
         }
         Update: {
           avatar_url?: string | null
           bio?: string | null
           company?: string | null
+          contact_email?: string | null
+          contact_phone?: string | null
           created_at?: string
           display_name?: string | null
           id?: string
@@ -269,6 +277,7 @@ export type Database = {
           membership_tier?: Database["public"]["Enums"]["membership_tier"]
           updated_at?: string
           user_id?: string
+          website_links?: Json | null
         }
         Relationships: []
       }
