@@ -29,6 +29,18 @@ import { format } from "date-fns";
 
 type ActionFilter = "all" | "tier_change" | "viber_access_override";
 
+interface AuditLogEntry {
+  id: string;
+  action: string;
+  performed_by: string;
+  target_user_id: string;
+  old_value: string | null;
+  new_value: string | null;
+  created_at: string;
+  performed_by_name: string;
+  target_name: string;
+}
+
 const actionLabels: Record<string, { label: string; icon: React.ElementType }> = {
   tier_change: { label: "Tier Change", icon: ArrowUpDown },
   viber_access_override: { label: "Viber Access Override", icon: Zap },
@@ -44,7 +56,7 @@ const AuditLog = () => {
     queryKey: ["audit-log"],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from("audit_log" as any)
+        .from("audit_log")
         .select("*")
         .order("created_at", { ascending: false })
         .limit(500);
@@ -52,7 +64,7 @@ const AuditLog = () => {
 
       // Fetch display names for all user IDs
       const userIds = new Set<string>();
-      (data as any[]).forEach((log: any) => {
+      (data as AuditLogEntry[]).forEach((log) => {
         if (log.performed_by) userIds.add(log.performed_by);
         if (log.target_user_id) userIds.add(log.target_user_id);
       });
@@ -66,7 +78,7 @@ const AuditLog = () => {
         profiles?.map((p) => [p.user_id, p.display_name ?? "Unknown"]) ?? []
       );
 
-      return (data as any[]).map((log: any) => ({
+      return (data as AuditLogEntry[]).map((log) => ({
         ...log,
         performed_by_name: nameMap.get(log.performed_by) ?? "System",
         target_name: nameMap.get(log.target_user_id) ?? "Unknown",
@@ -89,7 +101,7 @@ const AuditLog = () => {
     return <Navigate to="/" replace />;
   }
 
-  const filtered = logs?.filter((log: any) => {
+  const filtered = logs?.filter((log: AuditLogEntry) => {
     if (actionFilter !== "all" && log.action !== actionFilter) return false;
     if (!search) return true;
     const q = search.toLowerCase();
@@ -160,7 +172,7 @@ const AuditLog = () => {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {filtered.map((log: any) => {
+                  {filtered.map((log: AuditLogEntry) => {
                     const config = actionLabels[log.action];
                     const Icon = config?.icon ?? History;
                     return (
