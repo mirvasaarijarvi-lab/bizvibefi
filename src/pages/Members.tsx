@@ -255,6 +255,30 @@ const Members = () => {
                           <ExternalLink className="h-3 w-3" />
                         </a>
                       )}
+
+                      {isAdmin && (
+                        <div className="mt-4 pt-3 border-t border-border">
+                          <div className="flex items-center gap-2">
+                            <ShieldCheck className="h-4 w-4 text-muted-foreground" />
+                            <span className="text-xs text-muted-foreground">Tier:</span>
+                            <Select
+                              value={member.membership_tier}
+                              onValueChange={(val) =>
+                                updateTierMutation.mutate({ userId: member.user_id, tier: val as any })
+                              }
+                            >
+                              <SelectTrigger className="h-7 text-xs w-28">
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="starter">Starter</SelectItem>
+                                <SelectItem value="viber">Viber</SelectItem>
+                                <SelectItem value="vibetor">Vibetor</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </div>
+                        </div>
+                      )}
                     </CardContent>
                   </Card>
                 </motion.div>
