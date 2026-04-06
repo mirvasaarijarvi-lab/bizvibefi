@@ -80,6 +80,12 @@ export default {
           pale: "hsl(var(--electric-pale))",
           deep: "hsl(var(--electric-deep))",
         },
+        vibetor: {
+          DEFAULT: "hsl(var(--vibetor))",
+          soft: "hsl(var(--vibetor-soft))",
+          ghost: "hsl(var(--vibetor-ghost))",
+          deep: "hsl(var(--vibetor-deep))",
+        },
         void: "hsl(var(--void))",
         obsidian: "hsl(var(--obsidian))",
         snow: "hsl(var(--snow))",
