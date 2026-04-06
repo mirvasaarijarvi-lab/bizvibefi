@@ -11,10 +11,59 @@ import { Plus, Pin, Lock, MessageSquare, ArrowLeft, Clock, CheckCircle2, XCircle
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import { formatDistanceToNow } from "date-fns";
 import type { Profile } from "@/hooks/useProfile";
 import { Badge } from "@/components/ui/badge";
+
+const LEAD_PREFIX = "<!--LEAD_JSON-->";
+
+const isLeadCategory = (slug: string | undefined) =>
+  slug === "leads" || slug === "leads-opportunities";
+
+interface LeadFormData {
+  customer_name: string;
+  use_case: string;
+  timeline: string;
+  budget: string;
+  industry: string;
+  contact_person: string;
+  contact_email: string;
+  priority: string;
+  notes: string;
+}
+
+const emptyLead: LeadFormData = {
+  customer_name: "",
+  use_case: "",
+  timeline: "",
+  budget: "",
+  industry: "",
+  contact_person: "",
+  contact_email: "",
+  priority: "medium",
+  notes: "",
+};
+
+export const parseLeadContent = (content: string): LeadFormData | null => {
+  if (!content.startsWith(LEAD_PREFIX)) return null;
+  try {
+    return JSON.parse(content.slice(LEAD_PREFIX.length));
+  } catch {
+    return null;
+  }
+};
+
+const serializeLeadContent = (data: LeadFormData): string =>
+  LEAD_PREFIX + JSON.stringify(data);
 
 const ForumCategory = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -26,6 +75,9 @@ const ForumCategory = () => {
   const [newTitle, setNewTitle] = useState("");
   const [newContent, setNewContent] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const [leadForm, setLeadForm] = useState<LeadFormData>(emptyLead);
+
+  const isLead = isLeadCategory(slug);
 
   const { data: category } = useQuery({
     queryKey: ["forum-category", slug],
@@ -54,7 +106,6 @@ const ForumCategory = () => {
         .order("created_at", { ascending: false });
       if (error) throw error;
 
-      // Fetch profiles for all topic authors
       const userIds = [...new Set(topicsData.map((t) => t.user_id))];
       const { data: profiles } = await supabase
         .from("profiles")
@@ -104,11 +155,22 @@ const ForumCategory = () => {
     if (!user || !category) return;
     setSubmitting(true);
     try {
+      let title: string;
+      let content: string;
+
+      if (isLead) {
+        title = leadForm.customer_name.trim() || "Untitled Lead";
+        content = serializeLeadContent(leadForm);
+      } else {
+        title = newTitle.trim();
+        content = newContent.trim();
+      }
+
       const insertData: any = {
         category_id: category.id,
         user_id: user.id,
-        title: newTitle.trim(),
-        content: newContent.trim(),
+        title,
+        content,
       };
       if (requiresApproval && !isAdmin) {
         insertData.is_approved = false;
@@ -117,12 +179,13 @@ const ForumCategory = () => {
       if (error) throw error;
       setNewTitle("");
       setNewContent("");
+      setLeadForm(emptyLead);
       setShowNewTopic(false);
       queryClient.invalidateQueries({ queryKey: ["forum-topics", category.id] });
       toast({
         title: requiresApproval && !isAdmin
           ? "Lead submitted for approval!"
-          : "Topic created!",
+          : isLead ? "Lead created!" : "Topic created!",
         description: requiresApproval && !isAdmin
           ? "An admin will review your submission before it becomes visible."
           : undefined,
@@ -133,6 +196,158 @@ const ForumCategory = () => {
     } finally {
       setSubmitting(false);
     }
+  };
+
+  const setLead = (field: keyof LeadFormData, value: string) =>
+    setLeadForm((prev) => ({ ...prev, [field]: value }));
+
+  const renderLeadForm = () => (
+    <form onSubmit={handleCreateTopic} className="bg-card border border-border rounded-xl p-5 mb-6 space-y-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="space-y-1.5">
+          <Label className="font-body text-sm">Customer / Company Name *</Label>
+          <Input
+            value={leadForm.customer_name}
+            onChange={(e) => setLead("customer_name", e.target.value)}
+            required
+            maxLength={200}
+            placeholder="Acme Corp"
+            className="font-body"
+          />
+        </div>
+        <div className="space-y-1.5">
+          <Label className="font-body text-sm">Industry</Label>
+          <Input
+            value={leadForm.industry}
+            onChange={(e) => setLead("industry", e.target.value)}
+            maxLength={100}
+            placeholder="e.g. SaaS, Healthcare, Retail"
+            className="font-body"
+          />
+        </div>
+      </div>
+
+      <div className="space-y-1.5">
+        <Label className="font-body text-sm">Use Case / Opportunity *</Label>
+        <Textarea
+          value={leadForm.use_case}
+          onChange={(e) => setLead("use_case", e.target.value)}
+          required
+          maxLength={2000}
+          rows={3}
+          placeholder="Describe the opportunity, what they need, and how the community could help..."
+          className="font-body"
+        />
+      </div>
+
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div className="space-y-1.5">
+          <Label className="font-body text-sm">Timeline</Label>
+          <Input
+            value={leadForm.timeline}
+            onChange={(e) => setLead("timeline", e.target.value)}
+            maxLength={100}
+            placeholder="e.g. Q2 2026, ASAP, 3 months"
+            className="font-body"
+          />
+        </div>
+        <div className="space-y-1.5">
+          <Label className="font-body text-sm">Budget</Label>
+          <Input
+            value={leadForm.budget}
+            onChange={(e) => setLead("budget", e.target.value)}
+            maxLength={100}
+            placeholder="e.g. €10k–€25k, TBD"
+            className="font-body"
+          />
+        </div>
+        <div className="space-y-1.5">
+          <Label className="font-body text-sm">Priority</Label>
+          <Select value={leadForm.priority} onValueChange={(v) => setLead("priority", v)}>
+            <SelectTrigger className="font-body">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="low">Low</SelectItem>
+              <SelectItem value="medium">Medium</SelectItem>
+              <SelectItem value="high">High</SelectItem>
+              <SelectItem value="urgent">Urgent</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="space-y-1.5">
+          <Label className="font-body text-sm">Contact Person</Label>
+          <Input
+            value={leadForm.contact_person}
+            onChange={(e) => setLead("contact_person", e.target.value)}
+            maxLength={100}
+            placeholder="Jane Doe"
+            className="font-body"
+          />
+        </div>
+        <div className="space-y-1.5">
+          <Label className="font-body text-sm">Contact Email</Label>
+          <Input
+            type="email"
+            value={leadForm.contact_email}
+            onChange={(e) => setLead("contact_email", e.target.value)}
+            maxLength={200}
+            placeholder="jane@acme.com"
+            className="font-body"
+          />
+        </div>
+      </div>
+
+      <div className="space-y-1.5">
+        <Label className="font-body text-sm">Additional Notes</Label>
+        <Textarea
+          value={leadForm.notes}
+          onChange={(e) => setLead("notes", e.target.value)}
+          maxLength={2000}
+          rows={2}
+          placeholder="Any extra context, requirements, or links..."
+          className="font-body"
+        />
+      </div>
+
+      <div className="flex gap-2">
+        <Button type="submit" size="sm" className="bg-gradient-storm font-body" disabled={submitting}>
+          {submitting ? "Submitting..." : requiresApproval && !isAdmin ? "Submit for Approval" : "Post Lead"}
+        </Button>
+        <Button type="button" size="sm" variant="ghost" onClick={() => setShowNewTopic(false)} className="font-body">
+          Cancel
+        </Button>
+      </div>
+    </form>
+  );
+
+  const renderTopicPreview = (topic: any) => {
+    const lead = parseLeadContent(topic.content);
+    if (!lead) return null;
+    return (
+      <div className="flex flex-wrap gap-x-4 gap-y-1 mt-1.5 text-xs text-muted-foreground font-body">
+        {lead.industry && <span>🏢 {lead.industry}</span>}
+        {lead.budget && <span>💰 {lead.budget}</span>}
+        {lead.timeline && <span>📅 {lead.timeline}</span>}
+        {lead.priority && lead.priority !== "medium" && (
+          <Badge
+            variant="outline"
+            className={`text-[10px] px-1.5 py-0 ${
+              lead.priority === "urgent"
+                ? "border-destructive text-destructive"
+                : lead.priority === "high"
+                ? "border-vibetor text-vibetor"
+                : "border-muted-foreground"
+            }`}
+          >
+            {lead.priority.toUpperCase()}
+          </Badge>
+        )}
+      </div>
+    );
   };
 
   return (
@@ -162,39 +377,41 @@ const ForumCategory = () => {
                 className="bg-gradient-storm hover:opacity-90 font-body"
                 size="sm"
               >
-                <Plus className="h-4 w-4 mr-1" /> {requiresApproval ? "Submit Lead" : "New Topic"}
+                <Plus className="h-4 w-4 mr-1" /> {isLead ? "Submit Lead" : requiresApproval ? "Submit Lead" : "New Topic"}
               </Button>
             )}
           </div>
 
           {showNewTopic && (
-            <form onSubmit={handleCreateTopic} className="bg-card border border-border rounded-xl p-5 mb-6 space-y-4">
-              <Input
-                placeholder={requiresApproval ? "Lead title" : "Topic title"}
-                value={newTitle}
-                onChange={(e) => setNewTitle(e.target.value)}
-                required
-                maxLength={200}
-                className="font-body"
-              />
-              <Textarea
-                placeholder={requiresApproval ? "Describe the lead..." : "What's on your mind?"}
-                value={newContent}
-                onChange={(e) => setNewContent(e.target.value)}
-                required
-                maxLength={5000}
-                rows={4}
-                className="font-body"
-              />
-              <div className="flex gap-2">
-                <Button type="submit" size="sm" className="bg-gradient-storm font-body" disabled={submitting}>
-                  {submitting ? "Posting..." : requiresApproval ? "Submit for Approval" : "Post Topic"}
-                </Button>
-                <Button type="button" size="sm" variant="ghost" onClick={() => setShowNewTopic(false)} className="font-body">
-                  Cancel
-                </Button>
-              </div>
-            </form>
+            isLead ? renderLeadForm() : (
+              <form onSubmit={handleCreateTopic} className="bg-card border border-border rounded-xl p-5 mb-6 space-y-4">
+                <Input
+                  placeholder={requiresApproval ? "Lead title" : "Topic title"}
+                  value={newTitle}
+                  onChange={(e) => setNewTitle(e.target.value)}
+                  required
+                  maxLength={200}
+                  className="font-body"
+                />
+                <Textarea
+                  placeholder={requiresApproval ? "Describe the lead..." : "What's on your mind?"}
+                  value={newContent}
+                  onChange={(e) => setNewContent(e.target.value)}
+                  required
+                  maxLength={5000}
+                  rows={4}
+                  className="font-body"
+                />
+                <div className="flex gap-2">
+                  <Button type="submit" size="sm" className="bg-gradient-storm font-body" disabled={submitting}>
+                    {submitting ? "Posting..." : requiresApproval ? "Submit for Approval" : "Post Topic"}
+                  </Button>
+                  <Button type="button" size="sm" variant="ghost" onClick={() => setShowNewTopic(false)} className="font-body">
+                    Cancel
+                  </Button>
+                </div>
+              </form>
+            )
           )}
 
           {isLoading ? (
@@ -205,7 +422,7 @@ const ForumCategory = () => {
             <div className="text-center py-12">
               <MessageSquare className="h-12 w-12 text-muted-foreground mx-auto mb-3" />
               <p className="text-muted-foreground font-body">
-                {requiresApproval ? "No leads yet. Be the first to submit one!" : "No topics yet. Be the first to start a discussion!"}
+                {isLead || requiresApproval ? "No leads yet. Be the first to submit one!" : "No topics yet. Be the first to start a discussion!"}
               </p>
             </div>
           ) : (
@@ -247,6 +464,7 @@ const ForumCategory = () => {
                               </Badge>
                             )}
                           </div>
+                          {isLead && renderTopicPreview(topic)}
                           <div className="flex items-center gap-3 mt-1 text-xs text-muted-foreground font-body">
                             <span>{topic.profile?.display_name || "Anonymous"}</span>
                             <span>·</span>
