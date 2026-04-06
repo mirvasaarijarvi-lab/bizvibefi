@@ -328,4 +328,80 @@ const MetricsCounter = () => {
   );
 };
 
+const showcaseTypeIcons: Record<string, React.ElementType> = {
+  case_study: Lightbulb,
+  testimonial: MessageSquare,
+  tool: Wrench,
+};
+
+const ShowcasePreview = () => {
+  const { t } = useTranslation();
+  const { data: items } = useQuery({
+    queryKey: ["showcase-preview"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("showcase_items")
+        .select("*")
+        .eq("status", "approved")
+        .order("created_at", { ascending: false })
+        .limit(3);
+      if (error) throw error;
+      return data ?? [];
+    },
+    staleTime: 60_000,
+  });
+
+  if (!items || items.length === 0) return null;
+
+  return (
+    <section className="py-20 md:py-28 border-t border-border">
+      <div className="container">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="text-center mb-16"
+        >
+          <h2 className="font-display text-3xl md:text-5xl font-bold tracking-[-0.02em]">
+            {t("showcase.sectionTitle")} <span className="text-gradient-storm">{t("showcase.sectionHighlight")}</span>
+          </h2>
+        </motion.div>
+
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
+          {items.map((item, i) => {
+            const Icon = showcaseTypeIcons[item.type] || Lightbulb;
+            return (
+              <motion.div
+                key={item.id}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.08 }}
+                className="bg-card border border-border rounded-xl p-6 hover:border-primary/40 transition-colors"
+              >
+                <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
+                  <Icon className="h-5 w-5 text-primary" />
+                </div>
+                <h3 className="font-display text-lg font-semibold tracking-[-0.01em]">{item.title}</h3>
+                <p className="mt-2 text-sm text-muted-foreground font-body line-clamp-2">{item.description}</p>
+                <div className="flex flex-wrap gap-1.5 mt-3">
+                  {item.category_tags?.slice(0, 3).map((tag: string) => (
+                    <Badge key={tag} variant="secondary" className="text-xs">{tag}</Badge>
+                  ))}
+                </div>
+              </motion.div>
+            );
+          })}
+        </div>
+
+        <div className="mt-12 text-center">
+          <Button variant="heroOutline" size="lg" asChild>
+            <Link to="/showcase">{t("showcase.sectionCta")} <ArrowRight className="ml-2 h-4 w-4" /></Link>
+          </Button>
+        </div>
+      </div>
+    </section>
+  );
+};
+
 export default Index;
