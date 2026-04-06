@@ -228,6 +228,10 @@ const sv = {
       resetPending: "Återställ till väntande",
       empty: "Inga objekt i denna kategori.",
       submittedAt: "Inskickat",
+      addImage: "Lägg till bild",
+      imageUpdated: "Bild uppdaterad",
+      imageRemoved: "Bild borttagen",
+      imageUploadFailed: "Kunde inte ladda upp bild",
     },
   },
 };

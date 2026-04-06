@@ -228,6 +228,10 @@ const fi = {
       resetPending: "Palauta odottavaksi",
       empty: "Ei kohteita tässä kategoriassa.",
       submittedAt: "Lähetetty",
+      addImage: "Lisää kuva",
+      imageUpdated: "Kuva päivitetty",
+      imageRemoved: "Kuva poistettu",
+      imageUploadFailed: "Kuvan lataus epäonnistui",
     },
   },
 };

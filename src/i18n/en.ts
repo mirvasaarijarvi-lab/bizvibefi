@@ -228,6 +228,10 @@ const en = {
       resetPending: "Reset to Pending",
       empty: "No items in this category.",
       submittedAt: "Submitted",
+      addImage: "Add image",
+      imageUpdated: "Image updated",
+      imageRemoved: "Image removed",
+      imageUploadFailed: "Failed to upload image",
     },
   },
 };
