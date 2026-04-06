@@ -9,7 +9,8 @@ import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
-import { Search, Users, Linkedin, Building2, ExternalLink, ShieldCheck } from "lucide-react";
+import { Search, Users, Linkedin, Building2, ExternalLink, ShieldCheck, Zap } from "lucide-react";
+import { Switch } from "@/components/ui/switch";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Navigate } from "react-router-dom";
 import { useIsAdmin } from "@/hooks/useAdminShowcase";
@@ -31,6 +32,7 @@ interface MemberProfile {
   company: string | null;
   linkedin_url: string | null;
   membership_tier: "starter" | "viber" | "vibetor";
+  viber_access_override: boolean;
   created_at: string;
 }
 
