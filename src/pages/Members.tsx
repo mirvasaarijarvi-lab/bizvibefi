@@ -246,6 +246,11 @@ const Members = () => {
                                 VIBETOR
                               </Badge>
                             )}
+                            {member.membership_tier === "starter" && member.viber_access_override && (
+                              <Badge variant="outline" className="text-[10px] px-1.5 py-0 border-primary text-primary">
+                                VIBER ACCESS
+                              </Badge>
+                            )}
                           </div>
                           {member.company && (
                             <p className="text-sm text-muted-foreground flex items-center gap-1 truncate">
