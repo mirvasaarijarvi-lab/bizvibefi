@@ -456,7 +456,7 @@ const Profile = () => {
               </p>
             ) : (
               <div className="space-y-2">
-                {forumTopics.map((topic: any) => (
+                {forumTopics.map((topic) => (
                   <Link
                     key={topic.id}
                     to={`/forum/${topic.category?.slug ?? "general"}/${topic.id}`}
@@ -486,7 +486,7 @@ const Profile = () => {
               </p>
             ) : (
               <div className="space-y-2">
-                {upcomingRsvps.map((event: any) => (
+                {upcomingRsvps.map((event) => (
                   <Link
                     key={event.id}
                     to="/events"
@@ -521,7 +521,7 @@ const Profile = () => {
               </p>
             ) : (
               <div className="space-y-3">
-                {contactRequests.map((req: any) => (
+                {contactRequests.map((req) => (
                   <div
                     key={req.id}
                     className={`p-4 rounded-lg border transition-colors ${
