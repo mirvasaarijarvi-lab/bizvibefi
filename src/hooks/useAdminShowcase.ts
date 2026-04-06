@@ -136,10 +136,9 @@ export const useUpdateShowcaseFields = () => {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: async ({ id, fields }: { id: string; fields: ShowcaseFieldsUpdate }) => {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const { error } = await supabase
         .from("showcase_items")
-        .update(fields as any)
+        .update(fields as unknown as Record<string, unknown>)
         .eq("id", id);
       if (error) throw error;
     },
