@@ -61,11 +61,39 @@ export const useAllShowcaseItems = () => {
 export const useUpdateShowcaseStatus = () => {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: async ({ id, status }: { id: string; status: ApprovalStatus }) => {
+    mutationFn: async ({ id, status, rejection_reason }: { id: string; status: ApprovalStatus; rejection_reason?: string }) => {
+      const update: Record<string, unknown> = { status };
+      if (status === "rejected" && rejection_reason) {
+        update.rejection_reason = rejection_reason;
+      } else if (status !== "rejected") {
+        update.rejection_reason = null;
+      }
       const { error } = await supabase
         .from("showcase_items")
-        .update({ status })
+        .update(update)
         .eq("id", id);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["showcase"] });
+    },
+  });
+};
+
+export const useBulkUpdateShowcaseStatus = () => {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ ids, status, rejection_reason }: { ids: string[]; status: ApprovalStatus; rejection_reason?: string }) => {
+      const update: Record<string, unknown> = { status };
+      if (status === "rejected" && rejection_reason) {
+        update.rejection_reason = rejection_reason;
+      } else if (status !== "rejected") {
+        update.rejection_reason = null;
+      }
+      const { error } = await supabase
+        .from("showcase_items")
+        .update(update)
+        .in("id", ids);
       if (error) throw error;
     },
     onSuccess: () => {

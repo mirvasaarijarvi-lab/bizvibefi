@@ -1,0 +1,97 @@
+import { useState } from "react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import { useTranslation } from "@/i18n/useTranslation";
+import { useToast } from "@/hooks/use-toast";
+import { useUpdateShowcaseStatus, useBulkUpdateShowcaseStatus } from "@/hooks/useAdminShowcase";
+import { Loader2, XCircle } from "lucide-react";
+
+interface RejectDialogProps {
+  itemId: string;
+  itemTitle: string;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  bulk?: boolean;
+  bulkIds?: string[];
+  onBulkComplete?: () => void;
+}
+
+const RejectDialog = ({ itemId, itemTitle, open, onOpenChange, bulk, bulkIds, onBulkComplete }: RejectDialogProps) => {
+  const { t } = useTranslation();
+  const { toast } = useToast();
+  const updateStatus = useUpdateShowcaseStatus();
+  const bulkUpdate = useBulkUpdateShowcaseStatus();
+  const [reason, setReason] = useState("");
+
+  const handleReject = async () => {
+    if (!reason.trim()) {
+      toast({ title: t("admin.showcase.reject.reasonRequired"), variant: "destructive" });
+      return;
+    }
+
+    try {
+      if (bulk && bulkIds) {
+        await bulkUpdate.mutateAsync({
+          ids: bulkIds,
+          status: "rejected",
+          rejection_reason: reason.trim(),
+        });
+        toast({ title: t("admin.showcase.bulk.success").replace("{count}", String(bulkIds.length)) });
+        onBulkComplete?.();
+      } else {
+        await updateStatus.mutateAsync({
+          id: itemId,
+          status: "rejected",
+          rejection_reason: reason.trim(),
+        });
+        toast({ title: t("admin.showcase.reject.success") });
+      }
+      setReason("");
+      onOpenChange(false);
+    } catch {
+      toast({ title: t("admin.showcase.reject.failed"), variant: "destructive" });
+    }
+  };
+
+  const isPending = bulk ? bulkUpdate.isPending : updateStatus.isPending;
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="max-w-md">
+        <DialogHeader>
+          <DialogTitle>{t("admin.showcase.reject.title")}</DialogTitle>
+        </DialogHeader>
+        <p className="text-sm text-muted-foreground font-body">
+          {t("admin.showcase.reject.description").replace("{title}", itemTitle)}
+        </p>
+        <div className="space-y-2">
+          <Label>{t("admin.showcase.reject.reasonLabel")}</Label>
+          <Textarea
+            value={reason}
+            onChange={(e) => setReason(e.target.value)}
+            placeholder={t("admin.showcase.reject.reasonPlaceholder")}
+            rows={4}
+          />
+        </div>
+        <div className="flex gap-2 justify-end pt-2">
+          <Button variant="outline" onClick={() => onOpenChange(false)}>
+            {t("admin.showcase.reject.cancel")}
+          </Button>
+          <Button
+            variant="destructive"
+            onClick={handleReject}
+            disabled={isPending || !reason.trim()}
+          >
+            {isPending && <Loader2 className="mr-1 h-4 w-4 animate-spin" />}
+            <XCircle className="mr-1 h-3 w-3" />
+            {t("admin.showcase.reject.confirm")}
+          </Button>
+        </div>
+      </DialogContent>
+    </Dialog>
+  );
+};
+
+export default RejectDialog;
