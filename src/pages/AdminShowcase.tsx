@@ -15,7 +15,7 @@ import {
 import AdminItemCard from "@/components/AdminItemCard";
 import BulkActionBar from "@/components/BulkActionBar";
 import AdminSearchFilter, { filterShowcaseItems, type SortOption } from "@/components/AdminSearchFilter";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, Bell, ScrollText, Users } from "lucide-react";
 
 const ITEMS_PER_PAGE = 12;
 
