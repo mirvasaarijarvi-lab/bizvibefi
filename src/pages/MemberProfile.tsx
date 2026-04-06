@@ -208,17 +208,16 @@ const MemberProfile = () => {
                         <Badge variant="default" className="text-[10px] px-1.5 py-0">VIBER</Badge>
                       )}
                     </div>
-                    {(vis.company || isOwnProfile) && member.company && (
+                    {showField("company") && member.company && (
                       <p className="text-muted-foreground flex items-center gap-1.5 mt-1">
                         <Building2 className="h-4 w-4 shrink-0" />
-                        {(vis.company_url || isOwnProfile) && member.company_url ? (
+                        {showField("company_url") && member.company_url ? (
                           <a href={member.company_url} target="_blank" rel="noopener noreferrer" className="hover:text-primary hover:underline transition-colors">
                             {member.company}
                           </a>
                         ) : (
                           member.company
                         )}
-                        {!vis.company && <Badge variant="outline" className="text-[9px] ml-1">Hidden</Badge>}
                       </p>
                     )}
                     {!isOwnProfile && (
