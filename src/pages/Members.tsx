@@ -3,15 +3,24 @@ import Layout from "@/components/Layout";
 import PageMeta from "@/components/PageMeta";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
-import { Search, Users, Linkedin, Building2, ExternalLink } from "lucide-react";
+import { Search, Users, Linkedin, Building2, ExternalLink, ShieldCheck } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Navigate } from "react-router-dom";
+import { useIsAdmin } from "@/hooks/useAdminShowcase";
+import { toast } from "sonner";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import {
   Select,
   SelectContent,
@@ -37,9 +46,28 @@ type SortOption = "newest" | "alphabetical";
 
 const Members = () => {
   const { user, loading: authLoading } = useAuth();
+  const isAdmin = useIsAdmin();
+  const queryClient = useQueryClient();
   const [search, setSearch] = useState("");
   const [tierFilter, setTierFilter] = useState<TierFilter>("all");
   const [sortBy, setSortBy] = useState<SortOption>("newest");
+
+  const updateTierMutation = useMutation({
+    mutationFn: async ({ userId, tier }: { userId: string; tier: "starter" | "viber" | "vibetor" }) => {
+      const { error } = await supabase
+        .from("profiles")
+        .update({ membership_tier: tier } as any)
+        .eq("user_id", userId);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["members"] });
+      toast.success("Membership tier updated");
+    },
+    onError: (err: Error) => {
+      toast.error(err.message);
+    },
+  });
 
   const { data: members, isLoading } = useQuery({
     queryKey: ["members"],
