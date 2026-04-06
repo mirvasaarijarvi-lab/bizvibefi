@@ -177,6 +177,24 @@ const Contact = () => {
                 <h3 className="font-display text-lg font-semibold">{t("contact.whatsappTitle")}</h3>
                 <p className="text-sm text-muted-foreground font-body mt-1">{t("contact.whatsappDesc")}</p>
               </div>
+              <div className="bg-card border border-border rounded-xl p-6">
+                <MessageCircle className="h-6 w-6 text-electric mb-3" />
+                <h3 className="font-display text-lg font-semibold">Quick Chat</h3>
+                <p className="text-sm text-muted-foreground font-body mt-1">
+                  Need a quick answer? Try our{" "}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const chatBtn = document.querySelector('[aria-label="Open support chat"]') as HTMLButtonElement;
+                      chatBtn?.click();
+                    }}
+                    className="text-primary hover:underline font-medium"
+                  >
+                    AI support chat
+                  </button>
+                  .
+                </p>
+              </div>
             </motion.div>
           </div>
         </div>

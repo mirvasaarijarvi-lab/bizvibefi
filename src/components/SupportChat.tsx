@@ -229,6 +229,15 @@ const SupportChat = () => {
                   </div>
                 </div>
               )}
+
+              {/* Fallback contact link */}
+              {messages.length > 2 && (
+                <div className="text-center pt-2">
+                  <Link to="/contact" className="text-xs text-muted-foreground hover:text-primary font-body underline">
+                    Need more help? Submit a detailed request →
+                  </Link>
+                </div>
+              )}
             </div>
 
             {/* Input */}
