@@ -219,6 +219,7 @@ const AdminItemCard = ({ item }: { item: ShowcaseItem }) => {
         )}
       </CardFooter>
       <AdminEditDialog item={item} open={editOpen} onOpenChange={setEditOpen} />
+      <ImageCropDialog file={cropFile} open={cropOpen} onOpenChange={setCropOpen} onCropComplete={handleCropComplete} />
     </Card>
   );
 };
