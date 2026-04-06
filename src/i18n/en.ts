@@ -36,7 +36,7 @@ const en = {
     titleHighlight: "vibe",
     subtitle: "Start free, level up when you're ready.",
     free: {
-      name: "Free Tier",
+      name: "Starter",
       price: "€0 / forever",
       benefits: [
         "WhatsApp community with guidance",
@@ -44,20 +44,20 @@ const en = {
         "#shiphappens hackathons",
         "Meet likeminded builders",
       ],
-      cta: "Join Free",
+      cta: "Join Starter",
     },
     pro: {
-      name: "Pro Tier",
-      label: "PRO",
+      name: "Viber",
+      label: "VIBER",
       price: "Paid membership",
       benefits: [
-        "Everything in Free",
+        "Everything in Starter",
         "Lead generation access",
         "Exclusive courses and workshops",
         "Investor and market events",
-        "Pro WhatsApp group with leads",
+        "Viber WhatsApp group with leads",
       ],
-      cta: "Go Pro",
+      cta: "Go Viber",
     },
   },
   ctaSection: {
@@ -72,9 +72,9 @@ const en = {
     titleEnd: "is here",
     subtitle: "Two levels. One mission. Build things that matter, together.",
     free: {
-      name: "Free Tier",
+      name: "Starter",
       price: "€0, jump right in",
-      cta: "Join Free",
+      cta: "Join Starter",
       benefits: [
         { title: "WhatsApp Community", desc: "Get guidance from experienced builders whenever you're stuck." },
         { title: "Free Events & Meetups", desc: "Meet likeminded people IRL and online. Network, learn, and build." },
@@ -83,14 +83,14 @@ const en = {
       ],
     },
     pro: {
-      name: "Pro Tier",
-      price: "Paid membership. Everything in Free, plus:",
-      cta: "Go Pro",
+      name: "Viber",
+      price: "Paid membership. Everything in Starter, plus:",
+      cta: "Go Viber",
       benefits: [
         { title: "Lead Generation", desc: "Access qualified leads and business opportunities from the network." },
         { title: "Courses & Workshops", desc: "Deep-dive sessions on building, selling, and scaling your ideas." },
         { title: "Investor Access", desc: "Events with investors and market players. Pitch, connect, and get funded." },
-        { title: "Pro WhatsApp Group", desc: "Inner circle with leads, investors, and high-signal conversations." },
+        { title: "Viber WhatsApp Group", desc: "Inner circle with leads, investors, and high-signal conversations." },
         { title: "Exclusive Events", desc: "Market-facing events, demo days, and investor meetups." },
       ],
     },
