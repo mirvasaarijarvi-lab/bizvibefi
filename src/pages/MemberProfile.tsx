@@ -38,7 +38,7 @@ interface MemberData {
   membership_tier: string;
   website_links: { label?: string; url: string }[] | null;
   profile_visibility: Visibility | null;
-  role?: string;
+  created_at: string;
 }
 
 const defaultVisibility: Visibility = {
