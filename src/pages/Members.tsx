@@ -81,6 +81,7 @@ const Members = () => {
     },
   });
 
+  const { data: members, isLoading } = useQuery({
     queryKey: ["members"],
     queryFn: async () => {
       const { data, error } = await supabase
