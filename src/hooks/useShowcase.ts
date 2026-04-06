@@ -20,7 +20,7 @@ export interface ShowcaseItem {
   challenge: string | null;
   solution: string | null;
   benefits: string[] | null;
-  key_figures: KeyFigure[] | null;
+  key_figures: KeyFigure[] | null; // stored as jsonb, cast from Json
   image_url: string | null;
   link_url: string | null;
   category_tags: string[];
