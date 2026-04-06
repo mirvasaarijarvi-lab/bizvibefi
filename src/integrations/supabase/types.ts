@@ -414,6 +414,7 @@ export type Database = {
         }
         Returns: boolean
       }
+      has_viber_access: { Args: { _user_id: string }; Returns: boolean }
     }
     Enums: {
       app_role: "superadmin" | "admin" | "moderator" | "user"
