@@ -14,11 +14,13 @@ export interface Profile {
   avatar_url: string | null;
   bio: string | null;
   company: string | null;
+  company_url: string | null;
   linkedin_url: string | null;
   website_links: WebsiteLink[] | null;
   contact_email: string | null;
   contact_phone: string | null;
   membership_tier: "starter" | "viber" | "vibetor";
+  profile_visibility: Record<string, boolean> | null;
   created_at: string;
   updated_at: string;
 }
@@ -47,7 +49,7 @@ export const useUpdateProfile = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (updates: Partial<Pick<Profile, "display_name" | "bio" | "company" | "linkedin_url" | "avatar_url" | "contact_email" | "contact_phone">> & { website_links?: WebsiteLink[] }) => {
+    mutationFn: async (updates: Partial<Omit<Profile, "id" | "user_id" | "created_at" | "updated_at" | "membership_tier">> & { website_links?: WebsiteLink[]; profile_visibility?: Record<string, boolean> }) => {
       if (!user) throw new Error("Not authenticated");
       const { data, error } = await supabase
         .from("profiles")
