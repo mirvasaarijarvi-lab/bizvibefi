@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "@/hooks/useAuth";
-import { useProfile, useUpdateProfile } from "@/hooks/useProfile";
+import { useProfile, useUpdateProfile, type WebsiteLink } from "@/hooks/useProfile";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -11,7 +11,7 @@ import { useNavigate } from "react-router-dom";
 import Layout from "@/components/Layout";
 import PageMeta from "@/components/PageMeta";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Camera, Linkedin, Building, User } from "lucide-react";
+import { Camera, Linkedin, Building, User, Globe, Mail, Phone, Plus, Trash2 } from "lucide-react";
 
 const Profile = () => {
   const { user, loading: authLoading } = useAuth();
@@ -24,6 +24,9 @@ const Profile = () => {
   const [bio, setBio] = useState("");
   const [company, setCompany] = useState("");
   const [linkedinUrl, setLinkedinUrl] = useState("");
+  const [contactEmail, setContactEmail] = useState("");
+  const [contactPhone, setContactPhone] = useState("");
+  const [websiteLinks, setWebsiteLinks] = useState<WebsiteLink[]>([]);
   const [uploading, setUploading] = useState(false);
 
   useEffect(() => {
@@ -36,6 +39,9 @@ const Profile = () => {
       setBio(profile.bio ?? "");
       setCompany(profile.company ?? "");
       setLinkedinUrl(profile.linkedin_url ?? "");
+      setContactEmail(profile.contact_email ?? "");
+      setContactPhone(profile.contact_phone ?? "");
+      setWebsiteLinks(Array.isArray(profile.website_links) ? profile.website_links : []);
     }
   }, [profile]);
 
@@ -69,18 +75,30 @@ const Profile = () => {
 
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
+    const cleanLinks = websiteLinks.filter((l) => l.url.trim());
     try {
       await updateProfile.mutateAsync({
         display_name: displayName.trim(),
         bio: bio.trim(),
         company: company.trim(),
         linkedin_url: linkedinUrl.trim(),
+        contact_email: contactEmail.trim() || null,
+        contact_phone: contactPhone.trim() || null,
+        website_links: cleanLinks.length > 0 ? cleanLinks : [],
       });
       toast({ title: "Profile updated!" });
     } catch (error: unknown) {
       const message = error instanceof Error ? error.message : "Update failed";
       toast({ title: "Error", description: message, variant: "destructive" });
     }
+  };
+
+  const addLink = () => setWebsiteLinks([...websiteLinks, { label: "", url: "" }]);
+  const removeLink = (i: number) => setWebsiteLinks(websiteLinks.filter((_, idx) => idx !== i));
+  const updateLink = (i: number, field: "label" | "url", val: string) => {
+    const updated = [...websiteLinks];
+    updated[i] = { ...updated[i], [field]: val };
+    setWebsiteLinks(updated);
   };
 
   if (isLoading || authLoading) {
@@ -133,57 +151,137 @@ const Profile = () => {
               </div>
             </div>
 
-            <form onSubmit={handleSave} className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="display-name" className="font-body flex items-center gap-2">
-                  <User className="h-4 w-4" /> Display Name
-                </Label>
-                <Input
-                  id="display-name"
-                  value={displayName}
-                  onChange={(e) => setDisplayName(e.target.value)}
-                  className="font-body"
-                  maxLength={100}
-                />
+            <form onSubmit={handleSave} className="space-y-6">
+              {/* Basic Info */}
+              <div className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="display-name" className="font-body flex items-center gap-2">
+                    <User className="h-4 w-4" /> Display Name
+                  </Label>
+                  <Input
+                    id="display-name"
+                    value={displayName}
+                    onChange={(e) => setDisplayName(e.target.value)}
+                    className="font-body"
+                    maxLength={100}
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="bio" className="font-body">Bio</Label>
+                  <Textarea
+                    id="bio"
+                    value={bio}
+                    onChange={(e) => setBio(e.target.value)}
+                    className="font-body"
+                    rows={3}
+                    maxLength={500}
+                    placeholder="Tell the community about yourself..."
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="company" className="font-body flex items-center gap-2">
+                    <Building className="h-4 w-4" /> Company
+                  </Label>
+                  <Input
+                    id="company"
+                    value={company}
+                    onChange={(e) => setCompany(e.target.value)}
+                    className="font-body"
+                    maxLength={100}
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="linkedin" className="font-body flex items-center gap-2">
+                    <Linkedin className="h-4 w-4" /> LinkedIn URL
+                  </Label>
+                  <Input
+                    id="linkedin"
+                    value={linkedinUrl}
+                    onChange={(e) => setLinkedinUrl(e.target.value)}
+                    className="font-body"
+                    placeholder="https://linkedin.com/in/..."
+                  />
+                </div>
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="bio" className="font-body">Bio</Label>
-                <Textarea
-                  id="bio"
-                  value={bio}
-                  onChange={(e) => setBio(e.target.value)}
-                  className="font-body"
-                  rows={3}
-                  maxLength={500}
-                  placeholder="Tell the community about yourself..."
-                />
+              {/* Contact Info */}
+              <div className="border-t border-border pt-6 space-y-4">
+                <h2 className="font-display text-lg font-bold text-foreground">Contact Info</h2>
+                <div className="space-y-2">
+                  <Label htmlFor="contact-email" className="font-body flex items-center gap-2">
+                    <Mail className="h-4 w-4" /> Contact Email
+                  </Label>
+                  <Input
+                    id="contact-email"
+                    type="email"
+                    value={contactEmail}
+                    onChange={(e) => setContactEmail(e.target.value)}
+                    className="font-body"
+                    placeholder="public@example.com"
+                    maxLength={200}
+                  />
+                  <p className="text-xs text-muted-foreground font-body">Visible to other members on your profile.</p>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="contact-phone" className="font-body flex items-center gap-2">
+                    <Phone className="h-4 w-4" /> Phone Number
+                  </Label>
+                  <Input
+                    id="contact-phone"
+                    type="tel"
+                    value={contactPhone}
+                    onChange={(e) => setContactPhone(e.target.value)}
+                    className="font-body"
+                    placeholder="+358 ..."
+                    maxLength={30}
+                  />
+                </div>
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="company" className="font-body flex items-center gap-2">
-                  <Building className="h-4 w-4" /> Company
-                </Label>
-                <Input
-                  id="company"
-                  value={company}
-                  onChange={(e) => setCompany(e.target.value)}
-                  className="font-body"
-                  maxLength={100}
-                />
-              </div>
+              {/* Website Links */}
+              <div className="border-t border-border pt-6 space-y-4">
+                <h2 className="font-display text-lg font-bold text-foreground flex items-center gap-2">
+                  <Globe className="h-5 w-5" /> Projects & Websites
+                </h2>
+                <p className="text-sm text-muted-foreground font-body">Add links to your projects, portfolios, or websites.</p>
 
-              <div className="space-y-2">
-                <Label htmlFor="linkedin" className="font-body flex items-center gap-2">
-                  <Linkedin className="h-4 w-4" /> LinkedIn URL
-                </Label>
-                <Input
-                  id="linkedin"
-                  value={linkedinUrl}
-                  onChange={(e) => setLinkedinUrl(e.target.value)}
-                  className="font-body"
-                  placeholder="https://linkedin.com/in/..."
-                />
+                {websiteLinks.map((link, i) => (
+                  <div key={i} className="flex gap-2 items-start">
+                    <div className="flex-1 space-y-1">
+                      <Input
+                        value={link.label}
+                        onChange={(e) => updateLink(i, "label", e.target.value)}
+                        placeholder="Label (e.g. My SaaS)"
+                        className="font-body"
+                        maxLength={80}
+                      />
+                      <Input
+                        value={link.url}
+                        onChange={(e) => updateLink(i, "url", e.target.value)}
+                        placeholder="https://..."
+                        type="url"
+                        className="font-body"
+                      />
+                    </div>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => removeLink(i)}
+                      className="mt-1 shrink-0 text-muted-foreground hover:text-destructive"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  </div>
+                ))}
+
+                <Button type="button" variant="outline" size="sm" onClick={addLink}>
+                  <Plus className="mr-1 h-3 w-3" /> Add link
+                </Button>
               </div>
 
               <Button
