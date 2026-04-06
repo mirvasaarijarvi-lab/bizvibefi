@@ -3,18 +3,20 @@ import { useAuth } from "@/hooks/useAuth";
 import { useProfile, useUpdateProfile, type WebsiteLink } from "@/hooks/useProfile";
 import { useUserRole } from "@/hooks/useAdminShowcase";
 import { supabase } from "@/integrations/supabase/client";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import Layout from "@/components/Layout";
 import PageMeta from "@/components/PageMeta";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { Camera, Linkedin, Building, User, Globe, Mail, Phone, Plus, Trash2 } from "lucide-react";
+import { Camera, Linkedin, Building, User, Globe, Mail, Phone, Plus, Trash2, Inbox, CheckCheck } from "lucide-react";
+import { formatDistanceToNow } from "date-fns";
 
 const Profile = () => {
   const { user, loading: authLoading } = useAuth();
@@ -24,6 +26,48 @@ const Profile = () => {
   const updateProfile = useUpdateProfile();
   const { toast } = useToast();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
+
+  const { data: contactRequests } = useQuery({
+    queryKey: ["contact-requests-inbox", user?.id],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("contact_requests")
+        .select("*")
+        .eq("to_user_id", user!.id)
+        .order("created_at", { ascending: false })
+        .limit(50);
+      if (error) throw error;
+
+      const senderIds = [...new Set((data ?? []).map((r: any) => r.from_user_id))];
+      const { data: profiles } = await supabase
+        .from("profiles")
+        .select("user_id, display_name, avatar_url")
+        .in("user_id", senderIds);
+      const profileMap = new Map(profiles?.map((p) => [p.user_id, p]) ?? []);
+
+      return (data ?? []).map((r: any) => ({
+        ...r,
+        sender: profileMap.get(r.from_user_id),
+      }));
+    },
+    enabled: !!user,
+  });
+
+  const markReadMutation = useMutation({
+    mutationFn: async (id: string) => {
+      const { error } = await supabase
+        .from("contact_requests")
+        .update({ is_read: true } as any)
+        .eq("id", id);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["contact-requests-inbox"] });
+    },
+  });
+
+  const unreadCount = contactRequests?.filter((r: any) => !r.is_read).length ?? 0;
 
   const [displayName, setDisplayName] = useState("");
   const [bio, setBio] = useState("");
@@ -347,6 +391,72 @@ const Profile = () => {
                 {updateProfile.isPending ? "Saving..." : "Save Profile"}
               </Button>
             </form>
+          </div>
+
+          {/* Inbox */}
+          <div className="bg-card border border-border rounded-2xl p-6 mt-8">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="font-display text-lg font-bold text-foreground flex items-center gap-2">
+                <Inbox className="h-5 w-5" /> Inbox
+                {unreadCount > 0 && (
+                  <Badge variant="default" className="text-[10px] px-1.5 py-0 ml-1">{unreadCount}</Badge>
+                )}
+              </h2>
+            </div>
+
+            {!contactRequests || contactRequests.length === 0 ? (
+              <p className="text-muted-foreground text-sm font-body py-6 text-center">
+                No messages yet. When someone contacts you from your profile, their messages will appear here.
+              </p>
+            ) : (
+              <div className="space-y-3">
+                {contactRequests.map((req: any) => (
+                  <div
+                    key={req.id}
+                    className={`p-4 rounded-lg border transition-colors ${
+                      req.is_read ? "border-border bg-muted/20" : "border-primary/30 bg-primary/5"
+                    }`}
+                  >
+                    <div className="flex items-start gap-3">
+                      <Link to={`/members/${req.from_user_id}`}>
+                        <Avatar className="h-9 w-9">
+                          <AvatarImage src={req.sender?.avatar_url ?? undefined} />
+                          <AvatarFallback className="bg-muted text-xs font-display">
+                            {req.sender?.display_name?.charAt(0)?.toUpperCase() || "?"}
+                          </AvatarFallback>
+                        </Avatar>
+                      </Link>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <Link to={`/members/${req.from_user_id}`} className="font-display font-semibold text-sm hover:underline">
+                            {req.sender?.display_name || "A member"}
+                          </Link>
+                          <span className="text-xs text-muted-foreground font-body">
+                            {formatDistanceToNow(new Date(req.created_at), { addSuffix: true })}
+                          </span>
+                          {!req.is_read && (
+                            <Badge variant="default" className="text-[9px] px-1 py-0">NEW</Badge>
+                          )}
+                        </div>
+                        <p className="text-sm text-foreground font-body mt-1 whitespace-pre-wrap">{req.message}</p>
+                      </div>
+                      {!req.is_read && (
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="shrink-0 text-muted-foreground hover:text-primary"
+                          onClick={() => markReadMutation.mutate(req.id)}
+                          disabled={markReadMutation.isPending}
+                          title="Mark as read"
+                        >
+                          <CheckCheck className="h-4 w-4" />
+                        </Button>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         </div>
       </section>
