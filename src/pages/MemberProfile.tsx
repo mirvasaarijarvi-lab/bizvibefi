@@ -32,6 +32,7 @@ interface MemberData {
   avatar_url: string | null;
   bio: string | null;
   company: string | null;
+  company_url: string | null;
   linkedin_url: string | null;
   contact_email: string | null;
   contact_phone: string | null;
@@ -206,7 +207,13 @@ const MemberProfile = () => {
                     {(vis.company || isOwnProfile) && member.company && (
                       <p className="text-muted-foreground flex items-center gap-1.5 mt-1">
                         <Building2 className="h-4 w-4 shrink-0" />
-                        {member.company}
+                        {member.company_url ? (
+                          <a href={member.company_url} target="_blank" rel="noopener noreferrer" className="hover:text-primary hover:underline transition-colors">
+                            {member.company}
+                          </a>
+                        ) : (
+                          member.company
+                        )}
                         {!vis.company && <Badge variant="outline" className="text-[9px] ml-1">Hidden</Badge>}
                       </p>
                     )}

@@ -298,7 +298,13 @@ const Members = () => {
                           {member.company && (
                             <p className="text-sm text-muted-foreground flex items-center gap-1 truncate">
                               <Building2 className="h-3 w-3 shrink-0" />
-                              {member.company}
+                              {(member as Record<string, unknown>).company_url ? (
+                                <a href={(member as Record<string, unknown>).company_url as string} target="_blank" rel="noopener noreferrer" className="hover:text-primary hover:underline transition-colors" onClick={(e) => e.stopPropagation()}>
+                                  {member.company}
+                                </a>
+                              ) : (
+                                member.company
+                              )}
                             </p>
                           )}
                         </div>
