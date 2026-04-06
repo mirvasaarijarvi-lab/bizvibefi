@@ -21,6 +21,7 @@ import { CheckCircle, XCircle, Clock, ExternalLink, Lightbulb, MessageSquare, Wr
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import ImageDropZone from "@/components/ImageDropZone";
+import ImageCropDialog from "@/components/ImageCropDialog";
 import AdminEditDialog from "@/components/AdminEditDialog";
 
 const typeIcons: Record<string, React.ElementType> = {
@@ -42,6 +43,8 @@ const AdminItemCard = ({ item }: { item: ShowcaseItem }) => {
   const { toast } = useToast();
   const [uploading, setUploading] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
+  const [cropFile, setCropFile] = useState<File | null>(null);
+  const [cropOpen, setCropOpen] = useState(false);
   const Icon = typeIcons[item.type] || Lightbulb;
   const statusInfo = statusConfig[item.status];
   const StatusIcon = statusInfo.icon;
@@ -55,7 +58,7 @@ const AdminItemCard = ({ item }: { item: ShowcaseItem }) => {
     }
   };
 
-  const handleFileSelected = async (file: File) => {
+  const handleFileSelected = (file: File) => {
     if (file.size > 5 * 1024 * 1024) {
       toast({ title: t("showcase.fileTooLarge"), variant: "destructive" });
       return;
@@ -64,14 +67,18 @@ const AdminItemCard = ({ item }: { item: ShowcaseItem }) => {
       toast({ title: t("showcase.invalidFileType"), variant: "destructive" });
       return;
     }
+    setCropFile(file);
+    setCropOpen(true);
+  };
 
+  const handleCropComplete = async (croppedFile: File) => {
     setUploading(true);
     try {
-      const ext = file.name.split(".").pop();
+      const ext = croppedFile.name.split(".").pop();
       const path = `admin/${item.id}/${Date.now()}.${ext}`;
       const { error: uploadError } = await supabase.storage
         .from("showcase-images")
-        .upload(path, file, { upsert: true });
+        .upload(path, croppedFile, { upsert: true });
       if (uploadError) throw uploadError;
 
       const { data: urlData } = supabase.storage
@@ -212,6 +219,7 @@ const AdminItemCard = ({ item }: { item: ShowcaseItem }) => {
         )}
       </CardFooter>
       <AdminEditDialog item={item} open={editOpen} onOpenChange={setEditOpen} />
+      <ImageCropDialog file={cropFile} open={cropOpen} onOpenChange={setCropOpen} onCropComplete={handleCropComplete} />
     </Card>
   );
 };

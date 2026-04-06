@@ -18,6 +18,7 @@ import { useShowcaseItems, useCreateShowcaseItem, useShowcaseReviews, useCreateR
 import { Plus, Star, ExternalLink, Clock, CheckCircle, XCircle, ArrowRight, Lightbulb, MessageSquare, Wrench, Upload, X as XIcon } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import ImageDropZone from "@/components/ImageDropZone";
+import ImageCropDialog from "@/components/ImageCropDialog";
 import { useToast } from "@/hooks/use-toast";
 
 const typeIcons: Record<ShowcaseType, React.ElementType> = {
@@ -176,18 +177,25 @@ const SubmitForm = ({ onClose }: { onClose: () => void }) => {
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
+  const [cropFile, setCropFile] = useState<File | null>(null);
+  const [cropOpen, setCropOpen] = useState(false);
 
   const handleFileSelected = (file: File) => {
     if (!file.type.startsWith("image/")) {
-      toast({ title: "Please select an image file", variant: "destructive" });
+      toast({ title: t("showcase.invalidFileType"), variant: "destructive" });
       return;
     }
     if (file.size > 5 * 1024 * 1024) {
-      toast({ title: "Image must be under 5MB", variant: "destructive" });
+      toast({ title: t("showcase.fileTooLarge"), variant: "destructive" });
       return;
     }
-    setImageFile(file);
-    setImagePreview(URL.createObjectURL(file));
+    setCropFile(file);
+    setCropOpen(true);
+  };
+
+  const handleCropComplete = (croppedFile: File) => {
+    setImageFile(croppedFile);
+    setImagePreview(URL.createObjectURL(croppedFile));
   };
 
   const clearImage = () => {
@@ -312,6 +320,7 @@ const SubmitForm = ({ onClose }: { onClose: () => void }) => {
       <Button type="submit" disabled={createItem.isPending || uploading} className="w-full">
         {uploading ? t("showcase.uploading") : t("showcase.submitBtn")}
       </Button>
+      <ImageCropDialog file={cropFile} open={cropOpen} onOpenChange={setCropOpen} onCropComplete={handleCropComplete} />
     </form>
   );
 };
