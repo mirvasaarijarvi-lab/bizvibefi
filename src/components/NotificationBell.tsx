@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { Bell, CheckCheck } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
@@ -69,7 +70,7 @@ const NotificationBell = () => {
 
               <div className="max-h-80 overflow-y-auto">
                 {notifications && notifications.length > 0 ? (
-                  notifications.map((n) => (
+                  notifications.slice(0, 8).map((n) => (
                     <button
                       key={n.id}
                       onClick={() => {
@@ -113,6 +114,13 @@ const NotificationBell = () => {
                   </div>
                 )}
               </div>
+              <Link
+                to="/admin/notifications"
+                onClick={() => setOpen(false)}
+                className="block text-center text-xs text-primary hover:underline font-body py-2.5 border-t border-border"
+              >
+                View all notifications
+              </Link>
             </motion.div>
           </>
         )}
