@@ -235,7 +235,7 @@ const en = {
       subtitle: "Review, approve, or reject community submissions.",
       tabs: { pending: "Pending", approved: "Approved", rejected: "Rejected", all: "All" },
       approve: "Approve",
-      reject: "Reject",
+      rejectBtn: "Reject",
       resetPending: "Reset to Pending",
       empty: "No items in this category.",
       submittedAt: "Submitted",
@@ -253,7 +253,7 @@ const en = {
         requiredFields: "Title and description are required",
         titleTooLong: "Title must be under 200 characters",
       },
-      reject: {
+      rejection: {
         title: "Reject Submission",
         description: "Please provide a reason for rejecting \"{title}\".",
         reasonLabel: "Rejection Reason",

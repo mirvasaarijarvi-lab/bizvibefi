@@ -235,7 +235,7 @@ const sv = {
       subtitle: "Granska, godkänn eller avvisa communityinlämningar.",
       tabs: { pending: "Väntande", approved: "Godkända", rejected: "Avvisade", all: "Alla" },
       approve: "Godkänn",
-      reject: "Avvisa",
+      rejectBtn: "Avvisa",
       resetPending: "Återställ till väntande",
       empty: "Inga objekt i denna kategori.",
       submittedAt: "Inskickat",
@@ -253,7 +253,7 @@ const sv = {
         requiredFields: "Titel och beskrivning krävs",
         titleTooLong: "Titeln får vara högst 200 tecken",
       },
-      reject: {
+      rejection: {
         title: "Avvisa inlämning",
         description: "Ange en anledning till att avvisa \"{title}\".",
         reasonLabel: "Anledning till avvisning",
