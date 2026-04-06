@@ -12,7 +12,7 @@ import {
 } from "@/hooks/useAdminShowcase";
 import AdminItemCard from "@/components/AdminItemCard";
 import BulkActionBar from "@/components/BulkActionBar";
-import AdminSearchFilter, { filterShowcaseItems } from "@/components/AdminSearchFilter";
+import AdminSearchFilter, { filterShowcaseItems, type SortOption } from "@/components/AdminSearchFilter";
 
 const AdminShowcase = () => {
   const { t } = useTranslation();
@@ -22,6 +22,7 @@ const AdminShowcase = () => {
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [search, setSearch] = useState("");
   const [typeFilter, setTypeFilter] = useState("all");
+  const [sortBy, setSortBy] = useState<SortOption>("date_desc");
 
   const { data: pendingItems, isLoading: pendingLoading } = usePendingShowcaseItems();
   const { data: allItems, isLoading: allLoading } = useAllShowcaseItems();
@@ -43,8 +44,8 @@ const AdminShowcase = () => {
       : tab === "all"
         ? allItems
         : allItems?.filter((i) => i.status === tab);
-    return filterShowcaseItems(statusFiltered, search, typeFilter);
-  }, [tab, pendingItems, allItems, search, typeFilter]);
+    return filterShowcaseItems(statusFiltered, search, typeFilter, sortBy);
+  }, [tab, pendingItems, allItems, search, typeFilter, sortBy]);
 
   const isLoading = tab === "pending" ? pendingLoading : allLoading;
 

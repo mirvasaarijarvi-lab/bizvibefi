@@ -5,15 +5,19 @@ import { useTranslation } from "@/i18n/useTranslation";
 import { Search } from "lucide-react";
 import type { ShowcaseItem } from "@/hooks/useShowcase";
 
+export type SortOption = "date_desc" | "date_asc" | "title_asc" | "title_desc" | "type";
+
 interface AdminSearchFilterProps {
   search: string;
   onSearchChange: (value: string) => void;
   typeFilter: string;
   onTypeFilterChange: (value: string) => void;
+  sortBy: SortOption;
+  onSortChange: (value: SortOption) => void;
   items?: ShowcaseItem[];
 }
 
-const AdminSearchFilter = ({ search, onSearchChange, typeFilter, onTypeFilterChange, items }: AdminSearchFilterProps) => {
+const AdminSearchFilter = ({ search, onSearchChange, typeFilter, onTypeFilterChange, sortBy, onSortChange, items }: AdminSearchFilterProps) => {
   const { t } = useTranslation();
 
   const availableTags = useMemo(() => {
@@ -45,6 +49,18 @@ const AdminSearchFilter = ({ search, onSearchChange, typeFilter, onTypeFilterCha
           <SelectItem value="tool">{t("admin.showcase.search.tool")}</SelectItem>
         </SelectContent>
       </Select>
+      <Select value={sortBy} onValueChange={(v) => onSortChange(v as SortOption)}>
+        <SelectTrigger className="w-full sm:w-[180px]">
+          <SelectValue />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="date_desc">{t("admin.showcase.search.sortNewest")}</SelectItem>
+          <SelectItem value="date_asc">{t("admin.showcase.search.sortOldest")}</SelectItem>
+          <SelectItem value="title_asc">{t("admin.showcase.search.sortTitleAZ")}</SelectItem>
+          <SelectItem value="title_desc">{t("admin.showcase.search.sortTitleZA")}</SelectItem>
+          <SelectItem value="type">{t("admin.showcase.search.sortType")}</SelectItem>
+        </SelectContent>
+      </Select>
       {availableTags.length > 0 && (
         <Select value="all" onValueChange={(v) => onSearchChange(v === "all" ? search : v)}>
           <SelectTrigger className="w-full sm:w-[160px]">
@@ -68,6 +84,7 @@ export function filterShowcaseItems(
   items: ShowcaseItem[] | undefined,
   search: string,
   typeFilter: string,
+  sortBy: SortOption = "date_desc",
 ): ShowcaseItem[] | undefined {
   if (!items) return undefined;
   let filtered = items;
@@ -83,5 +100,24 @@ export function filterShowcaseItems(
         i.category_tags?.some((tag) => tag.toLowerCase().includes(q))
     );
   }
-  return filtered;
+  const sorted = [...filtered];
+  switch (sortBy) {
+    case "date_asc":
+      sorted.sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime());
+      break;
+    case "title_asc":
+      sorted.sort((a, b) => a.title.localeCompare(b.title));
+      break;
+    case "title_desc":
+      sorted.sort((a, b) => b.title.localeCompare(a.title));
+      break;
+    case "type":
+      sorted.sort((a, b) => a.type.localeCompare(b.type));
+      break;
+    case "date_desc":
+    default:
+      sorted.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+      break;
+  }
+  return sorted;
 }
