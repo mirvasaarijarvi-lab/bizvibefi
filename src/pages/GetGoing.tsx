@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { motion } from "framer-motion";
 import {
   Wrench, MessageCircle, BookOpen, Headphones,
-  ExternalLink, TrendingUp, Users, Lock, ArrowRight,
+  ExternalLink, TrendingUp, Users, Lock, ArrowRight, Rocket, CheckCircle2,
 } from "lucide-react";
 import { useTranslation } from "@/i18n/useTranslation";
 
@@ -137,6 +137,53 @@ const GetGoing = () => {
           <div className="mt-16 text-center">
             <p className="text-muted-foreground font-body">{t("getGoing.blogSoon")}</p>
           </div>
+        </div>
+      </section>
+
+      {/* Viber Upgrade CTA */}
+      <section className="pb-20 md:pb-28">
+        <div className="container max-w-4xl">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="bg-card border-2 border-primary/30 rounded-2xl p-8 md:p-12 relative overflow-hidden"
+          >
+            <div className="absolute top-0 right-0 bg-primary text-primary-foreground text-xs font-display font-semibold px-4 py-1.5 rounded-bl-xl">
+              VIBER
+            </div>
+            <div className="flex items-center gap-3 mb-6">
+              <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center">
+                <Rocket className="h-6 w-6 text-primary" />
+              </div>
+              <h2 className="font-display text-2xl md:text-3xl font-bold tracking-[-0.02em]">
+                {t("getGoing.upgradeCta.title")}{" "}
+                <span className="text-gradient-storm">{t("getGoing.upgradeCta.titleHighlight")}</span>
+              </h2>
+            </div>
+
+            <p className="text-muted-foreground font-body max-w-2xl mb-8">
+              {t("getGoing.upgradeCta.desc")}
+            </p>
+
+            <div className="bg-muted/50 rounded-xl p-6 mb-8">
+              <h3 className="font-display font-semibold text-lg mb-4">{t("getGoing.upgradeCta.howTitle")}</h3>
+              <ol className="space-y-3">
+                {[0, 1, 2, 3].map((i) => (
+                  <li key={i} className="flex items-start gap-3 font-body text-sm text-muted-foreground">
+                    <CheckCircle2 className="h-5 w-5 text-primary mt-0.5 shrink-0" />
+                    {t(`getGoing.upgradeCta.howSteps.${i}`)}
+                  </li>
+                ))}
+              </ol>
+            </div>
+
+            <Button variant="hero" size="lg" asChild>
+              <Link to="/contact">
+                {t("getGoing.upgradeCta.cta")} <ArrowRight className="ml-2 h-4 w-4" />
+              </Link>
+            </Button>
+          </motion.div>
         </div>
       </section>
     </Layout>
