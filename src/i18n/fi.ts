@@ -187,6 +187,14 @@ const fi = {
       { title: "Rakenna yhdessä", desc: "Yksinäiset nerot ovat myytti. Kollektiivi on kerroin." },
     ],
     cta: "Liity kollektiiviin",
+    vibetorsTitle: "Meidän",
+    vibetorsTitleHighlight: "Vibetormme",
+    vibetorsSubtitle: "Sijoittajat, innovaattorit ja kumppanit, jotka voimistavat kollektiivia.",
+    vibetorTypes: {
+      investor: "Sijoittaja",
+      innovator: "Innovaattori",
+      partner: "Kumppani",
+    },
   },
   contact: {
     tag: "Yhteystiedot",

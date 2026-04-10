@@ -187,6 +187,14 @@ const sv = {
       { title: "Bygg tillsammans", desc: "Ensamma genier är en myt. Kollektivet är multiplikatorn." },
     ],
     cta: "Gå med i kollektivet",
+    vibetorsTitle: "Våra",
+    vibetorsTitleHighlight: "Vibetorer",
+    vibetorsSubtitle: "Investerare, innovatörer och partners som driver kollektivet.",
+    vibetorTypes: {
+      investor: "Investerare",
+      innovator: "Innovatör",
+      partner: "Partner",
+    },
   },
   contact: {
     tag: "Kontakt",

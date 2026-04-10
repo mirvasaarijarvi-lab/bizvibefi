@@ -187,6 +187,14 @@ const en = {
       { title: "Build Together", desc: "Solo geniuses are a myth. The collective is the multiplier." },
     ],
     cta: "Join the Collective",
+    vibetorsTitle: "Our",
+    vibetorsTitleHighlight: "Vibetors",
+    vibetorsSubtitle: "Investors, innovators, and partners powering the collective.",
+    vibetorTypes: {
+      investor: "Investor",
+      innovator: "Innovator",
+      partner: "Partner",
+    },
   },
   contact: {
     tag: "Contact",
