@@ -27,6 +27,18 @@ const About = () => {
     staleTime: 300_000,
   });
 
+  const { data: vibetors } = useQuery({
+    queryKey: ["vibetors-about"],
+    queryFn: async () => {
+      const { data } = await supabase
+        .from("profiles")
+        .select("display_name, avatar_url, user_id, company, vibetor_type")
+        .eq("membership_tier", "vibetor");
+      return (data ?? []) as { display_name: string | null; avatar_url: string | null; user_id: string; company: string | null; vibetor_type: string | null }[];
+    },
+    staleTime: 300_000,
+  });
+
   const getFounderAvatar = (name: string) => {
     return founderProfiles?.find((p) => p.display_name === name)?.avatar_url ?? null;
   };
