@@ -62,11 +62,11 @@ const en = {
     vibetor: {
       name: "Vibetor",
       label: "VIBETOR",
-      price: "Investor membership",
+      price: "Investors, Innovators & Partners",
       benefits: [
         "Everything in Viber",
-        "Investor badge on profile",
-        "Exclusive investor network",
+        "Vibetor badge on profile",
+        "Exclusive Vibetor network",
         "Priority deal flow access",
         "Innovation showcase events",
       ],
@@ -109,11 +109,11 @@ const en = {
     },
     vibetor: {
       name: "Vibetor",
-      price: "Investor membership. Everything in Viber, plus:",
+      price: "Investors, Innovators & Partners. Everything in Viber, plus:",
       cta: "Contact Us",
       benefits: [
-        { title: "Investor Badge", desc: "Stand out with a verified investor badge on your profile." },
-        { title: "Investor Network", desc: "Connect with fellow investors and innovators in a dedicated circle." },
+        { title: "Vibetor Badge", desc: "Stand out with a verified Vibetor badge on your profile." },
+        { title: "Vibetor Network", desc: "Connect with fellow investors, innovators, and partners in a dedicated circle." },
         { title: "Deal Flow Access", desc: "Get priority access to startup pitches and investment opportunities." },
         { title: "Innovation Showcases", desc: "Exclusive events to discover and fund the next big thing." },
       ],
@@ -187,6 +187,14 @@ const en = {
       { title: "Build Together", desc: "Solo geniuses are a myth. The collective is the multiplier." },
     ],
     cta: "Join the Collective",
+    vibetorsTitle: "Our",
+    vibetorsTitleHighlight: "Vibetors",
+    vibetorsSubtitle: "Investors, innovators, and partners powering the collective.",
+    vibetorTypes: {
+      investor: "Investor",
+      innovator: "Innovator",
+      partner: "Partner",
+    },
   },
   contact: {
     tag: "Contact",

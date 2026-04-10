@@ -3,10 +3,12 @@ import PageMeta from "@/components/PageMeta";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { ArrowRight, Linkedin } from "lucide-react";
+import { ArrowRight, Linkedin, Gem } from "lucide-react";
 import { useTranslation } from "@/i18n/useTranslation";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
 
 const FOUNDER_NAMES = ["Minna Blomster", "Mirva Saarijärvi", "Vesa Mattila"];
 
@@ -21,6 +23,18 @@ const About = () => {
         .select("display_name, avatar_url, user_id")
         .in("display_name", FOUNDER_NAMES);
       return data ?? [];
+    },
+    staleTime: 300_000,
+  });
+
+  const { data: vibetors } = useQuery({
+    queryKey: ["vibetors-about"],
+    queryFn: async () => {
+      const { data } = await supabase
+        .from("profiles")
+        .select("display_name, avatar_url, user_id, company, vibetor_type")
+        .eq("membership_tier", "vibetor");
+      return (data ?? []) as { display_name: string | null; avatar_url: string | null; user_id: string; company: string | null; vibetor_type: string | null }[];
     },
     staleTime: 300_000,
   });
@@ -120,6 +134,67 @@ const About = () => {
           </div>
         </div>
       </section>
+
+      {/* Vibetors */}
+      {vibetors && vibetors.length > 0 && (
+        <section className="pb-20">
+          <div className="container max-w-4xl">
+            <div className="text-center mb-10">
+              <div className="flex items-center justify-center gap-2 mb-4">
+                <Gem className="h-6 w-6 text-vibetor" />
+              </div>
+              <h2 className="font-display text-2xl md:text-4xl font-bold tracking-[-0.02em]">
+                {t("about.vibetorsTitle")} <span className="text-vibetor">{t("about.vibetorsTitleHighlight")}</span>
+              </h2>
+              <p className="mt-3 text-muted-foreground font-body max-w-xl mx-auto">{t("about.vibetorsSubtitle")}</p>
+            </div>
+            <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6">
+              {vibetors.map((v) => {
+                const initials = v.display_name
+                  ? v.display_name.split(" ").map((w: string) => w[0]).join("").toUpperCase().slice(0, 2)
+                  : "?";
+                const typeLabel = v.vibetor_type ? t(`about.vibetorTypes.${v.vibetor_type}`) : null;
+                return (
+                  <motion.div
+                    key={v.user_id}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                  >
+                    <Link
+                      to={`/members/${v.user_id}`}
+                      className="block text-center bg-card border-2 border-vibetor/30 rounded-2xl p-6 hover:border-vibetor/60 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 group"
+                    >
+                      <Avatar className="h-20 w-20 mx-auto mb-4">
+                        <AvatarImage src={v.avatar_url ?? undefined} alt={v.display_name ?? "Vibetor"} />
+                        <AvatarFallback className="text-lg font-semibold bg-vibetor/20 text-vibetor">
+                          {initials}
+                        </AvatarFallback>
+                      </Avatar>
+                      <h3 className="font-display text-lg font-bold tracking-[-0.01em] group-hover:text-vibetor transition-colors">
+                        {v.display_name || "Vibetor"}
+                      </h3>
+                      {v.company && (
+                        <p className="text-sm text-muted-foreground font-body mt-1">{v.company}</p>
+                      )}
+                      <div className="flex items-center justify-center gap-2 mt-3">
+                        <Badge className="text-[10px] px-2 py-0.5 bg-vibetor/90 hover:bg-vibetor text-primary-foreground">
+                          VIBETOR
+                        </Badge>
+                        {typeLabel && (
+                          <Badge variant="outline" className="text-[10px] px-2 py-0.5 border-vibetor/40 text-vibetor">
+                            {typeLabel}
+                          </Badge>
+                        )}
+                      </div>
+                    </Link>
+                  </motion.div>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* Values */}
       <section className="pb-20 md:pb-28">

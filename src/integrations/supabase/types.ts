@@ -346,6 +346,7 @@ export type Database = {
           updated_at: string
           user_id: string
           viber_access_override: boolean
+          vibetor_type: Database["public"]["Enums"]["vibetor_type"] | null
           website_links: Json | null
         }
         Insert: {
@@ -364,6 +365,7 @@ export type Database = {
           updated_at?: string
           user_id: string
           viber_access_override?: boolean
+          vibetor_type?: Database["public"]["Enums"]["vibetor_type"] | null
           website_links?: Json | null
         }
         Update: {
@@ -382,6 +384,7 @@ export type Database = {
           updated_at?: string
           user_id?: string
           viber_access_override?: boolean
+          vibetor_type?: Database["public"]["Enums"]["vibetor_type"] | null
           website_links?: Json | null
         }
         Relationships: []
@@ -533,6 +536,7 @@ export type Database = {
         | "tool"
         | "guidebook"
         | "sample_code"
+      vibetor_type: "investor" | "innovator" | "partner"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -672,6 +676,7 @@ export const Constants = {
         "guidebook",
         "sample_code",
       ],
+      vibetor_type: ["investor", "innovator", "partner"],
     },
   },
 } as const

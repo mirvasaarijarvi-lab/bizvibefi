@@ -42,6 +42,7 @@ interface MemberData {
   profile_visibility: Visibility | null;
   created_at: string;
   role?: string;
+  vibetor_type?: "investor" | "innovator" | "partner" | null;
 }
 
 const defaultVisibility: Visibility = {
@@ -203,6 +204,11 @@ const MemberProfile = () => {
                       )}
                       {member.membership_tier === "vibetor" && member.role !== "superadmin" && (
                         <Badge variant="default" className="text-[10px] px-1.5 py-0 bg-vibetor/90 hover:bg-vibetor">VIBETOR</Badge>
+                      )}
+                      {member.membership_tier === "vibetor" && member.vibetor_type && (
+                        <Badge variant="outline" className="text-[10px] px-1.5 py-0 border-vibetor/40 text-vibetor capitalize">
+                          {member.vibetor_type}
+                        </Badge>
                       )}
                       {member.membership_tier === "viber" && (
                         <Badge variant="default" className="text-[10px] px-1.5 py-0">VIBER</Badge>

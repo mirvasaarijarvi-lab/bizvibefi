@@ -62,11 +62,11 @@ const fi = {
     vibetor: {
       name: "Vibetor",
       label: "VIBETOR",
-      price: "Sijoittajajäsenyys",
+      price: "Sijoittajat, Innovaattorit & Kumppanit",
       benefits: [
         "Kaikki Viberistä",
-        "Sijoittajamerkki profiilissa",
-        "Eksklusiivinen sijoittajaverkosto",
+        "Vibetor-merkki profiilissa",
+        "Eksklusiivinen Vibetor-verkosto",
         "Etusija deal flow -pääsyyn",
         "Innovaationäyttelytapahtumat",
       ],
@@ -109,11 +109,11 @@ const fi = {
     },
     vibetor: {
       name: "Vibetor",
-      price: "Sijoittajajäsenyys. Kaikki Viberistä ja lisäksi:",
+      price: "Sijoittajat, Innovaattorit & Kumppanit. Kaikki Viberistä ja lisäksi:",
       cta: "Ota yhteyttä",
       benefits: [
-        { title: "Sijoittajamerkki", desc: "Erotu joukosta vahvistetulla sijoittajamerkillä profiilissasi." },
-        { title: "Sijoittajaverkosto", desc: "Yhdistä muihin sijoittajiin ja innovaattoreihin omassa piirissä." },
+        { title: "Vibetor-merkki", desc: "Erotu joukosta vahvistetulla Vibetor-merkillä profiilissasi." },
+        { title: "Vibetor-verkosto", desc: "Yhdistä muihin sijoittajiin, innovaattoreihin ja kumppaneihin omassa piirissä." },
         { title: "Deal flow -pääsy", desc: "Etusija startup-pitchauksiin ja sijoitusmahdollisuuksiin." },
         { title: "Innovaationäyttelyt", desc: "Eksklusiivisia tapahtumia seuraavan suuren idean löytämiseen." },
       ],
@@ -187,6 +187,14 @@ const fi = {
       { title: "Rakenna yhdessä", desc: "Yksinäiset nerot ovat myytti. Kollektiivi on kerroin." },
     ],
     cta: "Liity kollektiiviin",
+    vibetorsTitle: "Meidän",
+    vibetorsTitleHighlight: "Vibetormme",
+    vibetorsSubtitle: "Sijoittajat, innovaattorit ja kumppanit, jotka voimistavat kollektiivia.",
+    vibetorTypes: {
+      investor: "Sijoittaja",
+      innovator: "Innovaattori",
+      partner: "Kumppani",
+    },
   },
   contact: {
     tag: "Yhteystiedot",

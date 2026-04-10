@@ -62,11 +62,11 @@ const sv = {
     vibetor: {
       name: "Vibetor",
       label: "VIBETOR",
-      price: "Investerarmedlemskap",
+      price: "Investerare, Innovatörer & Partners",
       benefits: [
         "Allt från Viber",
-        "Investoremblem på profilen",
-        "Exklusivt investornätverk",
+        "Vibetor-emblem på profilen",
+        "Exklusivt Vibetor-nätverk",
         "Prioriterad tillgång till deal flow",
         "Innovationsutställningar",
       ],
@@ -109,11 +109,11 @@ const sv = {
     },
     vibetor: {
       name: "Vibetor",
-      price: "Investerarmedlemskap. Allt från Viber och dessutom:",
+      price: "Investerare, Innovatörer & Partners. Allt från Viber och dessutom:",
       cta: "Kontakta oss",
       benefits: [
-        { title: "Investoremblem", desc: "Sticka ut med ett verifierat investoremblem på din profil." },
-        { title: "Investornätverk", desc: "Anslut till andra investerare och innovatörer i en dedikerad cirkel." },
+        { title: "Vibetor-emblem", desc: "Sticka ut med ett verifierat Vibetor-emblem på din profil." },
+        { title: "Vibetor-nätverk", desc: "Anslut till andra investerare, innovatörer och partners i en dedikerad cirkel." },
         { title: "Deal flow-åtkomst", desc: "Prioriterad tillgång till startup-pitchar och investeringsmöjligheter." },
         { title: "Innovationsutställningar", desc: "Exklusiva event för att upptäcka och finansiera nästa stora grej." },
       ],
@@ -187,6 +187,14 @@ const sv = {
       { title: "Bygg tillsammans", desc: "Ensamma genier är en myt. Kollektivet är multiplikatorn." },
     ],
     cta: "Gå med i kollektivet",
+    vibetorsTitle: "Våra",
+    vibetorsTitleHighlight: "Vibetorer",
+    vibetorsSubtitle: "Investerare, innovatörer och partners som driver kollektivet.",
+    vibetorTypes: {
+      investor: "Investerare",
+      innovator: "Innovatör",
+      partner: "Partner",
+    },
   },
   contact: {
     tag: "Kontakt",

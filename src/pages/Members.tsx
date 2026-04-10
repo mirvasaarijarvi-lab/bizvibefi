@@ -10,7 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
-import { Search, Users, Linkedin, Building2, ExternalLink, ShieldCheck, Zap, Globe, Mail, Phone, Briefcase } from "lucide-react";
+import { Search, Users, Linkedin, Building2, ExternalLink, ShieldCheck, Zap, Globe, Mail, Phone, Briefcase, Gem } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Navigate, Link } from "react-router-dom";
@@ -33,6 +33,7 @@ interface MemberProfile {
   company: string | null;
   linkedin_url: string | null;
   membership_tier: "starter" | "viber" | "vibetor";
+  vibetor_type: "investor" | "innovator" | "partner" | null;
   viber_access_override: boolean;
   contact_email: string | null;
   contact_phone: string | null;
@@ -284,6 +285,11 @@ const Members = () => {
                                 VIBETOR
                               </Badge>
                             )}
+                            {member.membership_tier === "vibetor" && member.vibetor_type && (
+                              <Badge variant="outline" className="text-[10px] px-1.5 py-0 border-vibetor/40 text-vibetor capitalize">
+                                {member.vibetor_type}
+                              </Badge>
+                            )}
                             {member.membership_tier === "viber" && (
                               <Badge variant="default" className="text-[10px] px-1.5 py-0">
                                 VIBER
@@ -396,6 +402,33 @@ const Members = () => {
                               </SelectContent>
                             </Select>
                           </div>
+                          {member.membership_tier === "vibetor" && (
+                            <div className="flex items-center gap-2 mt-2">
+                              <Gem className="h-4 w-4 text-vibetor" />
+                              <span className="text-xs text-muted-foreground">Type:</span>
+                              <Select
+                                value={member.vibetor_type ?? "none"}
+                                onValueChange={async (val) => {
+                                  const newType = val === "none" ? null : val;
+                                  await supabase
+                                    .from("profiles")
+                                    .update({ vibetor_type: newType } as never)
+                                    .eq("user_id", member.user_id);
+                                  queryClient.invalidateQueries({ queryKey: ["members-list"] });
+                                }}
+                              >
+                                <SelectTrigger className="h-7 text-xs w-28">
+                                  <SelectValue />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  <SelectItem value="none">Not set</SelectItem>
+                                  <SelectItem value="investor">Investor</SelectItem>
+                                  <SelectItem value="innovator">Innovator</SelectItem>
+                                  <SelectItem value="partner">Partner</SelectItem>
+                                </SelectContent>
+                              </Select>
+                            </div>
+                          )}
                           {member.membership_tier === "starter" && (
                             <div className="flex items-center gap-2 mt-2">
                               <Zap className="h-4 w-4 text-muted-foreground" />
