@@ -264,6 +264,7 @@ const AdminUsers = () => {
                           ) : (
                             <span className="text-xs text-muted-foreground">—</span>
                           )}
+                        </TableCell>
                         <TableCell>{roleBadge(u.role)}</TableCell>
                         <TableCell>
                           {isMe ? (
