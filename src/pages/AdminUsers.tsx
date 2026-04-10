@@ -25,7 +25,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Search, ShieldCheck, ArrowLeft, UserCog } from "lucide-react";
+import { Search, ShieldCheck, ArrowLeft, UserCog, Gem } from "lucide-react";
 import { toast } from "sonner";
 
 const roleBadge = (role: string) => {
@@ -70,7 +70,7 @@ const AdminUsers = () => {
       // Get all profiles
       const { data: profiles, error: pErr } = await supabase
         .from("profiles")
-        .select("user_id, display_name, avatar_url, membership_tier")
+        .select("user_id, display_name, avatar_url, membership_tier, vibetor_type")
         .order("created_at", { ascending: false });
       if (pErr) throw pErr;
 
@@ -208,6 +208,7 @@ const AdminUsers = () => {
                   <TableRow>
                     <TableHead className="font-body">User</TableHead>
                     <TableHead className="font-body">Tier</TableHead>
+                    <TableHead className="font-body">Vibetor Type</TableHead>
                     <TableHead className="font-body">Current Role</TableHead>
                     <TableHead className="font-body">Change Role</TableHead>
                   </TableRow>
@@ -234,6 +235,35 @@ const AdminUsers = () => {
                           <Badge variant="outline" className="text-[10px] capitalize">
                             {u.membership_tier}
                           </Badge>
+                        </TableCell>
+                        <TableCell>
+                          {u.membership_tier === "vibetor" ? (
+                            <Select
+                              value={(u as Record<string, unknown>).vibetor_type as string ?? "none"}
+                              onValueChange={async (val) => {
+                                const newType = val === "none" ? null : val;
+                                const { error } = await supabase
+                                  .from("profiles")
+                                  .update({ vibetor_type: newType } as never)
+                                  .eq("user_id", u.user_id);
+                                if (error) { toast.error(error.message); return; }
+                                queryClient.invalidateQueries({ queryKey: ["admin-users"] });
+                                toast.success("Vibetor type updated");
+                              }}
+                            >
+                              <SelectTrigger className="h-8 text-xs w-28 font-body">
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="none">Not set</SelectItem>
+                                <SelectItem value="investor">Investor</SelectItem>
+                                <SelectItem value="innovator">Innovator</SelectItem>
+                                <SelectItem value="partner">Partner</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          ) : (
+                            <span className="text-xs text-muted-foreground">—</span>
+                          )}
                         </TableCell>
                         <TableCell>{roleBadge(u.role)}</TableCell>
                         <TableCell>
