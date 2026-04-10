@@ -24,10 +24,10 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Search, History, ArrowUpDown, Zap } from "lucide-react";
+import { Search, History, ArrowUpDown, Zap, Gem } from "lucide-react";
 import { format } from "date-fns";
 
-type ActionFilter = "all" | "tier_change" | "viber_access_override";
+type ActionFilter = "all" | "tier_change" | "viber_access_override" | "vibetor_type_change";
 
 interface AuditLogEntry {
   id: string;
@@ -44,6 +44,7 @@ interface AuditLogEntry {
 const actionLabels: Record<string, { label: string; icon: React.ElementType }> = {
   tier_change: { label: "Tier Change", icon: ArrowUpDown },
   viber_access_override: { label: "Viber Access Override", icon: Zap },
+  vibetor_type_change: { label: "Vibetor Type Change", icon: Gem },
 };
 
 const AuditLog = () => {
@@ -151,6 +152,7 @@ const AuditLog = () => {
                 <SelectItem value="all">All Actions</SelectItem>
                 <SelectItem value="tier_change">Tier Changes</SelectItem>
                 <SelectItem value="viber_access_override">Access Overrides</SelectItem>
+                <SelectItem value="vibetor_type_change">Vibetor Type Changes</SelectItem>
               </SelectContent>
             </Select>
           </div>
