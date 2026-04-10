@@ -242,11 +242,18 @@ const AdminUsers = () => {
                               value={(u as Record<string, unknown>).vibetor_type as string ?? "none"}
                               onValueChange={async (val) => {
                                 const newType = val === "none" ? null : val;
+                                const oldType = (u as Record<string, unknown>).vibetor_type as string | null;
                                 const { error } = await supabase
                                   .from("profiles")
                                   .update({ vibetor_type: newType } as never)
                                   .eq("user_id", u.user_id);
                                 if (error) { toast.error(error.message); return; }
+                                const label = (t: string | null) => t ? t.charAt(0).toUpperCase() + t.slice(1) : "Not set";
+                                await supabase.from("admin_notifications").insert({
+                                  title: "Vibetor type changed",
+                                  message: `${u.display_name || "A member"}'s vibetor type was changed from "${label(oldType)}" to "${label(newType)}".`,
+                                  type: "vibetor_type_change",
+                                });
                                 queryClient.invalidateQueries({ queryKey: ["admin-users"] });
                                 toast.success("Vibetor type updated");
                               }}
