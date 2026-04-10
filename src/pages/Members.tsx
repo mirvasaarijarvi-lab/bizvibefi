@@ -10,7 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
-import { Search, Users, Linkedin, Building2, ExternalLink, ShieldCheck, Zap, Globe, Mail, Phone, Briefcase } from "lucide-react";
+import { Search, Users, Linkedin, Building2, ExternalLink, ShieldCheck, Zap, Globe, Mail, Phone, Briefcase, Gem } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Navigate, Link } from "react-router-dom";
