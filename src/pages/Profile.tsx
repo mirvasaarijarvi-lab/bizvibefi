@@ -498,6 +498,44 @@ const Profile = () => {
                 {updateProfile.isPending ? "Saving..." : "Save Profile"}
               </Button>
             </form>
+
+          {/* Change Password */}
+          <div className="bg-card border border-border rounded-2xl p-6 mt-8">
+            <h2 className="font-display text-lg font-bold text-foreground flex items-center gap-2 mb-4">
+              <KeyRound className="h-5 w-5" /> Change Password
+            </h2>
+            <div className="space-y-4 max-w-sm">
+              <div className="space-y-2">
+                <Label htmlFor="new-password" className="font-body">New Password</Label>
+                <Input
+                  id="new-password"
+                  type="password"
+                  value={newPasswordVal}
+                  onChange={(e) => setNewPasswordVal(e.target.value)}
+                  placeholder="Min 6 characters"
+                  className="font-body"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="confirm-password" className="font-body">Confirm Password</Label>
+                <Input
+                  id="confirm-password"
+                  type="password"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  placeholder="Re-enter password"
+                  className="font-body"
+                />
+              </div>
+              <Button
+                onClick={handlePasswordChange}
+                disabled={changingPassword || newPasswordVal.length < 6 || newPasswordVal !== confirmPassword}
+                className="font-body"
+              >
+                {changingPassword ? "Updating..." : "Update Password"}
+              </Button>
+            </div>
+          </div>
           </div>
 
           {/* Forum Activity */}
