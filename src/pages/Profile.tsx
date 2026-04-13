@@ -214,6 +214,30 @@ const Profile = () => {
     }
   };
 
+  const handlePasswordChange = async () => {
+    if (newPasswordVal.length < 6) {
+      toast({ title: "Password must be at least 6 characters", variant: "destructive" });
+      return;
+    }
+    if (newPasswordVal !== confirmPassword) {
+      toast({ title: "Passwords do not match", variant: "destructive" });
+      return;
+    }
+    setChangingPassword(true);
+    try {
+      const { error } = await supabase.auth.updateUser({ password: newPasswordVal });
+      if (error) throw error;
+      toast({ title: "Password updated successfully!" });
+      setNewPasswordVal("");
+      setConfirmPassword("");
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : "Failed to update password";
+      toast({ title: "Error", description: message, variant: "destructive" });
+    } finally {
+      setChangingPassword(false);
+    }
+  };
+
   const addLink = () => setWebsiteLinks([...websiteLinks, { label: "", url: "" }]);
   const removeLink = (i: number) => setWebsiteLinks(websiteLinks.filter((_, idx) => idx !== i));
   const updateLink = (i: number, field: "label" | "url", val: string) => {
