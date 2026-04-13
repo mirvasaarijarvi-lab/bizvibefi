@@ -15,7 +15,7 @@ import Layout from "@/components/Layout";
 import PageMeta from "@/components/PageMeta";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { Camera, Linkedin, Building, User, Globe, Mail, Phone, Plus, Trash2, Inbox, CheckCheck, MessageSquare, Calendar } from "lucide-react";
+import { Camera, Linkedin, Building, User, Globe, Mail, Phone, Plus, Trash2, Inbox, CheckCheck, MessageSquare, Calendar, KeyRound } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 
 const Profile = () => {
@@ -129,6 +129,10 @@ const Profile = () => {
   const [contactPhone, setContactPhone] = useState("");
   const [websiteLinks, setWebsiteLinks] = useState<WebsiteLink[]>([]);
   const [uploading, setUploading] = useState(false);
+  const [currentPassword, setCurrentPassword] = useState("");
+  const [newPasswordVal, setNewPasswordVal] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [changingPassword, setChangingPassword] = useState(false);
   const [visibility, setVisibility] = useState({
     bio: true,
     company: true,
@@ -207,6 +211,30 @@ const Profile = () => {
     } catch (error: unknown) {
       const message = error instanceof Error ? error.message : "Update failed";
       toast({ title: "Error", description: message, variant: "destructive" });
+    }
+  };
+
+  const handlePasswordChange = async () => {
+    if (newPasswordVal.length < 6) {
+      toast({ title: "Password must be at least 6 characters", variant: "destructive" });
+      return;
+    }
+    if (newPasswordVal !== confirmPassword) {
+      toast({ title: "Passwords do not match", variant: "destructive" });
+      return;
+    }
+    setChangingPassword(true);
+    try {
+      const { error } = await supabase.auth.updateUser({ password: newPasswordVal });
+      if (error) throw error;
+      toast({ title: "Password updated successfully!" });
+      setNewPasswordVal("");
+      setConfirmPassword("");
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : "Failed to update password";
+      toast({ title: "Error", description: message, variant: "destructive" });
+    } finally {
+      setChangingPassword(false);
     }
   };
 
@@ -470,6 +498,44 @@ const Profile = () => {
                 {updateProfile.isPending ? "Saving..." : "Save Profile"}
               </Button>
             </form>
+
+          {/* Change Password */}
+          <div className="bg-card border border-border rounded-2xl p-6 mt-8">
+            <h2 className="font-display text-lg font-bold text-foreground flex items-center gap-2 mb-4">
+              <KeyRound className="h-5 w-5" /> Change Password
+            </h2>
+            <div className="space-y-4 max-w-sm">
+              <div className="space-y-2">
+                <Label htmlFor="new-password" className="font-body">New Password</Label>
+                <Input
+                  id="new-password"
+                  type="password"
+                  value={newPasswordVal}
+                  onChange={(e) => setNewPasswordVal(e.target.value)}
+                  placeholder="Min 6 characters"
+                  className="font-body"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="confirm-password" className="font-body">Confirm Password</Label>
+                <Input
+                  id="confirm-password"
+                  type="password"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  placeholder="Re-enter password"
+                  className="font-body"
+                />
+              </div>
+              <Button
+                onClick={handlePasswordChange}
+                disabled={changingPassword || newPasswordVal.length < 6 || newPasswordVal !== confirmPassword}
+                className="font-body"
+              >
+                {changingPassword ? "Updating..." : "Update Password"}
+              </Button>
+            </div>
+          </div>
           </div>
 
           {/* Forum Activity */}
