@@ -129,6 +129,10 @@ const Profile = () => {
   const [contactPhone, setContactPhone] = useState("");
   const [websiteLinks, setWebsiteLinks] = useState<WebsiteLink[]>([]);
   const [uploading, setUploading] = useState(false);
+  const [currentPassword, setCurrentPassword] = useState("");
+  const [newPasswordVal, setNewPasswordVal] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [changingPassword, setChangingPassword] = useState(false);
   const [visibility, setVisibility] = useState({
     bio: true,
     company: true,
