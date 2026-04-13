@@ -276,6 +276,15 @@ const Profile = () => {
                 <p className="text-sm text-muted-foreground font-body">
                   {isSuperAdmin ? "SuperAdmin" : `${profile?.membership_tier} member`}
                 </p>
+                {isSuperAdmin && (
+                  <Link
+                    to="/admin/users"
+                    className="inline-flex items-center gap-1.5 mt-1 text-xs font-body text-primary hover:underline"
+                  >
+                    <User className="h-3.5 w-3.5" />
+                    User Management
+                  </Link>
+                )}
               </div>
             </div>
 
