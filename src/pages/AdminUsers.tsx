@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Navigate, Link } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
@@ -9,6 +9,7 @@ import PageMeta from "@/components/PageMeta";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Label } from "@/components/ui/label";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   Select,
@@ -25,7 +26,25 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Search, ShieldCheck, ArrowLeft, UserCog, Gem } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import { Search, ShieldCheck, UserCog, Plus, Trash2, KeyRound, Gem } from "lucide-react";
 import { toast } from "sonner";
 
 const roleBadge = (role: string) => {
@@ -57,6 +76,15 @@ const roleBadge = (role: string) => {
   }
 };
 
+const callAdminFn = async (action: string, params: Record<string, unknown>) => {
+  const { data, error } = await supabase.functions.invoke("admin-users", {
+    body: { action, ...params },
+  });
+  if (error) throw new Error(error.message);
+  if (data?.error) throw new Error(data.error);
+  return data;
+};
+
 const AdminUsers = () => {
   const { user, loading: authLoading } = useAuth();
   const { data: myRoles } = useUserRole();
@@ -64,17 +92,29 @@ const AdminUsers = () => {
   const queryClient = useQueryClient();
   const [search, setSearch] = useState("");
 
+  // Dialogs
+  const [createOpen, setCreateOpen] = useState(false);
+  const [deleteTarget, setDeleteTarget] = useState<{ user_id: string; name: string } | null>(null);
+  const [passwordTarget, setPasswordTarget] = useState<{ user_id: string; name: string } | null>(null);
+
+  // Create user form
+  const [newEmail, setNewEmail] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [newName, setNewName] = useState("");
+  const [newRole, setNewRole] = useState("user");
+
+  // Password form
+  const [newPwd, setNewPwd] = useState("");
+
   const { data: users, isLoading } = useQuery({
     queryKey: ["admin-users"],
     queryFn: async () => {
-      // Get all profiles
       const { data: profiles, error: pErr } = await supabase
         .from("profiles")
         .select("user_id, display_name, avatar_url, membership_tier, vibetor_type")
         .order("created_at", { ascending: false });
       if (pErr) throw pErr;
 
-      // Get all roles
       const userIds = profiles.map((p) => p.user_id);
       const { data: roles, error: rErr } = await supabase
         .from("user_roles")
@@ -104,18 +144,11 @@ const AdminUsers = () => {
       currentRoleId: string | null;
       newRole: string;
     }) => {
-      // Don't allow changing own superadmin role
       if (userId === user?.id) throw new Error("Cannot change your own role");
-
       if (currentRoleId) {
         if (newRole === "user") {
-          // Delete the role entry (default is user)
-          const { error } = await supabase
-            .from("user_roles")
-            .delete()
-            .eq("id", currentRoleId);
+          const { error } = await supabase.from("user_roles").delete().eq("id", currentRoleId);
           if (error) throw error;
-          // Re-insert as 'user'
           const { error: insertErr } = await supabase
             .from("user_roles")
             .insert({ user_id: userId, role: newRole } as never);
@@ -138,9 +171,48 @@ const AdminUsers = () => {
       queryClient.invalidateQueries({ queryKey: ["admin-users"] });
       toast.success("Role updated");
     },
-    onError: (err: Error) => {
-      toast.error(err.message);
+    onError: (err: Error) => toast.error(err.message),
+  });
+
+  const createUserMutation = useMutation({
+    mutationFn: () =>
+      callAdminFn("create_user", {
+        email: newEmail,
+        password: newPassword,
+        display_name: newName,
+        role: newRole,
+      }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["admin-users"] });
+      toast.success("User created");
+      setCreateOpen(false);
+      setNewEmail("");
+      setNewPassword("");
+      setNewName("");
+      setNewRole("user");
     },
+    onError: (err: Error) => toast.error(err.message),
+  });
+
+  const deleteUserMutation = useMutation({
+    mutationFn: (userId: string) => callAdminFn("delete_user", { user_id: userId }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["admin-users"] });
+      toast.success("User deleted");
+      setDeleteTarget(null);
+    },
+    onError: (err: Error) => toast.error(err.message),
+  });
+
+  const updatePasswordMutation = useMutation({
+    mutationFn: ({ userId, password }: { userId: string; password: string }) =>
+      callAdminFn("update_password", { user_id: userId, password }),
+    onSuccess: () => {
+      toast.success("Password updated");
+      setPasswordTarget(null);
+      setNewPwd("");
+    },
+    onError: (err: Error) => toast.error(err.message),
   });
 
   if (authLoading) {
@@ -159,8 +231,7 @@ const AdminUsers = () => {
 
   const filtered = users?.filter((u) => {
     if (!search) return true;
-    const q = search.toLowerCase();
-    return u.display_name?.toLowerCase().includes(q);
+    return u.display_name?.toLowerCase().includes(search.toLowerCase());
   });
 
   const initials = (name: string | null) => {
@@ -170,31 +241,25 @@ const AdminUsers = () => {
 
   return (
     <Layout>
-      <PageMeta
-        title="User Management — BizVibe Admin"
-        description="Manage user roles and permissions."
-      />
+      <PageMeta title="User Management — BizVibe Admin" description="Manage user roles and permissions." />
       <section className="py-24 md:py-32">
-        <div className="container max-w-4xl">
-
-          <div className="flex items-center gap-3 mb-2">
-            <UserCog className="h-6 w-6 text-primary" />
-            <h1 className="font-display text-2xl md:text-3xl font-bold">
-              User Management
-            </h1>
+        <div className="container max-w-5xl">
+          <div className="flex items-center justify-between mb-2">
+            <div className="flex items-center gap-3">
+              <UserCog className="h-6 w-6 text-primary" />
+              <h1 className="font-display text-2xl md:text-3xl font-bold">User Management</h1>
+            </div>
+            <Button onClick={() => setCreateOpen(true)} size="sm" className="gap-2">
+              <Plus className="h-4 w-4" /> Add User
+            </Button>
           </div>
           <p className="text-muted-foreground font-body mb-8">
-            Assign or remove admin and moderator roles. Only superadmins can access this page.
+            Manage users, roles, and passwords. Only superadmins can access this page.
           </p>
 
           <div className="relative max-w-sm mb-6">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <Input
-              placeholder="Search by name..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              className="pl-10"
-            />
+            <Input placeholder="Search by name..." value={search} onChange={(e) => setSearch(e.target.value)} className="pl-10" />
           </div>
 
           {isLoading ? (
@@ -211,6 +276,7 @@ const AdminUsers = () => {
                     <TableHead className="font-body">Vibetor Type</TableHead>
                     <TableHead className="font-body">Current Role</TableHead>
                     <TableHead className="font-body">Change Role</TableHead>
+                    <TableHead className="font-body text-right">Actions</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -222,19 +288,13 @@ const AdminUsers = () => {
                           <div className="flex items-center gap-3">
                             <Avatar className="h-8 w-8">
                               <AvatarImage src={u.avatar_url ?? undefined} />
-                              <AvatarFallback className="text-xs">
-                                {initials(u.display_name)}
-                              </AvatarFallback>
+                              <AvatarFallback className="text-xs">{initials(u.display_name)}</AvatarFallback>
                             </Avatar>
-                            <span className="font-body text-sm font-medium">
-                              {u.display_name || "Anonymous"}
-                            </span>
+                            <span className="font-body text-sm font-medium">{u.display_name || "Anonymous"}</span>
                           </div>
                         </TableCell>
                         <TableCell>
-                          <Badge variant="outline" className="text-[10px] capitalize">
-                            {u.membership_tier}
-                          </Badge>
+                          <Badge variant="outline" className="text-[10px] capitalize">{u.membership_tier}</Badge>
                         </TableCell>
                         <TableCell>
                           {u.membership_tier === "vibetor" ? (
@@ -258,9 +318,7 @@ const AdminUsers = () => {
                                 toast.success("Vibetor type updated");
                               }}
                             >
-                              <SelectTrigger className="h-8 text-xs w-28 font-body">
-                                <SelectValue />
-                              </SelectTrigger>
+                              <SelectTrigger className="h-8 text-xs w-28 font-body"><SelectValue /></SelectTrigger>
                               <SelectContent>
                                 <SelectItem value="none">Not set</SelectItem>
                                 <SelectItem value="investor">Investor</SelectItem>
@@ -275,24 +333,16 @@ const AdminUsers = () => {
                         <TableCell>{roleBadge(u.role)}</TableCell>
                         <TableCell>
                           {isMe ? (
-                            <span className="text-xs text-muted-foreground font-body">
-                              (your account)
-                            </span>
+                            <span className="text-xs text-muted-foreground font-body">(your account)</span>
                           ) : (
                             <Select
                               value={u.role}
                               onValueChange={(val) =>
-                                updateRoleMutation.mutate({
-                                  userId: u.user_id,
-                                  currentRoleId: u.role_id,
-                                  newRole: val,
-                                })
+                                updateRoleMutation.mutate({ userId: u.user_id, currentRoleId: u.role_id, newRole: val })
                               }
                               disabled={updateRoleMutation.isPending}
                             >
-                              <SelectTrigger className="h-8 text-xs w-32 font-body">
-                                <SelectValue />
-                              </SelectTrigger>
+                              <SelectTrigger className="h-8 text-xs w-32 font-body"><SelectValue /></SelectTrigger>
                               <SelectContent>
                                 <SelectItem value="user">User</SelectItem>
                                 <SelectItem value="moderator">Moderator</SelectItem>
@@ -300,6 +350,30 @@ const AdminUsers = () => {
                                 <SelectItem value="superadmin">SuperAdmin</SelectItem>
                               </SelectContent>
                             </Select>
+                          )}
+                        </TableCell>
+                        <TableCell className="text-right">
+                          {!isMe && (
+                            <div className="flex items-center justify-end gap-1">
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                className="h-8 w-8"
+                                title="Change password"
+                                onClick={() => setPasswordTarget({ user_id: u.user_id, name: u.display_name || "this user" })}
+                              >
+                                <KeyRound className="h-4 w-4" />
+                              </Button>
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                className="h-8 w-8 text-destructive hover:text-destructive"
+                                title="Delete user"
+                                onClick={() => setDeleteTarget({ user_id: u.user_id, name: u.display_name || "this user" })}
+                              >
+                                <Trash2 className="h-4 w-4" />
+                              </Button>
+                            </div>
                           )}
                         </TableCell>
                       </TableRow>
@@ -316,6 +390,100 @@ const AdminUsers = () => {
           )}
         </div>
       </section>
+
+      {/* Create User Dialog */}
+      <Dialog open={createOpen} onOpenChange={setCreateOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="font-display">Create New User</DialogTitle>
+            <DialogDescription className="font-body">
+              Add a new user with a pre-set email and password.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 py-2">
+            <div className="space-y-2">
+              <Label htmlFor="new-name">Display Name</Label>
+              <Input id="new-name" value={newName} onChange={(e) => setNewName(e.target.value)} placeholder="Full name" />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="new-email">Email</Label>
+              <Input id="new-email" type="email" value={newEmail} onChange={(e) => setNewEmail(e.target.value)} placeholder="user@example.com" />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="new-pwd">Password</Label>
+              <Input id="new-pwd" type="password" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} placeholder="Min 6 characters" />
+            </div>
+            <div className="space-y-2">
+              <Label>Role</Label>
+              <Select value={newRole} onValueChange={setNewRole}>
+                <SelectTrigger className="font-body"><SelectValue /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="user">User</SelectItem>
+                  <SelectItem value="moderator">Moderator</SelectItem>
+                  <SelectItem value="admin">Admin</SelectItem>
+                  <SelectItem value="superadmin">SuperAdmin</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setCreateOpen(false)}>Cancel</Button>
+            <Button
+              onClick={() => createUserMutation.mutate()}
+              disabled={!newEmail || !newPassword || newPassword.length < 6 || createUserMutation.isPending}
+            >
+              {createUserMutation.isPending ? "Creating..." : "Create User"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Delete Confirmation */}
+      <AlertDialog open={!!deleteTarget} onOpenChange={(open) => !open && setDeleteTarget(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle className="font-display">Delete User</AlertDialogTitle>
+            <AlertDialogDescription className="font-body">
+              Are you sure you want to permanently delete <strong>{deleteTarget?.name}</strong>? This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+              onClick={() => deleteTarget && deleteUserMutation.mutate(deleteTarget.user_id)}
+              disabled={deleteUserMutation.isPending}
+            >
+              {deleteUserMutation.isPending ? "Deleting..." : "Delete"}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      {/* Change Password Dialog */}
+      <Dialog open={!!passwordTarget} onOpenChange={(open) => { if (!open) { setPasswordTarget(null); setNewPwd(""); } }}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="font-display">Change Password</DialogTitle>
+            <DialogDescription className="font-body">
+              Set a new password for <strong>{passwordTarget?.name}</strong>.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-2 py-2">
+            <Label htmlFor="change-pwd">New Password</Label>
+            <Input id="change-pwd" type="password" value={newPwd} onChange={(e) => setNewPwd(e.target.value)} placeholder="Min 6 characters" />
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => { setPasswordTarget(null); setNewPwd(""); }}>Cancel</Button>
+            <Button
+              onClick={() => passwordTarget && updatePasswordMutation.mutate({ userId: passwordTarget.user_id, password: newPwd })}
+              disabled={newPwd.length < 6 || updatePasswordMutation.isPending}
+            >
+              {updatePasswordMutation.isPending ? "Updating..." : "Update Password"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </Layout>
   );
 };
