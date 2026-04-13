@@ -196,7 +196,7 @@ const FreeTierCard = () => {
         ))}
       </ul>
       <Button variant="heroOutline" className="mt-8 w-full" asChild>
-        <Link to="/community">{t("tiers.free.cta")}</Link>
+        <Link to="/auth">{t("tiers.free.cta")}</Link>
       </Button>
     </motion.div>
   );
@@ -232,7 +232,7 @@ const ProTierCard = () => {
         ))}
       </ul>
       <Button variant="hero" className="mt-8 w-full" asChild>
-        <Link to="/community">{t("tiers.pro.cta")}</Link>
+        <Link to="/contact">{t("tiers.pro.cta")}</Link>
       </Button>
     </motion.div>
   );
