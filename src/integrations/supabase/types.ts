@@ -505,6 +505,57 @@ export type Database = {
         }
         Relationships: []
       }
+      vibetor_applications: {
+        Row: {
+          company_name: string | null
+          created_at: string
+          email: string
+          full_name: string
+          id: string
+          is_company: boolean
+          linkedin_url: string | null
+          motivation: string
+          rejection_reason: string | null
+          representative_name: string | null
+          status: string
+          updated_at: string
+          user_id: string | null
+          vibetor_type: string
+        }
+        Insert: {
+          company_name?: string | null
+          created_at?: string
+          email: string
+          full_name: string
+          id?: string
+          is_company?: boolean
+          linkedin_url?: string | null
+          motivation: string
+          rejection_reason?: string | null
+          representative_name?: string | null
+          status?: string
+          updated_at?: string
+          user_id?: string | null
+          vibetor_type: string
+        }
+        Update: {
+          company_name?: string | null
+          created_at?: string
+          email?: string
+          full_name?: string
+          id?: string
+          is_company?: boolean
+          linkedin_url?: string | null
+          motivation?: string
+          rejection_reason?: string | null
+          representative_name?: string | null
+          status?: string
+          updated_at?: string
+          user_id?: string | null
+          vibetor_type?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
