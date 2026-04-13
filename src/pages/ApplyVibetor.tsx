@@ -20,7 +20,7 @@ import { motion } from "framer-motion";
 const formSchema = z.object({
   full_name: z.string().trim().min(2, "Name is required").max(100),
   email: z.string().trim().email("Valid email required").max(255),
-  vibetor_type: z.enum(["innovator", "investor", "partner"] as const, { required_error: "Please select a type" }),
+  vibetor_type: z.union([z.literal("innovator"), z.literal("investor"), z.literal("partner")], { errorMap: () => ({ message: "Please select a type" }) }),
   is_company: z.boolean().default(false),
   company_name: z.string().trim().max(200).optional(),
   representative_name: z.string().trim().max(100).optional(),
