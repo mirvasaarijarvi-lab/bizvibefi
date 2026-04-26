@@ -14,8 +14,8 @@ const sizeMap = {
 
 /**
  * Friendly BizVibe mascot avatar for page headers.
- * Wrapped in a soft gradient ring on a card-colored disc so the
- * transparent PNG never reveals the page background as a tiling artifact.
+ * Renders the transparent mascot directly on the page background — no disc,
+ * no ring, no tiling. The PNG itself carries true alpha transparency.
  */
 const HeroAvatar = ({ size = "md", className = "" }: HeroAvatarProps) => {
   return (
@@ -25,11 +25,11 @@ const HeroAvatar = ({ size = "md", className = "" }: HeroAvatarProps) => {
       transition={{ duration: 0.5, type: "spring", stiffness: 120 }}
       className={`mx-auto mb-6 ${className}`}
     >
-      <div className={`${sizeMap[size]} mx-auto rounded-full bg-gradient-to-br from-purple-vivid/20 via-card to-electric/20 p-1 shadow-lg ring-1 ring-border/50`}>
-        <div className="w-full h-full rounded-full bg-card flex items-center justify-center overflow-hidden">
-          <img src={botAvatar} alt="BizVibe mascot" className="w-full h-full object-contain drop-shadow-sm" />
-        </div>
-      </div>
+      <img
+        src={botAvatar}
+        alt="BizVibe mascot"
+        className={`${sizeMap[size]} mx-auto object-contain drop-shadow-lg`}
+      />
     </motion.div>
   );
 };
