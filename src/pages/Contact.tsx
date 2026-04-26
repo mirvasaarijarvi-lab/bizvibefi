@@ -95,6 +95,7 @@ const Contact = () => {
             animate={{ opacity: 1, y: 0 }}
             className="text-center mb-16"
           >
+            <HeroAvatar />
             <p className="font-body text-sm font-semibold text-turquoise tracking-widest uppercase mb-4">{t("contact.tag")}</p>
             <h1 className="font-display text-4xl md:text-6xl font-extrabold tracking-[-0.03em]">
               {t("contact.title")} <span className="text-gradient-surge">{t("contact.titleHighlight")}</span>
