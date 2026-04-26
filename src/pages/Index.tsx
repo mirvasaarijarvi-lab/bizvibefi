@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import Layout from "@/components/Layout";
 import PageMeta from "@/components/PageMeta";
 import NewsletterSignup from "@/components/NewsletterSignup";
+import HeroAvatar from "@/components/HeroAvatar";
 import { motion, useInView } from "framer-motion";
 import { Rocket, Users, Zap, ArrowRight, Wrench, Search, Handshake, TrendingUp, CalendarCheck, Code2, Lightbulb, MessageSquare, Gem } from "lucide-react";
 import { useTranslation } from "@/i18n/useTranslation";
@@ -30,6 +31,7 @@ const Index = () => {
             transition={{ duration: 0.7 }}
             className="max-w-4xl mx-auto text-center"
           >
+            <HeroAvatar size="lg" />
             <h1 className="font-display text-5xl md:text-8xl lg:text-[96px] font-extrabold tracking-[-0.03em] leading-[1.05] text-gradient-storm">
               BizVibe
             </h1>

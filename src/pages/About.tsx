@@ -1,5 +1,6 @@
 import Layout from "@/components/Layout";
 import PageMeta from "@/components/PageMeta";
+import HeroAvatar from "@/components/HeroAvatar";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
@@ -57,6 +58,7 @@ const About = () => {
             animate={{ opacity: 1, y: 0 }}
             className="max-w-3xl mx-auto text-center"
           >
+            <HeroAvatar />
             <p className="font-body text-sm font-semibold text-turquoise tracking-widest uppercase mb-4">{t("about.tag")}</p>
             <h1 className="font-display text-4xl md:text-6xl font-extrabold tracking-[-0.03em]">
               {t("about.title")} <span className="text-gradient-prism">{t("about.titleHighlight")}</span>
