@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import Layout from "@/components/Layout";
 import PageMeta from "@/components/PageMeta";
 import NewsletterSignup from "@/components/NewsletterSignup";
+import HeroAvatar from "@/components/HeroAvatar";
 import { motion, useInView } from "framer-motion";
 import { Rocket, Users, Zap, ArrowRight, Wrench, Search, Handshake, TrendingUp, CalendarCheck, Code2, Lightbulb, MessageSquare, Gem } from "lucide-react";
 import { useTranslation } from "@/i18n/useTranslation";
