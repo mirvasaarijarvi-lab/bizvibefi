@@ -1,9 +1,10 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import { Link } from "react-router-dom";
-import { MessageCircle, X, Send, Bot, User } from "lucide-react";
+import { X, Send, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
 import ReactMarkdown from "react-markdown";
+import botAvatar from "@/assets/support-bot-avatar.png";
 
 type Msg = { role: "user" | "assistant"; content: string };
 
@@ -135,9 +136,9 @@ const SupportChat = () => {
             exit={{ scale: 0 }}
             onClick={() => setOpen(true)}
             aria-label="Open support chat"
-            className="fixed bottom-4 left-4 z-[70] w-12 h-12 rounded-full bg-secondary text-secondary-foreground shadow-lg flex items-center justify-center hover:scale-110 transition-transform"
+            className="fixed bottom-4 left-4 z-[70] w-14 h-14 rounded-full bg-secondary/10 backdrop-blur-sm shadow-lg flex items-center justify-center hover:scale-110 transition-transform overflow-hidden"
           >
-            <MessageCircle className="h-6 w-6" />
+            <img src={botAvatar} alt="" className="w-full h-full object-contain drop-shadow-md" />
           </motion.button>
         )}
       </AnimatePresence>
@@ -154,7 +155,7 @@ const SupportChat = () => {
             {/* Header */}
             <div className="flex items-center justify-between px-4 py-3 bg-secondary text-secondary-foreground rounded-t-2xl">
               <div className="flex items-center gap-2">
-                <Bot className="h-5 w-5" />
+                <img src={botAvatar} alt="" className="h-7 w-7 object-contain" />
                 <span className="font-display font-semibold text-sm">BizVibe Support</span>
               </div>
               <button onClick={() => setOpen(false)} aria-label="Close chat" className="hover:opacity-70">
@@ -166,7 +167,7 @@ const SupportChat = () => {
             <div ref={scrollRef} className="flex-1 overflow-y-auto p-4 space-y-3">
               {messages.length === 0 && (
                 <div className="text-center py-8">
-                  <Bot className="h-10 w-10 mx-auto text-muted-foreground/40 mb-3" />
+                  <img src={botAvatar} alt="" className="h-20 w-20 mx-auto mb-3 object-contain drop-shadow-md" />
                   <p className="font-display font-semibold text-foreground text-sm">Hi! How can I help?</p>
                   <p className="text-xs text-muted-foreground font-body mt-1">
                     Ask me anything about BizVibe — membership, events, getting started, and more.
@@ -188,8 +189,8 @@ const SupportChat = () => {
               {messages.map((msg, i) => (
                 <div key={i} className={`flex gap-2 ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
                   {msg.role === "assistant" && (
-                    <div className="w-6 h-6 rounded-full bg-secondary text-secondary-foreground flex items-center justify-center shrink-0 mt-0.5">
-                      <Bot className="h-3.5 w-3.5" />
+                    <div className="w-7 h-7 rounded-full bg-secondary/10 flex items-center justify-center shrink-0 mt-0.5 overflow-hidden">
+                      <img src={botAvatar} alt="" className="w-full h-full object-contain" />
                     </div>
                   )}
                   <div
@@ -217,8 +218,8 @@ const SupportChat = () => {
 
               {loading && messages[messages.length - 1]?.role !== "assistant" && (
                 <div className="flex gap-2 items-start">
-                  <div className="w-6 h-6 rounded-full bg-secondary text-secondary-foreground flex items-center justify-center shrink-0">
-                    <Bot className="h-3.5 w-3.5" />
+                  <div className="w-7 h-7 rounded-full bg-secondary/10 flex items-center justify-center shrink-0 overflow-hidden">
+                    <img src={botAvatar} alt="" className="w-full h-full object-contain" />
                   </div>
                   <div className="bg-muted rounded-xl px-3 py-2">
                     <div className="flex gap-1">
