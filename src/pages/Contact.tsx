@@ -1,5 +1,6 @@
 import Layout from "@/components/Layout";
 import PageMeta from "@/components/PageMeta";
+import HeroAvatar from "@/components/HeroAvatar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
