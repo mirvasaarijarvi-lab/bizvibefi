@@ -136,9 +136,9 @@ const SupportChat = () => {
             exit={{ scale: 0 }}
             onClick={() => setOpen(true)}
             aria-label="Open support chat"
-            className="fixed bottom-4 left-4 z-[70] w-14 h-14 rounded-full bg-secondary/10 backdrop-blur-sm shadow-lg flex items-center justify-center hover:scale-110 transition-transform overflow-hidden"
+            className="fixed bottom-4 left-4 z-[70] w-14 h-14 rounded-full bg-secondary shadow-lg flex items-center justify-center hover:scale-110 transition-transform overflow-hidden"
           >
-            <img src={botAvatar} alt="" className="w-full h-full object-contain drop-shadow-md" />
+            <img src={botAvatar} alt="" className="w-12 h-12 object-contain" />
           </motion.button>
         )}
       </AnimatePresence>
@@ -155,7 +155,7 @@ const SupportChat = () => {
             {/* Header */}
             <div className="flex items-center justify-between px-4 py-3 bg-secondary text-secondary-foreground rounded-t-2xl">
               <div className="flex items-center gap-2">
-                <img src={botAvatar} alt="" className="h-7 w-7 object-contain" />
+                <img src={botAvatar} alt="" className="h-8 w-8 object-contain" />
                 <span className="font-display font-semibold text-sm">BizVibe Support</span>
               </div>
               <button onClick={() => setOpen(false)} aria-label="Close chat" className="hover:opacity-70">
@@ -167,7 +167,9 @@ const SupportChat = () => {
             <div ref={scrollRef} className="flex-1 overflow-y-auto p-4 space-y-3">
               {messages.length === 0 && (
                 <div className="text-center py-8">
-                  <img src={botAvatar} alt="" className="h-20 w-20 mx-auto mb-3 object-contain drop-shadow-md" />
+                  <div className="w-24 h-24 mx-auto mb-3 rounded-full bg-card flex items-center justify-center overflow-hidden">
+                    <img src={botAvatar} alt="" className="w-full h-full object-contain drop-shadow-md" />
+                  </div>
                   <p className="font-display font-semibold text-foreground text-sm">Hi! How can I help?</p>
                   <p className="text-xs text-muted-foreground font-body mt-1">
                     Ask me anything about BizVibe — membership, events, getting started, and more.
@@ -189,9 +191,7 @@ const SupportChat = () => {
               {messages.map((msg, i) => (
                 <div key={i} className={`flex gap-2 ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
                   {msg.role === "assistant" && (
-                    <div className="w-7 h-7 rounded-full bg-secondary/10 flex items-center justify-center shrink-0 mt-0.5 overflow-hidden">
-                      <img src={botAvatar} alt="" className="w-full h-full object-contain" />
-                    </div>
+                    <img src={botAvatar} alt="" className="w-7 h-7 object-contain shrink-0 mt-0.5" />
                   )}
                   <div
                     className={`max-w-[80%] rounded-xl px-3 py-2 text-sm font-body ${
@@ -218,9 +218,7 @@ const SupportChat = () => {
 
               {loading && messages[messages.length - 1]?.role !== "assistant" && (
                 <div className="flex gap-2 items-start">
-                  <div className="w-7 h-7 rounded-full bg-secondary/10 flex items-center justify-center shrink-0 overflow-hidden">
-                    <img src={botAvatar} alt="" className="w-full h-full object-contain" />
-                  </div>
+                  <img src={botAvatar} alt="" className="w-7 h-7 object-contain shrink-0" />
                   <div className="bg-muted rounded-xl px-3 py-2">
                     <div className="flex gap-1">
                       <span className="w-1.5 h-1.5 rounded-full bg-muted-foreground/40 animate-bounce [animation-delay:0ms]" />
