@@ -218,8 +218,8 @@ const SupportChat = () => {
 
               {loading && messages[messages.length - 1]?.role !== "assistant" && (
                 <div className="flex gap-2 items-start">
-                  <div className="w-6 h-6 rounded-full bg-secondary text-secondary-foreground flex items-center justify-center shrink-0">
-                    <Bot className="h-3.5 w-3.5" />
+                  <div className="w-7 h-7 rounded-full bg-secondary/10 flex items-center justify-center shrink-0 overflow-hidden">
+                    <img src={botAvatar} alt="" className="w-full h-full object-contain" />
                   </div>
                   <div className="bg-muted rounded-xl px-3 py-2">
                     <div className="flex gap-1">
