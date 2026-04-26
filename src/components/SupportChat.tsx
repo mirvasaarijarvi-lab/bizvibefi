@@ -167,7 +167,9 @@ const SupportChat = () => {
             <div ref={scrollRef} className="flex-1 overflow-y-auto p-4 space-y-3">
               {messages.length === 0 && (
                 <div className="text-center py-8">
-                  <img src={botAvatar} alt="" className="h-20 w-20 mx-auto mb-3 object-contain drop-shadow-md" />
+                  <div className="w-24 h-24 mx-auto mb-3 rounded-full bg-card flex items-center justify-center overflow-hidden">
+                    <img src={botAvatar} alt="" className="w-full h-full object-contain drop-shadow-md" />
+                  </div>
                   <p className="font-display font-semibold text-foreground text-sm">Hi! How can I help?</p>
                   <p className="text-xs text-muted-foreground font-body mt-1">
                     Ask me anything about BizVibe — membership, events, getting started, and more.
