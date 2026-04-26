@@ -155,7 +155,7 @@ const SupportChat = () => {
             {/* Header */}
             <div className="flex items-center justify-between px-4 py-3 bg-secondary text-secondary-foreground rounded-t-2xl">
               <div className="flex items-center gap-2">
-                <img src={botAvatar} alt="" className="h-7 w-7 object-contain" />
+                <img src={botAvatar} alt="" className="h-8 w-8 object-contain" />
                 <span className="font-display font-semibold text-sm">BizVibe Support</span>
               </div>
               <button onClick={() => setOpen(false)} aria-label="Close chat" className="hover:opacity-70">
