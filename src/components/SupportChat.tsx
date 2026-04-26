@@ -136,9 +136,9 @@ const SupportChat = () => {
             exit={{ scale: 0 }}
             onClick={() => setOpen(true)}
             aria-label="Open support chat"
-            className="fixed bottom-4 left-4 z-[70] w-14 h-14 rounded-full bg-secondary/10 backdrop-blur-sm shadow-lg flex items-center justify-center hover:scale-110 transition-transform overflow-hidden"
+            className="fixed bottom-4 left-4 z-[70] w-14 h-14 rounded-full bg-secondary shadow-lg flex items-center justify-center hover:scale-110 transition-transform overflow-hidden"
           >
-            <img src={botAvatar} alt="" className="w-full h-full object-contain drop-shadow-md" />
+            <img src={botAvatar} alt="" className="w-12 h-12 object-contain" />
           </motion.button>
         )}
       </AnimatePresence>
