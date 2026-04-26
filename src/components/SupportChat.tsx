@@ -4,6 +4,7 @@ import { MessageCircle, X, Send, Bot, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
 import ReactMarkdown from "react-markdown";
+import botAvatar from "@/assets/support-bot-avatar.png";
 
 type Msg = { role: "user" | "assistant"; content: string };
 
