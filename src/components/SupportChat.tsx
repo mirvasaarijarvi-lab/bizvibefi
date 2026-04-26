@@ -189,8 +189,8 @@ const SupportChat = () => {
               {messages.map((msg, i) => (
                 <div key={i} className={`flex gap-2 ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
                   {msg.role === "assistant" && (
-                    <div className="w-6 h-6 rounded-full bg-secondary text-secondary-foreground flex items-center justify-center shrink-0 mt-0.5">
-                      <Bot className="h-3.5 w-3.5" />
+                    <div className="w-7 h-7 rounded-full bg-secondary/10 flex items-center justify-center shrink-0 mt-0.5 overflow-hidden">
+                      <img src={botAvatar} alt="" className="w-full h-full object-contain" />
                     </div>
                   )}
                   <div
