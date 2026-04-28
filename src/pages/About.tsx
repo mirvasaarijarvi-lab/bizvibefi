@@ -60,10 +60,8 @@ const About = () => {
 
   const getFounderAvatar = (name: string) => findFounderProfile(name)?.avatar_url ?? null;
   const getFounderUserId = (name: string) => findFounderProfile(name)?.user_id ?? null;
-  const getFounderVibetorStatus = (name: string) => {
-    const p = findFounderProfile(name);
-    return p?.membership_tier === "vibetor" || !!p?.vibetor_type;
-  };
+  // All three founders are Vibetors by virtue of founding the collective
+  const getFounderVibetorStatus = (_name: string) => true;
 
   return (
     <Layout>
