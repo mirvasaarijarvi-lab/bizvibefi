@@ -163,65 +163,89 @@ const About = () => {
       </section>
 
       {/* Vibetors */}
-      {vibetors && vibetors.length > 0 && (
-        <section className="pb-20">
-          <div className="container max-w-4xl">
-            <div className="text-center mb-10">
-              <div className="flex items-center justify-center gap-2 mb-4">
-                <Gem className="h-6 w-6 text-vibetor" />
-              </div>
-              <h2 className="font-display text-2xl md:text-4xl font-bold tracking-[-0.02em]">
-                {t("about.vibetorsTitle")} <span className="text-vibetor">{t("about.vibetorsTitleHighlight")}</span>
-              </h2>
-              <p className="mt-3 text-muted-foreground font-body max-w-xl mx-auto">{t("about.vibetorsSubtitle")}</p>
+      <section className="pb-20">
+        <div className="container max-w-4xl">
+          <div className="text-center mb-10">
+            <div className="flex items-center justify-center gap-2 mb-4">
+              <Gem className="h-6 w-6 text-vibetor" />
             </div>
-            <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6">
-              {vibetors.map((v) => {
-                const initials = v.display_name
-                  ? v.display_name.split(" ").map((w: string) => w[0]).join("").toUpperCase().slice(0, 2)
-                  : "?";
-                const typeLabel = v.vibetor_type ? t(`about.vibetorTypes.${v.vibetor_type}`) : null;
-                return (
-                  <motion.div
-                    key={v.user_id}
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                  >
-                    <Link
-                      to={`/members/${v.user_id}`}
-                      className="block text-center bg-card border-2 border-vibetor/30 rounded-2xl p-6 hover:border-vibetor/60 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 group"
-                    >
-                      <Avatar className="h-20 w-20 mx-auto mb-4">
-                        <AvatarImage src={v.avatar_url ?? undefined} alt={v.display_name ?? "Vibetor"} />
-                        <AvatarFallback className="text-lg font-semibold bg-vibetor/20 text-vibetor">
-                          {initials}
-                        </AvatarFallback>
-                      </Avatar>
-                      <h3 className="font-display text-lg font-bold tracking-[-0.01em] group-hover:text-vibetor transition-colors">
-                        {v.display_name || "Vibetor"}
-                      </h3>
-                      {v.company && (
-                        <p className="text-sm text-muted-foreground font-body mt-1">{v.company}</p>
-                      )}
-                      <div className="flex items-center justify-center gap-2 mt-3">
-                        <Badge className="text-[10px] px-2 py-0.5 bg-vibetor/90 hover:bg-vibetor text-primary-foreground">
-                          VIBETOR
-                        </Badge>
-                        {typeLabel && (
-                          <Badge variant="outline" className="text-[10px] px-2 py-0.5 border-vibetor/40 text-vibetor">
-                            {typeLabel}
-                          </Badge>
-                        )}
-                      </div>
-                    </Link>
-                  </motion.div>
-                );
-              })}
-            </div>
+            <h2 className="font-display text-2xl md:text-4xl font-bold tracking-[-0.02em]">
+              {t("about.vibetorsTitle")} <span className="text-vibetor">{t("about.vibetorsTitleHighlight")}</span>
+            </h2>
+            <p className="mt-3 text-muted-foreground font-body max-w-xl mx-auto">{t("about.vibetorsSubtitle")}</p>
           </div>
-        </section>
-      )}
+          <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6">
+            {filteredVibetors.map((v) => {
+              const initials = v.display_name
+                ? v.display_name.split(" ").map((w: string) => w[0]).join("").toUpperCase().slice(0, 2)
+                : "?";
+              const typeLabel = v.vibetor_type ? t(`about.vibetorTypes.${v.vibetor_type}`) : null;
+              return (
+                <motion.div
+                  key={v.user_id}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                >
+                  <Link
+                    to={`/members/${v.user_id}`}
+                    className="block text-center bg-card border-2 border-vibetor/30 rounded-2xl p-6 hover:border-vibetor/60 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 group"
+                  >
+                    <Avatar className="h-20 w-20 mx-auto mb-4">
+                      <AvatarImage src={v.avatar_url ?? undefined} alt={v.display_name ?? "Vibetor"} />
+                      <AvatarFallback className="text-lg font-semibold bg-vibetor/20 text-vibetor">
+                        {initials}
+                      </AvatarFallback>
+                    </Avatar>
+                    <h3 className="font-display text-lg font-bold tracking-[-0.01em] group-hover:text-vibetor transition-colors">
+                      {v.display_name || "Vibetor"}
+                    </h3>
+                    {v.company && (
+                      <p className="text-sm text-muted-foreground font-body mt-1">{v.company}</p>
+                    )}
+                    <div className="flex items-center justify-center gap-2 mt-3">
+                      <Badge className="text-[10px] px-2 py-0.5 bg-vibetor/90 hover:bg-vibetor text-primary-foreground">
+                        VIBETOR
+                      </Badge>
+                      {typeLabel && (
+                        <Badge variant="outline" className="text-[10px] px-2 py-0.5 border-vibetor/40 text-vibetor">
+                          {typeLabel}
+                        </Badge>
+                      )}
+                    </div>
+                  </Link>
+                </motion.div>
+              );
+            })}
+
+            {/* Join CTA placeholder card */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="sm:col-span-2 md:col-span-1"
+            >
+              <Link
+                to="/get-going"
+                className="flex flex-col items-center justify-center text-center h-full bg-card border-2 border-dashed border-vibetor/40 rounded-2xl p-6 hover:border-vibetor hover:shadow-lg hover:-translate-y-1 transition-all duration-300 group"
+              >
+                <div className="h-20 w-20 mx-auto mb-4 rounded-full bg-vibetor/10 flex items-center justify-center group-hover:bg-vibetor/20 transition-colors">
+                  <Sparkles className="h-8 w-8 text-vibetor" />
+                </div>
+                <h3 className="font-display text-lg font-bold tracking-[-0.01em] text-vibetor">
+                  {t("about.vibetorJoinTitle")}
+                </h3>
+                <p className="text-sm text-muted-foreground font-body mt-2">
+                  {t("about.vibetorJoinDesc")}
+                </p>
+                <span className="inline-flex items-center gap-1.5 mt-4 text-sm font-body font-semibold text-vibetor">
+                  {t("about.vibetorJoinCta")} <ArrowRight className="h-3.5 w-3.5 group-hover:translate-x-1 transition-transform" />
+                </span>
+              </Link>
+            </motion.div>
+          </div>
+        </div>
+      </section>
 
       {/* Values */}
       <section className="pb-20 md:pb-28">
