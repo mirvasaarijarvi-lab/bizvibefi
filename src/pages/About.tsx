@@ -29,8 +29,8 @@ const About = () => {
     queryFn: async () => {
       const { data } = await supabase
         .from("profiles")
-        .select("display_name, avatar_url, user_id")
-        .in("display_name", FOUNDER_NAMES);
+        .select("display_name, avatar_url, user_id, membership_tier, vibetor_type")
+        .in("display_name", ALL_FOUNDER_NAMES);
       return data ?? [];
     },
     staleTime: 300_000,
@@ -48,12 +48,21 @@ const About = () => {
     staleTime: 300_000,
   });
 
-  const getFounderAvatar = (name: string) => {
-    return founderProfiles?.find((p) => p.display_name === name)?.avatar_url ?? null;
+  // Exclude founders (and their aliases) from the public Vibetors list
+  const filteredVibetors = (vibetors ?? []).filter(
+    (v) => !v.display_name || !ALL_FOUNDER_NAMES.includes(v.display_name)
+  );
+
+  const findFounderProfile = (name: string) => {
+    const aliases = [name, ...(FOUNDER_ALIASES[name] ?? [])];
+    return founderProfiles?.find((p) => p.display_name && aliases.includes(p.display_name)) ?? null;
   };
 
-  const getFounderUserId = (name: string) => {
-    return founderProfiles?.find((p) => p.display_name === name)?.user_id ?? null;
+  const getFounderAvatar = (name: string) => findFounderProfile(name)?.avatar_url ?? null;
+  const getFounderUserId = (name: string) => findFounderProfile(name)?.user_id ?? null;
+  const getFounderVibetorStatus = (name: string) => {
+    const p = findFounderProfile(name);
+    return p?.membership_tier === "vibetor" || !!p?.vibetor_type;
   };
 
   return (
