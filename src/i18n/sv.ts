@@ -174,6 +174,8 @@ const sv = {
     title: "Tre byggare.",
     titleHighlight: "Ett kollektiv.",
     desc: "Vi startade BizVibe för att vi var trötta på att bygga ensamma. Det bästa händer när man kombinerar kompletterande kaos. Så vi byggde ett kollektiv kring det.",
+    foundersHeading: "BizVibes",
+    foundersHeadingHighlight: "grundare",
     founders: [
       { name: "Minna Blomster", role: "Superconnector, Strateg, Byggare", bio: "Ser kopplingar andra missar. Öppnar dörrar, bygger broar och gör det omöjliga till en självklarhet.", linkedin: "https://www.linkedin.com/in/minnablomster/" },
       { name: "Mirva Saarijärvi", role: "Strateg, Byggare, Kopplare", bio: "Gör kaos till klarhet. Kartlägger vägen från idé till genomförande och ser till att det faktiskt händer.", linkedin: "https://www.linkedin.com/in/mirvasaarijarvi/" },
