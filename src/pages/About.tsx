@@ -119,13 +119,16 @@ const About = () => {
                   </div>
                   <h3 className="font-display text-xl font-bold tracking-[-0.01em] group-hover:text-primary transition-colors">{name}</h3>
                   <p className="text-turquoise font-body font-semibold text-sm mt-1">{t(`about.founders.${i}.role`)}</p>
-                  {isVibetor && (
-                    <div className="flex justify-center mt-2">
+                  <div className="flex flex-wrap justify-center gap-2 mt-2">
+                    <Badge className="text-[10px] px-2 py-0.5 bg-gradient-prism text-primary-foreground inline-flex items-center gap-1 border-0">
+                      <Star className="h-3 w-3" /> FOUNDER
+                    </Badge>
+                    {isVibetor && (
                       <Badge className="text-[10px] px-2 py-0.5 bg-vibetor/90 hover:bg-vibetor text-primary-foreground inline-flex items-center gap-1">
                         <Gem className="h-3 w-3" /> VIBETOR
                       </Badge>
-                    </div>
-                  )}
+                    )}
+                  </div>
                   <p className="mt-3 text-sm text-muted-foreground font-body">{t(`about.founders.${i}.bio`)}</p>
                   <div className="flex items-center justify-center gap-3 mt-4">
                     <span className="inline-flex items-center gap-1.5 text-sm font-body font-medium text-electric group-hover:text-electric-light transition-colors">
