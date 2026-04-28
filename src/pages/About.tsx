@@ -93,6 +93,7 @@ const About = () => {
               const name = t(`about.founders.${i}.name`);
               const avatarUrl = getFounderAvatar(name);
               const userId = getFounderUserId(name);
+              const isVibetor = getFounderVibetorStatus(name);
               const linkedinUrl = t(`about.founders.${i}.linkedin`);
 
               const cardContent = (
