@@ -195,6 +195,9 @@ const sv = {
       innovator: "Innovatör",
       partner: "Partner",
     },
+    vibetorJoinTitle: "Bli en Vibetor",
+    vibetorJoinDesc: "Innovatörer och investerare, var med och stärk byggare som levererar.",
+    vibetorJoinCta: "Ansök nu",
   },
   contact: {
     tag: "Kontakt",
