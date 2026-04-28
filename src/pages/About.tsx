@@ -86,6 +86,14 @@ const About = () => {
       {/* Team */}
       <section className="pb-20">
         <div className="container">
+          <div className="text-center mb-10">
+            <div className="flex items-center justify-center gap-2 mb-4">
+              <Star className="h-6 w-6 text-primary" />
+            </div>
+            <h2 className="font-display text-2xl md:text-4xl font-bold tracking-[-0.02em]">
+              {t("about.foundersHeading")} <span className="text-gradient-prism">{t("about.foundersHeadingHighlight")}</span>
+            </h2>
+          </div>
           <div className="grid md:grid-cols-3 gap-8 max-w-4xl mx-auto">
             {[0, 1, 2].map((i) => {
               const name = t(`about.founders.${i}.name`);
