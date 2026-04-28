@@ -195,6 +195,9 @@ const fi = {
       innovator: "Innovaattori",
       partner: "Kumppani",
     },
+    vibetorJoinTitle: "Liity Vibetoriksi",
+    vibetorJoinDesc: "Innovaattorit ja sijoittajat, voimistakaa kanssamme rakentajia, jotka toimittavat.",
+    vibetorJoinCta: "Hae mukaan",
   },
   contact: {
     tag: "Yhteystiedot",

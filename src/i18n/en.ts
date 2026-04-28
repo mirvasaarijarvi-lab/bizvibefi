@@ -195,6 +195,9 @@ const en = {
       innovator: "Innovator",
       partner: "Partner",
     },
+    vibetorJoinTitle: "Become a Vibetor",
+    vibetorJoinDesc: "Innovators and investors, join us in powering builders who ship.",
+    vibetorJoinCta: "Apply now",
   },
   contact: {
     tag: "Contact",
