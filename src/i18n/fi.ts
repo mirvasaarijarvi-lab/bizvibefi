@@ -174,6 +174,8 @@ const fi = {
     title: "Kolme rakentajaa.",
     titleHighlight: "Yksi kollektiivi.",
     desc: "Aloitimme BizViben koska olimme kyllästyneitä rakentamaan yksin. Parhaat asiat syntyvät kun yhdistää toisiaan täydentävää kaaosta, joten rakensimme kollektiivin sen ympärille.",
+    foundersHeading: "BizViben",
+    foundersHeadingHighlight: "perustajat",
     founders: [
       { name: "Minna Blomster", role: "Yhdistäjä, Strategi, Rakentaja", bio: "Yhdistää pisteet joita muut eivät näe. Avaa ovia, rakentaa siltoja ja tekee mahdottomasta itsestään selvää.", linkedin: "https://www.linkedin.com/in/minnablomster/" },
       { name: "Mirva Saarijärvi", role: "Strategi, Rakentaja, Yhdistäjä", bio: "Muuttaa kaaoksen selkeydeksi. Kartoittaa polun ideasta toteutukseen ja varmistaa että se oikeasti tapahtuu.", linkedin: "https://www.linkedin.com/in/mirvasaarijarvi/" },
