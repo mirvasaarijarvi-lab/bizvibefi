@@ -4,7 +4,7 @@ import HeroAvatar from "@/components/HeroAvatar";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { ArrowRight, Linkedin, Gem } from "lucide-react";
+import { ArrowRight, Linkedin, Gem, Sparkles } from "lucide-react";
 import { useTranslation } from "@/i18n/useTranslation";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -12,6 +12,14 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 
 const FOUNDER_NAMES = ["Minna Blomster", "Mirva Saarijärvi", "Vesa Mattila"];
+// Aliases / alternate display names some founders may use on their member profile
+const FOUNDER_ALIASES: Record<string, string[]> = {
+  "Mirva Saarijärvi": ["Mimmi Saarijärvi"],
+};
+const ALL_FOUNDER_NAMES = [
+  ...FOUNDER_NAMES,
+  ...Object.values(FOUNDER_ALIASES).flat(),
+];
 
 const About = () => {
   const { t } = useTranslation();
