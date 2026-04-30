@@ -11,6 +11,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Search, Users, Linkedin, Building2, ExternalLink, ShieldCheck, Zap, Globe, Mail, Phone, Briefcase, Gem } from "lucide-react";
+import Leaderboard from "@/components/Leaderboard";
 import { Switch } from "@/components/ui/switch";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Navigate, Link } from "react-router-dom";
@@ -192,6 +193,8 @@ const Members = () => {
               Discover builders, strategists, and connectors in the BizVibe collective.
             </p>
           </motion.div>
+
+          <Leaderboard />
 
           <div className="flex flex-col sm:flex-row gap-3 max-w-2xl mx-auto mb-10">
             <div className="relative flex-1">
