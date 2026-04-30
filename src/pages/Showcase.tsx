@@ -15,7 +15,7 @@ import { motion } from "framer-motion";
 import { useTranslation } from "@/i18n/useTranslation";
 import { useAuth } from "@/hooks/useAuth";
 import { useShowcaseItems, useCreateShowcaseItem, type ShowcaseType, type ShowcaseItem, type KeyFigure } from "@/hooks/useShowcase";
-import { Plus, ExternalLink, ArrowRight, Lightbulb, MessageSquare, Wrench, Upload, X as XIcon, Trash2, BookOpen, Code } from "lucide-react";
+import { Plus, ExternalLink, ArrowRight, Lightbulb, MessageSquare, Wrench, Upload, X as XIcon, Trash2, BookOpen, Code, BarChart3 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import ImageDropZone from "@/components/ImageDropZone";
 import ImageCropDialog from "@/components/ImageCropDialog";
@@ -27,6 +27,7 @@ const typeIcons: Record<ShowcaseType, React.ElementType> = {
   tool: Wrench,
   guidebook: BookOpen,
   sample_code: Code,
+  infographic: BarChart3,
 };
 
 const ShowcaseCard = ({ item }: { item: ShowcaseItem }) => {
@@ -265,6 +266,7 @@ const SubmitForm = ({ onClose }: { onClose: () => void }) => {
             <SelectItem value="tool">{t("showcase.tabs.tools")}</SelectItem>
             <SelectItem value="guidebook">{t("showcase.tabs.guidebooks")}</SelectItem>
             <SelectItem value="sample_code">{t("showcase.tabs.sampleCode")}</SelectItem>
+            <SelectItem value="infographic">{t("showcase.tabs.infographics")}</SelectItem>
           </SelectContent>
         </Select>
       </div>
@@ -411,6 +413,7 @@ const Showcase = () => {
               <TabsTrigger value="tool">{t("showcase.tabs.tools")}</TabsTrigger>
               <TabsTrigger value="guidebook">{t("showcase.tabs.guidebooks")}</TabsTrigger>
               <TabsTrigger value="sample_code">{t("showcase.tabs.sampleCode")}</TabsTrigger>
+              <TabsTrigger value="infographic">{t("showcase.tabs.infographics")}</TabsTrigger>
             </TabsList>
 
             <TabsContent value={activeTab}>

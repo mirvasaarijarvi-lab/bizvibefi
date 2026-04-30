@@ -587,6 +587,7 @@ export type Database = {
         | "tool"
         | "guidebook"
         | "sample_code"
+        | "infographic"
       vibetor_type: "investor" | "innovator" | "partner"
     }
     CompositeTypes: {
@@ -726,6 +727,7 @@ export const Constants = {
         "tool",
         "guidebook",
         "sample_code",
+        "infographic",
       ],
       vibetor_type: ["investor", "innovator", "partner"],
     },
