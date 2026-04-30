@@ -413,6 +413,7 @@ const Showcase = () => {
               <TabsTrigger value="tool">{t("showcase.tabs.tools")}</TabsTrigger>
               <TabsTrigger value="guidebook">{t("showcase.tabs.guidebooks")}</TabsTrigger>
               <TabsTrigger value="sample_code">{t("showcase.tabs.sampleCode")}</TabsTrigger>
+              <TabsTrigger value="infographic">{t("showcase.tabs.infographics")}</TabsTrigger>
             </TabsList>
 
             <TabsContent value={activeTab}>
