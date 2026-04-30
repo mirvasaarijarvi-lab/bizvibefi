@@ -194,6 +194,26 @@ export const useLeaderboard = () =>
     },
   });
 
+export const useAllMemberBadges = (userIds: string[]) =>
+  useQuery({
+    queryKey: ["all-member-badges", userIds.sort().join(",")],
+    queryFn: async () => {
+      if (userIds.length === 0) return {} as Record<string, Set<string>>;
+      const { data, error } = await supabase
+        .from("member_badges" as never)
+        .select("user_id, badge_id")
+        .in("user_id", userIds);
+      if (error) throw error;
+      const map: Record<string, Set<string>> = {};
+      for (const row of (data as unknown as { user_id: string; badge_id: string }[])) {
+        if (!map[row.user_id]) map[row.user_id] = new Set();
+        map[row.user_id].add(row.badge_id);
+      }
+      return map;
+    },
+    enabled: userIds.length > 0,
+  });
+
 export const useCreateClaim = () => {
   const { user } = useAuth();
   const qc = useQueryClient();
