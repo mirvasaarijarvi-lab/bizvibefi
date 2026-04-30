@@ -32,6 +32,8 @@ const AdminNotifications = lazy(() => import("./pages/AdminNotifications.tsx"));
 const AuditLog = lazy(() => import("./pages/AuditLog.tsx"));
 const AdminUsers = lazy(() => import("./pages/AdminUsers.tsx"));
 const ApplyVibetor = lazy(() => import("./pages/ApplyVibetor.tsx"));
+const Badges = lazy(() => import("./pages/Badges.tsx"));
+const AdminBadges = lazy(() => import("./pages/AdminBadges.tsx"));
 const NotFound = lazy(() => import("./pages/NotFound.tsx"));
 
 const queryClient = new QueryClient();
@@ -70,6 +72,8 @@ const App = () => (
                 <Route path="/admin/audit-log" element={<AuditLog />} />
                 <Route path="/admin/users" element={<AdminUsers />} />
                 <Route path="/apply-vibetor" element={<ApplyVibetor />} />
+                <Route path="/badges" element={<Badges />} />
+                <Route path="/admin/badges" element={<AdminBadges />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </Suspense>

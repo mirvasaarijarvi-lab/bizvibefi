@@ -77,6 +77,122 @@ export type Database = {
         }
         Relationships: []
       }
+      badge_catalog: {
+        Row: {
+          bonus_points: number
+          category: string
+          code: string
+          color: string
+          created_at: string
+          description: string
+          evidence_hint: string | null
+          icon: string
+          id: string
+          is_active: boolean
+          is_diamond: boolean
+          name: string
+          requires_founder: boolean
+          requires_peer: boolean
+          sort_order: number
+          subcategory: string | null
+          tier: number | null
+        }
+        Insert: {
+          bonus_points?: number
+          category: string
+          code: string
+          color?: string
+          created_at?: string
+          description: string
+          evidence_hint?: string | null
+          icon?: string
+          id?: string
+          is_active?: boolean
+          is_diamond?: boolean
+          name: string
+          requires_founder?: boolean
+          requires_peer?: boolean
+          sort_order?: number
+          subcategory?: string | null
+          tier?: number | null
+        }
+        Update: {
+          bonus_points?: number
+          category?: string
+          code?: string
+          color?: string
+          created_at?: string
+          description?: string
+          evidence_hint?: string | null
+          icon?: string
+          id?: string
+          is_active?: boolean
+          is_diamond?: boolean
+          name?: string
+          requires_founder?: boolean
+          requires_peer?: boolean
+          sort_order?: number
+          subcategory?: string | null
+          tier?: number | null
+        }
+        Relationships: []
+      }
+      badge_claims: {
+        Row: {
+          badge_id: string
+          created_at: string
+          evidence: string
+          id: string
+          peer_confirmed: boolean | null
+          peer_confirmed_at: string | null
+          peer_user_id: string | null
+          rejection_reason: string | null
+          reviewed_at: string | null
+          reviewed_by: string | null
+          status: Database["public"]["Enums"]["badge_claim_status"]
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          badge_id: string
+          created_at?: string
+          evidence: string
+          id?: string
+          peer_confirmed?: boolean | null
+          peer_confirmed_at?: string | null
+          peer_user_id?: string | null
+          rejection_reason?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: Database["public"]["Enums"]["badge_claim_status"]
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          badge_id?: string
+          created_at?: string
+          evidence?: string
+          id?: string
+          peer_confirmed?: boolean | null
+          peer_confirmed_at?: string | null
+          peer_user_id?: string | null
+          rejection_reason?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: Database["public"]["Enums"]["badge_claim_status"]
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "badge_claims_badge_id_fkey"
+            columns: ["badge_id"]
+            isOneToOne: false
+            referencedRelation: "badge_catalog"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       contact_requests: {
         Row: {
           created_at: string
@@ -307,6 +423,51 @@ export type Database = {
             columns: ["category_id"]
             isOneToOne: false
             referencedRelation: "forum_categories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      member_badges: {
+        Row: {
+          awarded_at: string
+          awarded_by: string | null
+          badge_id: string
+          claim_id: string | null
+          id: string
+          notes: string | null
+          user_id: string
+        }
+        Insert: {
+          awarded_at?: string
+          awarded_by?: string | null
+          badge_id: string
+          claim_id?: string | null
+          id?: string
+          notes?: string | null
+          user_id: string
+        }
+        Update: {
+          awarded_at?: string
+          awarded_by?: string | null
+          badge_id?: string
+          claim_id?: string | null
+          id?: string
+          notes?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "member_badges_badge_id_fkey"
+            columns: ["badge_id"]
+            isOneToOne: false
+            referencedRelation: "badge_catalog"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "member_badges_claim_id_fkey"
+            columns: ["claim_id"]
+            isOneToOne: false
+            referencedRelation: "badge_claims"
             referencedColumns: ["id"]
           },
         ]
@@ -561,6 +722,18 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      get_badge_leaderboard: {
+        Args: never
+        Returns: {
+          avatar_url: string
+          badge_count: number
+          display_name: string
+          is_founder: boolean
+          membership_tier: Database["public"]["Enums"]["membership_tier"]
+          total_points: number
+          user_id: string
+        }[]
+      }
       get_event_rsvp_count: { Args: { _event_id: string }; Returns: number }
       get_membership_tier: {
         Args: { _user_id: string }
@@ -578,6 +751,11 @@ export type Database = {
     Enums: {
       app_role: "superadmin" | "admin" | "moderator" | "user"
       approval_status: "pending" | "approved" | "rejected"
+      badge_claim_status:
+        | "pending_peer"
+        | "pending_review"
+        | "approved"
+        | "rejected"
       event_type: "meetup" | "webinar" | "workshop" | "hackathon"
       membership_tier: "starter" | "viber" | "vibetor"
       rsvp_status: "going" | "maybe" | "cancelled"
@@ -718,6 +896,12 @@ export const Constants = {
     Enums: {
       app_role: ["superadmin", "admin", "moderator", "user"],
       approval_status: ["pending", "approved", "rejected"],
+      badge_claim_status: [
+        "pending_peer",
+        "pending_review",
+        "approved",
+        "rejected",
+      ],
       event_type: ["meetup", "webinar", "workshop", "hackathon"],
       membership_tier: ["starter", "viber", "vibetor"],
       rsvp_status: ["going", "maybe", "cancelled"],
