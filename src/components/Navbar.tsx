@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Menu, X, Globe, User, LogOut, MessageSquare, Users, Sun, Moon, Shield } from "lucide-react";
+import { Menu, X, Globe, User, LogOut, MessageSquare, Users, Sun, Moon, Shield, Award } from "lucide-react";
 import NotificationBell from "@/components/NotificationBell";
 import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
@@ -150,6 +150,13 @@ const Navbar = () => {
                       <Users className="h-4 w-4" /> Members
                     </Link>
                     <Link
+                      to="/badges"
+                      onClick={() => setUserMenuOpen(false)}
+                      className="flex items-center gap-2 px-4 py-2.5 text-sm font-body text-foreground hover:bg-muted transition-colors"
+                    >
+                      <Award className="h-4 w-4" /> Badges
+                    </Link>
+                    <Link
                       to="/forum"
                       onClick={() => setUserMenuOpen(false)}
                       className="flex items-center gap-2 px-4 py-2.5 text-sm font-body text-foreground hover:bg-muted transition-colors"
@@ -164,6 +171,13 @@ const Navbar = () => {
                           className="flex items-center gap-2 px-4 py-2.5 text-sm font-body text-primary hover:bg-muted transition-colors"
                         >
                           <Shield className="h-4 w-4" /> Admin Showcase
+                        </Link>
+                        <Link
+                          to="/admin/badges"
+                          onClick={() => setUserMenuOpen(false)}
+                          className="flex items-center gap-2 px-4 py-2.5 text-sm font-body text-primary hover:bg-muted transition-colors"
+                        >
+                          <Award className="h-4 w-4" /> Badge Claims
                         </Link>
                         <Link
                           to="/admin/users"
