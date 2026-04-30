@@ -238,7 +238,7 @@ const fi = {
     submitCta: "Lähetä omasi",
     submitTitle: "Lähetä näyteikkunaan",
     signInToSubmit: "Kirjaudu sisään lähettääksesi",
-    tabs: { all: "Kaikki", caseStudies: "Tapaustutkimukset", testimonials: "Suositukset", tools: "Työkalut", guidebooks: "Oppaat", sampleCode: "Koodit & promptit" },
+    tabs: { all: "Kaikki", caseStudies: "Tapaustutkimukset", testimonials: "Suositukset", tools: "Työkalut", guidebooks: "Oppaat", sampleCode: "Koodit & promptit", infographics: "Infograafit" },
     by: "tekijä",
     visitLink: "Avaa",
     reviews: "Arvostelut",
