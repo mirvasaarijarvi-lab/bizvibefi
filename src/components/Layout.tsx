@@ -7,7 +7,7 @@ import SupportChat from "./SupportChat";
 import Breadcrumbs from "./Breadcrumbs";
 
 const Layout = ({ children }: { children: ReactNode }) => (
-  <div className="min-h-screen flex flex-col">
+  <div className="min-h-screen flex flex-col overflow-x-hidden">
     <a href="#main-content" className="skip-to-content">
       Skip to content
     </a>
