@@ -17,6 +17,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import BadgePill from "@/components/BadgePill";
+import AddToLinkedInButton from "@/components/AddToLinkedInButton";
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery } from "@tanstack/react-query";
 import { Award, CheckCircle2, XCircle, Clock, Users as UsersIcon, Search } from "lucide-react";
@@ -215,6 +216,15 @@ const BadgesPage = () => {
                         <BadgePill badge={mb.badge} size="lg" />
                         <p className="font-medium text-sm">{mb.badge.name}</p>
                         <p className="text-xs text-muted-foreground">{new Date(mb.awarded_at).toLocaleDateString()}</p>
+                        <AddToLinkedInButton
+                          name={`BizVibe — ${mb.badge.name}`}
+                          issueDate={mb.awarded_at}
+                          certUrl={`${window.location.origin}/members/${user.id}`}
+                          certId={mb.id}
+                          size="sm"
+                          label="LinkedIn"
+                          className="mt-1"
+                        />
                       </CardContent>
                     </Card>
                   ))}
