@@ -180,6 +180,13 @@ const Navbar = () => {
                           <Award className="h-4 w-4" /> Badge Claims
                         </Link>
                         <Link
+                          to="/admin/certificates"
+                          onClick={() => setUserMenuOpen(false)}
+                          className="flex items-center gap-2 px-4 py-2.5 text-sm font-body text-primary hover:bg-muted transition-colors"
+                        >
+                          <Award className="h-4 w-4" /> Issue Certificate
+                        </Link>
+                        <Link
                           to="/admin/users"
                           onClick={() => setUserMenuOpen(false)}
                           className="flex items-center gap-2 px-4 py-2.5 text-sm font-body text-primary hover:bg-muted transition-colors"
