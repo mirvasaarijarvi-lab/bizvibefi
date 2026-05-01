@@ -220,6 +220,109 @@ export type Database = {
         }
         Relationships: []
       }
+      course_certificates: {
+        Row: {
+          completion_date: string
+          course_content: string
+          course_id: string
+          course_title: string
+          created_at: string
+          id: string
+          issued_by: string
+          issued_by_name: string
+          method: Database["public"]["Enums"]["course_method"]
+          method_details: string | null
+          participant_name: string
+          participant_user_id: string | null
+          pdf_url: string | null
+          updated_at: string
+        }
+        Insert: {
+          completion_date: string
+          course_content: string
+          course_id: string
+          course_title: string
+          created_at?: string
+          id?: string
+          issued_by: string
+          issued_by_name: string
+          method: Database["public"]["Enums"]["course_method"]
+          method_details?: string | null
+          participant_name: string
+          participant_user_id?: string | null
+          pdf_url?: string | null
+          updated_at?: string
+        }
+        Update: {
+          completion_date?: string
+          course_content?: string
+          course_id?: string
+          course_title?: string
+          created_at?: string
+          id?: string
+          issued_by?: string
+          issued_by_name?: string
+          method?: Database["public"]["Enums"]["course_method"]
+          method_details?: string | null
+          participant_name?: string
+          participant_user_id?: string | null
+          pdf_url?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "course_certificates_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      courses: {
+        Row: {
+          badge_id: string | null
+          created_at: string
+          created_by: string | null
+          default_method: Database["public"]["Enums"]["course_method"]
+          id: string
+          is_active: boolean
+          summary: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          badge_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          default_method?: Database["public"]["Enums"]["course_method"]
+          id?: string
+          is_active?: boolean
+          summary: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          badge_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          default_method?: Database["public"]["Enums"]["course_method"]
+          id?: string
+          is_active?: boolean
+          summary?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "courses_badge_id_fkey"
+            columns: ["badge_id"]
+            isOneToOne: false
+            referencedRelation: "badge_catalog"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       event_rsvps: {
         Row: {
           created_at: string
@@ -756,6 +859,12 @@ export type Database = {
         | "pending_review"
         | "approved"
         | "rejected"
+      course_method:
+        | "face_to_face"
+        | "seminar"
+        | "webinar"
+        | "customized"
+        | "other"
       event_type: "meetup" | "webinar" | "workshop" | "hackathon"
       membership_tier: "starter" | "viber" | "vibetor"
       rsvp_status: "going" | "maybe" | "cancelled"
@@ -901,6 +1010,13 @@ export const Constants = {
         "pending_review",
         "approved",
         "rejected",
+      ],
+      course_method: [
+        "face_to_face",
+        "seminar",
+        "webinar",
+        "customized",
+        "other",
       ],
       event_type: ["meetup", "webinar", "workshop", "hackathon"],
       membership_tier: ["starter", "viber", "vibetor"],
