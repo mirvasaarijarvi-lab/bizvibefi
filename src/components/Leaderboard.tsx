@@ -26,7 +26,7 @@ const Leaderboard = () => {
   return (
     <TooltipProvider>
       <Card className="mb-12 overflow-hidden border-primary/20">
-        <CardContent className="p-6">
+        <CardContent className="p-4 sm:p-6">
           <div className="flex items-center gap-2 mb-6">
             <Trophy className="h-5 w-5 text-primary" />
             <h2 className="font-display text-xl font-bold tracking-[-0.02em]">
