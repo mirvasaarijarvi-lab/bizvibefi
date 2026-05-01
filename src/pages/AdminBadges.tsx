@@ -58,7 +58,7 @@ const AdminBadges = () => {
                         </div>
                         <p className="text-xs text-muted-foreground mt-1">
                           By <strong>{c.claimant?.display_name ?? c.user_id.slice(0, 8)}</strong>
-                          {c.peer && <> · Peer: <strong>{c.peer.display_name ?? "?"}</strong>{c.peer_confirmed === true && " ✓"}</>}
+                          {c.peer && <> · Peer: <strong>{c.peer.display_name ?? "?"}</strong>{c.peer_confirmed === true && <CheckCircle2 className="inline h-3 w-3 ml-1 text-primary" />}</>}
                         </p>
                         <p className="text-sm mt-2 whitespace-pre-wrap">{c.evidence}</p>
                       </div>

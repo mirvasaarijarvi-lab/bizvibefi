@@ -267,7 +267,7 @@ const AdminUsers = () => {
               <div className="animate-spin h-8 w-8 border-4 border-primary border-t-transparent rounded-full" />
             </div>
           ) : filtered && filtered.length > 0 ? (
-            <div className="bg-card border border-border rounded-xl overflow-hidden">
+            <div className="bg-card border border-border rounded-xl overflow-x-auto">
               <Table>
                 <TableHeader>
                   <TableRow>

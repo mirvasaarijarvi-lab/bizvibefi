@@ -205,7 +205,7 @@ const EventFormDialog = ({
               className="font-body"
             />
           </div>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <Label className="font-body text-sm">Type</Label>
               <Select value={form.event_type} onValueChange={(v) => set("event_type", v)}>
@@ -232,7 +232,7 @@ const EventFormDialog = ({
               />
             </div>
           </div>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <Label className="font-body text-sm">Starts At *</Label>
               <Input
