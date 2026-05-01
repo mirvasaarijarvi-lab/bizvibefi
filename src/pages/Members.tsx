@@ -260,7 +260,7 @@ const Members = () => {
                 >
                    <Link to={`/members/${member.user_id}`} className="block">
                   <Card className="h-full hover:shadow-md transition-shadow cursor-pointer">
-                    <CardContent className="p-6">
+                    <CardContent className="p-4 sm:p-6">
                       <div className="flex items-center gap-4 mb-4">
                         <Avatar className="h-14 w-14">
                           <AvatarImage src={member.avatar_url ?? undefined} alt={member.display_name ?? "Member"} />
