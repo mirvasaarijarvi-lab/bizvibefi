@@ -119,13 +119,13 @@ const AdminShowcase = () => {
           </div>
 
           <Tabs value={tab} onValueChange={handleTabChange}>
-            <TabsList className="mb-8">
-              <TabsTrigger value="pending">
+            <TabsList className="mb-8 flex flex-wrap h-auto w-full sm:w-auto justify-start">
+              <TabsTrigger value="pending" className="text-xs sm:text-sm">
                 {t("admin.showcase.tabs.pending")} {pendingItems ? `(${pendingItems.length})` : ""}
               </TabsTrigger>
-              <TabsTrigger value="approved">{t("admin.showcase.tabs.approved")}</TabsTrigger>
-              <TabsTrigger value="rejected">{t("admin.showcase.tabs.rejected")}</TabsTrigger>
-              <TabsTrigger value="all">{t("admin.showcase.tabs.all")}</TabsTrigger>
+              <TabsTrigger value="approved" className="text-xs sm:text-sm">{t("admin.showcase.tabs.approved")}</TabsTrigger>
+              <TabsTrigger value="rejected" className="text-xs sm:text-sm">{t("admin.showcase.tabs.rejected")}</TabsTrigger>
+              <TabsTrigger value="all" className="text-xs sm:text-sm">{t("admin.showcase.tabs.all")}</TabsTrigger>
             </TabsList>
 
             <AdminSearchFilter
