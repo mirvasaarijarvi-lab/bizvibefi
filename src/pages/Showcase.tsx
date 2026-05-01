@@ -406,15 +406,17 @@ const Showcase = () => {
       <section className="pb-24 md:pb-32">
         <div className="container">
           <Tabs value={activeTab} onValueChange={setActiveTab}>
-            <TabsList className="mb-8">
-              <TabsTrigger value="all">{t("showcase.tabs.all")}</TabsTrigger>
-              <TabsTrigger value="case_study">{t("showcase.tabs.caseStudies")}</TabsTrigger>
-              <TabsTrigger value="testimonial">{t("showcase.tabs.testimonials")}</TabsTrigger>
-              <TabsTrigger value="tool">{t("showcase.tabs.tools")}</TabsTrigger>
-              <TabsTrigger value="guidebook">{t("showcase.tabs.guidebooks")}</TabsTrigger>
-              <TabsTrigger value="sample_code">{t("showcase.tabs.sampleCode")}</TabsTrigger>
-              <TabsTrigger value="infographic">{t("showcase.tabs.infographics")}</TabsTrigger>
-            </TabsList>
+            <div className="mb-8 -mx-4 px-4 sm:mx-0 sm:px-0">
+              <TabsList className="flex w-full flex-wrap h-auto gap-1 justify-start sm:justify-center">
+                <TabsTrigger value="all" className="text-xs sm:text-sm">{t("showcase.tabs.all")}</TabsTrigger>
+                <TabsTrigger value="case_study" className="text-xs sm:text-sm">{t("showcase.tabs.caseStudies")}</TabsTrigger>
+                <TabsTrigger value="testimonial" className="text-xs sm:text-sm">{t("showcase.tabs.testimonials")}</TabsTrigger>
+                <TabsTrigger value="tool" className="text-xs sm:text-sm">{t("showcase.tabs.tools")}</TabsTrigger>
+                <TabsTrigger value="guidebook" className="text-xs sm:text-sm">{t("showcase.tabs.guidebooks")}</TabsTrigger>
+                <TabsTrigger value="sample_code" className="text-xs sm:text-sm">{t("showcase.tabs.sampleCode")}</TabsTrigger>
+                <TabsTrigger value="infographic" className="text-xs sm:text-sm">{t("showcase.tabs.infographics")}</TabsTrigger>
+              </TabsList>
+            </div>
 
             <TabsContent value={activeTab}>
               {isLoading && (

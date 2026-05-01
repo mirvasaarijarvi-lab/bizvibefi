@@ -26,7 +26,7 @@ const Leaderboard = () => {
   return (
     <TooltipProvider>
       <Card className="mb-12 overflow-hidden border-primary/20">
-        <CardContent className="p-6">
+        <CardContent className="p-4 sm:p-6">
           <div className="flex items-center gap-2 mb-6">
             <Trophy className="h-5 w-5 text-primary" />
             <h2 className="font-display text-xl font-bold tracking-[-0.02em]">
@@ -76,7 +76,7 @@ const Leaderboard = () => {
                       </Badge>
                     </div>
                     {catalog && catalog.length > 0 && (
-                      <div className="mt-3 pl-11 flex flex-wrap gap-1.5">
+                      <div className="mt-3 sm:pl-11 flex flex-wrap gap-1.5">
                         {catalog.map((b) => (
                           <BadgePill key={b.id} badge={b} size="xs" earned={earned.has(b.id)} />
                         ))}

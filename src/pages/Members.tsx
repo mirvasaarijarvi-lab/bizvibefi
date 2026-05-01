@@ -260,7 +260,7 @@ const Members = () => {
                 >
                    <Link to={`/members/${member.user_id}`} className="block">
                   <Card className="h-full hover:shadow-md transition-shadow cursor-pointer">
-                    <CardContent className="p-6">
+                    <CardContent className="p-4 sm:p-6">
                       <div className="flex items-center gap-4 mb-4">
                         <Avatar className="h-14 w-14">
                           <AvatarImage src={member.avatar_url ?? undefined} alt={member.display_name ?? "Member"} />
@@ -385,9 +385,9 @@ const Members = () => {
                       </div>
 
                       {isAdmin && (
-                        <div className="mt-4 pt-3 border-t border-border">
-                          <div className="flex items-center gap-2">
-                            <ShieldCheck className="h-4 w-4 text-muted-foreground" />
+                        <div className="mt-4 pt-3 border-t border-border space-y-2">
+                          <div className="flex items-center gap-2 flex-wrap">
+                            <ShieldCheck className="h-4 w-4 text-muted-foreground shrink-0" />
                             <span className="text-xs text-muted-foreground">Tier:</span>
                             <Select
                               value={member.membership_tier}
@@ -395,7 +395,7 @@ const Members = () => {
                                 updateTierMutation.mutate({ userId: member.user_id, tier: val as "starter" | "viber" | "vibetor" })
                               }
                             >
-                              <SelectTrigger className="h-7 text-xs w-28">
+                              <SelectTrigger className="h-7 text-xs flex-1 min-w-[110px]">
                                 <SelectValue />
                               </SelectTrigger>
                               <SelectContent>
@@ -406,8 +406,8 @@ const Members = () => {
                             </Select>
                           </div>
                           {member.membership_tier === "vibetor" && (
-                            <div className="flex items-center gap-2 mt-2">
-                              <Gem className="h-4 w-4 text-vibetor" />
+                            <div className="flex items-center gap-2 flex-wrap">
+                              <Gem className="h-4 w-4 text-vibetor shrink-0" />
                               <span className="text-xs text-muted-foreground">Type:</span>
                               <Select
                                 value={member.vibetor_type ?? "none"}
@@ -420,7 +420,7 @@ const Members = () => {
                                   queryClient.invalidateQueries({ queryKey: ["members-list"] });
                                 }}
                               >
-                                <SelectTrigger className="h-7 text-xs w-28">
+                                <SelectTrigger className="h-7 text-xs flex-1 min-w-[110px]">
                                   <SelectValue />
                                 </SelectTrigger>
                                 <SelectContent>
@@ -433,8 +433,8 @@ const Members = () => {
                             </div>
                           )}
                           {member.membership_tier === "starter" && (
-                            <div className="flex items-center gap-2 mt-2">
-                              <Zap className="h-4 w-4 text-muted-foreground" />
+                            <div className="flex items-center gap-2 flex-wrap">
+                              <Zap className="h-4 w-4 text-muted-foreground shrink-0" />
                               <span className="text-xs text-muted-foreground">Viber access:</span>
                               <Switch
                                 checked={member.viber_access_override}
