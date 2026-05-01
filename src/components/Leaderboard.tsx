@@ -76,7 +76,7 @@ const Leaderboard = () => {
                       </Badge>
                     </div>
                     {catalog && catalog.length > 0 && (
-                      <div className="mt-3 pl-11 flex flex-wrap gap-1.5">
+                      <div className="mt-3 sm:pl-11 flex flex-wrap gap-1.5">
                         {catalog.map((b) => (
                           <BadgePill key={b.id} badge={b} size="xs" earned={earned.has(b.id)} />
                         ))}
