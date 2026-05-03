@@ -4,7 +4,7 @@ import HeroAvatar from "@/components/HeroAvatar";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { ArrowRight, Linkedin, Gem, Sparkles, Star } from "lucide-react";
+import { ArrowRight, Linkedin, Gem, Sparkles, Star, Target, Eye, Compass, Rocket, Heart, Feather } from "lucide-react";
 import { useTranslation } from "@/i18n/useTranslation";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -171,6 +171,64 @@ const About = () => {
         </div>
       </section>
 
+      {/* Three builders, one collective */}
+      <section className="pb-20">
+        <div className="container max-w-3xl">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="bg-card border border-border rounded-2xl p-8 md:p-12"
+          >
+            <h2 className="font-display text-2xl md:text-4xl font-bold tracking-[-0.02em] text-center">
+              Three builders. <span className="text-gradient-prism">One collective.</span>
+            </h2>
+            <div className="mt-8 space-y-5 text-muted-foreground font-body leading-relaxed">
+              <p>
+                We started BizVibe because we were tired of building alone. The best things happen when complementary people work in the same direction, so we built a collective around that belief.
+              </p>
+              <p>
+                We believe smart speed and deep care aren't opposites. The best builders move fast because they have the right knowledge, the right people, and a community that fills the gaps they haven't filled yet. Not because they cut corners.
+              </p>
+              <p>
+                Our goal is simple: a Nordic ecosystem where builders grow through shared knowledge and honest practice, and ship products that are user-first, legally sound, and built around a pain point worth solving.
+              </p>
+              <p className="font-semibold text-foreground">
+                BizVibe is where that starts.
+              </p>
+            </div>
+
+            <div className="mt-10 grid sm:grid-cols-2 gap-4">
+              <div className="bg-background/60 border border-border rounded-xl p-5">
+                <p className="font-display text-sm font-semibold text-turquoise tracking-widest uppercase mb-2">The problem</p>
+                <p className="text-sm text-muted-foreground font-body leading-relaxed">
+                  The best builders are still building alone. Not because they want to, because the right collective doesn't exist yet.
+                </p>
+              </div>
+              <div className="bg-background/60 border border-border rounded-xl p-5">
+                <p className="font-display text-sm font-semibold text-electric tracking-widest uppercase mb-2">The opportunity</p>
+                <p className="text-sm text-muted-foreground font-body leading-relaxed">
+                  A generation of vibecoders has the tools to build anything. What they're missing is the knowledge infrastructure, the network, and the community to ship it properly, and to market before the window closes.
+                </p>
+              </div>
+            </div>
+
+            <p className="mt-8 text-base text-foreground font-body leading-relaxed">
+              BizVibe gives vibecoders the tools, community, and knowledge to build the next big thing. And ship it while the window is open, without cutting corners.
+            </p>
+          </motion.div>
+
+          <motion.blockquote
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="mt-10 border-l-4 border-primary pl-6 text-muted-foreground font-body italic leading-relaxed"
+          >
+            BizVibe is a Nordic builder collective for vibecoders, people who build fast, think in systems, and use AI as a co-founder. We exist to prove that smart speed and deep care aren't opposites. Through community membership, expert knowledge, and a high-trust network of connectors and investors, we give builders the infrastructure to find their leads, grow their skills, and ship products that are user-first, compliant, and built around a real pain point. We are not a startup accelerator, a job board, or a mentorship programme. We are the collective the next generation of Nordic builders builds through.
+          </motion.blockquote>
+        </div>
+      </section>
+
       {/* Vibetors */}
       <section className="pb-20">
         <div className="container max-w-4xl">
@@ -284,6 +342,81 @@ const About = () => {
                 </Link>
               );
             })}
+          </div>
+
+          {/* Purpose, Vision, Mission, Values */}
+          <div className="mt-16 grid sm:grid-cols-2 gap-6">
+            {[
+              {
+                icon: Target,
+                label: "Our purpose",
+                text: "Prove that smart speed and deep care aren't opposites, and that the best builders never have to choose between moving fast and doing it right.",
+                accent: "text-primary",
+              },
+              {
+                icon: Eye,
+                label: "Our vision",
+                text: "A Nordic ecosystem where builders grow through shared knowledge, honest practice, and a collective that holds the skills you haven't developed yet.",
+                accent: "text-turquoise",
+              },
+              {
+                icon: Rocket,
+                label: "Our mission",
+                text: "We give vibecoders the tools, community, and knowledge to build the next big thing. And ship it while the window is open, without cutting corners.",
+                accent: "text-electric",
+              },
+              {
+                icon: Compass,
+                label: "Our values",
+                text: "Courage, Kindness, Curiosity, Authenticity. Not aspirational, just how we already behave.",
+                accent: "text-vibetor",
+              },
+            ].map((item, i) => {
+              const Icon = item.icon;
+              return (
+                <motion.div
+                  key={item.label}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.08 }}
+                  className="bg-card border border-border rounded-2xl p-6 hover:border-primary/40 hover:shadow-md transition-all"
+                >
+                  <div className="flex items-center gap-3 mb-3">
+                    <Icon className={`h-6 w-6 ${item.accent}`} />
+                    <h3 className="font-display text-lg font-bold tracking-[-0.01em]">{item.label}</h3>
+                  </div>
+                  <p className="text-sm text-muted-foreground font-body leading-relaxed">{item.text}</p>
+                </motion.div>
+              );
+            })}
+          </div>
+
+          {/* Values anchor */}
+          <div className="mt-12 bg-card border border-border rounded-2xl p-6 md:p-8">
+            <p className="font-display text-sm font-semibold text-turquoise tracking-widest uppercase mb-2 text-center">Values anchor</p>
+            <p className="text-sm text-muted-foreground font-body text-center mb-6">
+              These four values are not aspirational. They describe how we already behave.
+            </p>
+            <div className="grid sm:grid-cols-2 gap-4">
+              {[
+                { icon: Sparkles, name: "Courage", desc: "We test, try, learn, and resolve. Publicly when we can." },
+                { icon: Heart, name: "Kindness", desc: "We help first. We critique when it matters, and we do it with care." },
+                { icon: Compass, name: "Curiosity", desc: "We chase what's next. We are interested in the future before it arrives." },
+                { icon: Feather, name: "Authenticity", desc: "We let everyone be themselves. No performance required." },
+              ].map((v) => {
+                const Icon = v.icon;
+                return (
+                  <div key={v.name} className="flex gap-3 items-start bg-background/60 border border-border rounded-xl p-4">
+                    <Icon className="h-5 w-5 text-primary mt-0.5 shrink-0" />
+                    <div>
+                      <p className="font-display font-semibold tracking-[-0.01em]">{v.name}</p>
+                      <p className="text-sm text-muted-foreground font-body mt-1 leading-relaxed">{v.desc}</p>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
           </div>
 
           <div className="mt-12 text-center">
