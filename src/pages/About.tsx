@@ -171,6 +171,64 @@ const About = () => {
         </div>
       </section>
 
+      {/* Three builders, one collective */}
+      <section className="pb-20">
+        <div className="container max-w-3xl">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="bg-card border border-border rounded-2xl p-8 md:p-12"
+          >
+            <h2 className="font-display text-2xl md:text-4xl font-bold tracking-[-0.02em] text-center">
+              Three builders. <span className="text-gradient-prism">One collective.</span>
+            </h2>
+            <div className="mt-8 space-y-5 text-muted-foreground font-body leading-relaxed">
+              <p>
+                We started BizVibe because we were tired of building alone. The best things happen when complementary people work in the same direction, so we built a collective around that belief.
+              </p>
+              <p>
+                We believe smart speed and deep care aren't opposites. The best builders move fast because they have the right knowledge, the right people, and a community that fills the gaps they haven't filled yet. Not because they cut corners.
+              </p>
+              <p>
+                Our goal is simple: a Nordic ecosystem where builders grow through shared knowledge and honest practice, and ship products that are user-first, legally sound, and built around a pain point worth solving.
+              </p>
+              <p className="font-semibold text-foreground">
+                BizVibe is where that starts.
+              </p>
+            </div>
+
+            <div className="mt-10 grid sm:grid-cols-2 gap-4">
+              <div className="bg-background/60 border border-border rounded-xl p-5">
+                <p className="font-display text-sm font-semibold text-turquoise tracking-widest uppercase mb-2">The problem</p>
+                <p className="text-sm text-muted-foreground font-body leading-relaxed">
+                  The best builders are still building alone. Not because they want to, because the right collective doesn't exist yet.
+                </p>
+              </div>
+              <div className="bg-background/60 border border-border rounded-xl p-5">
+                <p className="font-display text-sm font-semibold text-electric tracking-widest uppercase mb-2">The opportunity</p>
+                <p className="text-sm text-muted-foreground font-body leading-relaxed">
+                  A generation of vibecoders has the tools to build anything. What they're missing is the knowledge infrastructure, the network, and the community to ship it properly, and to market before the window closes.
+                </p>
+              </div>
+            </div>
+
+            <p className="mt-8 text-base text-foreground font-body leading-relaxed">
+              BizVibe gives vibecoders the tools, community, and knowledge to build the next big thing. And ship it while the window is open, without cutting corners.
+            </p>
+          </motion.div>
+
+          <motion.blockquote
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="mt-10 border-l-4 border-primary pl-6 text-muted-foreground font-body italic leading-relaxed"
+          >
+            BizVibe is a Nordic builder collective for vibecoders, people who build fast, think in systems, and use AI as a co-founder. We exist to prove that smart speed and deep care aren't opposites. Through community membership, expert knowledge, and a high-trust network of connectors and investors, we give builders the infrastructure to find their leads, grow their skills, and ship products that are user-first, compliant, and built around a real pain point. We are not a startup accelerator, a job board, or a mentorship programme. We are the collective the next generation of Nordic builders builds through.
+          </motion.blockquote>
+        </div>
+      </section>
+
       {/* Vibetors */}
       <section className="pb-20">
         <div className="container max-w-4xl">
