@@ -344,6 +344,81 @@ const About = () => {
             })}
           </div>
 
+          {/* Purpose, Vision, Mission, Values */}
+          <div className="mt-16 grid sm:grid-cols-2 gap-6">
+            {[
+              {
+                icon: Target,
+                label: "Our purpose",
+                text: "Prove that smart speed and deep care aren't opposites, and that the best builders never have to choose between moving fast and doing it right.",
+                accent: "text-primary",
+              },
+              {
+                icon: Eye,
+                label: "Our vision",
+                text: "A Nordic ecosystem where builders grow through shared knowledge, honest practice, and a collective that holds the skills you haven't developed yet.",
+                accent: "text-turquoise",
+              },
+              {
+                icon: Rocket,
+                label: "Our mission",
+                text: "We give vibecoders the tools, community, and knowledge to build the next big thing. And ship it while the window is open, without cutting corners.",
+                accent: "text-electric",
+              },
+              {
+                icon: Compass,
+                label: "Our values",
+                text: "Courage, Kindness, Curiosity, Authenticity. Not aspirational, just how we already behave.",
+                accent: "text-vibetor",
+              },
+            ].map((item, i) => {
+              const Icon = item.icon;
+              return (
+                <motion.div
+                  key={item.label}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.08 }}
+                  className="bg-card border border-border rounded-2xl p-6 hover:border-primary/40 hover:shadow-md transition-all"
+                >
+                  <div className="flex items-center gap-3 mb-3">
+                    <Icon className={`h-6 w-6 ${item.accent}`} />
+                    <h3 className="font-display text-lg font-bold tracking-[-0.01em]">{item.label}</h3>
+                  </div>
+                  <p className="text-sm text-muted-foreground font-body leading-relaxed">{item.text}</p>
+                </motion.div>
+              );
+            })}
+          </div>
+
+          {/* Values anchor */}
+          <div className="mt-12 bg-card border border-border rounded-2xl p-6 md:p-8">
+            <p className="font-display text-sm font-semibold text-turquoise tracking-widest uppercase mb-2 text-center">Values anchor</p>
+            <p className="text-sm text-muted-foreground font-body text-center mb-6">
+              These four values are not aspirational. They describe how we already behave.
+            </p>
+            <div className="grid sm:grid-cols-2 gap-4">
+              {[
+                { icon: Sparkles, name: "Courage", desc: "We test, try, learn, and resolve. Publicly when we can." },
+                { icon: Heart, name: "Kindness", desc: "We help first. We critique when it matters, and we do it with care." },
+                { icon: Compass, name: "Curiosity", desc: "We chase what's next. We are interested in the future before it arrives." },
+                { icon: Feather, name: "Authenticity", desc: "We let everyone be themselves. No performance required." },
+              ].map((v) => {
+                const Icon = v.icon;
+                return (
+                  <div key={v.name} className="flex gap-3 items-start bg-background/60 border border-border rounded-xl p-4">
+                    <Icon className="h-5 w-5 text-primary mt-0.5 shrink-0" />
+                    <div>
+                      <p className="font-display font-semibold tracking-[-0.01em]">{v.name}</p>
+                      <p className="text-sm text-muted-foreground font-body mt-1 leading-relaxed">{v.desc}</p>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
           <div className="mt-12 text-center">
             <Button variant="hero" size="lg" asChild>
               <Link to="/community">{t("about.cta")} <ArrowRight className="ml-2 h-4 w-4" /></Link>
