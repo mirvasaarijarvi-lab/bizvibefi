@@ -186,7 +186,8 @@ const AdminItemCard = ({ item, selected, onSelectChange }: AdminItemCardProps) =
         </p>
       </CardContent>
       {item.file_url && (
-        <div className="px-6 pb-2">
+        <div className="px-6 pb-3 space-y-1.5">
+          <FilePreview url={item.file_url} name={item.file_name} variant="thumbnail" />
           <a
             href={item.file_url}
             target="_blank"
