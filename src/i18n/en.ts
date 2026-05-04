@@ -268,6 +268,16 @@ const en = {
     pricingPlaceholder: "Free, €9/mo, etc.",
     fileTooLarge: "Image must be under 5MB",
     invalidFileType: "Please select an image file",
+    file: {
+      label: "Attachment",
+      upload: "Click to upload a file (PDF, DOC, XLS, PPT, TXT, CSV, ZIP — max 25MB)",
+      replace: "Replace",
+      download: "Download file",
+      uploaded: "File uploaded",
+      uploadFailed: "File upload failed",
+      tooLarge: "File must be under 25MB",
+      invalidType: "Unsupported file type",
+    },
     crop: {
       title: "Crop Image",
       description: "Adjust the crop area to 16:9 for consistent showcase dimensions.",

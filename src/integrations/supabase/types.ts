@@ -661,6 +661,8 @@ export type Database = {
           content: string | null
           created_at: string
           description: string
+          file_name: string | null
+          file_url: string | null
           id: string
           image_url: string | null
           key_figures: Json | null
@@ -681,6 +683,8 @@ export type Database = {
           content?: string | null
           created_at?: string
           description: string
+          file_name?: string | null
+          file_url?: string | null
           id?: string
           image_url?: string | null
           key_figures?: Json | null
@@ -701,6 +705,8 @@ export type Database = {
           content?: string | null
           created_at?: string
           description?: string
+          file_name?: string | null
+          file_url?: string | null
           id?: string
           image_url?: string | null
           key_figures?: Json | null

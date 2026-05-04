@@ -16,7 +16,7 @@ import { useShowcaseItem, useShowcaseReviews, useCreateReview, type KeyFigure } 
 import { useToast } from "@/hooks/use-toast";
 import {
   ArrowLeft, ExternalLink, Lightbulb, MessageSquare, Wrench, Star,
-  Target, Zap, CheckCircle2, BarChart3,
+  Target, Zap, CheckCircle2, BarChart3, FileText, Download,
 } from "lucide-react";
 
 const typeIcons: Record<string, React.ElementType> = {
@@ -158,6 +158,15 @@ const ShowcaseDetail = () => {
                   <Button asChild>
                     <a href={item.link_url} target="_blank" rel="noopener noreferrer">
                       {t("showcase.visitLink")} <ExternalLink className="ml-2 h-4 w-4" />
+                    </a>
+                  </Button>
+                )}
+                {item.file_url && (
+                  <Button variant="outline" asChild>
+                    <a href={item.file_url} target="_blank" rel="noopener noreferrer" download>
+                      <FileText className="mr-2 h-4 w-4" />
+                      {item.file_name ?? t("showcase.file.download")}
+                      <Download className="ml-2 h-4 w-4" />
                     </a>
                   </Button>
                 )}

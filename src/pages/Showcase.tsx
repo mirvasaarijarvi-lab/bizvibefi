@@ -15,7 +15,7 @@ import { motion } from "framer-motion";
 import { useTranslation } from "@/i18n/useTranslation";
 import { useAuth } from "@/hooks/useAuth";
 import { useShowcaseItems, useCreateShowcaseItem, type ShowcaseType, type ShowcaseItem, type KeyFigure } from "@/hooks/useShowcase";
-import { Plus, ExternalLink, ArrowRight, Lightbulb, MessageSquare, Wrench, Upload, X as XIcon, Trash2, BookOpen, Code, BarChart3 } from "lucide-react";
+import { Plus, ExternalLink, ArrowRight, Lightbulb, MessageSquare, Wrench, Upload, X as XIcon, Trash2, BookOpen, Code, BarChart3, FileText, Loader2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import ImageDropZone from "@/components/ImageDropZone";
 import ImageCropDialog from "@/components/ImageCropDialog";
@@ -178,6 +178,7 @@ const SubmitForm = ({ onClose }: { onClose: () => void }) => {
   const [pricingInfo, setPricingInfo] = useState("");
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [attachmentFile, setAttachmentFile] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);
   const [cropFile, setCropFile] = useState<File | null>(null);
   const [cropOpen, setCropOpen] = useState(false);
@@ -211,6 +212,8 @@ const SubmitForm = ({ onClose }: { onClose: () => void }) => {
 
     setUploading(true);
     let image_url: string | undefined;
+    let file_url: string | undefined;
+    let file_name: string | undefined;
 
     try {
       if (imageFile && user) {
@@ -224,6 +227,23 @@ const SubmitForm = ({ onClose }: { onClose: () => void }) => {
           .from("showcase-images")
           .getPublicUrl(path);
         image_url = urlData.publicUrl;
+      }
+
+      if (attachmentFile && user) {
+        if (attachmentFile.size > 25 * 1024 * 1024) {
+          toast({ title: t("showcase.file.tooLarge"), variant: "destructive" });
+          setUploading(false);
+          return;
+        }
+        const safeName = attachmentFile.name.replace(/[^a-zA-Z0-9._-]/g, "_");
+        const path = `${user.id}/${Date.now()}-${safeName}`;
+        const { error: fErr } = await supabase.storage
+          .from("showcase-files")
+          .upload(path, attachmentFile);
+        if (fErr) throw fErr;
+        const { data: fUrl } = supabase.storage.from("showcase-files").getPublicUrl(path);
+        file_url = fUrl.publicUrl;
+        file_name = attachmentFile.name;
       }
 
       const cleanBenefits = benefits.filter((b) => b.trim());
@@ -240,6 +260,8 @@ const SubmitForm = ({ onClose }: { onClose: () => void }) => {
         key_figures: cleanFigures.length > 0 ? cleanFigures : undefined,
         link_url: linkUrl.trim() || undefined,
         image_url,
+        file_url,
+        file_name,
         category_tags: tags.split(",").map((t) => t.trim()).filter(Boolean),
         pricing_info: pricingInfo.trim() || undefined,
       });
@@ -336,6 +358,37 @@ const SubmitForm = ({ onClose }: { onClose: () => void }) => {
             </>
           )}
         </ImageDropZone>
+      </div>
+      <div>
+        <Label>{t("showcase.file.label")}</Label>
+        {attachmentFile ? (
+          <div className="mt-2 flex items-center gap-2 rounded-lg border border-border p-2">
+            <FileText className="h-4 w-4 text-primary shrink-0" />
+            <span className="text-sm font-body truncate flex-1">{attachmentFile.name}</span>
+            <Button type="button" variant="ghost" size="icon" onClick={() => setAttachmentFile(null)}>
+              <XIcon className="h-4 w-4" />
+            </Button>
+          </div>
+        ) : (
+          <label className="mt-1 w-full border-2 border-dashed border-border rounded-lg p-4 flex flex-col items-center gap-2 text-muted-foreground hover:border-primary/40 hover:text-foreground transition-colors cursor-pointer">
+            {uploading ? <Loader2 className="h-5 w-5 animate-spin" /> : <Upload className="h-5 w-5" />}
+            <span className="text-sm font-body">{t("showcase.file.upload")}</span>
+            <input
+              type="file"
+              className="hidden"
+              accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.csv,.zip,.json"
+              onChange={(e) => {
+                const f = e.target.files?.[0];
+                if (!f) return;
+                if (f.size > 25 * 1024 * 1024) {
+                  toast({ title: t("showcase.file.tooLarge"), variant: "destructive" });
+                  return;
+                }
+                setAttachmentFile(f);
+              }}
+            />
+          </label>
+        )}
       </div>
       <div>
         <Label>{t("showcase.tagsLabel")}</Label>

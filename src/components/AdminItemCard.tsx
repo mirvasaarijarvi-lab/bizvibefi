@@ -7,7 +7,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { useTranslation } from "@/i18n/useTranslation";
 import { useUpdateShowcaseStatus, useUpdateShowcaseImage } from "@/hooks/useAdminShowcase";
 import type { ShowcaseItem, ApprovalStatus } from "@/hooks/useShowcase";
-import { CheckCircle, XCircle, Clock, ExternalLink, Lightbulb, MessageSquare, Wrench, ImagePlus, Trash2, Loader2, Pencil } from "lucide-react";
+import { CheckCircle, XCircle, Clock, ExternalLink, Lightbulb, MessageSquare, Wrench, ImagePlus, Trash2, Loader2, Pencil, FileText } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import ImageDropZone from "@/components/ImageDropZone";
@@ -184,6 +184,19 @@ const AdminItemCard = ({ item, selected, onSelectChange }: AdminItemCardProps) =
           {t("admin.showcase.submittedAt")}: {new Date(item.created_at).toLocaleDateString()}
         </p>
       </CardContent>
+      {item.file_url && (
+        <div className="px-6 pb-2">
+          <a
+            href={item.file_url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1.5 text-xs text-primary hover:underline font-body"
+          >
+            <FileText className="h-3.5 w-3.5" />
+            {item.file_name ?? t("showcase.file.download")}
+          </a>
+        </div>
+      )}
       <CardFooter className="gap-2 flex-wrap pt-0">
         <Button variant="outline" size="sm" onClick={() => setEditOpen(true)}>
           <Pencil className="mr-1 h-3 w-3" /> {t("admin.showcase.edit.editBtn")}

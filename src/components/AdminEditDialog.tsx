@@ -8,6 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useTranslation } from "@/i18n/useTranslation";
 import { useToast } from "@/hooks/use-toast";
 import { useUpdateShowcaseFields } from "@/hooks/useAdminShowcase";
+import ShowcaseFileField from "@/components/ShowcaseFileField";
 import type { ShowcaseItem, ShowcaseType, KeyFigure } from "@/hooks/useShowcase";
 import { Loader2, Plus, Trash2 } from "lucide-react";
 
@@ -35,6 +36,8 @@ const AdminEditDialog = ({ item, open, onOpenChange }: AdminEditDialogProps) => 
   const [linkUrl, setLinkUrl] = useState(item.link_url ?? "");
   const [tags, setTags] = useState((item.category_tags ?? []).join(", "));
   const [pricingInfo, setPricingInfo] = useState(item.pricing_info ?? "");
+  const [fileUrl, setFileUrl] = useState<string | null>(item.file_url ?? null);
+  const [fileName, setFileName] = useState<string | null>(item.file_name ?? null);
 
   const handleSave = async () => {
     if (!title.trim() || !description.trim()) {
@@ -64,6 +67,8 @@ const AdminEditDialog = ({ item, open, onOpenChange }: AdminEditDialogProps) => 
           link_url: linkUrl.trim() || null,
           category_tags: tags.split(",").map((t) => t.trim()).filter(Boolean),
           pricing_info: pricingInfo.trim() || null,
+          file_url: fileUrl,
+          file_name: fileName,
         },
       });
       toast({ title: t("admin.showcase.edit.saved") });
@@ -191,6 +196,15 @@ const AdminEditDialog = ({ item, open, onOpenChange }: AdminEditDialogProps) => 
               <Input value={pricingInfo} onChange={(e) => setPricingInfo(e.target.value)} />
             </div>
           )}
+          <ShowcaseFileField
+            fileUrl={fileUrl}
+            fileName={fileName}
+            pathPrefix={`admin/${item.id}`}
+            onChange={({ file_url, file_name }) => {
+              setFileUrl(file_url);
+              setFileName(file_name);
+            }}
+          />
           <div className="flex gap-2 justify-end pt-2">
             <Button variant="outline" onClick={() => onOpenChange(false)}>
               {t("admin.showcase.edit.cancel")}

@@ -118,6 +118,22 @@ export const useUpdateShowcaseImage = () => {
   });
 };
 
+export const useUpdateShowcaseFile = () => {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ id, file_url, file_name }: { id: string; file_url: string | null; file_name: string | null }) => {
+      const { error } = await supabase
+        .from("showcase_items")
+        .update({ file_url, file_name })
+        .eq("id", id);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["showcase"] });
+    },
+  });
+};
+
 export interface ShowcaseFieldsUpdate {
   title?: string;
   description?: string;
@@ -129,7 +145,9 @@ export interface ShowcaseFieldsUpdate {
   link_url?: string | null;
   category_tags?: string[];
   pricing_info?: string | null;
-  type?: "case_study" | "testimonial" | "tool" | "guidebook" | "sample_code";
+  file_url?: string | null;
+  file_name?: string | null;
+  type?: "case_study" | "testimonial" | "tool" | "guidebook" | "sample_code" | "infographic";
 }
 
 export const useUpdateShowcaseFields = () => {
