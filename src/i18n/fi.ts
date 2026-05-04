@@ -268,6 +268,16 @@ const fi = {
     pricingPlaceholder: "Ilmainen, €9/kk, jne.",
     fileTooLarge: "Kuva saa olla enintään 5Mt",
     invalidFileType: "Valitse kuvatiedosto",
+    file: {
+      label: "Liite",
+      upload: "Lataa tiedosto (PDF, DOC, XLS, PPT, TXT, CSV, ZIP, enintään 25Mt)",
+      replace: "Korvaa",
+      download: "Lataa tiedosto",
+      uploaded: "Tiedosto ladattu",
+      uploadFailed: "Tiedoston lataus epäonnistui",
+      tooLarge: "Tiedosto saa olla enintään 25Mt",
+      invalidType: "Tiedostotyyppiä ei tueta",
+    },
     crop: {
       title: "Rajaa kuva",
       description: "Säädä rajaus 16:9-suhteeseen yhtenäisen näkymän varmistamiseksi.",
