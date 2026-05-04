@@ -139,6 +139,7 @@ export const useCreateShowcaseItem = () => {
       file_url?: string;
       file_name?: string;
       link_url?: string;
+      link_urls?: { label?: string; url: string }[];
       category_tags?: string[];
       pricing_info?: string;
     }) => {
