@@ -157,6 +157,7 @@ export const useCreateShowcaseItem = () => {
         file_url: item.file_url,
         file_name: item.file_name,
         link_url: item.link_url,
+        link_urls: item.link_urls as unknown as Record<string, unknown>[] | undefined,
         category_tags: item.category_tags,
         pricing_info: item.pricing_info,
         user_id: user.id,
