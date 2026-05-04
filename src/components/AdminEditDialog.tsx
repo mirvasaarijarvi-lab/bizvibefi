@@ -36,6 +36,8 @@ const AdminEditDialog = ({ item, open, onOpenChange }: AdminEditDialogProps) => 
   const [linkUrl, setLinkUrl] = useState(item.link_url ?? "");
   const [tags, setTags] = useState((item.category_tags ?? []).join(", "));
   const [pricingInfo, setPricingInfo] = useState(item.pricing_info ?? "");
+  const [fileUrl, setFileUrl] = useState<string | null>(item.file_url ?? null);
+  const [fileName, setFileName] = useState<string | null>(item.file_name ?? null);
 
   const handleSave = async () => {
     if (!title.trim() || !description.trim()) {
