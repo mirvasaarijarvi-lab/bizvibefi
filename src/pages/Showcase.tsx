@@ -15,7 +15,7 @@ import { motion } from "framer-motion";
 import { useTranslation } from "@/i18n/useTranslation";
 import { useAuth } from "@/hooks/useAuth";
 import { useShowcaseItems, useCreateShowcaseItem, type ShowcaseType, type ShowcaseItem, type KeyFigure } from "@/hooks/useShowcase";
-import { Plus, ExternalLink, ArrowRight, Lightbulb, MessageSquare, Wrench, Upload, X as XIcon, Trash2, BookOpen, Code, BarChart3 } from "lucide-react";
+import { Plus, ExternalLink, ArrowRight, Lightbulb, MessageSquare, Wrench, Upload, X as XIcon, Trash2, BookOpen, Code, BarChart3, FileText, Loader2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import ImageDropZone from "@/components/ImageDropZone";
 import ImageCropDialog from "@/components/ImageCropDialog";
