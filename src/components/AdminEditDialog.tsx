@@ -67,6 +67,8 @@ const AdminEditDialog = ({ item, open, onOpenChange }: AdminEditDialogProps) => 
           link_url: linkUrl.trim() || null,
           category_tags: tags.split(",").map((t) => t.trim()).filter(Boolean),
           pricing_info: pricingInfo.trim() || null,
+          file_url: fileUrl,
+          file_name: fileName,
         },
       });
       toast({ title: t("admin.showcase.edit.saved") });
