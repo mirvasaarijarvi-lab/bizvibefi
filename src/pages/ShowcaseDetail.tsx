@@ -180,12 +180,14 @@ const ShowcaseDetail = () => {
               </div>
             </div>
 
-            {/* Right: image */}
-            {item.image_url && (
+            {/* Right: image or file preview */}
+            {item.image_url ? (
               <div className="aspect-video w-full overflow-hidden rounded-xl border">
                 <img src={item.image_url} alt={item.title} className="w-full h-full object-cover" />
               </div>
-            )}
+            ) : item.file_url ? (
+              <FilePreview url={item.file_url} name={item.file_name} />
+            ) : null}
           </motion.div>
         </div>
       </section>
