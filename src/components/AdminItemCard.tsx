@@ -14,6 +14,7 @@ import ImageDropZone from "@/components/ImageDropZone";
 import ImageCropDialog from "@/components/ImageCropDialog";
 import AdminEditDialog from "@/components/AdminEditDialog";
 import RejectDialog from "@/components/RejectDialog";
+import FilePreview from "@/components/FilePreview";
 
 const typeIcons: Record<string, React.ElementType> = {
   case_study: Lightbulb,
