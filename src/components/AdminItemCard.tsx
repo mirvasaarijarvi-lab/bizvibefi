@@ -203,13 +203,13 @@ const AdminItemCard = ({ item, selected, onSelectChange }: AdminItemCardProps) =
         <Button variant="outline" size="sm" onClick={() => setEditOpen(true)}>
           <Pencil className="mr-1 h-3 w-3" /> {t("admin.showcase.edit.editBtn")}
         </Button>
-        {item.link_url && (
-          <Button variant="outline" size="sm" asChild>
-            <a href={item.link_url} target="_blank" rel="noopener noreferrer">
-              {t("showcase.visitLink")} <ExternalLink className="ml-1 h-3 w-3" />
+        {[...(item.link_urls ?? []), ...(item.link_url ? [{ url: item.link_url }] : [])].map((l, i) => (
+          <Button key={i} variant="outline" size="sm" asChild>
+            <a href={l.url} target="_blank" rel="noopener noreferrer">
+              {l.label || t("showcase.visitLink")} <ExternalLink className="ml-1 h-3 w-3" />
             </a>
           </Button>
-        )}
+        ))}
         {item.status !== "approved" && (
           <Button
             size="sm"
