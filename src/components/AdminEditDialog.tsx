@@ -196,6 +196,15 @@ const AdminEditDialog = ({ item, open, onOpenChange }: AdminEditDialogProps) => 
               <Input value={pricingInfo} onChange={(e) => setPricingInfo(e.target.value)} />
             </div>
           )}
+          <ShowcaseFileField
+            fileUrl={fileUrl}
+            fileName={fileName}
+            pathPrefix={`admin/${item.id}`}
+            onChange={({ file_url, file_name }) => {
+              setFileUrl(file_url);
+              setFileName(file_name);
+            }}
+          />
           <div className="flex gap-2 justify-end pt-2">
             <Button variant="outline" onClick={() => onOpenChange(false)}>
               {t("admin.showcase.edit.cancel")}
