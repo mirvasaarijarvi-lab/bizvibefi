@@ -667,6 +667,7 @@ export type Database = {
           image_url: string | null
           key_figures: Json | null
           link_url: string | null
+          link_urls: Json
           pricing_info: string | null
           rejection_reason: string | null
           solution: string | null
@@ -689,6 +690,7 @@ export type Database = {
           image_url?: string | null
           key_figures?: Json | null
           link_url?: string | null
+          link_urls?: Json
           pricing_info?: string | null
           rejection_reason?: string | null
           solution?: string | null
@@ -711,6 +713,7 @@ export type Database = {
           image_url?: string | null
           key_figures?: Json | null
           link_url?: string | null
+          link_urls?: Json
           pricing_info?: string | null
           rejection_reason?: string | null
           solution?: string | null

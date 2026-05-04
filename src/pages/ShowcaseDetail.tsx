@@ -155,13 +155,13 @@ const ShowcaseDetail = () => {
               )}
 
               <div className="flex flex-wrap gap-3">
-                {item.link_url && (
-                  <Button asChild>
-                    <a href={item.link_url} target="_blank" rel="noopener noreferrer">
-                      {t("showcase.visitLink")} <ExternalLink className="ml-2 h-4 w-4" />
+                {[...(item.link_urls ?? []), ...(item.link_url ? [{ url: item.link_url }] : [])].map((l, i) => (
+                  <Button key={i} asChild variant={i === 0 ? "default" : "outline"}>
+                    <a href={l.url} target="_blank" rel="noopener noreferrer">
+                      {l.label || t("showcase.visitLink")} <ExternalLink className="ml-2 h-4 w-4" />
                     </a>
                   </Button>
-                )}
+                ))}
                 {item.file_url && (
                   <Button variant="outline" asChild>
                     <a href={item.file_url} target="_blank" rel="noopener noreferrer" download>

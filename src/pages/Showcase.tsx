@@ -20,6 +20,7 @@ import { supabase } from "@/integrations/supabase/client";
 import ImageDropZone from "@/components/ImageDropZone";
 import ImageCropDialog from "@/components/ImageCropDialog";
 import FilePreview from "@/components/FilePreview";
+import ShowcaseLinksField from "@/components/ShowcaseLinksField";
 import { useToast } from "@/hooks/use-toast";
 
 const typeIcons: Record<ShowcaseType, React.ElementType> = {
@@ -74,13 +75,16 @@ const ShowcaseCard = ({ item }: { item: ShowcaseItem }) => {
             )}
           </CardContent>
           <CardFooter className="gap-2 flex-wrap">
-            {item.link_url && (
-              <Button variant="outline" size="sm" asChild onClick={(e) => e.stopPropagation()}>
-                <a href={item.link_url} target="_blank" rel="noopener noreferrer">
-                  {t("showcase.visitLink")} <ExternalLink className="ml-1 h-3 w-3" />
-                </a>
-              </Button>
-            )}
+            {(() => {
+              const all = [...(item.link_urls ?? []), ...(item.link_url ? [{ url: item.link_url }] : [])];
+              return all[0] ? (
+                <Button variant="outline" size="sm" asChild onClick={(e) => e.stopPropagation()}>
+                  <a href={all[0].url} target="_blank" rel="noopener noreferrer">
+                    {all[0].label || t("showcase.visitLink")} <ExternalLink className="ml-1 h-3 w-3" />
+                  </a>
+                </Button>
+              ) : null;
+            })()}
             <Button variant="ghost" size="sm" className="ml-auto">
               {t("showcase.detail.readMore")} <ArrowRight className="ml-1 h-3 w-3" />
             </Button>
@@ -178,7 +182,7 @@ const SubmitForm = ({ onClose }: { onClose: () => void }) => {
   const [solution, setSolution] = useState("");
   const [benefits, setBenefits] = useState<string[]>([]);
   const [keyFigures, setKeyFigures] = useState<KeyFigure[]>([]);
-  const [linkUrl, setLinkUrl] = useState("");
+  const [links, setLinks] = useState<{ label?: string; url: string }[]>([]);
   const [tags, setTags] = useState("");
   const [pricingInfo, setPricingInfo] = useState("");
   const [imageFile, setImageFile] = useState<File | null>(null);
@@ -263,7 +267,7 @@ const SubmitForm = ({ onClose }: { onClose: () => void }) => {
         solution: solution.trim() || undefined,
         benefits: cleanBenefits.length > 0 ? cleanBenefits : undefined,
         key_figures: cleanFigures.length > 0 ? cleanFigures : undefined,
-        link_url: linkUrl.trim() || undefined,
+        link_urls: links.filter((l) => l.url.trim()).map((l) => ({ label: l.label?.trim() || undefined, url: l.url.trim() })),
         image_url,
         file_url,
         file_name,
@@ -325,10 +329,7 @@ const SubmitForm = ({ onClose }: { onClose: () => void }) => {
         <Label>{t("showcase.contentLabel")}</Label>
         <Textarea value={content} onChange={(e) => setContent(e.target.value)} placeholder={t("showcase.contentPlaceholder")} />
       </div>
-      <div>
-        <Label>{t("showcase.linkLabel")}</Label>
-        <Input type="url" value={linkUrl} onChange={(e) => setLinkUrl(e.target.value)} placeholder="https://..." />
-      </div>
+      <ShowcaseLinksField links={links} onChange={setLinks} />
       <div>
         <Label>{t("showcase.imageLabel")}</Label>
         <ImageDropZone onFileSelected={handleFileSelected}>

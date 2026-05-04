@@ -25,6 +25,7 @@ export interface ShowcaseItem {
   file_url: string | null;
   file_name: string | null;
   link_url: string | null;
+  link_urls: { label?: string; url: string }[] | null;
   category_tags: string[];
   pricing_info: string | null;
   rejection_reason: string | null;
@@ -138,6 +139,7 @@ export const useCreateShowcaseItem = () => {
       file_url?: string;
       file_name?: string;
       link_url?: string;
+      link_urls?: { label?: string; url: string }[];
       category_tags?: string[];
       pricing_info?: string;
     }) => {
@@ -155,6 +157,7 @@ export const useCreateShowcaseItem = () => {
         file_url: item.file_url,
         file_name: item.file_name,
         link_url: item.link_url,
+        link_urls: item.link_urls as unknown as Record<string, unknown>[] | undefined,
         category_tags: item.category_tags,
         pricing_info: item.pricing_info,
         user_id: user.id,
