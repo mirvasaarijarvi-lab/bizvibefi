@@ -43,11 +43,15 @@ const ShowcaseCard = ({ item }: { item: ShowcaseItem }) => {
     >
       <Link to={`/showcase/${item.id}`} className="block">
         <Card className="h-full flex flex-col hover:border-primary/40 transition-colors group">
-          {item.image_url && (
+          {item.image_url ? (
             <div className="aspect-video w-full overflow-hidden rounded-t-lg">
               <img src={item.image_url} alt={item.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
             </div>
-          )}
+          ) : item.file_url ? (
+            <div className="rounded-t-lg overflow-hidden">
+              <FilePreview url={item.file_url} name={item.file_name} />
+            </div>
+          ) : null}
           <CardHeader>
             <div className="flex items-start justify-between gap-2">
               <div className="flex items-center gap-2">
