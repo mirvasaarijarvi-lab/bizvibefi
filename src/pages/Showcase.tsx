@@ -212,6 +212,8 @@ const SubmitForm = ({ onClose }: { onClose: () => void }) => {
 
     setUploading(true);
     let image_url: string | undefined;
+    let file_url: string | undefined;
+    let file_name: string | undefined;
 
     try {
       if (imageFile && user) {
@@ -225,6 +227,23 @@ const SubmitForm = ({ onClose }: { onClose: () => void }) => {
           .from("showcase-images")
           .getPublicUrl(path);
         image_url = urlData.publicUrl;
+      }
+
+      if (attachmentFile && user) {
+        if (attachmentFile.size > 25 * 1024 * 1024) {
+          toast({ title: t("showcase.file.tooLarge"), variant: "destructive" });
+          setUploading(false);
+          return;
+        }
+        const safeName = attachmentFile.name.replace(/[^a-zA-Z0-9._-]/g, "_");
+        const path = `${user.id}/${Date.now()}-${safeName}`;
+        const { error: fErr } = await supabase.storage
+          .from("showcase-files")
+          .upload(path, attachmentFile);
+        if (fErr) throw fErr;
+        const { data: fUrl } = supabase.storage.from("showcase-files").getPublicUrl(path);
+        file_url = fUrl.publicUrl;
+        file_name = attachmentFile.name;
       }
 
       const cleanBenefits = benefits.filter((b) => b.trim());
@@ -241,6 +260,8 @@ const SubmitForm = ({ onClose }: { onClose: () => void }) => {
         key_figures: cleanFigures.length > 0 ? cleanFigures : undefined,
         link_url: linkUrl.trim() || undefined,
         image_url,
+        file_url,
+        file_name,
         category_tags: tags.split(",").map((t) => t.trim()).filter(Boolean),
         pricing_info: pricingInfo.trim() || undefined,
       });
