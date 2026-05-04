@@ -22,6 +22,8 @@ export interface ShowcaseItem {
   benefits: string[] | null;
   key_figures: KeyFigure[] | null; // stored as jsonb, cast from Json
   image_url: string | null;
+  file_url: string | null;
+  file_name: string | null;
   link_url: string | null;
   category_tags: string[];
   pricing_info: string | null;
