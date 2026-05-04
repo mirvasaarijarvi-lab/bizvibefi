@@ -8,6 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useTranslation } from "@/i18n/useTranslation";
 import { useToast } from "@/hooks/use-toast";
 import { useUpdateShowcaseFields } from "@/hooks/useAdminShowcase";
+import ShowcaseFileField from "@/components/ShowcaseFileField";
 import type { ShowcaseItem, ShowcaseType, KeyFigure } from "@/hooks/useShowcase";
 import { Loader2, Plus, Trash2 } from "lucide-react";
 
