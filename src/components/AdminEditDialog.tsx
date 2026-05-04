@@ -9,6 +9,7 @@ import { useTranslation } from "@/i18n/useTranslation";
 import { useToast } from "@/hooks/use-toast";
 import { useUpdateShowcaseFields } from "@/hooks/useAdminShowcase";
 import ShowcaseFileField from "@/components/ShowcaseFileField";
+import ShowcaseLinksField from "@/components/ShowcaseLinksField";
 import type { ShowcaseItem, ShowcaseType, KeyFigure } from "@/hooks/useShowcase";
 import { Loader2, Plus, Trash2 } from "lucide-react";
 
@@ -34,6 +35,9 @@ const AdminEditDialog = ({ item, open, onOpenChange }: AdminEditDialogProps) => 
     Array.isArray(item.key_figures) ? item.key_figures : []
   );
   const [linkUrl, setLinkUrl] = useState(item.link_url ?? "");
+  const [links, setLinks] = useState<{ label?: string; url: string }[]>(
+    Array.isArray(item.link_urls) ? item.link_urls : []
+  );
   const [tags, setTags] = useState((item.category_tags ?? []).join(", "));
   const [pricingInfo, setPricingInfo] = useState(item.pricing_info ?? "");
   const [fileUrl, setFileUrl] = useState<string | null>(item.file_url ?? null);
@@ -65,6 +69,7 @@ const AdminEditDialog = ({ item, open, onOpenChange }: AdminEditDialogProps) => 
           benefits: cleanBenefits.length > 0 ? cleanBenefits : null,
           key_figures: cleanFigures.length > 0 ? cleanFigures as unknown as Record<string, unknown>[] : null,
           link_url: linkUrl.trim() || null,
+          link_urls: links.filter((l) => l.url.trim()).map((l) => ({ label: l.label?.trim() || undefined, url: l.url.trim() })),
           category_tags: tags.split(",").map((t) => t.trim()).filter(Boolean),
           pricing_info: pricingInfo.trim() || null,
           file_url: fileUrl,
