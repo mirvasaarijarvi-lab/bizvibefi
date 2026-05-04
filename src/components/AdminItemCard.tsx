@@ -7,7 +7,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { useTranslation } from "@/i18n/useTranslation";
 import { useUpdateShowcaseStatus, useUpdateShowcaseImage } from "@/hooks/useAdminShowcase";
 import type { ShowcaseItem, ApprovalStatus } from "@/hooks/useShowcase";
-import { CheckCircle, XCircle, Clock, ExternalLink, Lightbulb, MessageSquare, Wrench, ImagePlus, Trash2, Loader2, Pencil } from "lucide-react";
+import { CheckCircle, XCircle, Clock, ExternalLink, Lightbulb, MessageSquare, Wrench, ImagePlus, Trash2, Loader2, Pencil, FileText } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import ImageDropZone from "@/components/ImageDropZone";
