@@ -161,6 +161,15 @@ const ShowcaseDetail = () => {
                     </a>
                   </Button>
                 )}
+                {item.file_url && (
+                  <Button variant="outline" asChild>
+                    <a href={item.file_url} target="_blank" rel="noopener noreferrer" download>
+                      <FileText className="mr-2 h-4 w-4" />
+                      {item.file_name ?? t("showcase.file.download")}
+                      <Download className="ml-2 h-4 w-4" />
+                    </a>
+                  </Button>
+                )}
                 {item.type === "tool" && avgRating && (
                   <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-muted">
                     <Star className="h-4 w-4 text-yellow-500 fill-yellow-500" />
