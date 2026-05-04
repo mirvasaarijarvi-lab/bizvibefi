@@ -75,13 +75,16 @@ const ShowcaseCard = ({ item }: { item: ShowcaseItem }) => {
             )}
           </CardContent>
           <CardFooter className="gap-2 flex-wrap">
-            {item.link_url && (
-              <Button variant="outline" size="sm" asChild onClick={(e) => e.stopPropagation()}>
-                <a href={item.link_url} target="_blank" rel="noopener noreferrer">
-                  {t("showcase.visitLink")} <ExternalLink className="ml-1 h-3 w-3" />
-                </a>
-              </Button>
-            )}
+            {(() => {
+              const all = [...(item.link_urls ?? []), ...(item.link_url ? [{ url: item.link_url }] : [])];
+              return all[0] ? (
+                <Button variant="outline" size="sm" asChild onClick={(e) => e.stopPropagation()}>
+                  <a href={all[0].url} target="_blank" rel="noopener noreferrer">
+                    {all[0].label || t("showcase.visitLink")} <ExternalLink className="ml-1 h-3 w-3" />
+                  </a>
+                </Button>
+              ) : null;
+            })()}
             <Button variant="ghost" size="sm" className="ml-auto">
               {t("showcase.detail.readMore")} <ArrowRight className="ml-1 h-3 w-3" />
             </Button>
