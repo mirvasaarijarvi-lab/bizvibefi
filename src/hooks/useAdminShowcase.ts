@@ -143,6 +143,7 @@ export interface ShowcaseFieldsUpdate {
   benefits?: string[] | null;
   key_figures?: Record<string, unknown>[] | null;
   link_url?: string | null;
+  link_urls?: { label?: string; url: string }[] | null;
   category_tags?: string[];
   pricing_info?: string | null;
   file_url?: string | null;
