@@ -268,6 +268,16 @@ const sv = {
     pricingPlaceholder: "Gratis, €9/mån, etc.",
     fileTooLarge: "Bilden får vara högst 5MB",
     invalidFileType: "Välj en bildfil",
+    file: {
+      label: "Bilaga",
+      upload: "Ladda upp en fil (PDF, DOC, XLS, PPT, TXT, CSV, ZIP, max 25MB)",
+      replace: "Ersätt",
+      download: "Ladda ner fil",
+      uploaded: "Filen har laddats upp",
+      uploadFailed: "Filuppladdning misslyckades",
+      tooLarge: "Filen måste vara under 25MB",
+      invalidType: "Filtypen stöds inte",
+    },
     crop: {
       title: "Beskär bild",
       description: "Justera beskärningsområdet till 16:9 för enhetliga skyltfönsterdimensioner.",
