@@ -188,9 +188,10 @@ const AdminEditDialog = ({ item, open, onOpenChange }: AdminEditDialogProps) => 
             <Textarea value={content} onChange={(e) => setContent(e.target.value)} rows={4} />
           </div>
           <div>
-            <Label>{t("showcase.linkLabel")}</Label>
+            <Label>{t("showcase.linkLabel")} ({t("showcase.legacyLink")})</Label>
             <Input type="url" value={linkUrl} onChange={(e) => setLinkUrl(e.target.value)} placeholder="https://..." />
           </div>
+          <ShowcaseLinksField links={links} onChange={setLinks} />
           <div>
             <Label>{t("showcase.tagsLabel")}</Label>
             <Input value={tags} onChange={(e) => setTags(e.target.value)} placeholder={t("showcase.tagsPlaceholder")} />
