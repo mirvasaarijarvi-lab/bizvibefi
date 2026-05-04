@@ -20,6 +20,7 @@ import { supabase } from "@/integrations/supabase/client";
 import ImageDropZone from "@/components/ImageDropZone";
 import ImageCropDialog from "@/components/ImageCropDialog";
 import FilePreview from "@/components/FilePreview";
+import ShowcaseLinksField from "@/components/ShowcaseLinksField";
 import { useToast } from "@/hooks/use-toast";
 
 const typeIcons: Record<ShowcaseType, React.ElementType> = {
@@ -263,7 +264,7 @@ const SubmitForm = ({ onClose }: { onClose: () => void }) => {
         solution: solution.trim() || undefined,
         benefits: cleanBenefits.length > 0 ? cleanBenefits : undefined,
         key_figures: cleanFigures.length > 0 ? cleanFigures : undefined,
-        link_url: linkUrl.trim() || undefined,
+        link_urls: links.filter((l) => l.url.trim()).map((l) => ({ label: l.label?.trim() || undefined, url: l.url.trim() })),
         image_url,
         file_url,
         file_name,
@@ -325,10 +326,7 @@ const SubmitForm = ({ onClose }: { onClose: () => void }) => {
         <Label>{t("showcase.contentLabel")}</Label>
         <Textarea value={content} onChange={(e) => setContent(e.target.value)} placeholder={t("showcase.contentPlaceholder")} />
       </div>
-      <div>
-        <Label>{t("showcase.linkLabel")}</Label>
-        <Input type="url" value={linkUrl} onChange={(e) => setLinkUrl(e.target.value)} placeholder="https://..." />
-      </div>
+      <ShowcaseLinksField links={links} onChange={setLinks} />
       <div>
         <Label>{t("showcase.imageLabel")}</Label>
         <ImageDropZone onFileSelected={handleFileSelected}>
