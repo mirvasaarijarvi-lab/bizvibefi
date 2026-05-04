@@ -135,6 +135,8 @@ export const useCreateShowcaseItem = () => {
       benefits?: string[];
       key_figures?: KeyFigure[];
       image_url?: string;
+      file_url?: string;
+      file_name?: string;
       link_url?: string;
       category_tags?: string[];
       pricing_info?: string;
@@ -150,6 +152,8 @@ export const useCreateShowcaseItem = () => {
         benefits: item.benefits,
         key_figures: item.key_figures as unknown as Record<string, unknown>[],
         image_url: item.image_url,
+        file_url: item.file_url,
+        file_name: item.file_name,
         link_url: item.link_url,
         category_tags: item.category_tags,
         pricing_info: item.pricing_info,
