@@ -13,6 +13,7 @@ import { motion } from "framer-motion";
 import { useTranslation } from "@/i18n/useTranslation";
 import { useAuth } from "@/hooks/useAuth";
 import { useShowcaseItem, useShowcaseReviews, useCreateReview, type KeyFigure } from "@/hooks/useShowcase";
+import FilePreview from "@/components/FilePreview";
 import { useToast } from "@/hooks/use-toast";
 import {
   ArrowLeft, ExternalLink, Lightbulb, MessageSquare, Wrench, Star,
