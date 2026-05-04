@@ -16,7 +16,7 @@ import { useShowcaseItem, useShowcaseReviews, useCreateReview, type KeyFigure } 
 import { useToast } from "@/hooks/use-toast";
 import {
   ArrowLeft, ExternalLink, Lightbulb, MessageSquare, Wrench, Star,
-  Target, Zap, CheckCircle2, BarChart3,
+  Target, Zap, CheckCircle2, BarChart3, FileText, Download,
 } from "lucide-react";
 
 const typeIcons: Record<string, React.ElementType> = {
