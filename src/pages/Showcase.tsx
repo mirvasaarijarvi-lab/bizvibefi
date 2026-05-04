@@ -19,6 +19,7 @@ import { Plus, ExternalLink, ArrowRight, Lightbulb, MessageSquare, Wrench, Uploa
 import { supabase } from "@/integrations/supabase/client";
 import ImageDropZone from "@/components/ImageDropZone";
 import ImageCropDialog from "@/components/ImageCropDialog";
+import FilePreview from "@/components/FilePreview";
 import { useToast } from "@/hooks/use-toast";
 
 const typeIcons: Record<ShowcaseType, React.ElementType> = {
