@@ -25,6 +25,7 @@ export interface ShowcaseItem {
   file_url: string | null;
   file_name: string | null;
   link_url: string | null;
+  link_urls: { label?: string; url: string }[] | null;
   category_tags: string[];
   pricing_info: string | null;
   rejection_reason: string | null;
