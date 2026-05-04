@@ -178,7 +178,7 @@ const SubmitForm = ({ onClose }: { onClose: () => void }) => {
   const [solution, setSolution] = useState("");
   const [benefits, setBenefits] = useState<string[]>([]);
   const [keyFigures, setKeyFigures] = useState<KeyFigure[]>([]);
-  const [linkUrl, setLinkUrl] = useState("");
+  const [links, setLinks] = useState<{ label?: string; url: string }[]>([]);
   const [tags, setTags] = useState("");
   const [pricingInfo, setPricingInfo] = useState("");
   const [imageFile, setImageFile] = useState<File | null>(null);
