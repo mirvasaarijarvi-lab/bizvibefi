@@ -37,7 +37,7 @@ const FilePreview = ({ url, name, variant = "full" }: FilePreviewProps) => {
         <img
           src={url}
           alt={name ?? "Attachment"}
-          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+          className="w-full h-full object-contain group-hover:scale-[1.02] transition-transform duration-300"
           loading="lazy"
         />
       ) : pdf ? (
