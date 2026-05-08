@@ -180,12 +180,30 @@ const ShowcaseDetail = () => {
               </div>
             </div>
 
-            {/* Right: image or file preview */}
-            {item.image_url ? (
-              <FilePreview url={item.image_url} name={item.title} />
-            ) : item.file_url ? (
-              <FilePreview url={item.file_url} name={item.file_name} />
-            ) : null}
+            {/* Right: image gallery or file preview */}
+            {(() => {
+              const imgs = item.image_urls && item.image_urls.length > 0
+                ? item.image_urls
+                : item.image_url ? [item.image_url] : [];
+              if (imgs.length > 0) {
+                return (
+                  <div className="space-y-3">
+                    <FilePreview url={imgs[0]} name={item.title} />
+                    {imgs.length > 1 && (
+                      <div className="grid grid-cols-4 gap-2">
+                        {imgs.slice(1).map((url, i) => (
+                          <FilePreview key={i} url={url} name={`${item.title} ${i + 2}`} variant="thumbnail" />
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                );
+              }
+              if (item.file_url) {
+                return <FilePreview url={item.file_url} name={item.file_name} />;
+              }
+              return null;
+            })()}
           </motion.div>
         </div>
       </section>
