@@ -185,36 +185,15 @@ const SubmitForm = ({ onClose }: { onClose: () => void }) => {
   const [tags, setTags] = useState("");
   const [pricingInfo, setPricingInfo] = useState("");
   const [images, setImages] = useState<string[]>([]);
-  const [attachmentFile, setAttachmentFile] = useState<File | null>(null);
-  const [uploading, setUploading] = useState(false);
+  const [files, setFiles] = useState<{ url: string; name: string }[]>([]);
+  const [submitting, setSubmitting] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!title.trim() || !description.trim()) return;
 
-    setUploading(true);
-    let file_url: string | undefined;
-    let file_name: string | undefined;
-
+    setSubmitting(true);
     try {
-
-      if (attachmentFile && user) {
-        if (attachmentFile.size > 25 * 1024 * 1024) {
-          toast({ title: t("showcase.file.tooLarge"), variant: "destructive" });
-          setUploading(false);
-          return;
-        }
-        const safeName = attachmentFile.name.replace(/[^a-zA-Z0-9._-]/g, "_");
-        const path = `${user.id}/${Date.now()}-${safeName}`;
-        const { error: fErr } = await supabase.storage
-          .from("showcase-files")
-          .upload(path, attachmentFile);
-        if (fErr) throw fErr;
-        const { data: fUrl } = supabase.storage.from("showcase-files").getPublicUrl(path);
-        file_url = fUrl.publicUrl;
-        file_name = attachmentFile.name;
-      }
-
       const cleanBenefits = benefits.filter((b) => b.trim());
       const cleanFigures = keyFigures.filter((f) => f.label.trim() && f.value.trim());
 
@@ -230,8 +209,9 @@ const SubmitForm = ({ onClose }: { onClose: () => void }) => {
         link_urls: links.filter((l) => l.url.trim()).map((l) => ({ label: l.label?.trim() || undefined, url: l.url.trim() })),
         image_url: images[0],
         image_urls: images,
-        file_url,
-        file_name,
+        file_url: files[0]?.url,
+        file_name: files[0]?.name,
+        file_urls: files,
         category_tags: tags.split(",").map((t) => t.trim()).filter(Boolean),
         pricing_info: pricingInfo.trim() || undefined,
       });
@@ -240,7 +220,7 @@ const SubmitForm = ({ onClose }: { onClose: () => void }) => {
     } catch {
       toast({ title: t("showcase.submitError"), variant: "destructive" });
     } finally {
-      setUploading(false);
+      setSubmitting(false);
     }
   };
 
