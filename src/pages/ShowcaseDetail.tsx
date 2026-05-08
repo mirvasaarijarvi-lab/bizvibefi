@@ -280,32 +280,10 @@ const ShowcaseDetail = () => {
       {/* Full Content */}
       {item.content && (
         <section className="py-12 md:py-16 border-t">
-          <div className="container">
-            <div className={`grid gap-10 items-start ${(item.image_url || item.file_url) ? "lg:grid-cols-2" : ""}`}>
-              <div className="max-w-3xl">
-                <h2 className="font-display text-2xl font-bold mb-6">{t("showcase.detail.fullStory")}</h2>
-                <div className="prose prose-sm max-w-none text-muted-foreground font-body whitespace-pre-line">
-                  {item.content}
-                </div>
-              </div>
-              {(item.image_url || item.file_url) && (
-                <div className="lg:sticky lg:top-24">
-                  <FilePreview
-                    url={(item.image_url ?? item.file_url) as string}
-                    name={item.image_url ? item.title : item.file_name}
-                  />
-                  {item.file_url && (
-                    <div className="mt-4 flex justify-end">
-                      <Button asChild>
-                        <a href={item.file_url} target="_blank" rel="noopener noreferrer" download>
-                          <Download className="mr-2 h-4 w-4" />
-                          {t("showcase.file.download")}
-                        </a>
-                      </Button>
-                    </div>
-                  )}
-                </div>
-              )}
+          <div className="container max-w-3xl">
+            <h2 className="font-display text-2xl font-bold mb-6">{t("showcase.detail.fullStory")}</h2>
+            <div className="prose prose-sm max-w-none text-muted-foreground font-body whitespace-pre-line">
+              {item.content}
             </div>
           </div>
         </section>
