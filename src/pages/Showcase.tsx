@@ -228,7 +228,8 @@ const SubmitForm = ({ onClose }: { onClose: () => void }) => {
         benefits: cleanBenefits.length > 0 ? cleanBenefits : undefined,
         key_figures: cleanFigures.length > 0 ? cleanFigures : undefined,
         link_urls: links.filter((l) => l.url.trim()).map((l) => ({ label: l.label?.trim() || undefined, url: l.url.trim() })),
-        image_url,
+        image_url: images[0],
+        image_urls: images,
         file_url,
         file_name,
         category_tags: tags.split(",").map((t) => t.trim()).filter(Boolean),
@@ -290,41 +291,7 @@ const SubmitForm = ({ onClose }: { onClose: () => void }) => {
         <Textarea value={content} onChange={(e) => setContent(e.target.value)} placeholder={t("showcase.contentPlaceholder")} />
       </div>
       <ShowcaseLinksField links={links} onChange={setLinks} />
-      <div>
-        <Label>{t("showcase.imageLabel")}</Label>
-        <ImageDropZone onFileSelected={handleFileSelected}>
-          {({ openPicker, isDragging }) => (
-            <>
-              {imagePreview ? (
-                <div className="relative mt-2">
-                  <img src={imagePreview} alt="Preview" className="w-full h-32 object-cover rounded-lg border border-border" />
-                  {isDragging && (
-                    <div className="absolute inset-0 bg-primary/20 flex items-center justify-center rounded-lg">
-                      <p className="text-sm font-medium text-primary-foreground bg-primary/80 px-3 py-1 rounded">{t("showcase.dropHere")}</p>
-                    </div>
-                  )}
-                  <button
-                    type="button"
-                    onClick={clearImage}
-                    className="absolute top-1 right-1 bg-background/80 rounded-full p-1 hover:bg-destructive hover:text-destructive-foreground transition-colors"
-                  >
-                    <XIcon className="h-4 w-4" />
-                  </button>
-                </div>
-              ) : (
-                <button
-                  type="button"
-                  onClick={openPicker}
-                  className={`mt-1 w-full border-2 border-dashed rounded-lg p-6 flex flex-col items-center gap-2 transition-colors ${isDragging ? "border-primary bg-primary/5 text-primary" : "border-border text-muted-foreground hover:border-primary/40 hover:text-foreground"}`}
-                >
-                  <Upload className="h-6 w-6" />
-                  <span className="text-sm font-body">{isDragging ? t("showcase.dropHere") : t("showcase.uploadImage")}</span>
-                </button>
-              )}
-            </>
-          )}
-        </ImageDropZone>
-      </div>
+      <ShowcaseImagesField images={images} onChange={setImages} />
       <div>
         <Label>{t("showcase.file.label")}</Label>
         {attachmentFile ? (
@@ -369,7 +336,7 @@ const SubmitForm = ({ onClose }: { onClose: () => void }) => {
       <Button type="submit" disabled={createItem.isPending || uploading} className="w-full">
         {uploading ? t("showcase.uploading") : t("showcase.submitBtn")}
       </Button>
-      <ImageCropDialog file={cropFile} open={cropOpen} onOpenChange={setCropOpen} onCropComplete={handleCropComplete} />
+      
     </form>
   );
 };
