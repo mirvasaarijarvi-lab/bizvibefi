@@ -4,6 +4,8 @@ import { Link } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import Layout from "@/components/Layout";
 import PageMeta from "@/components/PageMeta";
+import HeroAvatar from "@/components/HeroAvatar";
+import mascotForum from "@/assets/mascot-forum.png";
 import { MessageSquare, Lock, Crown, Gem } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -40,6 +42,7 @@ const Forum = () => {
       />
       <section className="py-20 px-4">
         <div className="max-w-4xl mx-auto">
+          <HeroAvatar src={mascotForum} alt="BizVibe forum mascot" />
           <div className="flex items-center justify-between mb-8">
             <div>
               <h1 className="font-display text-3xl font-bold text-foreground">Community Forum</h1>
