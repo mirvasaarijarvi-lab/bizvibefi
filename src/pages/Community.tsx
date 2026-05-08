@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import Layout from "@/components/Layout";
 import PageMeta from "@/components/PageMeta";
 import HeroAvatar from "@/components/HeroAvatar";
+import mascotHeart from "@/assets/mascot-heart.png";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { Users, Rocket, Zap, MessageCircle, Calendar, TrendingUp, GraduationCap, Handshake, ArrowRight, Quote, Gem } from "lucide-react";
@@ -41,7 +42,7 @@ const Community = () => {
             animate={{ opacity: 1, y: 0 }}
             className="text-center max-w-3xl mx-auto"
           >
-            <HeroAvatar />
+            <HeroAvatar src={mascotHeart} alt="BizVibe heart mascot" />
             <p className="font-body text-sm font-semibold text-turquoise tracking-widest uppercase mb-4">{t("community.tag")}</p>
             <h1 className="font-display text-4xl md:text-6xl font-extrabold tracking-[-0.03em]">
               {t("community.title")} <span className="text-gradient-storm">{t("community.titleHighlight")}</span> {t("community.titleEnd")}
