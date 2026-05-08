@@ -286,7 +286,7 @@ const SubmitForm = ({ onClose }: { onClose: () => void }) => {
         </div>
       )}
       <Button type="submit" disabled={createItem.isPending || submitting} className="w-full">
-        {submitting ? t("showcase.submitting") : t("showcase.submitBtn")}
+        {submitting ? t("showcase.uploading") : t("showcase.submitBtn")}
       </Button>
       
     </form>
