@@ -220,13 +220,9 @@ const AdminEditDialog = ({ item, open, onOpenChange }: AdminEditDialogProps) => 
             pathPrefix={`admin/${item.id}`}
           />
           <ShowcaseFileField
-            fileUrl={fileUrl}
-            fileName={fileName}
+            files={files}
             pathPrefix={`admin/${item.id}`}
-            onChange={({ file_url, file_name }) => {
-              setFileUrl(file_url);
-              setFileName(file_name);
-            }}
+            onChange={(next) => setFiles(next)}
           />
           <div className="flex gap-2 justify-end pt-2">
             <Button variant="outline" onClick={() => onOpenChange(false)}>
