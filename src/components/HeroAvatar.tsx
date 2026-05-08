@@ -4,6 +4,8 @@ import botAvatar from "@/assets/support-bot-avatar.png";
 interface HeroAvatarProps {
   size?: "sm" | "md" | "lg";
   className?: string;
+  src?: string;
+  alt?: string;
 }
 
 const sizeMap = {
@@ -17,7 +19,7 @@ const sizeMap = {
  * Renders the transparent mascot directly on the page background — no disc,
  * no ring, no tiling. The PNG itself carries true alpha transparency.
  */
-const HeroAvatar = ({ size = "md", className = "" }: HeroAvatarProps) => {
+const HeroAvatar = ({ size = "md", className = "", src, alt }: HeroAvatarProps) => {
   return (
     <motion.div
       initial={{ opacity: 0, scale: 0.7, y: -10 }}
@@ -26,8 +28,8 @@ const HeroAvatar = ({ size = "md", className = "" }: HeroAvatarProps) => {
       className={`mx-auto mb-6 ${className}`}
     >
       <img
-        src={botAvatar}
-        alt="BizVibe mascot"
+        src={src ?? botAvatar}
+        alt={alt ?? "BizVibe mascot"}
         className={`${sizeMap[size]} mx-auto object-contain drop-shadow-lg`}
       />
     </motion.div>
