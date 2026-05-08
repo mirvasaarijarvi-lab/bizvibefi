@@ -153,14 +153,19 @@ const ShowcaseDetail = () => {
             )}
 
             <div className="flex flex-wrap gap-3">
-              {item.file_url && (
-                <Button size="lg" asChild className="shadow-lg">
-                  <a href={item.file_url} target="_blank" rel="noopener noreferrer" download>
-                    <Download className="mr-2 h-5 w-5" />
-                    {t("showcase.file.download")}
-                  </a>
-                </Button>
-              )}
+              {(() => {
+                const allFiles = item.file_urls && item.file_urls.length > 0
+                  ? item.file_urls
+                  : item.file_url ? [{ url: item.file_url, name: item.file_name ?? "" }] : [];
+                return allFiles.map((f, i) => (
+                  <Button key={i} size="lg" asChild className="shadow-lg">
+                    <a href={f.url} target="_blank" rel="noopener noreferrer" download={f.name || undefined}>
+                      <Download className="mr-2 h-5 w-5" />
+                      {f.name || t("showcase.file.download")}
+                    </a>
+                  </Button>
+                ));
+              })()}
               {[...(item.link_urls ?? []), ...(item.link_url ? [{ url: item.link_url }] : [])].map((l, i) => (
                 <Button key={i} asChild variant="outline">
                   <a href={l.url} target="_blank" rel="noopener noreferrer">
