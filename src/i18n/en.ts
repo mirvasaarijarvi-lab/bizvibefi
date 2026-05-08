@@ -276,13 +276,14 @@ const en = {
     invalidFileType: "Please select an image file",
     file: {
       label: "Attachment",
-      upload: "Click to upload a file (PDF, DOC, XLS, PPT, TXT, CSV, ZIP — max 25MB)",
+      upload: "Click to upload files (images, PDF, DOC, XLS, PPT, ZIP, max 50MB each)",
       replace: "Replace",
       download: "Download file",
       uploaded: "File uploaded",
       uploadFailed: "File upload failed",
-      tooLarge: "File must be under 25MB",
+      tooLarge: "File must be under 50MB",
       invalidType: "Unsupported file type",
+      addMore: "Add another file",
     },
     crop: {
       title: "Crop Image",

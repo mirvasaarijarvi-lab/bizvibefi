@@ -283,6 +283,7 @@ const fi = {
       uploadFailed: "Tiedoston lataus epäonnistui",
       tooLarge: "Tiedosto saa olla enintään 25Mt",
       invalidType: "Tiedostotyyppiä ei tueta",
+      addMore: "Lisää tiedosto",
     },
     crop: {
       title: "Rajaa kuva",

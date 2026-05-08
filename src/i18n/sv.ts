@@ -283,6 +283,7 @@ const sv = {
       uploadFailed: "Filuppladdning misslyckades",
       tooLarge: "Filen måste vara under 25MB",
       invalidType: "Filtypen stöds inte",
+      addMore: "Lägg till fil",
     },
     crop: {
       title: "Beskär bild",
