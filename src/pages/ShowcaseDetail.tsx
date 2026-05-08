@@ -117,93 +117,65 @@ const ShowcaseDetail = () => {
             <Link to="/showcase"><ArrowLeft className="mr-2 h-4 w-4" /> {t("showcase.detail.backToShowcase")}</Link>
           </Button>
 
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="grid lg:grid-cols-2 gap-10 items-start">
-            {/* Left: text */}
-            <div>
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
-                  <Icon className="h-5 w-5 text-primary" />
-                </div>
-                <Badge variant="outline">{item.type.replace("_", " ")}</Badge>
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="max-w-3xl">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
+                <Icon className="h-5 w-5 text-primary" />
               </div>
-
-              <h1 className="font-display text-3xl md:text-4xl font-extrabold tracking-tight mb-4">{item.title}</h1>
-              <p className="text-lg text-muted-foreground font-body mb-6">{item.description}</p>
-
-              <div className="flex flex-wrap gap-2 mb-4">
-                {item.category_tags?.map((tag) => (
-                  <Badge key={tag} variant="secondary">{tag}</Badge>
-                ))}
-              </div>
-
-              {item.profiles?.display_name && (
-                <Link to={`/members/${item.user_id}`} className="inline-flex items-center gap-2 mb-6 group">
-                  <Avatar className="h-6 w-6">
-                    <AvatarImage src={item.profiles.avatar_url ?? undefined} />
-                    <AvatarFallback className="bg-muted text-[10px] font-display">
-                      {item.profiles.display_name.charAt(0).toUpperCase()}
-                    </AvatarFallback>
-                  </Avatar>
-                  <span className="text-sm text-muted-foreground font-body group-hover:text-primary">
-                    {t("showcase.by")} <span className="font-medium">{item.profiles.display_name}</span>
-                  </span>
-                </Link>
-              )}
-
-              {item.pricing_info && (
-                <p className="text-lg font-semibold text-primary font-body mb-6">{item.pricing_info}</p>
-              )}
-
-              <div className="flex flex-wrap gap-3">
-                {item.file_url && (
-                  <Button size="lg" asChild className="shadow-lg">
-                    <a href={item.file_url} target="_blank" rel="noopener noreferrer" download>
-                      <Download className="mr-2 h-5 w-5" />
-                      {t("showcase.file.download")}
-                    </a>
-                  </Button>
-                )}
-                {[...(item.link_urls ?? []), ...(item.link_url ? [{ url: item.link_url }] : [])].map((l, i) => (
-                  <Button key={i} asChild variant="outline">
-                    <a href={l.url} target="_blank" rel="noopener noreferrer">
-                      {l.label || t("showcase.visitLink")} <ExternalLink className="ml-2 h-4 w-4" />
-                    </a>
-                  </Button>
-                ))}
-                {item.type === "tool" && avgRating && (
-                  <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-muted">
-                    <Star className="h-4 w-4 text-yellow-500 fill-yellow-500" />
-                    <span className="font-semibold">{avgRating}</span>
-                    <span className="text-sm text-muted-foreground">({reviews?.length})</span>
-                  </div>
-                )}
-              </div>
+              <Badge variant="outline">{item.type.replace("_", " ")}</Badge>
             </div>
 
-            {/* Right: image gallery or file preview */}
-            {(() => {
-              const imgs = item.image_urls && item.image_urls.length > 0
-                ? item.image_urls
-                : item.image_url ? [item.image_url] : [];
-              if (imgs.length > 0) {
-                return (
-                  <div className="space-y-3">
-                    <FilePreview url={imgs[0]} name={item.title} />
-                    {imgs.length > 1 && (
-                      <div className="grid grid-cols-4 gap-2">
-                        {imgs.slice(1).map((url, i) => (
-                          <FilePreview key={i} url={url} name={`${item.title} ${i + 2}`} variant="thumbnail" />
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                );
-              }
-              if (item.file_url) {
-                return <FilePreview url={item.file_url} name={item.file_name} />;
-              }
-              return null;
-            })()}
+            <h1 className="font-display text-3xl md:text-4xl font-extrabold tracking-tight mb-4">{item.title}</h1>
+            <p className="text-lg text-muted-foreground font-body mb-6">{item.description}</p>
+
+            <div className="flex flex-wrap gap-2 mb-4">
+              {item.category_tags?.map((tag) => (
+                <Badge key={tag} variant="secondary">{tag}</Badge>
+              ))}
+            </div>
+
+            {item.profiles?.display_name && (
+              <Link to={`/members/${item.user_id}`} className="inline-flex items-center gap-2 mb-6 group">
+                <Avatar className="h-6 w-6">
+                  <AvatarImage src={item.profiles.avatar_url ?? undefined} />
+                  <AvatarFallback className="bg-muted text-[10px] font-display">
+                    {item.profiles.display_name.charAt(0).toUpperCase()}
+                  </AvatarFallback>
+                </Avatar>
+                <span className="text-sm text-muted-foreground font-body group-hover:text-primary">
+                  {t("showcase.by")} <span className="font-medium">{item.profiles.display_name}</span>
+                </span>
+              </Link>
+            )}
+
+            {item.pricing_info && (
+              <p className="text-lg font-semibold text-primary font-body mb-6">{item.pricing_info}</p>
+            )}
+
+            <div className="flex flex-wrap gap-3">
+              {item.file_url && (
+                <Button size="lg" asChild className="shadow-lg">
+                  <a href={item.file_url} target="_blank" rel="noopener noreferrer" download>
+                    <Download className="mr-2 h-5 w-5" />
+                    {t("showcase.file.download")}
+                  </a>
+                </Button>
+              )}
+              {[...(item.link_urls ?? []), ...(item.link_url ? [{ url: item.link_url }] : [])].map((l, i) => (
+                <Button key={i} asChild variant="outline">
+                  <a href={l.url} target="_blank" rel="noopener noreferrer">
+                    {l.label || t("showcase.visitLink")} <ExternalLink className="ml-2 h-4 w-4" />
+                  </a>
+                </Button>
+              ))}
+              {item.type === "tool" && avgRating && (
+                <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-muted">
+                  <Star className="h-4 w-4 text-yellow-500 fill-yellow-500" />
+                  <span className="font-semibold">{avgRating}</span>
+                  <span className="text-sm text-muted-foreground">({reviews?.length})</span>
+                </div>
+              )}
+            </div>
           </motion.div>
         </div>
       </section>
@@ -278,16 +250,44 @@ const ShowcaseDetail = () => {
       )}
 
       {/* Full Content */}
-      {item.content && (
-        <section className="py-12 md:py-16 border-t">
-          <div className="container max-w-3xl">
-            <h2 className="font-display text-2xl font-bold mb-6">{t("showcase.detail.fullStory")}</h2>
-            <div className="prose prose-sm max-w-none text-muted-foreground font-body whitespace-pre-line">
-              {item.content}
+      {item.content && (() => {
+        const imgs = item.image_urls && item.image_urls.length > 0
+          ? item.image_urls
+          : item.image_url ? [item.image_url] : [];
+        const hasMedia = imgs.length > 0 || !!item.file_url;
+        return (
+          <section className="py-12 md:py-16 border-t">
+            <div className="container">
+              <div className={`grid gap-10 items-start ${hasMedia ? "lg:grid-cols-2" : ""}`}>
+                <div className="max-w-3xl">
+                  <h2 className="font-display text-2xl font-bold mb-6">{t("showcase.detail.fullStory")}</h2>
+                  <div className="prose prose-sm max-w-none text-muted-foreground font-body whitespace-pre-line">
+                    {item.content}
+                  </div>
+                </div>
+                {hasMedia && (
+                  <div className="lg:sticky lg:top-24 space-y-3">
+                    {imgs.length > 0 ? (
+                      <>
+                        <FilePreview url={imgs[0]} name={item.title} />
+                        {imgs.length > 1 && (
+                          <div className="grid grid-cols-4 gap-2">
+                            {imgs.slice(1).map((url, i) => (
+                              <FilePreview key={i} url={url} name={`${item.title} ${i + 2}`} variant="thumbnail" />
+                            ))}
+                          </div>
+                        )}
+                      </>
+                    ) : item.file_url ? (
+                      <FilePreview url={item.file_url} name={item.file_name} />
+                    ) : null}
+                  </div>
+                )}
+              </div>
             </div>
-          </div>
-        </section>
-      )}
+          </section>
+        );
+      })()}
 
       {/* Reviews (tools only) */}
       {item.type === "tool" && (
