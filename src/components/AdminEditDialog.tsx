@@ -41,8 +41,11 @@ const AdminEditDialog = ({ item, open, onOpenChange }: AdminEditDialogProps) => 
   );
   const [tags, setTags] = useState((item.category_tags ?? []).join(", "));
   const [pricingInfo, setPricingInfo] = useState(item.pricing_info ?? "");
-  const [fileUrl, setFileUrl] = useState<string | null>(item.file_url ?? null);
-  const [fileName, setFileName] = useState<string | null>(item.file_name ?? null);
+  const [files, setFiles] = useState<{ url: string; name: string }[]>(
+    item.file_urls && item.file_urls.length > 0
+      ? item.file_urls
+      : item.file_url ? [{ url: item.file_url, name: item.file_name ?? "" }] : []
+  );
   const [images, setImages] = useState<string[]>(
     item.image_urls && item.image_urls.length > 0
       ? item.image_urls
