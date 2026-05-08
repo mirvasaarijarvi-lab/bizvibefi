@@ -4,6 +4,8 @@ import { Link } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import Layout from "@/components/Layout";
 import PageMeta from "@/components/PageMeta";
+import HeroAvatar from "@/components/HeroAvatar";
+import mascotForum from "@/assets/mascot-forum.png";
 import { MessageSquare, Lock, Crown, Gem } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
