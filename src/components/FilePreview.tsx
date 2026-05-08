@@ -64,13 +64,20 @@ const FilePreview = ({ url, name, variant = "full" }: FilePreviewProps) => {
           className="max-w-5xl w-[95vw] h-[90vh] p-0 overflow-hidden"
           onClick={(e) => e.stopPropagation()}
         >
-          <div className="flex items-center justify-between px-4 py-2 border-b">
+          <div className="flex items-center justify-between gap-2 px-4 py-2 border-b">
             <span className="text-sm font-body truncate">{name ?? "Attachment"}</span>
-            <Button variant="outline" size="sm" asChild>
-              <a href={url} target="_blank" rel="noopener noreferrer">
-                Open <ExternalLink className="ml-1 h-3 w-3" />
-              </a>
-            </Button>
+            <div className="flex items-center gap-2 shrink-0">
+              <Button size="sm" asChild>
+                <a href={url} target="_blank" rel="noopener noreferrer" download>
+                  <Download className="mr-1 h-3 w-3" /> Download
+                </a>
+              </Button>
+              <Button variant="outline" size="sm" asChild>
+                <a href={url} target="_blank" rel="noopener noreferrer">
+                  Open <ExternalLink className="ml-1 h-3 w-3" />
+                </a>
+              </Button>
+            </div>
           </div>
           <div className="w-full h-full bg-muted/30 flex items-center justify-center overflow-auto">
             {image ? (
