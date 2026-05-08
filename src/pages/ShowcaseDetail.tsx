@@ -155,22 +155,21 @@ const ShowcaseDetail = () => {
               )}
 
               <div className="flex flex-wrap gap-3">
+                {item.file_url && (
+                  <Button size="lg" asChild className="shadow-lg">
+                    <a href={item.file_url} target="_blank" rel="noopener noreferrer" download>
+                      <Download className="mr-2 h-5 w-5" />
+                      {t("showcase.file.download")}
+                    </a>
+                  </Button>
+                )}
                 {[...(item.link_urls ?? []), ...(item.link_url ? [{ url: item.link_url }] : [])].map((l, i) => (
-                  <Button key={i} asChild variant={i === 0 ? "default" : "outline"}>
+                  <Button key={i} asChild variant="outline">
                     <a href={l.url} target="_blank" rel="noopener noreferrer">
                       {l.label || t("showcase.visitLink")} <ExternalLink className="ml-2 h-4 w-4" />
                     </a>
                   </Button>
                 ))}
-                {item.file_url && (
-                  <Button variant="outline" asChild>
-                    <a href={item.file_url} target="_blank" rel="noopener noreferrer" download>
-                      <FileText className="mr-2 h-4 w-4" />
-                      {item.file_name ?? t("showcase.file.download")}
-                      <Download className="ml-2 h-4 w-4" />
-                    </a>
-                  </Button>
-                )}
                 {item.type === "tool" && avgRating && (
                   <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-muted">
                     <Star className="h-4 w-4 text-yellow-500 fill-yellow-500" />
@@ -183,9 +182,7 @@ const ShowcaseDetail = () => {
 
             {/* Right: image or file preview */}
             {item.image_url ? (
-              <div className="aspect-video w-full overflow-hidden rounded-xl border">
-                <img src={item.image_url} alt={item.title} className="w-full h-full object-cover" />
-              </div>
+              <FilePreview url={item.image_url} name={item.title} />
             ) : item.file_url ? (
               <FilePreview url={item.file_url} name={item.file_name} />
             ) : null}
@@ -265,10 +262,32 @@ const ShowcaseDetail = () => {
       {/* Full Content */}
       {item.content && (
         <section className="py-12 md:py-16 border-t">
-          <div className="container max-w-3xl">
-            <h2 className="font-display text-2xl font-bold mb-6">{t("showcase.detail.fullStory")}</h2>
-            <div className="prose prose-sm max-w-none text-muted-foreground font-body whitespace-pre-line">
-              {item.content}
+          <div className="container">
+            <div className={`grid gap-10 items-start ${(item.image_url || item.file_url) ? "lg:grid-cols-2" : ""}`}>
+              <div className="max-w-3xl">
+                <h2 className="font-display text-2xl font-bold mb-6">{t("showcase.detail.fullStory")}</h2>
+                <div className="prose prose-sm max-w-none text-muted-foreground font-body whitespace-pre-line">
+                  {item.content}
+                </div>
+              </div>
+              {(item.image_url || item.file_url) && (
+                <div className="lg:sticky lg:top-24">
+                  <FilePreview
+                    url={(item.image_url ?? item.file_url) as string}
+                    name={item.image_url ? item.title : item.file_name}
+                  />
+                  {item.file_url && (
+                    <div className="mt-4 flex justify-end">
+                      <Button asChild>
+                        <a href={item.file_url} target="_blank" rel="noopener noreferrer" download>
+                          <Download className="mr-2 h-4 w-4" />
+                          {t("showcase.file.download")}
+                        </a>
+                      </Button>
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
           </div>
         </section>
