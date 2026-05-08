@@ -185,20 +185,30 @@ const AdminItemCard = ({ item, selected, onSelectChange }: AdminItemCardProps) =
           {t("admin.showcase.submittedAt")}: {new Date(item.created_at).toLocaleDateString()}
         </p>
       </CardContent>
-      {item.file_url && (
-        <div className="px-6 pb-3 space-y-1.5">
-          <FilePreview url={item.file_url} name={item.file_name} variant="thumbnail" />
-          <a
-            href={item.file_url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 text-xs text-primary hover:underline font-body"
-          >
-            <FileText className="h-3.5 w-3.5" />
-            {item.file_name ?? t("showcase.file.download")}
-          </a>
-        </div>
-      )}
+      {(() => {
+        const fileList = item.file_urls && item.file_urls.length > 0
+          ? item.file_urls
+          : item.file_url ? [{ url: item.file_url, name: item.file_name ?? "" }] : [];
+        if (fileList.length === 0) return null;
+        return (
+          <div className="px-6 pb-3 space-y-1.5">
+            {fileList.map((f, i) => (
+              <div key={i} className="space-y-1">
+                <FilePreview url={f.url} name={f.name} variant="thumbnail" />
+                <a
+                  href={f.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 text-xs text-primary hover:underline font-body"
+                >
+                  <FileText className="h-3.5 w-3.5" />
+                  {f.name || t("showcase.file.download")}
+                </a>
+              </div>
+            ))}
+          </div>
+        );
+      })()}
       <CardFooter className="gap-2 flex-wrap pt-0">
         <Button variant="outline" size="sm" onClick={() => setEditOpen(true)}>
           <Pencil className="mr-1 h-3 w-3" /> {t("admin.showcase.edit.editBtn")}

@@ -15,11 +15,11 @@ import { motion } from "framer-motion";
 import { useTranslation } from "@/i18n/useTranslation";
 import { useAuth } from "@/hooks/useAuth";
 import { useShowcaseItems, useCreateShowcaseItem, type ShowcaseType, type ShowcaseItem, type KeyFigure } from "@/hooks/useShowcase";
-import { Plus, ExternalLink, ArrowRight, Lightbulb, MessageSquare, Wrench, Upload, X as XIcon, Trash2, BookOpen, Code, BarChart3, FileText, Loader2 } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
+import { Plus, ExternalLink, ArrowRight, Lightbulb, MessageSquare, Wrench, Trash2, BookOpen, Code, BarChart3 } from "lucide-react";
 import FilePreview from "@/components/FilePreview";
 import ShowcaseLinksField from "@/components/ShowcaseLinksField";
 import ShowcaseImagesField from "@/components/ShowcaseImagesField";
+import ShowcaseFileField from "@/components/ShowcaseFileField";
 import { useToast } from "@/hooks/use-toast";
 
 const typeIcons: Record<ShowcaseType, React.ElementType> = {
@@ -47,9 +47,12 @@ const ShowcaseCard = ({ item }: { item: ShowcaseItem }) => {
             <div className="aspect-video w-full overflow-hidden rounded-t-lg bg-muted">
               <img src={item.image_url} alt={item.title} className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300" />
             </div>
-          ) : item.file_url ? (
+          ) : (item.file_urls?.[0] || item.file_url) ? (
             <div className="rounded-t-lg overflow-hidden">
-              <FilePreview url={item.file_url} name={item.file_name} />
+              <FilePreview
+                url={item.file_urls?.[0]?.url ?? (item.file_url as string)}
+                name={item.file_urls?.[0]?.name ?? item.file_name}
+              />
             </div>
           ) : null}
           <CardHeader>
@@ -185,36 +188,15 @@ const SubmitForm = ({ onClose }: { onClose: () => void }) => {
   const [tags, setTags] = useState("");
   const [pricingInfo, setPricingInfo] = useState("");
   const [images, setImages] = useState<string[]>([]);
-  const [attachmentFile, setAttachmentFile] = useState<File | null>(null);
-  const [uploading, setUploading] = useState(false);
+  const [files, setFiles] = useState<{ url: string; name: string }[]>([]);
+  const [submitting, setSubmitting] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!title.trim() || !description.trim()) return;
 
-    setUploading(true);
-    let file_url: string | undefined;
-    let file_name: string | undefined;
-
+    setSubmitting(true);
     try {
-
-      if (attachmentFile && user) {
-        if (attachmentFile.size > 25 * 1024 * 1024) {
-          toast({ title: t("showcase.file.tooLarge"), variant: "destructive" });
-          setUploading(false);
-          return;
-        }
-        const safeName = attachmentFile.name.replace(/[^a-zA-Z0-9._-]/g, "_");
-        const path = `${user.id}/${Date.now()}-${safeName}`;
-        const { error: fErr } = await supabase.storage
-          .from("showcase-files")
-          .upload(path, attachmentFile);
-        if (fErr) throw fErr;
-        const { data: fUrl } = supabase.storage.from("showcase-files").getPublicUrl(path);
-        file_url = fUrl.publicUrl;
-        file_name = attachmentFile.name;
-      }
-
       const cleanBenefits = benefits.filter((b) => b.trim());
       const cleanFigures = keyFigures.filter((f) => f.label.trim() && f.value.trim());
 
@@ -230,8 +212,9 @@ const SubmitForm = ({ onClose }: { onClose: () => void }) => {
         link_urls: links.filter((l) => l.url.trim()).map((l) => ({ label: l.label?.trim() || undefined, url: l.url.trim() })),
         image_url: images[0],
         image_urls: images,
-        file_url,
-        file_name,
+        file_url: files[0]?.url,
+        file_name: files[0]?.name,
+        file_urls: files,
         category_tags: tags.split(",").map((t) => t.trim()).filter(Boolean),
         pricing_info: pricingInfo.trim() || undefined,
       });
@@ -240,7 +223,7 @@ const SubmitForm = ({ onClose }: { onClose: () => void }) => {
     } catch {
       toast({ title: t("showcase.submitError"), variant: "destructive" });
     } finally {
-      setUploading(false);
+      setSubmitting(false);
     }
   };
 
@@ -292,37 +275,9 @@ const SubmitForm = ({ onClose }: { onClose: () => void }) => {
       </div>
       <ShowcaseLinksField links={links} onChange={setLinks} />
       <ShowcaseImagesField images={images} onChange={setImages} />
-      <div>
-        <Label>{t("showcase.file.label")}</Label>
-        {attachmentFile ? (
-          <div className="mt-2 flex items-center gap-2 rounded-lg border border-border p-2">
-            <FileText className="h-4 w-4 text-primary shrink-0" />
-            <span className="text-sm font-body truncate flex-1">{attachmentFile.name}</span>
-            <Button type="button" variant="ghost" size="icon" onClick={() => setAttachmentFile(null)}>
-              <XIcon className="h-4 w-4" />
-            </Button>
-          </div>
-        ) : (
-          <label className="mt-1 w-full border-2 border-dashed border-border rounded-lg p-4 flex flex-col items-center gap-2 text-muted-foreground hover:border-primary/40 hover:text-foreground transition-colors cursor-pointer">
-            {uploading ? <Loader2 className="h-5 w-5 animate-spin" /> : <Upload className="h-5 w-5" />}
-            <span className="text-sm font-body">{t("showcase.file.upload")}</span>
-            <input
-              type="file"
-              className="hidden"
-              accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.csv,.zip,.json"
-              onChange={(e) => {
-                const f = e.target.files?.[0];
-                if (!f) return;
-                if (f.size > 25 * 1024 * 1024) {
-                  toast({ title: t("showcase.file.tooLarge"), variant: "destructive" });
-                  return;
-                }
-                setAttachmentFile(f);
-              }}
-            />
-          </label>
-        )}
-      </div>
+      {user && (
+        <ShowcaseFileField files={files} onChange={setFiles} pathPrefix={user.id} />
+      )}
       <div>
         <Label>{t("showcase.tagsLabel")}</Label>
         <Input value={tags} onChange={(e) => setTags(e.target.value)} placeholder={t("showcase.tagsPlaceholder")} />
@@ -333,8 +288,8 @@ const SubmitForm = ({ onClose }: { onClose: () => void }) => {
           <Input value={pricingInfo} onChange={(e) => setPricingInfo(e.target.value)} placeholder={t("showcase.pricingPlaceholder")} />
         </div>
       )}
-      <Button type="submit" disabled={createItem.isPending || uploading} className="w-full">
-        {uploading ? t("showcase.uploading") : t("showcase.submitBtn")}
+      <Button type="submit" disabled={createItem.isPending || submitting} className="w-full">
+        {submitting ? t("showcase.uploading") : t("showcase.submitBtn")}
       </Button>
       
     </form>

@@ -41,8 +41,11 @@ const AdminEditDialog = ({ item, open, onOpenChange }: AdminEditDialogProps) => 
   );
   const [tags, setTags] = useState((item.category_tags ?? []).join(", "));
   const [pricingInfo, setPricingInfo] = useState(item.pricing_info ?? "");
-  const [fileUrl, setFileUrl] = useState<string | null>(item.file_url ?? null);
-  const [fileName, setFileName] = useState<string | null>(item.file_name ?? null);
+  const [files, setFiles] = useState<{ url: string; name: string }[]>(
+    item.file_urls && item.file_urls.length > 0
+      ? item.file_urls
+      : item.file_url ? [{ url: item.file_url, name: item.file_name ?? "" }] : []
+  );
   const [images, setImages] = useState<string[]>(
     item.image_urls && item.image_urls.length > 0
       ? item.image_urls
@@ -78,8 +81,9 @@ const AdminEditDialog = ({ item, open, onOpenChange }: AdminEditDialogProps) => 
           link_urls: links.filter((l) => l.url.trim()).map((l) => ({ label: l.label?.trim() || undefined, url: l.url.trim() })),
           category_tags: tags.split(",").map((t) => t.trim()).filter(Boolean),
           pricing_info: pricingInfo.trim() || null,
-          file_url: fileUrl,
-          file_name: fileName,
+          file_url: files[0]?.url ?? null,
+          file_name: files[0]?.name ?? null,
+          file_urls: files,
           image_url: images[0] ?? null,
           image_urls: images,
         },
@@ -216,13 +220,9 @@ const AdminEditDialog = ({ item, open, onOpenChange }: AdminEditDialogProps) => 
             pathPrefix={`admin/${item.id}`}
           />
           <ShowcaseFileField
-            fileUrl={fileUrl}
-            fileName={fileName}
+            files={files}
             pathPrefix={`admin/${item.id}`}
-            onChange={({ file_url, file_name }) => {
-              setFileUrl(file_url);
-              setFileName(file_name);
-            }}
+            onChange={(next) => setFiles(next)}
           />
           <div className="flex gap-2 justify-end pt-2">
             <Button variant="outline" onClick={() => onOpenChange(false)}>
