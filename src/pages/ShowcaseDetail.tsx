@@ -281,6 +281,19 @@ const ShowcaseDetail = () => {
                     ) : item.file_url ? (
                       <FilePreview url={item.file_url} name={item.file_name} />
                     ) : null}
+                    {(() => {
+                      const dlUrl = imgs[0] ?? item.file_url;
+                      const dlName = imgs.length > 0 ? item.title : item.file_name;
+                      if (!dlUrl) return null;
+                      return (
+                        <Button asChild size="lg" className="w-full shadow-lg">
+                          <a href={dlUrl} target="_blank" rel="noopener noreferrer" download={dlName ?? undefined}>
+                            <Download className="mr-2 h-5 w-5" />
+                            {t("showcase.file.download")}
+                          </a>
+                        </Button>
+                      );
+                    })()}
                   </div>
                 )}
               </div>
