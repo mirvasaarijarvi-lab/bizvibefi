@@ -141,6 +141,7 @@ export const useCreateShowcaseItem = () => {
       image_urls?: string[];
       file_url?: string;
       file_name?: string;
+      file_urls?: { url: string; name: string }[];
       link_url?: string;
       link_urls?: { label?: string; url: string }[];
       category_tags?: string[];
