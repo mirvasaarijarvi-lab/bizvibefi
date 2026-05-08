@@ -10,6 +10,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useUpdateShowcaseFields } from "@/hooks/useAdminShowcase";
 import ShowcaseFileField from "@/components/ShowcaseFileField";
 import ShowcaseLinksField from "@/components/ShowcaseLinksField";
+import ShowcaseImagesField from "@/components/ShowcaseImagesField";
 import type { ShowcaseItem, ShowcaseType, KeyFigure } from "@/hooks/useShowcase";
 import { Loader2, Plus, Trash2 } from "lucide-react";
 
@@ -42,6 +43,11 @@ const AdminEditDialog = ({ item, open, onOpenChange }: AdminEditDialogProps) => 
   const [pricingInfo, setPricingInfo] = useState(item.pricing_info ?? "");
   const [fileUrl, setFileUrl] = useState<string | null>(item.file_url ?? null);
   const [fileName, setFileName] = useState<string | null>(item.file_name ?? null);
+  const [images, setImages] = useState<string[]>(
+    item.image_urls && item.image_urls.length > 0
+      ? item.image_urls
+      : item.image_url ? [item.image_url] : []
+  );
 
   const handleSave = async () => {
     if (!title.trim() || !description.trim()) {
@@ -74,6 +80,8 @@ const AdminEditDialog = ({ item, open, onOpenChange }: AdminEditDialogProps) => 
           pricing_info: pricingInfo.trim() || null,
           file_url: fileUrl,
           file_name: fileName,
+          image_url: images[0] ?? null,
+          image_urls: images,
         },
       });
       toast({ title: t("admin.showcase.edit.saved") });
@@ -202,6 +210,11 @@ const AdminEditDialog = ({ item, open, onOpenChange }: AdminEditDialogProps) => 
               <Input value={pricingInfo} onChange={(e) => setPricingInfo(e.target.value)} />
             </div>
           )}
+          <ShowcaseImagesField
+            images={images}
+            onChange={setImages}
+            pathPrefix={`admin/${item.id}`}
+          />
           <ShowcaseFileField
             fileUrl={fileUrl}
             fileName={fileName}
