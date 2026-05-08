@@ -267,13 +267,15 @@ const ShowcaseDetail = () => {
         return (
           <section className="py-12 md:py-16 border-t">
             <div className="container">
-              <div className={`grid gap-10 items-start ${hasMedia ? "lg:grid-cols-2" : ""}`}>
-                <div className="max-w-3xl">
-                  <h2 className="font-display text-2xl font-bold mb-6">{t("showcase.detail.fullStory")}</h2>
-                  <div className="prose prose-sm max-w-none text-muted-foreground font-body whitespace-pre-line">
-                    {item.content}
+              <div className={`grid gap-10 items-start ${hasMedia && item.content ? "lg:grid-cols-2" : ""}`}>
+                {item.content && (
+                  <div className="max-w-3xl">
+                    <h2 className="font-display text-2xl font-bold mb-6">{t("showcase.detail.fullStory")}</h2>
+                    <div className="prose prose-sm max-w-none text-muted-foreground font-body whitespace-pre-line">
+                      {item.content}
+                    </div>
                   </div>
-                </div>
+                )}
                 {hasMedia && (
                   <div className="lg:sticky lg:top-24 space-y-3">
                     {imgs.length > 0 ? (
