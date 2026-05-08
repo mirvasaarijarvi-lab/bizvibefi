@@ -146,6 +146,8 @@ export interface ShowcaseFieldsUpdate {
   link_urls?: { label?: string; url: string }[] | null;
   category_tags?: string[];
   pricing_info?: string | null;
+  image_url?: string | null;
+  image_urls?: string[] | null;
   file_url?: string | null;
   file_name?: string | null;
   type?: "case_study" | "testimonial" | "tool" | "guidebook" | "sample_code" | "infographic";

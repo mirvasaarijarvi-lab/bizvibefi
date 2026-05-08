@@ -22,6 +22,7 @@ export interface ShowcaseItem {
   benefits: string[] | null;
   key_figures: KeyFigure[] | null; // stored as jsonb, cast from Json
   image_url: string | null;
+  image_urls: string[] | null;
   file_url: string | null;
   file_name: string | null;
   link_url: string | null;
@@ -136,6 +137,7 @@ export const useCreateShowcaseItem = () => {
       benefits?: string[];
       key_figures?: KeyFigure[];
       image_url?: string;
+      image_urls?: string[];
       file_url?: string;
       file_name?: string;
       link_url?: string;
@@ -154,6 +156,7 @@ export const useCreateShowcaseItem = () => {
         benefits: item.benefits,
         key_figures: item.key_figures as unknown as Record<string, unknown>[],
         image_url: item.image_url,
+        image_urls: item.image_urls as unknown as Record<string, unknown>[] | undefined,
         file_url: item.file_url,
         file_name: item.file_name,
         link_url: item.link_url,

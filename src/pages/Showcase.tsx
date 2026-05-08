@@ -17,10 +17,9 @@ import { useAuth } from "@/hooks/useAuth";
 import { useShowcaseItems, useCreateShowcaseItem, type ShowcaseType, type ShowcaseItem, type KeyFigure } from "@/hooks/useShowcase";
 import { Plus, ExternalLink, ArrowRight, Lightbulb, MessageSquare, Wrench, Upload, X as XIcon, Trash2, BookOpen, Code, BarChart3, FileText, Loader2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
-import ImageDropZone from "@/components/ImageDropZone";
-import ImageCropDialog from "@/components/ImageCropDialog";
 import FilePreview from "@/components/FilePreview";
 import ShowcaseLinksField from "@/components/ShowcaseLinksField";
+import ShowcaseImagesField from "@/components/ShowcaseImagesField";
 import { useToast } from "@/hooks/use-toast";
 
 const typeIcons: Record<ShowcaseType, React.ElementType> = {
@@ -45,8 +44,8 @@ const ShowcaseCard = ({ item }: { item: ShowcaseItem }) => {
       <Link to={`/showcase/${item.id}`} className="block">
         <Card className="h-full flex flex-col hover:border-primary/40 transition-colors group">
           {item.image_url ? (
-            <div className="aspect-video w-full overflow-hidden rounded-t-lg">
-              <img src={item.image_url} alt={item.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+            <div className="aspect-video w-full overflow-hidden rounded-t-lg bg-muted">
+              <img src={item.image_url} alt={item.title} className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300" />
             </div>
           ) : item.file_url ? (
             <div className="rounded-t-lg overflow-hidden">
@@ -185,58 +184,19 @@ const SubmitForm = ({ onClose }: { onClose: () => void }) => {
   const [links, setLinks] = useState<{ label?: string; url: string }[]>([]);
   const [tags, setTags] = useState("");
   const [pricingInfo, setPricingInfo] = useState("");
-  const [imageFile, setImageFile] = useState<File | null>(null);
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [images, setImages] = useState<string[]>([]);
   const [attachmentFile, setAttachmentFile] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);
-  const [cropFile, setCropFile] = useState<File | null>(null);
-  const [cropOpen, setCropOpen] = useState(false);
-
-  const handleFileSelected = (file: File) => {
-    if (!file.type.startsWith("image/")) {
-      toast({ title: t("showcase.invalidFileType"), variant: "destructive" });
-      return;
-    }
-    if (file.size > 5 * 1024 * 1024) {
-      toast({ title: t("showcase.fileTooLarge"), variant: "destructive" });
-      return;
-    }
-    setCropFile(file);
-    setCropOpen(true);
-  };
-
-  const handleCropComplete = (croppedFile: File) => {
-    setImageFile(croppedFile);
-    setImagePreview(URL.createObjectURL(croppedFile));
-  };
-
-  const clearImage = () => {
-    setImageFile(null);
-    setImagePreview(null);
-  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!title.trim() || !description.trim()) return;
 
     setUploading(true);
-    let image_url: string | undefined;
     let file_url: string | undefined;
     let file_name: string | undefined;
 
     try {
-      if (imageFile && user) {
-        const ext = imageFile.name.split(".").pop();
-        const path = `${user.id}/${Date.now()}.${ext}`;
-        const { error: uploadError } = await supabase.storage
-          .from("showcase-images")
-          .upload(path, imageFile);
-        if (uploadError) throw uploadError;
-        const { data: urlData } = supabase.storage
-          .from("showcase-images")
-          .getPublicUrl(path);
-        image_url = urlData.publicUrl;
-      }
 
       if (attachmentFile && user) {
         if (attachmentFile.size > 25 * 1024 * 1024) {
@@ -268,7 +228,8 @@ const SubmitForm = ({ onClose }: { onClose: () => void }) => {
         benefits: cleanBenefits.length > 0 ? cleanBenefits : undefined,
         key_figures: cleanFigures.length > 0 ? cleanFigures : undefined,
         link_urls: links.filter((l) => l.url.trim()).map((l) => ({ label: l.label?.trim() || undefined, url: l.url.trim() })),
-        image_url,
+        image_url: images[0],
+        image_urls: images,
         file_url,
         file_name,
         category_tags: tags.split(",").map((t) => t.trim()).filter(Boolean),
@@ -330,41 +291,7 @@ const SubmitForm = ({ onClose }: { onClose: () => void }) => {
         <Textarea value={content} onChange={(e) => setContent(e.target.value)} placeholder={t("showcase.contentPlaceholder")} />
       </div>
       <ShowcaseLinksField links={links} onChange={setLinks} />
-      <div>
-        <Label>{t("showcase.imageLabel")}</Label>
-        <ImageDropZone onFileSelected={handleFileSelected}>
-          {({ openPicker, isDragging }) => (
-            <>
-              {imagePreview ? (
-                <div className="relative mt-2">
-                  <img src={imagePreview} alt="Preview" className="w-full h-32 object-cover rounded-lg border border-border" />
-                  {isDragging && (
-                    <div className="absolute inset-0 bg-primary/20 flex items-center justify-center rounded-lg">
-                      <p className="text-sm font-medium text-primary-foreground bg-primary/80 px-3 py-1 rounded">{t("showcase.dropHere")}</p>
-                    </div>
-                  )}
-                  <button
-                    type="button"
-                    onClick={clearImage}
-                    className="absolute top-1 right-1 bg-background/80 rounded-full p-1 hover:bg-destructive hover:text-destructive-foreground transition-colors"
-                  >
-                    <XIcon className="h-4 w-4" />
-                  </button>
-                </div>
-              ) : (
-                <button
-                  type="button"
-                  onClick={openPicker}
-                  className={`mt-1 w-full border-2 border-dashed rounded-lg p-6 flex flex-col items-center gap-2 transition-colors ${isDragging ? "border-primary bg-primary/5 text-primary" : "border-border text-muted-foreground hover:border-primary/40 hover:text-foreground"}`}
-                >
-                  <Upload className="h-6 w-6" />
-                  <span className="text-sm font-body">{isDragging ? t("showcase.dropHere") : t("showcase.uploadImage")}</span>
-                </button>
-              )}
-            </>
-          )}
-        </ImageDropZone>
-      </div>
+      <ShowcaseImagesField images={images} onChange={setImages} />
       <div>
         <Label>{t("showcase.file.label")}</Label>
         {attachmentFile ? (
@@ -409,7 +336,7 @@ const SubmitForm = ({ onClose }: { onClose: () => void }) => {
       <Button type="submit" disabled={createItem.isPending || uploading} className="w-full">
         {uploading ? t("showcase.uploading") : t("showcase.submitBtn")}
       </Button>
-      <ImageCropDialog file={cropFile} open={cropOpen} onOpenChange={setCropOpen} onCropComplete={handleCropComplete} />
+      
     </form>
   );
 };
