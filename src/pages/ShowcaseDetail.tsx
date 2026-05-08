@@ -155,22 +155,21 @@ const ShowcaseDetail = () => {
               )}
 
               <div className="flex flex-wrap gap-3">
+                {item.file_url && (
+                  <Button size="lg" asChild className="shadow-lg">
+                    <a href={item.file_url} target="_blank" rel="noopener noreferrer" download>
+                      <Download className="mr-2 h-5 w-5" />
+                      {t("showcase.file.download")}
+                    </a>
+                  </Button>
+                )}
                 {[...(item.link_urls ?? []), ...(item.link_url ? [{ url: item.link_url }] : [])].map((l, i) => (
-                  <Button key={i} asChild variant={i === 0 ? "default" : "outline"}>
+                  <Button key={i} asChild variant="outline">
                     <a href={l.url} target="_blank" rel="noopener noreferrer">
                       {l.label || t("showcase.visitLink")} <ExternalLink className="ml-2 h-4 w-4" />
                     </a>
                   </Button>
                 ))}
-                {item.file_url && (
-                  <Button variant="outline" asChild>
-                    <a href={item.file_url} target="_blank" rel="noopener noreferrer" download>
-                      <FileText className="mr-2 h-4 w-4" />
-                      {item.file_name ?? t("showcase.file.download")}
-                      <Download className="ml-2 h-4 w-4" />
-                    </a>
-                  </Button>
-                )}
                 {item.type === "tool" && avgRating && (
                   <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-muted">
                     <Star className="h-4 w-4 text-yellow-500 fill-yellow-500" />
