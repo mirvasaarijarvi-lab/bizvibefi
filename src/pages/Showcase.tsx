@@ -272,37 +272,9 @@ const SubmitForm = ({ onClose }: { onClose: () => void }) => {
       </div>
       <ShowcaseLinksField links={links} onChange={setLinks} />
       <ShowcaseImagesField images={images} onChange={setImages} />
-      <div>
-        <Label>{t("showcase.file.label")}</Label>
-        {attachmentFile ? (
-          <div className="mt-2 flex items-center gap-2 rounded-lg border border-border p-2">
-            <FileText className="h-4 w-4 text-primary shrink-0" />
-            <span className="text-sm font-body truncate flex-1">{attachmentFile.name}</span>
-            <Button type="button" variant="ghost" size="icon" onClick={() => setAttachmentFile(null)}>
-              <XIcon className="h-4 w-4" />
-            </Button>
-          </div>
-        ) : (
-          <label className="mt-1 w-full border-2 border-dashed border-border rounded-lg p-4 flex flex-col items-center gap-2 text-muted-foreground hover:border-primary/40 hover:text-foreground transition-colors cursor-pointer">
-            {uploading ? <Loader2 className="h-5 w-5 animate-spin" /> : <Upload className="h-5 w-5" />}
-            <span className="text-sm font-body">{t("showcase.file.upload")}</span>
-            <input
-              type="file"
-              className="hidden"
-              accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.csv,.zip,.json"
-              onChange={(e) => {
-                const f = e.target.files?.[0];
-                if (!f) return;
-                if (f.size > 25 * 1024 * 1024) {
-                  toast({ title: t("showcase.file.tooLarge"), variant: "destructive" });
-                  return;
-                }
-                setAttachmentFile(f);
-              }}
-            />
-          </label>
-        )}
-      </div>
+      {user && (
+        <ShowcaseFileField files={files} onChange={setFiles} pathPrefix={user.id} />
+      )}
       <div>
         <Label>{t("showcase.tagsLabel")}</Label>
         <Input value={tags} onChange={(e) => setTags(e.target.value)} placeholder={t("showcase.tagsPlaceholder")} />
