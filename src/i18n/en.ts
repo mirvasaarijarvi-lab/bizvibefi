@@ -263,6 +263,8 @@ const en = {
     linkLabelPlaceholder: "Label (optional)",
     legacyLink: "legacy",
     imageLabel: "Image",
+    imagesLabel: "Images",
+    addImages: "Click or drag to upload images (max 10MB each)",
     uploadImage: "Click or drag to upload an image (max 5MB)",
     dropHere: "Drop image here",
     uploading: "Uploading…",
