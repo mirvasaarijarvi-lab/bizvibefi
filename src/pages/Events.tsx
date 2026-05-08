@@ -6,6 +6,8 @@ import { useAuth } from "@/hooks/useAuth";
 import { useIsAdmin } from "@/hooks/useAdminShowcase";
 import Layout from "@/components/Layout";
 import PageMeta from "@/components/PageMeta";
+import HeroAvatar from "@/components/HeroAvatar";
+import mascotEvents from "@/assets/mascot-events.png";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
@@ -654,6 +656,7 @@ const Events = () => {
       <section className="py-20 px-4">
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-12">
+            <HeroAvatar src={mascotEvents} alt="BizVibe events mascot" />
             <p className="font-body text-sm font-semibold text-turquoise tracking-widest uppercase mb-3">
               Events
             </p>
