@@ -254,8 +254,17 @@ const ShowcaseDetail = () => {
         </section>
       )}
 
-      {/* Full Content */}
-      {item.content && (() => {
+      {/* Full Content / Media */}
+      {(() => {
+        const imgs = item.image_urls && item.image_urls.length > 0
+          ? item.image_urls
+          : item.image_url ? [item.image_url] : [];
+        const fileList = item.file_urls && item.file_urls.length > 0
+          ? item.file_urls
+          : item.file_url ? [{ url: item.file_url, name: item.file_name ?? "" }] : [];
+        const hasMedia = imgs.length > 0 || fileList.length > 0;
+        if (!item.content && !hasMedia) return null;
+        return (() => {
         const imgs = item.image_urls && item.image_urls.length > 0
           ? item.image_urls
           : item.image_url ? [item.image_url] : [];
