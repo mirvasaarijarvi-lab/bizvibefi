@@ -250,16 +250,44 @@ const ShowcaseDetail = () => {
       )}
 
       {/* Full Content */}
-      {item.content && (
-        <section className="py-12 md:py-16 border-t">
-          <div className="container max-w-3xl">
-            <h2 className="font-display text-2xl font-bold mb-6">{t("showcase.detail.fullStory")}</h2>
-            <div className="prose prose-sm max-w-none text-muted-foreground font-body whitespace-pre-line">
-              {item.content}
+      {item.content && (() => {
+        const imgs = item.image_urls && item.image_urls.length > 0
+          ? item.image_urls
+          : item.image_url ? [item.image_url] : [];
+        const hasMedia = imgs.length > 0 || !!item.file_url;
+        return (
+          <section className="py-12 md:py-16 border-t">
+            <div className="container">
+              <div className={`grid gap-10 items-start ${hasMedia ? "lg:grid-cols-2" : ""}`}>
+                <div className="max-w-3xl">
+                  <h2 className="font-display text-2xl font-bold mb-6">{t("showcase.detail.fullStory")}</h2>
+                  <div className="prose prose-sm max-w-none text-muted-foreground font-body whitespace-pre-line">
+                    {item.content}
+                  </div>
+                </div>
+                {hasMedia && (
+                  <div className="lg:sticky lg:top-24 space-y-3">
+                    {imgs.length > 0 ? (
+                      <>
+                        <FilePreview url={imgs[0]} name={item.title} />
+                        {imgs.length > 1 && (
+                          <div className="grid grid-cols-4 gap-2">
+                            {imgs.slice(1).map((url, i) => (
+                              <FilePreview key={i} url={url} name={`${item.title} ${i + 2}`} variant="thumbnail" />
+                            ))}
+                          </div>
+                        )}
+                      </>
+                    ) : item.file_url ? (
+                      <FilePreview url={item.file_url} name={item.file_name} />
+                    ) : null}
+                  </div>
+                )}
+              </div>
             </div>
-          </div>
-        </section>
-      )}
+          </section>
+        );
+      })()}
 
       {/* Reviews (tools only) */}
       {item.type === "tool" && (
