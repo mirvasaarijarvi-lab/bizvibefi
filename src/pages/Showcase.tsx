@@ -47,9 +47,12 @@ const ShowcaseCard = ({ item }: { item: ShowcaseItem }) => {
             <div className="aspect-video w-full overflow-hidden rounded-t-lg bg-muted">
               <img src={item.image_url} alt={item.title} className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300" />
             </div>
-          ) : item.file_url ? (
+          ) : (item.file_urls?.[0] || item.file_url) ? (
             <div className="rounded-t-lg overflow-hidden">
-              <FilePreview url={item.file_url} name={item.file_name} />
+              <FilePreview
+                url={item.file_urls?.[0]?.url ?? (item.file_url as string)}
+                name={item.file_urls?.[0]?.name ?? item.file_name}
+              />
             </div>
           ) : null}
           <CardHeader>
