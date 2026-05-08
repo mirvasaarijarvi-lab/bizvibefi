@@ -42,6 +42,7 @@ const Forum = () => {
       />
       <section className="py-20 px-4">
         <div className="max-w-4xl mx-auto">
+          <HeroAvatar src={mascotForum} alt="BizVibe forum mascot" />
           <div className="flex items-center justify-between mb-8">
             <div>
               <h1 className="font-display text-3xl font-bold text-foreground">Community Forum</h1>
