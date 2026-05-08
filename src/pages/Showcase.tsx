@@ -15,11 +15,11 @@ import { motion } from "framer-motion";
 import { useTranslation } from "@/i18n/useTranslation";
 import { useAuth } from "@/hooks/useAuth";
 import { useShowcaseItems, useCreateShowcaseItem, type ShowcaseType, type ShowcaseItem, type KeyFigure } from "@/hooks/useShowcase";
-import { Plus, ExternalLink, ArrowRight, Lightbulb, MessageSquare, Wrench, Upload, X as XIcon, Trash2, BookOpen, Code, BarChart3, FileText, Loader2 } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
+import { Plus, ExternalLink, ArrowRight, Lightbulb, MessageSquare, Wrench, Trash2, BookOpen, Code, BarChart3 } from "lucide-react";
 import FilePreview from "@/components/FilePreview";
 import ShowcaseLinksField from "@/components/ShowcaseLinksField";
 import ShowcaseImagesField from "@/components/ShowcaseImagesField";
+import ShowcaseFileField from "@/components/ShowcaseFileField";
 import { useToast } from "@/hooks/use-toast";
 
 const typeIcons: Record<ShowcaseType, React.ElementType> = {
