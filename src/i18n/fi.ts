@@ -263,6 +263,8 @@ const fi = {
     linkLabelPlaceholder: "Otsikko (valinnainen)",
     legacyLink: "vanha",
     imageLabel: "Kuva",
+    imagesLabel: "Kuvat",
+    addImages: "Klikkaa tai vedä kuvia (max 10Mt/kpl)",
     uploadImage: "Klikkaa tai vedä kuva tähän (max 5Mt)",
     dropHere: "Pudota kuva tähän",
     uploading: "Ladataan…",

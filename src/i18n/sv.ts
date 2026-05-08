@@ -263,6 +263,8 @@ const sv = {
     linkLabelPlaceholder: "Etikett (valfri)",
     legacyLink: "äldre",
     imageLabel: "Bild",
+    imagesLabel: "Bilder",
+    addImages: "Klicka eller dra för att ladda upp bilder (max 10MB/st)",
     uploadImage: "Klicka eller dra för att ladda upp en bild (max 5MB)",
     dropHere: "Släpp bilden här",
     uploading: "Laddar upp…",
