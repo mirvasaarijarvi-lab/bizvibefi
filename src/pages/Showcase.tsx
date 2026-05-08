@@ -17,10 +17,9 @@ import { useAuth } from "@/hooks/useAuth";
 import { useShowcaseItems, useCreateShowcaseItem, type ShowcaseType, type ShowcaseItem, type KeyFigure } from "@/hooks/useShowcase";
 import { Plus, ExternalLink, ArrowRight, Lightbulb, MessageSquare, Wrench, Upload, X as XIcon, Trash2, BookOpen, Code, BarChart3, FileText, Loader2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
-import ImageDropZone from "@/components/ImageDropZone";
-import ImageCropDialog from "@/components/ImageCropDialog";
 import FilePreview from "@/components/FilePreview";
 import ShowcaseLinksField from "@/components/ShowcaseLinksField";
+import ShowcaseImagesField from "@/components/ShowcaseImagesField";
 import { useToast } from "@/hooks/use-toast";
 
 const typeIcons: Record<ShowcaseType, React.ElementType> = {
@@ -185,58 +184,19 @@ const SubmitForm = ({ onClose }: { onClose: () => void }) => {
   const [links, setLinks] = useState<{ label?: string; url: string }[]>([]);
   const [tags, setTags] = useState("");
   const [pricingInfo, setPricingInfo] = useState("");
-  const [imageFile, setImageFile] = useState<File | null>(null);
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [images, setImages] = useState<string[]>([]);
   const [attachmentFile, setAttachmentFile] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);
-  const [cropFile, setCropFile] = useState<File | null>(null);
-  const [cropOpen, setCropOpen] = useState(false);
-
-  const handleFileSelected = (file: File) => {
-    if (!file.type.startsWith("image/")) {
-      toast({ title: t("showcase.invalidFileType"), variant: "destructive" });
-      return;
-    }
-    if (file.size > 5 * 1024 * 1024) {
-      toast({ title: t("showcase.fileTooLarge"), variant: "destructive" });
-      return;
-    }
-    setCropFile(file);
-    setCropOpen(true);
-  };
-
-  const handleCropComplete = (croppedFile: File) => {
-    setImageFile(croppedFile);
-    setImagePreview(URL.createObjectURL(croppedFile));
-  };
-
-  const clearImage = () => {
-    setImageFile(null);
-    setImagePreview(null);
-  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!title.trim() || !description.trim()) return;
 
     setUploading(true);
-    let image_url: string | undefined;
     let file_url: string | undefined;
     let file_name: string | undefined;
 
     try {
-      if (imageFile && user) {
-        const ext = imageFile.name.split(".").pop();
-        const path = `${user.id}/${Date.now()}.${ext}`;
-        const { error: uploadError } = await supabase.storage
-          .from("showcase-images")
-          .upload(path, imageFile);
-        if (uploadError) throw uploadError;
-        const { data: urlData } = supabase.storage
-          .from("showcase-images")
-          .getPublicUrl(path);
-        image_url = urlData.publicUrl;
-      }
 
       if (attachmentFile && user) {
         if (attachmentFile.size > 25 * 1024 * 1024) {
