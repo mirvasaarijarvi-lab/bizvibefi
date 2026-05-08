@@ -259,7 +259,10 @@ const ShowcaseDetail = () => {
         const imgs = item.image_urls && item.image_urls.length > 0
           ? item.image_urls
           : item.image_url ? [item.image_url] : [];
-        const hasMedia = imgs.length > 0 || !!item.file_url;
+        const fileList = item.file_urls && item.file_urls.length > 0
+          ? item.file_urls
+          : item.file_url ? [{ url: item.file_url, name: item.file_name ?? "" }] : [];
+        const hasMedia = imgs.length > 0 || fileList.length > 0;
         return (
           <section className="py-12 md:py-16 border-t">
             <div className="container">
@@ -283,22 +286,32 @@ const ShowcaseDetail = () => {
                           </div>
                         )}
                       </>
-                    ) : item.file_url ? (
-                      <FilePreview url={item.file_url} name={item.file_name} />
+                    ) : fileList[0] ? (
+                      <FilePreview url={fileList[0].url} name={fileList[0].name} />
                     ) : null}
-                    {(() => {
-                      const dlUrl = imgs[0] ?? item.file_url;
-                      const dlName = imgs.length > 0 ? item.title : item.file_name;
-                      if (!dlUrl) return null;
-                      return (
-                        <Button asChild size="lg" className="w-full shadow-lg">
-                          <a href={dlUrl} target="_blank" rel="noopener noreferrer" download={dlName ?? undefined}>
-                            <Download className="mr-2 h-5 w-5" />
-                            {t("showcase.file.download")}
-                          </a>
-                        </Button>
-                      );
-                    })()}
+                    {fileList.length > 1 && imgs.length === 0 && (
+                      <div className="grid grid-cols-4 gap-2">
+                        {fileList.slice(1).map((f, i) => (
+                          <FilePreview key={i} url={f.url} name={f.name} variant="thumbnail" />
+                        ))}
+                      </div>
+                    )}
+                    {fileList.map((f, i) => (
+                      <Button key={i} asChild size="lg" className="w-full shadow-lg">
+                        <a href={f.url} target="_blank" rel="noopener noreferrer" download={f.name || undefined}>
+                          <Download className="mr-2 h-5 w-5" />
+                          {f.name || t("showcase.file.download")}
+                        </a>
+                      </Button>
+                    ))}
+                    {fileList.length === 0 && imgs[0] && (
+                      <Button asChild size="lg" className="w-full shadow-lg">
+                        <a href={imgs[0]} target="_blank" rel="noopener noreferrer" download>
+                          <Download className="mr-2 h-5 w-5" />
+                          {t("showcase.file.download")}
+                        </a>
+                      </Button>
+                    )}
                   </div>
                 )}
               </div>
