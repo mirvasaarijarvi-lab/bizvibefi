@@ -285,8 +285,8 @@ const SubmitForm = ({ onClose }: { onClose: () => void }) => {
           <Input value={pricingInfo} onChange={(e) => setPricingInfo(e.target.value)} placeholder={t("showcase.pricingPlaceholder")} />
         </div>
       )}
-      <Button type="submit" disabled={createItem.isPending || uploading} className="w-full">
-        {uploading ? t("showcase.uploading") : t("showcase.submitBtn")}
+      <Button type="submit" disabled={createItem.isPending || submitting} className="w-full">
+        {submitting ? t("showcase.submitting") : t("showcase.submitBtn")}
       </Button>
       
     </form>
