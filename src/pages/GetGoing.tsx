@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import Layout from "@/components/Layout";
 import PageMeta from "@/components/PageMeta";
 import HeroAvatar from "@/components/HeroAvatar";
+import mascotRunning from "@/assets/mascot-running.png";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { motion } from "framer-motion";
@@ -33,7 +34,7 @@ const GetGoing = () => {
             animate={{ opacity: 1, y: 0 }}
             className="text-center max-w-3xl mx-auto"
           >
-            <HeroAvatar />
+            <HeroAvatar src={mascotRunning} alt="BizVibe running mascot" />
             <p className="font-body text-sm font-semibold text-turquoise tracking-widest uppercase mb-4">{t("getGoing.tag")}</p>
             <h1 className="font-display text-4xl md:text-6xl font-extrabold tracking-[-0.03em]">
               <span className="text-gradient-surge">{t("getGoing.title")}</span> {t("getGoing.titleEnd")}
