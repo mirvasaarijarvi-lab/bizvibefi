@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
-import { FileText, ExternalLink } from "lucide-react";
+import { FileText, ExternalLink, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 interface FilePreviewProps {
