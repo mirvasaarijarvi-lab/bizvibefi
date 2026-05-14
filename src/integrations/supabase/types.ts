@@ -890,7 +890,7 @@ export type Database = {
         | "guidebook"
         | "sample_code"
         | "infographic"
-      vibetor_type: "investor" | "innovator" | "partner"
+      vibetor_type: "investor" | "innovator" | "partner" | "founder"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -1044,7 +1044,7 @@ export const Constants = {
         "sample_code",
         "infographic",
       ],
-      vibetor_type: ["investor", "innovator", "partner"],
+      vibetor_type: ["investor", "innovator", "partner", "founder"],
     },
   },
 } as const

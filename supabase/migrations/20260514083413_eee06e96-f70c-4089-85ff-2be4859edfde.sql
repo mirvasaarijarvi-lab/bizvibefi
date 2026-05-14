@@ -1,0 +1,1 @@
+ALTER TYPE public.vibetor_type ADD VALUE IF NOT EXISTS 'founder';
