@@ -439,6 +439,9 @@ const sv = {
     titleHighlight: "händer",
     subtitle: "Meetups, webinarer, workshops och hackathoner. Kom, bygg, nätverka.",
     createEvent: "Skapa evenemang",
+    going: "Anmäld",
+    cancel: "Avbryt",
+    spots: "platser",
   },
 };
 
