@@ -254,6 +254,12 @@ const ApplyVibetor = () => {
                         <FormMessage />
                       </FormItem>
                     )} />
+                    <BillingFields
+                      control={form.control}
+                      isCompany={true}
+                      title="Invoicing details"
+                      description="Company partners are invoiced €599/year. We'll use these details for your invoice."
+                    />
                   </>
                 )}
 
