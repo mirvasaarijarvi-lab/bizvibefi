@@ -84,6 +84,7 @@ const EventFormDialog = ({
   onOpenChange: (open: boolean) => void;
   editEvent?: Tables<"events"> | null;
 }) => {
+  const { t } = useTranslation();
   const { user } = useAuth();
   const { toast } = useToast();
   const queryClient = useQueryClient();
@@ -178,7 +179,7 @@ const EventFormDialog = ({
       <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="font-display">
-            {editEvent ? "Edit Event" : "Create Event"}
+            {editEvent ? "Edit Event" : t("events.createEvent")}
           </DialogTitle>
         </DialogHeader>
         <form
@@ -336,7 +337,7 @@ const EventFormDialog = ({
                 ? "Saving..."
                 : editEvent
                 ? "Update Event"
-                : "Create Event"}
+                : t("events.createEvent")}
             </Button>
             <Button
               type="button"
@@ -673,7 +674,7 @@ const Events = () => {
                 className="mt-6 bg-gradient-storm hover:opacity-90 font-body"
                 onClick={() => setCreateOpen(true)}
               >
-                <Plus className="h-4 w-4 mr-2" /> Create Event
+                <Plus className="h-4 w-4 mr-2" /> {t("events.createEvent")}
               </Button>
             )}
           </div>

@@ -438,6 +438,7 @@ const en = {
     title: "What's",
     titleHighlight: "happening",
     subtitle: "Meetups, webinars, workshops, and hackathons. Show up, build, connect.",
+    createEvent: "Create Event",
   },
 };
 
