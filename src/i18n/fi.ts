@@ -97,7 +97,7 @@ const fi = {
     },
     pro: {
       name: "Viber",
-      price: "Maksullinen jäsenyys. Kaikki Starterista ja lisäksi:",
+      price: "199 € / vuosi, 599 € / vuosi yrityskumppaneille. Kaikki Starterista ja lisäksi:",
       cta: "Siirry Viberiin",
       benefits: [
         { title: "Liidien generointi", desc: "Pääsy laadukkaiden liidien ja liiketoimintamahdollisuuksien äärelle." },
