@@ -49,7 +49,7 @@ const en = {
     pro: {
       name: "Viber",
       label: "VIBER",
-      price: "Paid membership",
+      price: "€199 / year, €599 / year for company partners",
       benefits: [
         "Everything in Starter",
         "Lead generation access",
