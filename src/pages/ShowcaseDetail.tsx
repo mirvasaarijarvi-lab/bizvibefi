@@ -12,12 +12,13 @@ import { Textarea } from "@/components/ui/textarea";
 import { motion } from "framer-motion";
 import { useTranslation } from "@/i18n/useTranslation";
 import { useAuth } from "@/hooks/useAuth";
+import { useProfile } from "@/hooks/useProfile";
 import { useShowcaseItem, useShowcaseReviews, useCreateReview, type KeyFigure } from "@/hooks/useShowcase";
 import FilePreview from "@/components/FilePreview";
 import { useToast } from "@/hooks/use-toast";
 import {
   ArrowLeft, ExternalLink, Lightbulb, MessageSquare, Wrench, Star,
-  Target, Zap, CheckCircle2, BarChart3, FileText, Download,
+  Target, Zap, CheckCircle2, BarChart3, FileText, Download, Lock,
 } from "lucide-react";
 
 const typeIcons: Record<string, React.ElementType> = {
