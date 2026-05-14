@@ -27,11 +27,9 @@ const About = () => {
   const { data: founderProfiles } = useQuery({
     queryKey: ["founder-profiles"],
     queryFn: async () => {
-      const { data } = await supabase
-        .from("profiles")
-        .select("display_name, avatar_url, user_id, membership_tier, vibetor_type")
-        .in("display_name", ALL_FOUNDER_NAMES);
-      return data ?? [];
+      const { data } = await supabase.rpc("list_public_profiles");
+      const all = (data ?? []) as unknown as { display_name: string | null; avatar_url: string | null; user_id: string; membership_tier: string | null; vibetor_type: string | null; company: string | null }[];
+      return all.filter((p) => p.display_name && ALL_FOUNDER_NAMES.includes(p.display_name));
     },
     staleTime: 300_000,
   });
@@ -39,11 +37,9 @@ const About = () => {
   const { data: vibetors } = useQuery({
     queryKey: ["vibetors-about"],
     queryFn: async () => {
-      const { data } = await supabase
-        .from("profiles")
-        .select("display_name, avatar_url, user_id, company, vibetor_type")
-        .eq("membership_tier", "vibetor");
-      return (data ?? []) as { display_name: string | null; avatar_url: string | null; user_id: string; company: string | null; vibetor_type: string | null }[];
+      const { data } = await supabase.rpc("list_public_profiles");
+      const all = (data ?? []) as unknown as { display_name: string | null; avatar_url: string | null; user_id: string; company: string | null; vibetor_type: string | null; membership_tier: string | null }[];
+      return all.filter((p) => p.membership_tier === "vibetor");
     },
     staleTime: 300_000,
   });
