@@ -337,7 +337,7 @@ const EventFormDialog = ({
                 ? "Saving..."
                 : editEvent
                 ? "Update Event"
-                : "Create Event"}
+                : t("events.createEvent")}
             </Button>
             <Button
               type="button"
