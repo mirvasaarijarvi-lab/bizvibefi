@@ -36,6 +36,7 @@ import {
   Video, Wrench, Rocket, Plus, Pencil, Trash2, ImagePlus, ExternalLink, X,
 } from "lucide-react";
 import { format, isPast } from "date-fns";
+import { fi, enUS, sv } from "date-fns/locale";
 
 const googleMapsUrl = (location: string) =>
   `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(location)}`;
