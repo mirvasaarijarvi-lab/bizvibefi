@@ -37,6 +37,7 @@ const ForumTopic = () => {
   const queryClient = useQueryClient();
   const [replyContent, setReplyContent] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const [sort, setSort] = useState<"oldest" | "newest">("oldest");
 
   const { data: topic } = useQuery({
     queryKey: ["forum-topic", topicId],
