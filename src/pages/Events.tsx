@@ -357,7 +357,7 @@ const EventFormDialog = ({
 
 const Events = () => {
   const { user } = useAuth();
-  const { t } = useTranslation();
+  const { t, lang } = useTranslation();
   const isAdmin = useIsAdmin();
   const { toast } = useToast();
   const queryClient = useQueryClient();
@@ -481,8 +481,8 @@ const Events = () => {
               <div className="bg-muted rounded-xl p-3">
                 <p className="text-xs text-muted-foreground font-body uppercase">
                   {format(new Date(event.starts_at), "MMM", { 
-                    locale: localStorage.getItem("language") === "fi" ? fi : 
-                            localStorage.getItem("language") === "sv" ? sv : enUS 
+                    locale: lang === "fi" ? fi : 
+                            lang === "sv" ? sv : enUS 
                   })}
                 </p>
                 <p className="text-2xl font-display font-bold text-foreground">
@@ -551,8 +551,8 @@ const Events = () => {
                 <Clock className="h-3.5 w-3.5" />
                 {isPastEvent
                   ? format(new Date(event.starts_at), "MMM dd, yyyy", { 
-                      locale: localStorage.getItem("language") === "fi" ? fi : 
-                              localStorage.getItem("language") === "sv" ? sv : enUS 
+                      locale: lang === "fi" ? fi : 
+                              lang === "sv" ? sv : enUS 
                     })
                   : (
                     <>
