@@ -7,6 +7,7 @@ import { useIsAdmin } from "@/hooks/useAdminShowcase";
 import Layout from "@/components/Layout";
 import PageMeta from "@/components/PageMeta";
 import HeroAvatar from "@/components/HeroAvatar";
+import { useTranslation } from "@/i18n/useTranslation";
 import mascotEvents from "@/assets/mascot-events.png";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -354,6 +355,7 @@ const EventFormDialog = ({
 
 const Events = () => {
   const { user } = useAuth();
+  const { t } = useTranslation();
   const isAdmin = useIsAdmin();
   const { toast } = useToast();
   const queryClient = useQueryClient();
@@ -650,21 +652,21 @@ const Events = () => {
   return (
     <Layout>
       <PageMeta
-        title="Events — BizVibe"
-        description="Join BizVibe meetups, webinars, workshops, and hackathons. Connect with builders and grow together."
+        title={`${t("events.tag")} — BizVibe`}
+        description={t("events.subtitle")}
       />
       <section className="py-20 px-4">
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-12">
             <HeroAvatar src={mascotEvents} alt="BizVibe events mascot" />
             <p className="font-body text-sm font-semibold text-turquoise tracking-widest uppercase mb-3">
-              Events
+              {t("events.tag")}
             </p>
             <h1 className="font-display text-3xl md:text-5xl font-bold text-foreground tracking-[-0.02em]">
-              What's <span className="text-gradient-surge">happening</span>
+              {t("events.title")} <span className="text-gradient-surge">{t("events.titleHighlight")}</span>
             </h1>
             <p className="mt-4 text-muted-foreground font-body text-lg max-w-xl mx-auto">
-              Meetups, webinars, workshops, and hackathons. Show up, build, connect.
+              {t("events.subtitle")}
             </p>
             {isAdmin && (
               <Button

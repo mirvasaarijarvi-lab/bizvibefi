@@ -433,6 +433,12 @@ const sv = {
       anonymous: "Anonym",
     },
   },
+  events: {
+    tag: "Evenemang",
+    title: "Vad",
+    titleHighlight: "händer",
+    subtitle: "Meetups, webinarer, workshops och hackathoner. Kom, bygg, nätverka.",
+  },
 };
 
 export default sv;
