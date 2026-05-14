@@ -189,7 +189,7 @@ const FreeTierCard = () => {
       <h3 className="font-display text-2xl font-bold tracking-[-0.01em]">{t("tiers.free.name")}</h3>
       <p className="text-turquoise font-display text-lg font-semibold mt-1">{t("tiers.free.price")}</p>
       <ul className="mt-6 space-y-3 font-body text-sm text-muted-foreground">
-        {[0, 1, 2, 3].map((i) => (
+        {freeTierIndices.map((i) => (
           <li key={i}>
             <Link to={freeTierLinks[i]} className="flex items-start gap-2 hover:text-primary transition-colors group/item">
               <Zap className="h-4 w-4 text-turquoise mt-0.5 shrink-0" />
