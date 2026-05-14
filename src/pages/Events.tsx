@@ -7,6 +7,7 @@ import { useIsAdmin } from "@/hooks/useAdminShowcase";
 import Layout from "@/components/Layout";
 import PageMeta from "@/components/PageMeta";
 import HeroAvatar from "@/components/HeroAvatar";
+import { useTranslation } from "@/i18n/useTranslation";
 import mascotEvents from "@/assets/mascot-events.png";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
