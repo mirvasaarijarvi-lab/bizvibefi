@@ -413,11 +413,16 @@ const Members = () => {
                                 value={member.vibetor_type ?? "none"}
                                 onValueChange={async (val) => {
                                   const newType = val === "none" ? null : val;
-                                  await supabase
+                                  const { error } = await supabase
                                     .from("profiles")
                                     .update({ vibetor_type: newType } as never)
                                     .eq("user_id", member.user_id);
+                                  if (error) {
+                                    toast.error(error.message);
+                                    return;
+                                  }
                                   queryClient.invalidateQueries({ queryKey: ["members-list"] });
+                                  toast.success("Vibetor type updated");
                                 }}
                               >
                                 <SelectTrigger className="h-7 text-xs flex-1 min-w-[110px]">
@@ -425,6 +430,7 @@ const Members = () => {
                                 </SelectTrigger>
                                 <SelectContent>
                                   <SelectItem value="none">Not set</SelectItem>
+                                  <SelectItem value="founder">Founder</SelectItem>
                                   <SelectItem value="investor">Investor</SelectItem>
                                   <SelectItem value="innovator">Innovator</SelectItem>
                                   <SelectItem value="partner">Partner</SelectItem>
