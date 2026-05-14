@@ -173,11 +173,13 @@ export const useAllPendingClaims = () =>
         ...claims.map((c) => c.peer_user_id).filter(Boolean) as string[],
       ]));
       if (userIds.length === 0) return claims;
-      const { data: profiles } = await supabase
-        .from("profiles")
-        .select("user_id, display_name, avatar_url")
-        .in("user_id", userIds);
-      const map = new Map((profiles ?? []).map((p) => [p.user_id, p]));
+      const { data: profiles } = await supabase.rpc("list_public_profiles");
+      const idSet = new Set(userIds);
+      const map = new Map(
+        ((profiles ?? []) as unknown as { user_id: string; display_name: string | null; avatar_url: string | null }[])
+          .filter((p) => idSet.has(p.user_id))
+          .map((p) => [p.user_id, p])
+      );
       return claims.map((c) => ({
         ...c,
         claimant: map.get(c.user_id) as { display_name: string | null; avatar_url: string | null } | undefined,
