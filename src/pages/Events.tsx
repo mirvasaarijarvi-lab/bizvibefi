@@ -551,8 +551,8 @@ const Events = () => {
                 <Clock className="h-3.5 w-3.5" />
                 {isPastEvent
                   ? format(new Date(event.starts_at), "MMM dd, yyyy", { 
-                      locale: localStorage.getItem("language") === "fi" ? fi : 
-                              localStorage.getItem("language") === "sv" ? sv : enUS 
+                      locale: lang === "fi" ? fi : 
+                              lang === "sv" ? sv : enUS 
                     })
                   : (
                     <>
