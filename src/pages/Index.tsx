@@ -205,7 +205,8 @@ const FreeTierCard = () => {
   );
 };
 
-const proTierLinks = ["/community", "/get-going", "/get-going", "/events", "/contact"];
+const proTierLinks = ["/community", "/showcase", "/get-going", "/members", "/contact", "/badges"];
+const proTierIndices = [0, 1, 2, 3, 4, 5];
 
 const ProTierCard = () => {
   const { t } = useTranslation();
