@@ -433,6 +433,12 @@ const en = {
       anonymous: "Anonymous",
     },
   },
+  events: {
+    tag: "Events",
+    title: "What's",
+    titleHighlight: "happening",
+    subtitle: "Meetups, webinars, workshops, and hackathons. Show up, build, connect.",
+  },
 };
 
 export default en;
