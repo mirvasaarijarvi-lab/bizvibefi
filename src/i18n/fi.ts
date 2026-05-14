@@ -238,9 +238,9 @@ const fi = {
     rights: "BizVibe Collective. Kaikki oikeudet pidätetään.",
   },
   showcase: {
-    pageTitle: "Näyteikkuna",
+    pageTitle: "Näytteitä, malleja ja esimerkkejä",
     pageDesc: "Tutustu tapaustutkimuksiin, suosituksiin ja yhteisön rakentamiin työkaluihin.",
-    tag: "Näyteikkuna",
+    tag: "Näytteitä, malleja ja esimerkkejä",
     title: "Yhteisön",
     titleHighlight: "rakentamaa",
     subtitle: "Tapaustutkimuksia, suosituksia ja työkaluja rakentajilta kuten sinä.",
