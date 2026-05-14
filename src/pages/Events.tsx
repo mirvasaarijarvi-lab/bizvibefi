@@ -650,21 +650,21 @@ const Events = () => {
   return (
     <Layout>
       <PageMeta
-        title="Events — BizVibe"
-        description="Join BizVibe meetups, webinars, workshops, and hackathons. Connect with builders and grow together."
+        title="Tapahtumia — BizVibe"
+        description="Tapaamiset, webinsarit, workshopit ja hackathonit. Tule paikalle, rakenna, verkostoidu."
       />
       <section className="py-20 px-4">
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-12">
             <HeroAvatar src={mascotEvents} alt="BizVibe events mascot" />
             <p className="font-body text-sm font-semibold text-turquoise tracking-widest uppercase mb-3">
-              Events
+              Tapahtumia
             </p>
             <h1 className="font-display text-3xl md:text-5xl font-bold text-foreground tracking-[-0.02em]">
-              What's <span className="text-gradient-surge">happening</span>
+              Mitä seuraavaksi <span className="text-gradient-surge">meneillään?</span>
             </h1>
             <p className="mt-4 text-muted-foreground font-body text-lg max-w-xl mx-auto">
-              Meetups, webinars, workshops, and hackathons. Show up, build, connect.
+              Tapaamiset, webinsarit, workshopit ja hackathonit. Tule paikalle, rakenna, verkostoidu.
             </p>
             {isAdmin && (
               <Button
