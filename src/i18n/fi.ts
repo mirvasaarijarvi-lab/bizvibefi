@@ -433,6 +433,12 @@ const fi = {
       anonymous: "Nimetön",
     },
   },
+  events: {
+    tag: "Tapahtumia",
+    title: "Mitä seuraavaksi",
+    titleHighlight: "meneillään?",
+    subtitle: "Tapaamiset, webinsarit, workshopit ja hackathonit. Tule paikalle, rakenna, verkostoidu.",
+  },
 };
 
 export default fi;
