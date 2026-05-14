@@ -345,7 +345,7 @@ const EventFormDialog = ({
               onClick={() => onOpenChange(false)}
               className="font-body"
             >
-              Cancel
+              {t("events.cancel")}
             </Button>
           </div>
         </form>
@@ -569,8 +569,8 @@ const Events = () => {
               {!isPastEvent && (
                 <span className="flex items-center gap-1">
                   <Users className="h-3.5 w-3.5" />
-                  {attendeeCount} going
-                  {event.max_attendees && ` / ${event.max_attendees} spots`}
+                  {attendeeCount} {t("events.going")}
+                  {event.max_attendees && ` / ${event.max_attendees} ${t("events.spots")}`}
                 </span>
               )}
             </div>

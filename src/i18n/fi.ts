@@ -439,6 +439,9 @@ const fi = {
     titleHighlight: "meneillään?",
     subtitle: "Tapaamiset, webinsarit, workshopit ja hackathonit. Tule paikalle, rakenna, verkostoidu.",
     createEvent: "Lisää tapahtuma",
+    going: "Mukana",
+    cancel: "Peruuta",
+    spots: "paikkaa",
   },
 };
 
