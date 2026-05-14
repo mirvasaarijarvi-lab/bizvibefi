@@ -593,7 +593,7 @@ const Events = () => {
                   {rsvpStatus === "going" ? (
                     <>
                       <Button size="sm" className="bg-accent text-accent-foreground font-body" disabled>
-                        <CheckCircle className="h-4 w-4 mr-1" /> Going
+                        <CheckCircle className="h-4 w-4 mr-1" /> {t("events.going")}
                       </Button>
                       <Button
                         size="sm"
@@ -602,7 +602,7 @@ const Events = () => {
                         onClick={() => rsvpMutation.mutate({ eventId: event.id, status: "cancelled" })}
                         disabled={rsvpMutation.isPending}
                       >
-                        Cancel
+                        {t("events.cancel")}
                       </Button>
                     </>
                   ) : rsvpStatus === "maybe" ? (
@@ -614,7 +614,7 @@ const Events = () => {
                         onClick={() => rsvpMutation.mutate({ eventId: event.id, status: "going" })}
                         disabled={rsvpMutation.isPending || isFull}
                       >
-                        <Zap className="h-4 w-4 mr-1" /> Switch to Going
+                        <Zap className="h-4 w-4 mr-1" /> {t("events.switchToGoing")}
                       </Button>
                       <Button
                         size="sm"
@@ -623,7 +623,7 @@ const Events = () => {
                         onClick={() => rsvpMutation.mutate({ eventId: event.id, status: "cancelled" })}
                         disabled={rsvpMutation.isPending}
                       >
-                        Cancel
+                        {t("events.cancel")}
                       </Button>
                     </>
                   ) : (
@@ -634,7 +634,7 @@ const Events = () => {
                         onClick={() => rsvpMutation.mutate({ eventId: event.id, status: "going" })}
                         disabled={rsvpMutation.isPending || isFull}
                       >
-                        {isFull ? "Full" : "I'm Going"}
+                        {isFull ? t("events.full") : t("events.imGoing")}
                       </Button>
                       <Button
                         size="sm"
@@ -643,14 +643,14 @@ const Events = () => {
                         onClick={() => rsvpMutation.mutate({ eventId: event.id, status: "maybe" })}
                         disabled={rsvpMutation.isPending}
                       >
-                        Maybe
+                        {t("events.maybe")}
                       </Button>
                     </>
                   )}
                 </div>
               ) : (
                 <Button asChild size="sm" className="bg-gradient-storm hover:opacity-90 font-body">
-                  <Link to="/auth">Sign in to RSVP</Link>
+                  <Link to="/auth">{t("events.signInToRsvp")}</Link>
                 </Button>
               )
             )}
