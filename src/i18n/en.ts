@@ -110,7 +110,7 @@ const en = {
     vibetor: {
       name: "Vibetor",
       price: "Investors, Innovators & Partners. Everything in Viber, plus:",
-      cta: "Contact Us",
+      cta: "Apply as Vibetor",
       benefits: [
         { title: "Vibetor Badge", desc: "Stand out with a verified Vibetor badge on your profile." },
         { title: "Vibetor Network", desc: "Connect with fellow investors, innovators, and partners in a dedicated circle." },
