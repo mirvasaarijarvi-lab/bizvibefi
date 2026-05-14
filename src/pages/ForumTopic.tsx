@@ -86,6 +86,16 @@ const ForumTopic = () => {
     enabled: !!topicId,
   });
 
+  const sortedReplies = useMemo(() => {
+    if (!replies) return [];
+    const list = [...replies];
+    list.sort((a, b) => {
+      const diff = new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
+      return sort === "oldest" ? diff : -diff;
+    });
+    return list;
+  }, [replies, sort]);
+
   const handleReply = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!user || !topicId) return;
