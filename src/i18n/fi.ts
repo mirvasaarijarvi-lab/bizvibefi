@@ -294,6 +294,7 @@ const fi = {
       invalidType: "Tiedostotyyppiä ei tueta",
       addMore: "Lisää tiedosto",
     },
+    lockedViber: "Avaa Viberillä",
     crop: {
       title: "Rajaa kuva",
       description: "Säädä rajaus 16:9-suhteeseen yhtenäisen näkymän varmistamiseksi.",
