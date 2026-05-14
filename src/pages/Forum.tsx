@@ -110,7 +110,7 @@ const Forum = () => {
             </div>
             {!user && (
               <Button asChild className="bg-gradient-storm hover:opacity-90 font-body">
-                <Link to="/auth">Sign in to post</Link>
+                <Link to="/auth?redirect=%2Fforum">Sign in to post</Link>
               </Button>
             )}
           </div>

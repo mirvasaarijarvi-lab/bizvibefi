@@ -259,7 +259,7 @@ const ForumTopic = () => {
             <div className="text-center py-6 bg-card border border-border rounded-xl">
               <p className="text-muted-foreground font-body mb-3">Sign in to reply</p>
               <Button asChild size="sm" className="bg-gradient-storm font-body">
-                <Link to="/auth">Sign In</Link>
+                <Link to={`/auth?redirect=${encodeURIComponent(`/forum/${slug}/${topicId}`)}`}>Sign In</Link>
               </Button>
             </div>
           ) : null}
