@@ -34,7 +34,7 @@ interface MemberProfile {
   company: string | null;
   linkedin_url: string | null;
   membership_tier: "starter" | "viber" | "vibetor";
-  vibetor_type: "investor" | "innovator" | "partner" | null;
+  vibetor_type: "investor" | "innovator" | "partner" | "founder" | null;
   viber_access_override: boolean;
   contact_email: string | null;
   contact_phone: string | null;
