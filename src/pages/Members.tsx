@@ -94,7 +94,7 @@ const Members = () => {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("profiles")
-        .select("id, user_id, display_name, avatar_url, bio, company, linkedin_url, membership_tier, viber_access_override, contact_email, contact_phone, website_links, created_at")
+        .select("id, user_id, display_name, avatar_url, bio, company, linkedin_url, membership_tier, vibetor_type, viber_access_override, contact_email, contact_phone, website_links, created_at")
         .order("created_at", { ascending: false });
       if (error) throw error;
 
@@ -421,7 +421,7 @@ const Members = () => {
                                     toast.error(error.message);
                                     return;
                                   }
-                                  queryClient.invalidateQueries({ queryKey: ["members-list"] });
+                                  queryClient.invalidateQueries({ queryKey: ["members"] });
                                   toast.success("Vibetor type updated");
                                 }}
                               >
