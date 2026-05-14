@@ -650,21 +650,21 @@ const Events = () => {
   return (
     <Layout>
       <PageMeta
-        title="Tapahtumia — BizVibe"
-        description="Tapaamiset, webinsarit, workshopit ja hackathonit. Tule paikalle, rakenna, verkostoidu."
+        title={`${t("events.tag")} — BizVibe`}
+        description={t("events.subtitle")}
       />
       <section className="py-20 px-4">
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-12">
             <HeroAvatar src={mascotEvents} alt="BizVibe events mascot" />
             <p className="font-body text-sm font-semibold text-turquoise tracking-widest uppercase mb-3">
-              Tapahtumia
+              {t("events.tag")}
             </p>
             <h1 className="font-display text-3xl md:text-5xl font-bold text-foreground tracking-[-0.02em]">
-              Mitä seuraavaksi <span className="text-gradient-surge">meneillään?</span>
+              {t("events.title")} <span className="text-gradient-surge">{t("events.titleHighlight")}</span>
             </h1>
             <p className="mt-4 text-muted-foreground font-body text-lg max-w-xl mx-auto">
-              Tapaamiset, webinsarit, workshopit ja hackathonit. Tule paikalle, rakenna, verkostoidu.
+              {t("events.subtitle")}
             </p>
             {isAdmin && (
               <Button
