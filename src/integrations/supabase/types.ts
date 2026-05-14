@@ -837,61 +837,7 @@ export type Database = {
       }
     }
     Views: {
-      profiles_public: {
-        Row: {
-          avatar_url: string | null
-          bio: string | null
-          company: string | null
-          company_url: string | null
-          created_at: string | null
-          display_name: string | null
-          id: string | null
-          linkedin_url: string | null
-          membership_tier: Database["public"]["Enums"]["membership_tier"] | null
-          profile_visibility: Json | null
-          updated_at: string | null
-          user_id: string | null
-          vibetor_type: Database["public"]["Enums"]["vibetor_type"] | null
-          website_links: Json | null
-        }
-        Insert: {
-          avatar_url?: string | null
-          bio?: string | null
-          company?: string | null
-          company_url?: string | null
-          created_at?: string | null
-          display_name?: string | null
-          id?: string | null
-          linkedin_url?: string | null
-          membership_tier?:
-            | Database["public"]["Enums"]["membership_tier"]
-            | null
-          profile_visibility?: Json | null
-          updated_at?: string | null
-          user_id?: string | null
-          vibetor_type?: Database["public"]["Enums"]["vibetor_type"] | null
-          website_links?: Json | null
-        }
-        Update: {
-          avatar_url?: string | null
-          bio?: string | null
-          company?: string | null
-          company_url?: string | null
-          created_at?: string | null
-          display_name?: string | null
-          id?: string | null
-          linkedin_url?: string | null
-          membership_tier?:
-            | Database["public"]["Enums"]["membership_tier"]
-            | null
-          profile_visibility?: Json | null
-          updated_at?: string | null
-          user_id?: string | null
-          vibetor_type?: Database["public"]["Enums"]["vibetor_type"] | null
-          website_links?: Json | null
-        }
-        Relationships: []
-      }
+      [_ in never]: never
     }
     Functions: {
       get_badge_leaderboard: {
@@ -918,6 +864,8 @@ export type Database = {
           bio: string
           company: string
           company_url: string
+          contact_email: string
+          contact_phone: string
           created_at: string
           display_name: string
           id: string
@@ -926,6 +874,7 @@ export type Database = {
           profile_visibility: Json
           updated_at: string
           user_id: string
+          viber_access_override: boolean
           vibetor_type: Database["public"]["Enums"]["vibetor_type"]
           website_links: Json
         }[]
@@ -945,6 +894,8 @@ export type Database = {
           bio: string
           company: string
           company_url: string
+          contact_email: string
+          contact_phone: string
           created_at: string
           display_name: string
           id: string
@@ -953,6 +904,7 @@ export type Database = {
           profile_visibility: Json
           updated_at: string
           user_id: string
+          viber_access_override: boolean
           vibetor_type: Database["public"]["Enums"]["vibetor_type"]
           website_links: Json
         }[]
