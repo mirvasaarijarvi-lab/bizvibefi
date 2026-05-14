@@ -212,10 +212,23 @@ const ForumTopic = () => {
 
           {/* Replies */}
           <div className="mb-6">
-            <h2 className="font-display text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
-              <MessageSquare className="h-5 w-5" />
-              {replies?.length ?? 0} {(replies?.length ?? 0) === 1 ? "Reply" : "Replies"}
-            </h2>
+            <div className="flex items-center justify-between mb-4 gap-3">
+              <h2 className="font-display text-lg font-semibold text-foreground flex items-center gap-2">
+                <MessageSquare className="h-5 w-5" />
+                {replies?.length ?? 0} {(replies?.length ?? 0) === 1 ? "Reply" : "Replies"}
+              </h2>
+              {(replies?.length ?? 0) > 1 && (
+                <Select value={sort} onValueChange={(v) => setSort(v as "oldest" | "newest")}>
+                  <SelectTrigger className="w-36 h-8 font-body text-xs">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="oldest">Oldest first</SelectItem>
+                    <SelectItem value="newest">Newest first</SelectItem>
+                  </SelectContent>
+                </Select>
+              )}
+            </div>
 
             {isLoading ? (
               <div className="flex justify-center py-8">
@@ -223,7 +236,7 @@ const ForumTopic = () => {
               </div>
             ) : (
               <div className="space-y-3">
-                {replies?.map((reply) => (
+                {sortedReplies.map((reply) => (
                   <div key={reply.id} className="bg-card border border-border rounded-xl p-4">
                     <div className="flex items-center gap-3 mb-3">
                       <Avatar className="h-7 w-7">
