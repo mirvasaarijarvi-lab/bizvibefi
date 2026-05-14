@@ -314,8 +314,8 @@ const fi = {
     addKeyFigure: "Lisää luku",
     detail: {
       readMore: "Lue lisää",
-      backToShowcase: "Takaisin näyteikkunaan",
-      notFound: "Näyteikkunan kohdetta ei löytynyt.",
+      backToShowcase: "Takaisin",
+      notFound: "Kohdetta ei löytynyt.",
       challenge: "Haaste",
       solution: "Ratkaisu",
       benefits: "Keskeiset hyödyt",
