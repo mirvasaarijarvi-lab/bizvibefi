@@ -77,6 +77,7 @@ const App = () => (
                 <Route path="/admin/users" element={<AdminUsers />} />
                 <Route path="/apply-vibetor" element={<ApplyVibetor />} />
                 <Route path="/apply-viber" element={<ApplyViber />} />
+                <Route path="/apply-starter" element={<ApplyStarter />} />
                 <Route path="/badges" element={<Badges />} />
                 <Route path="/admin/badges" element={<AdminBadges />} />
                 <Route path="/admin/certificates" element={<AdminCertificates />} />
