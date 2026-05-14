@@ -359,9 +359,9 @@ const MetricsCounter = () => {
   });
 
   const metrics = [
-    { label: "Members", value: memberCount ?? 0, icon: Users, color: "text-turquoise" },
-    { label: "Events Hosted", value: eventCount ?? 0, icon: CalendarCheck, color: "text-purple-soft" },
-    { label: "Forum Topics", value: topicCount ?? 0, icon: Code2, color: "text-electric" },
+    { label: t("community.free.name") + "s", value: memberCount ?? 0, icon: Users, color: "text-turquoise" },
+    { label: t("events.tag"), value: eventCount ?? 0, icon: CalendarCheck, color: "text-purple-soft" },
+    { label: t("nav.community") + " leads", value: topicCount ?? 0, icon: Code2, color: "text-electric" },
   ];
 
   return (
