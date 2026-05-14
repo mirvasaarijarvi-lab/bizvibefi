@@ -294,6 +294,7 @@ const sv = {
       invalidType: "Filtypen stöds inte",
       addMore: "Lägg till fil",
     },
+    lockedViber: "Lås upp med Viber",
     crop: {
       title: "Beskär bild",
       description: "Justera beskärningsområdet till 16:9 för enhetliga skyltfönsterdimensioner.",
