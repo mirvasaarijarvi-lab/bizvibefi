@@ -171,7 +171,8 @@ const Index = () => {
   );
 };
 
-const freeTierLinks = ["/contact", "/events", "/events", "/members"];
+const freeTierLinks = ["/contact", "/showcase", "/events", "/showcase", "/badges"];
+const freeTierIndices = [0, 1, 2, 3, 4];
 
 const FreeTierCard = () => {
   const { t } = useTranslation();
