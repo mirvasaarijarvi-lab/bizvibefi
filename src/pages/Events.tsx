@@ -674,7 +674,7 @@ const Events = () => {
                 className="mt-6 bg-gradient-storm hover:opacity-90 font-body"
                 onClick={() => setCreateOpen(true)}
               >
-                <Plus className="h-4 w-4 mr-2" /> Create Event
+                <Plus className="h-4 w-4 mr-2" /> {t("events.createEvent")}
               </Button>
             )}
           </div>
