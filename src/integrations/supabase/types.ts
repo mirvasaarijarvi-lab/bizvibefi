@@ -857,6 +857,28 @@ export type Database = {
         Args: { _user_id: string }
         Returns: Database["public"]["Enums"]["membership_tier"]
       }
+      get_public_profile: {
+        Args: { _user_id: string }
+        Returns: {
+          avatar_url: string
+          bio: string
+          company: string
+          company_url: string
+          contact_email: string
+          contact_phone: string
+          created_at: string
+          display_name: string
+          id: string
+          linkedin_url: string
+          membership_tier: Database["public"]["Enums"]["membership_tier"]
+          profile_visibility: Json
+          updated_at: string
+          user_id: string
+          viber_access_override: boolean
+          vibetor_type: Database["public"]["Enums"]["vibetor_type"]
+          website_links: Json
+        }[]
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -865,6 +887,45 @@ export type Database = {
         Returns: boolean
       }
       has_viber_access: { Args: { _user_id: string }; Returns: boolean }
+      list_public_profiles: {
+        Args: never
+        Returns: {
+          avatar_url: string
+          bio: string
+          company: string
+          company_url: string
+          contact_email: string
+          contact_phone: string
+          created_at: string
+          display_name: string
+          id: string
+          linkedin_url: string
+          membership_tier: Database["public"]["Enums"]["membership_tier"]
+          profile_visibility: Json
+          updated_at: string
+          user_id: string
+          viber_access_override: boolean
+          vibetor_type: Database["public"]["Enums"]["vibetor_type"]
+          website_links: Json
+        }[]
+      }
+      verify_certificate: {
+        Args: { _id: string }
+        Returns: {
+          completion_date: string
+          course_content: string
+          course_id: string
+          course_title: string
+          created_at: string
+          id: string
+          issued_by_name: string
+          method: Database["public"]["Enums"]["course_method"]
+          method_details: string
+          participant_name: string
+          participant_user_id: string
+          pdf_url: string
+        }[]
+      }
     }
     Enums: {
       app_role: "superadmin" | "admin" | "moderator" | "user"

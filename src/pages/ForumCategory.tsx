@@ -106,13 +106,13 @@ const ForumCategory = () => {
         .order("created_at", { ascending: false });
       if (error) throw error;
 
-      const userIds = [...new Set(topicsData.map((t) => t.user_id))];
-      const { data: profiles } = await supabase
-        .from("profiles")
-        .select("user_id, display_name, avatar_url")
-        .in("user_id", userIds);
-
-      const profileMap = new Map(profiles?.map((p) => [p.user_id, p]) ?? []);
+      const userIds = new Set(topicsData.map((t) => t.user_id));
+      const { data: profiles } = await supabase.rpc("list_public_profiles");
+      const profileMap = new Map(
+        ((profiles ?? []) as unknown as { user_id: string; display_name: string | null; avatar_url: string | null }[])
+          .filter((p) => userIds.has(p.user_id))
+          .map((p) => [p.user_id, p])
+      );
 
       return topicsData.map((t) => ({
         ...t,

@@ -324,11 +324,9 @@ const MetricsCounter = () => {
   const { data: memberCount } = useQuery({
     queryKey: ["metrics-members"],
     queryFn: async () => {
-      const { count, error } = await supabase
-        .from("profiles")
-        .select("*", { count: "exact", head: true });
+      const { data, error } = await supabase.rpc("list_public_profiles");
       if (error) throw error;
-      return count ?? 0;
+      return (data as unknown as unknown[] | null)?.length ?? 0;
     },
     staleTime: 60_000,
   });

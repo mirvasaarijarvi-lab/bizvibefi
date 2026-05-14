@@ -65,12 +65,10 @@ export const useCertificate = (id: string | undefined) =>
     queryFn: async () => {
       if (!id) return null;
       const { data, error } = await supabase
-        .from("course_certificates" as never)
-        .select("*")
-        .eq("id", id)
-        .maybeSingle();
+        .rpc("verify_certificate" as never, { _id: id } as never);
       if (error) throw error;
-      return data as unknown as CourseCertificate | null;
+      const rows = data as unknown as CourseCertificate[] | null;
+      return rows?.[0] ?? null;
     },
     enabled: !!id,
   });

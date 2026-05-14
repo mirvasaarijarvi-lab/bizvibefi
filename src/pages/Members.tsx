@@ -92,11 +92,11 @@ const Members = () => {
   const { data: members, isLoading } = useQuery({
     queryKey: ["members"],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from("profiles")
-        .select("id, user_id, display_name, avatar_url, bio, company, linkedin_url, membership_tier, vibetor_type, viber_access_override, contact_email, contact_phone, website_links, created_at")
-        .order("created_at", { ascending: false });
+      const { data: rawData, error } = await supabase.rpc("list_public_profiles");
       if (error) throw error;
+      const data = ((rawData ?? []) as unknown as MemberProfile[])
+        .slice()
+        .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
 
       const userIds = data.map((p: MemberProfile) => p.user_id);
 

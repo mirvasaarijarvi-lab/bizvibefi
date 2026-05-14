@@ -61,10 +61,14 @@ const ApplyVibetor = () => {
   const isCompany = form.watch("is_company");
 
   const onSubmit = async (values: FormValues) => {
+    if (!user) {
+      toast({ title: "Sign in required", description: "Please sign in to submit your Vibetor application.", variant: "destructive" });
+      return;
+    }
     const { error } = await supabase
       .from("vibetor_applications")
       .insert({
-        user_id: user?.id ?? null,
+        user_id: user.id,
         full_name: values.full_name,
         email: values.email,
         vibetor_type: values.vibetor_type,

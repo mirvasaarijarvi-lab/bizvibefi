@@ -49,11 +49,8 @@ const ForumTopic = () => {
         .single();
       if (error) throw error;
 
-      const { data: profile } = await supabase
-        .from("profiles")
-        .select("display_name, avatar_url")
-        .eq("user_id", data.user_id)
-        .single();
+      const { data: profileRows } = await supabase.rpc("get_public_profile", { _user_id: data.user_id });
+      const profile = ((profileRows ?? []) as unknown as { display_name: string | null; avatar_url: string | null }[])[0] ?? null;
 
       return { ...data, profile };
     },
@@ -70,13 +67,13 @@ const ForumTopic = () => {
         .order("created_at");
       if (error) throw error;
 
-      const userIds = [...new Set(repliesData.map((r) => r.user_id))];
-      const { data: profiles } = await supabase
-        .from("profiles")
-        .select("user_id, display_name, avatar_url")
-        .in("user_id", userIds);
-
-      const profileMap = new Map(profiles?.map((p) => [p.user_id, p]) ?? []);
+      const userIds = new Set(repliesData.map((r) => r.user_id));
+      const { data: profiles } = await supabase.rpc("list_public_profiles");
+      const profileMap = new Map(
+        ((profiles ?? []) as unknown as { user_id: string; display_name: string | null; avatar_url: string | null }[])
+          .filter((p) => userIds.has(p.user_id))
+          .map((p) => [p.user_id, p])
+      );
 
       return repliesData.map((r) => ({
         ...r,
