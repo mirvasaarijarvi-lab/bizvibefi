@@ -179,17 +179,17 @@ const MemberProfile = () => {
           </Link>
 
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-            <Card>
-              <CardContent className="p-8">
+            <Card className="overflow-hidden">
+              <CardContent className="p-6 md:p-8">
                 {/* Header */}
-                <div className="flex items-center gap-6 mb-6">
-                  <Avatar className="h-20 w-20">
+                <div className="flex items-center gap-4 md:gap-6 mb-6">
+                  <Avatar className="h-20 w-20 shrink-0">
                     <AvatarImage src={member.avatar_url ?? undefined} alt={member.display_name ?? "Member"} />
                     <AvatarFallback className="text-lg font-semibold">
                       {initials(member.display_name)}
                     </AvatarFallback>
                   </Avatar>
-                  <div>
+                  <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-2 flex-wrap">
                       <h1 className="font-display text-2xl font-bold">
                         {member.display_name || "Anonymous"}
@@ -215,14 +215,14 @@ const MemberProfile = () => {
                       )}
                     </div>
                     {showField("company") && member.company && (
-                      <p className="text-muted-foreground flex items-center gap-1.5 mt-1">
+                      <p className="text-muted-foreground flex items-center gap-1.5 mt-1 min-w-0">
                         <Building2 className="h-4 w-4 shrink-0" />
                         {showField("company_url") && member.company_url ? (
-                          <a href={member.company_url} target="_blank" rel="noopener noreferrer" className="hover:text-primary hover:underline transition-colors">
+                          <a href={member.company_url} target="_blank" rel="noopener noreferrer" className="hover:text-primary hover:underline transition-colors truncate">
                             {member.company}
                           </a>
                         ) : (
-                          member.company
+                          <span className="truncate">{member.company}</span>
                         )}
                       </p>
                     )}
@@ -241,7 +241,7 @@ const MemberProfile = () => {
                 {/* Bio */}
                 {showField("bio") && member.bio && (
                   <div className="mb-6">
-                    <p className="text-muted-foreground font-body leading-relaxed">
+                    <p className="text-muted-foreground font-body leading-relaxed break-words whitespace-pre-line">
                       {member.bio}
                     </p>
                   </div>
@@ -252,19 +252,19 @@ const MemberProfile = () => {
                   {showField("contact_email") && member.contact_email && (
                     <a
                       href={`mailto:${member.contact_email}`}
-                      className="flex items-center gap-2 text-muted-foreground hover:text-foreground font-body"
+                      className="flex items-center gap-2 text-muted-foreground hover:text-foreground font-body min-w-0"
                     >
                       <Mail className="h-4 w-4 shrink-0" />
-                      <span>{member.contact_email}</span>
+                      <span className="truncate">{member.contact_email}</span>
                     </a>
                   )}
                   {showField("contact_phone") && member.contact_phone && (
                     <a
                       href={`tel:${member.contact_phone}`}
-                      className="flex items-center gap-2 text-muted-foreground hover:text-foreground font-body"
+                      className="flex items-center gap-2 text-muted-foreground hover:text-foreground font-body min-w-0"
                     >
                       <Phone className="h-4 w-4 shrink-0" />
-                      <span>{member.contact_phone}</span>
+                      <span className="truncate">{member.contact_phone}</span>
                     </a>
                   )}
                   {showField("linkedin_url") && member.linkedin_url && (
@@ -272,11 +272,11 @@ const MemberProfile = () => {
                       href={member.linkedin_url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center gap-2 text-primary hover:underline font-body"
+                      className="flex items-center gap-2 text-primary hover:underline font-body min-w-0"
                     >
                       <Linkedin className="h-4 w-4 shrink-0" />
-                      LinkedIn
-                      <ExternalLink className="h-3 w-3" />
+                      <span className="truncate">LinkedIn</span>
+                      <ExternalLink className="h-3 w-3 shrink-0" />
                     </a>
                   )}
                   {showField("website_links") && websiteLinks.length > 0 && (
@@ -287,7 +287,7 @@ const MemberProfile = () => {
                           href={link.url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="flex items-center gap-2 text-primary hover:underline font-body"
+                          className="flex items-center gap-2 text-primary hover:underline font-body min-w-0"
                         >
                           <Globe className="h-4 w-4 shrink-0" />
                           <span className="truncate">{link.label || link.url}</span>
@@ -302,22 +302,27 @@ const MemberProfile = () => {
                 {showcaseItems && showcaseItems.length > 0 && (
                   <div className="mt-8 pt-6 border-t border-border">
                     <h2 className="font-display text-lg font-bold mb-4">Showcase</h2>
-                    <div className="grid gap-3">
+                    <div className="grid gap-2">
                       {showcaseItems.map((item) => (
                         <Link
                           key={item.id}
                           to={`/showcase/${item.id}`}
-                          className="flex items-center gap-3 p-3 rounded-lg border border-border hover:border-primary/40 transition-colors bg-muted/30"
+                          className="group flex items-center gap-3 p-3 rounded-lg border border-border hover:border-primary/40 hover:bg-muted/50 transition-colors bg-muted/20 min-w-0"
                         >
-                          {item.image_url && (
-                            <img
-                              src={item.image_url}
-                              alt={item.title}
-                              className="h-12 w-20 object-cover rounded shrink-0"
-                            />
-                          )}
+                          <div className="h-12 w-12 rounded-md overflow-hidden bg-muted shrink-0 flex items-center justify-center">
+                            {item.image_url ? (
+                              <img
+                                src={item.image_url}
+                                alt={item.title}
+                                loading="lazy"
+                                className="h-full w-full object-cover"
+                              />
+                            ) : (
+                              <ExternalLink className="h-4 w-4 text-muted-foreground" />
+                            )}
+                          </div>
                           <div className="min-w-0 flex-1">
-                            <div className="flex items-center gap-2">
+                            <div className="flex items-center gap-2 min-w-0">
                               <p className="font-display font-semibold text-sm truncate">{item.title}</p>
                               <Badge variant="outline" className="text-[10px] px-1.5 py-0 capitalize shrink-0">
                                 {item.type?.replace("_", " ")}
@@ -327,7 +332,7 @@ const MemberProfile = () => {
                               {item.description}
                             </p>
                           </div>
-                          <ExternalLink className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
+                          <ExternalLink className="h-3.5 w-3.5 text-muted-foreground shrink-0 group-hover:text-primary transition-colors" />
                         </Link>
                       ))}
                     </div>
