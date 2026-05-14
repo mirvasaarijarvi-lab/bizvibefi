@@ -49,11 +49,8 @@ const ForumTopic = () => {
         .single();
       if (error) throw error;
 
-      const { data: profile } = await supabase
-        .from("profiles")
-        .select("display_name, avatar_url")
-        .eq("user_id", data.user_id)
-        .single();
+      const { data: profileRows } = await supabase.rpc("get_public_profile", { _user_id: data.user_id });
+      const profile = ((profileRows ?? []) as unknown as { display_name: string | null; avatar_url: string | null }[])[0] ?? null;
 
       return { ...data, profile };
     },
