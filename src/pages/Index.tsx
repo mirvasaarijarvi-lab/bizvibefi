@@ -242,7 +242,7 @@ const ProTierCard = () => {
   );
 };
 
-const vibetorTierLinks = ["/community", "/profile", "/members", "/showcase", "/events"];
+const vibetorTierLinks = ["/community", "/contact", "/showcase", "/events", "/badges"];
 
 const VibetorTierCard = () => {
   const { t } = useTranslation();
