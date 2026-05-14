@@ -294,6 +294,7 @@ const en = {
       invalidType: "Unsupported file type",
       addMore: "Add another file",
     },
+    lockedViber: "Unlock with Viber",
     crop: {
       title: "Crop Image",
       description: "Adjust the crop area to 16:9 for consistent showcase dimensions.",
