@@ -49,7 +49,7 @@ const sv = {
     pro: {
       name: "Viber",
       label: "VIBER",
-      price: "Betalt medlemskap",
+      price: "199 € / år, 599 € / år för företagspartners",
       benefits: [
         "Allt från Starter",
         "Leadgenerering",
