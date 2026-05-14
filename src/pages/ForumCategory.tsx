@@ -371,13 +371,19 @@ const ForumCategory = () => {
                 </p>
               )}
             </div>
-            {user && (
+            {user ? (
               <Button
                 onClick={() => setShowNewTopic(!showNewTopic)}
                 className="bg-gradient-storm hover:opacity-90 font-body"
                 size="sm"
               >
                 <Plus className="h-4 w-4 mr-1" /> {isLead ? "Submit Lead" : requiresApproval ? "Submit Lead" : "New Topic"}
+              </Button>
+            ) : (
+              <Button asChild className="bg-gradient-storm hover:opacity-90 font-body" size="sm">
+                <Link to={`/auth?redirect=${encodeURIComponent(`/forum/${slug}`)}`}>
+                  <Plus className="h-4 w-4 mr-1" /> Sign in to post
+                </Link>
               </Button>
             )}
           </div>
