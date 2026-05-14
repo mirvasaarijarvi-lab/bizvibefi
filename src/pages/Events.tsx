@@ -457,6 +457,10 @@ const Events = () => {
     const rsvpStatus = getRsvpStatus(event.id);
     const attendeeCount = rsvpCounts?.[event.id] ?? 0;
     const isFull = event.max_attendees ? attendeeCount >= event.max_attendees : false;
+    const e = event as Tables<"events"> & { title_fi?: string | null; title_sv?: string | null; description_fi?: string | null; description_sv?: string | null; location_fi?: string | null; location_sv?: string | null };
+    const localizedTitle = (lang === "fi" && e.title_fi) || (lang === "sv" && e.title_sv) || event.title;
+    const localizedDescription = (lang === "fi" && e.description_fi) || (lang === "sv" && e.description_sv) || event.description;
+    const localizedLocation = (lang === "fi" && e.location_fi) || (lang === "sv" && e.location_sv) || event.location;
 
     return (
       <div
@@ -538,11 +542,11 @@ const Events = () => {
             </div>
 
             <h2 className={`font-display font-bold text-foreground mb-2 ${isPastEvent ? "text-base" : "text-xl"}`}>
-              {event.title}
+              {localizedTitle}
             </h2>
-            {!isPastEvent && event.description && (
+            {!isPastEvent && localizedDescription && (
               <p className="text-sm text-muted-foreground font-body mb-4">
-                {event.description}
+                {localizedDescription}
               </p>
             )}
 
@@ -561,15 +565,15 @@ const Events = () => {
                     </>
                   )}
               </span>
-              {event.location && (
+              {localizedLocation && (
                 <a
-                  href={googleMapsUrl(event.location)}
+                  href={googleMapsUrl(localizedLocation)}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center gap-1 hover:text-foreground transition-colors"
                 >
                   <MapPin className="h-3.5 w-3.5" />
-                  {event.location}
+                  {localizedLocation}
                   <ExternalLink className="h-3 w-3" />
                 </a>
               )}

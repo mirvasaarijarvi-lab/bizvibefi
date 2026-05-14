@@ -360,6 +360,8 @@ export type Database = {
           created_at: string
           created_by: string | null
           description: string | null
+          description_fi: string | null
+          description_sv: string | null
           ends_at: string | null
           event_type: Database["public"]["Enums"]["event_type"]
           id: string
@@ -367,16 +369,22 @@ export type Database = {
           is_online: boolean
           is_published: boolean
           location: string | null
+          location_fi: string | null
+          location_sv: string | null
           max_attendees: number | null
           online_url: string | null
           starts_at: string
           title: string
+          title_fi: string | null
+          title_sv: string | null
           updated_at: string
         }
         Insert: {
           created_at?: string
           created_by?: string | null
           description?: string | null
+          description_fi?: string | null
+          description_sv?: string | null
           ends_at?: string | null
           event_type?: Database["public"]["Enums"]["event_type"]
           id?: string
@@ -384,16 +392,22 @@ export type Database = {
           is_online?: boolean
           is_published?: boolean
           location?: string | null
+          location_fi?: string | null
+          location_sv?: string | null
           max_attendees?: number | null
           online_url?: string | null
           starts_at: string
           title: string
+          title_fi?: string | null
+          title_sv?: string | null
           updated_at?: string
         }
         Update: {
           created_at?: string
           created_by?: string | null
           description?: string | null
+          description_fi?: string | null
+          description_sv?: string | null
           ends_at?: string | null
           event_type?: Database["public"]["Enums"]["event_type"]
           id?: string
@@ -401,10 +415,14 @@ export type Database = {
           is_online?: boolean
           is_published?: boolean
           location?: string | null
+          location_fi?: string | null
+          location_sv?: string | null
           max_attendees?: number | null
           online_url?: string | null
           starts_at?: string
           title?: string
+          title_fi?: string | null
+          title_sv?: string | null
           updated_at?: string
         }
         Relationships: []
