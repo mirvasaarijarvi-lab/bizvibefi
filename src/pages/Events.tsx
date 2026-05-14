@@ -550,7 +550,10 @@ const Events = () => {
               <span className="flex items-center gap-1">
                 <Clock className="h-3.5 w-3.5" />
                 {isPastEvent
-                  ? format(new Date(event.starts_at), "MMM dd, yyyy")
+                  ? format(new Date(event.starts_at), "MMM dd, yyyy", { 
+                      locale: localStorage.getItem("language") === "fi" ? fi : 
+                              localStorage.getItem("language") === "sv" ? sv : enUS 
+                    })
                   : (
                     <>
                       {format(new Date(event.starts_at), "HH:mm")}
