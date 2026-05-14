@@ -97,7 +97,7 @@ const sv = {
     },
     pro: {
       name: "Viber",
-      price: "Betalt medlemskap. Allt från Starter och dessutom:",
+      price: "199 € / år, 599 € / år för företagspartners. Allt från Starter och dessutom:",
       cta: "Bli Viber",
       benefits: [
         { title: "Leadgenerering", desc: "Tillgång till kvalificerade leads och affärsmöjligheter från nätverket." },
