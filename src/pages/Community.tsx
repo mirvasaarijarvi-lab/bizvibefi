@@ -136,7 +136,7 @@ const Community = () => {
               ))}
             </div>
             <Button variant="hero" size="lg" className="mt-8" asChild>
-              <a href="/contact">{t("community.vibetor.cta")} <ArrowRight className="ml-2 h-4 w-4" /></a>
+              <Link to="/apply-vibetor">{t("community.vibetor.cta")} <ArrowRight className="ml-2 h-4 w-4" /></Link>
             </Button>
           </motion.div>
         </div>
