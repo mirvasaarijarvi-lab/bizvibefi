@@ -16,6 +16,21 @@ import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
 import { Gem, ArrowRight, CheckCircle } from "lucide-react";
 import { motion } from "framer-motion";
+import BillingFields, { billingSchema } from "@/components/BillingFields";
+
+const partnerBillingSchema = {
+  billing_name: billingSchema.billing_name.optional().or(z.literal("")),
+  billing_business_id: billingSchema.billing_business_id,
+  billing_vat_id: billingSchema.billing_vat_id,
+  billing_email: billingSchema.billing_email.optional().or(z.literal("")),
+  billing_address: billingSchema.billing_address.optional().or(z.literal("")),
+  billing_postal_code: billingSchema.billing_postal_code.optional().or(z.literal("")),
+  billing_city: billingSchema.billing_city.optional().or(z.literal("")),
+  billing_country: billingSchema.billing_country.optional().or(z.literal("")),
+  billing_reference: billingSchema.billing_reference,
+  einvoice_address: billingSchema.einvoice_address,
+  einvoice_operator: billingSchema.einvoice_operator,
+};
 
 const formSchema = z.object({
   full_name: z.string().trim().min(2, "Name is required").max(100),
@@ -26,6 +41,7 @@ const formSchema = z.object({
   representative_name: z.string().trim().max(100).optional(),
   linkedin_url: z.string().trim().url("Please enter a valid URL").optional().or(z.literal("")),
   motivation: z.string().trim().min(20, "Please tell us a bit more (at least 20 characters)").max(2000),
+  ...partnerBillingSchema,
 }).refine(
   (data) => {
     if (data.vibetor_type === "partner" && data.is_company) {
@@ -34,6 +50,16 @@ const formSchema = z.object({
     return true;
   },
   { message: "Company partners must provide a representative name", path: ["representative_name"] }
+).refine(
+  (data) => {
+    if (data.vibetor_type === "partner" && data.is_company) {
+      return !!data.billing_name && !!data.billing_email && !!data.billing_address
+        && !!data.billing_postal_code && !!data.billing_city && !!data.billing_country
+        && !!data.billing_business_id;
+    }
+    return true;
+  },
+  { message: "Invoicing details are required for company partners", path: ["billing_name"] }
 );
 
 type FormValues = z.infer<typeof formSchema>;
@@ -54,11 +80,23 @@ const ApplyVibetor = () => {
       representative_name: "",
       linkedin_url: "",
       motivation: "",
+      billing_name: "",
+      billing_business_id: "",
+      billing_vat_id: "",
+      billing_email: "",
+      billing_address: "",
+      billing_postal_code: "",
+      billing_city: "",
+      billing_country: "Finland",
+      billing_reference: "",
+      einvoice_address: "",
+      einvoice_operator: "",
     },
   });
 
   const vibetorType = form.watch("vibetor_type");
   const isCompany = form.watch("is_company");
+  const showBilling = vibetorType === "partner" && isCompany;
 
   const onSubmit = async (values: FormValues) => {
     if (!user) {
@@ -77,6 +115,17 @@ const ApplyVibetor = () => {
         representative_name: values.representative_name || null,
         linkedin_url: values.linkedin_url || null,
         motivation: values.motivation,
+        billing_name: showBilling ? values.billing_name || null : null,
+        billing_business_id: showBilling ? values.billing_business_id || null : null,
+        billing_vat_id: showBilling ? values.billing_vat_id || null : null,
+        billing_email: showBilling ? values.billing_email || null : null,
+        billing_address: showBilling ? values.billing_address || null : null,
+        billing_postal_code: showBilling ? values.billing_postal_code || null : null,
+        billing_city: showBilling ? values.billing_city || null : null,
+        billing_country: showBilling ? values.billing_country || null : null,
+        billing_reference: showBilling ? values.billing_reference || null : null,
+        einvoice_address: showBilling ? values.einvoice_address || null : null,
+        einvoice_operator: showBilling ? values.einvoice_operator || null : null,
       });
 
     if (error) {
@@ -205,6 +254,12 @@ const ApplyVibetor = () => {
                         <FormMessage />
                       </FormItem>
                     )} />
+                    <BillingFields
+                      control={form.control}
+                      isCompany={true}
+                      title="Invoicing details"
+                      description="Company partners are invoiced €599/year. We'll use these details for your invoice."
+                    />
                   </>
                 )}
 

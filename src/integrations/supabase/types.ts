@@ -784,10 +784,102 @@ export type Database = {
         }
         Relationships: []
       }
-      vibetor_applications: {
+      viber_applications: {
         Row: {
+          billing_address: string
+          billing_business_id: string | null
+          billing_city: string
+          billing_country: string
+          billing_email: string
+          billing_name: string
+          billing_postal_code: string
+          billing_reference: string | null
+          billing_vat_id: string | null
           company_name: string | null
           created_at: string
+          einvoice_address: string | null
+          einvoice_operator: string | null
+          email: string
+          full_name: string
+          id: string
+          is_company: boolean
+          notes: string | null
+          phone: string | null
+          rejection_reason: string | null
+          representative_name: string | null
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          billing_address: string
+          billing_business_id?: string | null
+          billing_city: string
+          billing_country?: string
+          billing_email: string
+          billing_name: string
+          billing_postal_code: string
+          billing_reference?: string | null
+          billing_vat_id?: string | null
+          company_name?: string | null
+          created_at?: string
+          einvoice_address?: string | null
+          einvoice_operator?: string | null
+          email: string
+          full_name: string
+          id?: string
+          is_company?: boolean
+          notes?: string | null
+          phone?: string | null
+          rejection_reason?: string | null
+          representative_name?: string | null
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          billing_address?: string
+          billing_business_id?: string | null
+          billing_city?: string
+          billing_country?: string
+          billing_email?: string
+          billing_name?: string
+          billing_postal_code?: string
+          billing_reference?: string | null
+          billing_vat_id?: string | null
+          company_name?: string | null
+          created_at?: string
+          einvoice_address?: string | null
+          einvoice_operator?: string | null
+          email?: string
+          full_name?: string
+          id?: string
+          is_company?: boolean
+          notes?: string | null
+          phone?: string | null
+          rejection_reason?: string | null
+          representative_name?: string | null
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      vibetor_applications: {
+        Row: {
+          billing_address: string | null
+          billing_business_id: string | null
+          billing_city: string | null
+          billing_country: string | null
+          billing_email: string | null
+          billing_name: string | null
+          billing_postal_code: string | null
+          billing_reference: string | null
+          billing_vat_id: string | null
+          company_name: string | null
+          created_at: string
+          einvoice_address: string | null
+          einvoice_operator: string | null
           email: string
           full_name: string
           id: string
@@ -802,8 +894,19 @@ export type Database = {
           vibetor_type: string
         }
         Insert: {
+          billing_address?: string | null
+          billing_business_id?: string | null
+          billing_city?: string | null
+          billing_country?: string | null
+          billing_email?: string | null
+          billing_name?: string | null
+          billing_postal_code?: string | null
+          billing_reference?: string | null
+          billing_vat_id?: string | null
           company_name?: string | null
           created_at?: string
+          einvoice_address?: string | null
+          einvoice_operator?: string | null
           email: string
           full_name: string
           id?: string
@@ -818,8 +921,19 @@ export type Database = {
           vibetor_type: string
         }
         Update: {
+          billing_address?: string | null
+          billing_business_id?: string | null
+          billing_city?: string | null
+          billing_country?: string | null
+          billing_email?: string | null
+          billing_name?: string | null
+          billing_postal_code?: string | null
+          billing_reference?: string | null
+          billing_vat_id?: string | null
           company_name?: string | null
           created_at?: string
+          einvoice_address?: string | null
+          einvoice_operator?: string | null
           email?: string
           full_name?: string
           id?: string

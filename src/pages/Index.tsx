@@ -234,7 +234,7 @@ const ProTierCard = () => {
         ))}
       </ul>
       <Button variant="hero" className="mt-8 w-full" asChild>
-        <Link to="/contact">{t("tiers.pro.cta")}</Link>
+        <Link to="/apply-viber">{t("tiers.pro.cta")}</Link>
       </Button>
     </motion.div>
   );
