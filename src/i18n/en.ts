@@ -97,7 +97,7 @@ const en = {
     },
     pro: {
       name: "Viber",
-      price: "Paid membership. Everything in Starter, plus:",
+      price: "€199 / year, €599 / year for company partners. Everything in Starter, plus:",
       cta: "Go Viber",
       benefits: [
         { title: "Lead Generation", desc: "Access qualified leads and business opportunities from the network." },
