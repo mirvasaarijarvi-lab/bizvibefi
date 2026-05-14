@@ -110,7 +110,7 @@ const fi = {
     vibetor: {
       name: "Vibetor",
       price: "Sijoittajat, Innovaattorit & Kumppanit. Kaikki Viberistä ja lisäksi:",
-      cta: "Ota yhteyttä",
+      cta: "Hae Vibetoriksi",
       benefits: [
         { title: "Vibetor-merkki", desc: "Erotu joukosta vahvistetulla Vibetor-merkillä profiilissasi." },
         { title: "Vibetor-verkosto", desc: "Yhdistä muihin sijoittajiin, innovaattoreihin ja kumppaneihin omassa piirissä." },
