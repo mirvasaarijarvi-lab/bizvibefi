@@ -5,28 +5,35 @@ import HeroAvatar from "@/components/HeroAvatar";
 import mascotHeart from "@/assets/mascot-heart.png";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
-import { Users, Rocket, Zap, MessageCircle, Calendar, TrendingUp, GraduationCap, Handshake, ArrowRight, Quote, Gem } from "lucide-react";
+import { Users, Rocket, Zap, MessageCircle, Calendar, TrendingUp, GraduationCap, Handshake, ArrowRight, Quote, Gem, Award, Download, Gift, BookOpen, Webhook, Shield, Briefcase, Lock } from "lucide-react";
 import { useTranslation } from "@/i18n/useTranslation";
 import { Badge } from "@/components/ui/badge";
 
 const freeBenefits = [
   { icon: MessageCircle, link: "/contact" },
+  { icon: Download, link: "/showcase" },
   { icon: Calendar, link: "/events" },
   { icon: Rocket, link: "/events" },
-  { icon: Users, link: "/members" },
+  { icon: Gift, link: "/showcase" },
+  { icon: Award, link: "/badges" },
 ];
 const proBenefits = [
-  { icon: TrendingUp, link: "/get-going" },
-  { icon: GraduationCap, link: "/get-going" },
+  { icon: Download, link: "/showcase" },
+  { icon: BookOpen, link: "/get-going" },
+  { icon: Shield, link: "/contact" },
+  { icon: Briefcase, link: "/members" },
   { icon: Handshake, link: "/events" },
+  { icon: Webhook, link: "/events" },
+  { icon: GraduationCap, link: "/get-going" },
   { icon: MessageCircle, link: "/contact" },
-  { icon: Calendar, link: "/events" },
+  { icon: Award, link: "/badges" },
 ];
 const vibetorBenefits = [
+  { icon: MessageCircle, link: "/members" },
   { icon: Gem, link: "/profile" },
-  { icon: Users, link: "/members" },
   { icon: TrendingUp, link: "/showcase" },
-  { icon: Calendar, link: "/events" },
+  { icon: Users, link: "/members" },
+  { icon: Award, link: "/badges" },
 ];
 
 const Community = () => {
