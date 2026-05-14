@@ -84,6 +84,7 @@ const EventFormDialog = ({
   onOpenChange: (open: boolean) => void;
   editEvent?: Tables<"events"> | null;
 }) => {
+  const { t } = useTranslation();
   const { user } = useAuth();
   const { toast } = useToast();
   const queryClient = useQueryClient();
