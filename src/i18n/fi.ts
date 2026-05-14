@@ -438,6 +438,7 @@ const fi = {
     title: "Mitä seuraavaksi",
     titleHighlight: "meneillään?",
     subtitle: "Tapaamiset, webinsarit, workshopit ja hackathonit. Tule paikalle, rakenna, verkostoidu.",
+    createEvent: "Lisää tapahtuma",
   },
 };
 
