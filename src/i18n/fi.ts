@@ -324,7 +324,7 @@ const fi = {
       leaveReview: "Jätä arvostelu",
     },
     submitBtn: "Lähetä tarkistettavaksi",
-    sectionTitle: "Näyteikkunan",
+    sectionTitle: "Malleja ja",
     sectionHighlight: "parhaat",
     sectionCta: "Katso kaikki",
   },
