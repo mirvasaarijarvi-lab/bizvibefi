@@ -441,7 +441,12 @@ const en = {
     createEvent: "Create Event",
     going: "Going",
     goingPlural: "Going",
+    maybe: "Maybe",
     cancel: "Cancel",
+    switchToGoing: "Switch to Going",
+    imGoing: "I'm Going",
+    full: "Full",
+    signInToRsvp: "Sign in to RSVP",
     spots: "spots",
   },
 };
