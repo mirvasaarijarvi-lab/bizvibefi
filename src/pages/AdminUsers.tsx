@@ -321,6 +321,7 @@ const AdminUsers = () => {
                               <SelectTrigger className="h-8 text-xs w-28 font-body"><SelectValue /></SelectTrigger>
                               <SelectContent>
                                 <SelectItem value="none">Not set</SelectItem>
+                                <SelectItem value="founder">Founder</SelectItem>
                                 <SelectItem value="investor">Investor</SelectItem>
                                 <SelectItem value="innovator">Innovator</SelectItem>
                                 <SelectItem value="partner">Partner</SelectItem>
