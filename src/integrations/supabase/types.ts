@@ -837,7 +837,61 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      profiles_public: {
+        Row: {
+          avatar_url: string | null
+          bio: string | null
+          company: string | null
+          company_url: string | null
+          created_at: string | null
+          display_name: string | null
+          id: string | null
+          linkedin_url: string | null
+          membership_tier: Database["public"]["Enums"]["membership_tier"] | null
+          profile_visibility: Json | null
+          updated_at: string | null
+          user_id: string | null
+          vibetor_type: Database["public"]["Enums"]["vibetor_type"] | null
+          website_links: Json | null
+        }
+        Insert: {
+          avatar_url?: string | null
+          bio?: string | null
+          company?: string | null
+          company_url?: string | null
+          created_at?: string | null
+          display_name?: string | null
+          id?: string | null
+          linkedin_url?: string | null
+          membership_tier?:
+            | Database["public"]["Enums"]["membership_tier"]
+            | null
+          profile_visibility?: Json | null
+          updated_at?: string | null
+          user_id?: string | null
+          vibetor_type?: Database["public"]["Enums"]["vibetor_type"] | null
+          website_links?: Json | null
+        }
+        Update: {
+          avatar_url?: string | null
+          bio?: string | null
+          company?: string | null
+          company_url?: string | null
+          created_at?: string | null
+          display_name?: string | null
+          id?: string | null
+          linkedin_url?: string | null
+          membership_tier?:
+            | Database["public"]["Enums"]["membership_tier"]
+            | null
+          profile_visibility?: Json | null
+          updated_at?: string | null
+          user_id?: string | null
+          vibetor_type?: Database["public"]["Enums"]["vibetor_type"] | null
+          website_links?: Json | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       get_badge_leaderboard: {
@@ -857,6 +911,25 @@ export type Database = {
         Args: { _user_id: string }
         Returns: Database["public"]["Enums"]["membership_tier"]
       }
+      get_public_profile: {
+        Args: { _user_id: string }
+        Returns: {
+          avatar_url: string
+          bio: string
+          company: string
+          company_url: string
+          created_at: string
+          display_name: string
+          id: string
+          linkedin_url: string
+          membership_tier: Database["public"]["Enums"]["membership_tier"]
+          profile_visibility: Json
+          updated_at: string
+          user_id: string
+          vibetor_type: Database["public"]["Enums"]["vibetor_type"]
+          website_links: Json
+        }[]
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -865,6 +938,42 @@ export type Database = {
         Returns: boolean
       }
       has_viber_access: { Args: { _user_id: string }; Returns: boolean }
+      list_public_profiles: {
+        Args: never
+        Returns: {
+          avatar_url: string
+          bio: string
+          company: string
+          company_url: string
+          created_at: string
+          display_name: string
+          id: string
+          linkedin_url: string
+          membership_tier: Database["public"]["Enums"]["membership_tier"]
+          profile_visibility: Json
+          updated_at: string
+          user_id: string
+          vibetor_type: Database["public"]["Enums"]["vibetor_type"]
+          website_links: Json
+        }[]
+      }
+      verify_certificate: {
+        Args: { _id: string }
+        Returns: {
+          completion_date: string
+          course_content: string
+          course_id: string
+          course_title: string
+          created_at: string
+          id: string
+          issued_by_name: string
+          method: Database["public"]["Enums"]["course_method"]
+          method_details: string
+          participant_name: string
+          participant_user_id: string
+          pdf_url: string
+        }[]
+      }
     }
     Enums: {
       app_role: "superadmin" | "admin" | "moderator" | "user"
