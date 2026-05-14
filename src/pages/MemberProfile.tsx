@@ -302,22 +302,27 @@ const MemberProfile = () => {
                 {showcaseItems && showcaseItems.length > 0 && (
                   <div className="mt-8 pt-6 border-t border-border">
                     <h2 className="font-display text-lg font-bold mb-4">Showcase</h2>
-                    <div className="grid gap-3">
+                    <div className="grid gap-2">
                       {showcaseItems.map((item) => (
                         <Link
                           key={item.id}
                           to={`/showcase/${item.id}`}
-                          className="flex items-center gap-3 p-3 rounded-lg border border-border hover:border-primary/40 transition-colors bg-muted/30"
+                          className="group flex items-center gap-3 p-3 rounded-lg border border-border hover:border-primary/40 hover:bg-muted/50 transition-colors bg-muted/20 min-w-0"
                         >
-                          {item.image_url && (
-                            <img
-                              src={item.image_url}
-                              alt={item.title}
-                              className="h-12 w-20 object-cover rounded shrink-0"
-                            />
-                          )}
+                          <div className="h-12 w-12 rounded-md overflow-hidden bg-muted shrink-0 flex items-center justify-center">
+                            {item.image_url ? (
+                              <img
+                                src={item.image_url}
+                                alt={item.title}
+                                loading="lazy"
+                                className="h-full w-full object-cover"
+                              />
+                            ) : (
+                              <ExternalLink className="h-4 w-4 text-muted-foreground" />
+                            )}
+                          </div>
                           <div className="min-w-0 flex-1">
-                            <div className="flex items-center gap-2">
+                            <div className="flex items-center gap-2 min-w-0">
                               <p className="font-display font-semibold text-sm truncate">{item.title}</p>
                               <Badge variant="outline" className="text-[10px] px-1.5 py-0 capitalize shrink-0">
                                 {item.type?.replace("_", " ")}
@@ -327,7 +332,7 @@ const MemberProfile = () => {
                               {item.description}
                             </p>
                           </div>
-                          <ExternalLink className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
+                          <ExternalLink className="h-3.5 w-3.5 text-muted-foreground shrink-0 group-hover:text-primary transition-colors" />
                         </Link>
                       ))}
                     </div>
