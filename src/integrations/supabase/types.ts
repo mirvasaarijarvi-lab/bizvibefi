@@ -766,6 +766,45 @@ export type Database = {
           },
         ]
       }
+      starter_applications: {
+        Row: {
+          company_name: string | null
+          created_at: string
+          email: string
+          full_name: string
+          id: string
+          notes: string | null
+          phone: string | null
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          company_name?: string | null
+          created_at?: string
+          email: string
+          full_name: string
+          id?: string
+          notes?: string | null
+          phone?: string | null
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          company_name?: string | null
+          created_at?: string
+          email?: string
+          full_name?: string
+          id?: string
+          notes?: string | null
+          phone?: string | null
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           id: string
