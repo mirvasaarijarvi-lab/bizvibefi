@@ -480,7 +480,10 @@ const Events = () => {
             <div className="flex-shrink-0 w-20 text-center">
               <div className="bg-muted rounded-xl p-3">
                 <p className="text-xs text-muted-foreground font-body uppercase">
-                  {format(new Date(event.starts_at), "MMM") === "Jun" ? "Kesä" : format(new Date(event.starts_at), "MMM")}
+                  {format(new Date(event.starts_at), "MMM", { 
+                    locale: localStorage.getItem("language") === "fi" ? fi : 
+                            localStorage.getItem("language") === "sv" ? sv : enUS 
+                  })}
                 </p>
                 <p className="text-2xl font-display font-bold text-foreground">
                   {format(new Date(event.starts_at), "dd")}
