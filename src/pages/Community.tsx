@@ -105,8 +105,8 @@ const Community = () => {
                 </Link>
               ))}
             </div>
-            <Button variant="hero" size="lg" className="mt-8">
-              {t("community.pro.cta")} <ArrowRight className="ml-2 h-4 w-4" />
+            <Button variant="hero" size="lg" className="mt-8" asChild>
+              <Link to="/apply-viber">{t("community.pro.cta")} <ArrowRight className="ml-2 h-4 w-4" /></Link>
             </Button>
           </motion.div>
         </div>
