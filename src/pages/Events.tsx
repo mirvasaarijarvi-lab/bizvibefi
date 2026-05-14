@@ -354,6 +354,7 @@ const EventFormDialog = ({
 
 const Events = () => {
   const { user } = useAuth();
+  const { t } = useTranslation();
   const isAdmin = useIsAdmin();
   const { toast } = useToast();
   const queryClient = useQueryClient();
