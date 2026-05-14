@@ -226,7 +226,7 @@ const ProTierCard = () => {
       <h3 className="font-display text-2xl font-bold tracking-[-0.01em]">{t("tiers.pro.name")}</h3>
       <p className="text-purple-soft font-display text-lg font-semibold mt-1">{t("tiers.pro.price")}</p>
       <ul className="mt-6 space-y-3 font-body text-sm text-muted-foreground">
-        {[0, 1, 2, 3, 4].map((i) => (
+        {proTierIndices.map((i) => (
           <li key={i}>
             <Link to={proTierLinks[i]} className="flex items-start gap-2 hover:text-primary transition-colors group/item">
               <Zap className="h-4 w-4 text-purple-soft mt-0.5 shrink-0" />
