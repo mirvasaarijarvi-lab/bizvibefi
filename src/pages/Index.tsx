@@ -323,6 +323,7 @@ const MetricCard = ({ metric, index }: { metric: { label: string; value: number;
 };
 
 const MetricsCounter = () => {
+  const { t } = useTranslation();
   const { data: memberCount } = useQuery({
     queryKey: ["metrics-members"],
     queryFn: async () => {
