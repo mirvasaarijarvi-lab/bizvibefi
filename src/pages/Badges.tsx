@@ -41,12 +41,11 @@ const BadgesPage = () => {
   const { data: members } = useQuery({
     queryKey: ["members-min"],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from("profiles")
-        .select("user_id, display_name")
-        .order("display_name");
+      const { data, error } = await supabase.rpc("list_public_profiles");
       if (error) throw error;
-      return data;
+      return ((data ?? []) as unknown as { user_id: string; display_name: string | null }[])
+        .slice()
+        .sort((a, b) => (a.display_name ?? "").localeCompare(b.display_name ?? ""));
     },
     enabled: !!user,
   });
