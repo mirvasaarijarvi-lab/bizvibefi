@@ -330,10 +330,10 @@ const fi = {
   },
   admin: {
     showcase: {
-      pageTitle: "Hallinta — Näyteikkuna",
+      pageTitle: "Hallinta — Näytteet",
       pageDesc: "Tarkista ja hallitse odottavia näyteikkunan lähetyksiä.",
       tag: "Hallintapaneeli",
-      title: "Näyteikkunan moderointi",
+      title: "Näytteiden moderointi",
       subtitle: "Tarkista, hyväksy tai hylkää yhteisön lähetyksiä.",
       tabs: { pending: "Odottavat", approved: "Hyväksytyt", rejected: "Hylätyt", all: "Kaikki" },
       approve: "Hyväksy",
