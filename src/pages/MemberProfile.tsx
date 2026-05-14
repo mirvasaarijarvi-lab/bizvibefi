@@ -241,7 +241,7 @@ const MemberProfile = () => {
                 {/* Bio */}
                 {showField("bio") && member.bio && (
                   <div className="mb-6">
-                    <p className="text-muted-foreground font-body leading-relaxed">
+                    <p className="text-muted-foreground font-body leading-relaxed break-words whitespace-pre-line">
                       {member.bio}
                     </p>
                   </div>
@@ -252,19 +252,19 @@ const MemberProfile = () => {
                   {showField("contact_email") && member.contact_email && (
                     <a
                       href={`mailto:${member.contact_email}`}
-                      className="flex items-center gap-2 text-muted-foreground hover:text-foreground font-body"
+                      className="flex items-center gap-2 text-muted-foreground hover:text-foreground font-body min-w-0"
                     >
                       <Mail className="h-4 w-4 shrink-0" />
-                      <span>{member.contact_email}</span>
+                      <span className="truncate">{member.contact_email}</span>
                     </a>
                   )}
                   {showField("contact_phone") && member.contact_phone && (
                     <a
                       href={`tel:${member.contact_phone}`}
-                      className="flex items-center gap-2 text-muted-foreground hover:text-foreground font-body"
+                      className="flex items-center gap-2 text-muted-foreground hover:text-foreground font-body min-w-0"
                     >
                       <Phone className="h-4 w-4 shrink-0" />
-                      <span>{member.contact_phone}</span>
+                      <span className="truncate">{member.contact_phone}</span>
                     </a>
                   )}
                   {showField("linkedin_url") && member.linkedin_url && (
@@ -272,11 +272,11 @@ const MemberProfile = () => {
                       href={member.linkedin_url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center gap-2 text-primary hover:underline font-body"
+                      className="flex items-center gap-2 text-primary hover:underline font-body min-w-0"
                     >
                       <Linkedin className="h-4 w-4 shrink-0" />
-                      LinkedIn
-                      <ExternalLink className="h-3 w-3" />
+                      <span className="truncate">LinkedIn</span>
+                      <ExternalLink className="h-3 w-3 shrink-0" />
                     </a>
                   )}
                   {showField("website_links") && websiteLinks.length > 0 && (
@@ -287,7 +287,7 @@ const MemberProfile = () => {
                           href={link.url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="flex items-center gap-2 text-primary hover:underline font-body"
+                          className="flex items-center gap-2 text-primary hover:underline font-body min-w-0"
                         >
                           <Globe className="h-4 w-4 shrink-0" />
                           <span className="truncate">{link.label || link.url}</span>
