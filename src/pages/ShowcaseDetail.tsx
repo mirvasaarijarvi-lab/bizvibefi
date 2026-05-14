@@ -312,12 +312,21 @@ const ShowcaseDetail = () => {
                       </div>
                     )}
                     {fileList.map((f, i) => (
-                      <Button key={i} asChild size="lg" className="w-full shadow-lg">
-                        <a href={f.url} target="_blank" rel="noopener noreferrer" download={f.name || undefined}>
-                          <Download className="mr-2 h-5 w-5" />
-                          {f.name || t("showcase.file.download")}
-                        </a>
-                      </Button>
+                      hasViber ? (
+                        <Button key={i} asChild size="lg" className="w-full shadow-lg">
+                          <a href={f.url} target="_blank" rel="noopener noreferrer" download={f.name || undefined}>
+                            <Download className="mr-2 h-5 w-5" />
+                            {f.name || t("showcase.file.download")}
+                          </a>
+                        </Button>
+                      ) : (
+                        <Button key={i} asChild size="lg" variant="outline" className="w-full">
+                          <Link to="/apply-viber">
+                            <Lock className="mr-2 h-5 w-5" />
+                            {t("showcase.lockedViber")}
+                          </Link>
+                        </Button>
+                      )
                     ))}
                     {fileList.length === 0 && imgs[0] && (
                       <Button asChild size="lg" className="w-full shadow-lg">
