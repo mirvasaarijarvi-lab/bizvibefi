@@ -32,6 +32,7 @@ const AdminNotifications = lazy(() => import("./pages/AdminNotifications.tsx"));
 const AuditLog = lazy(() => import("./pages/AuditLog.tsx"));
 const AdminUsers = lazy(() => import("./pages/AdminUsers.tsx"));
 const ApplyVibetor = lazy(() => import("./pages/ApplyVibetor.tsx"));
+const ApplyViber = lazy(() => import("./pages/ApplyViber.tsx"));
 const Badges = lazy(() => import("./pages/Badges.tsx"));
 const AdminBadges = lazy(() => import("./pages/AdminBadges.tsx"));
 const AdminCertificates = lazy(() => import("./pages/AdminCertificates.tsx"));
