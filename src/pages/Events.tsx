@@ -36,6 +36,7 @@ import {
   Video, Wrench, Rocket, Plus, Pencil, Trash2, ImagePlus, ExternalLink, X,
 } from "lucide-react";
 import { format, isPast } from "date-fns";
+import { fi, enUS, sv } from "date-fns/locale";
 
 const googleMapsUrl = (location: string) =>
   `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(location)}`;
@@ -479,7 +480,10 @@ const Events = () => {
             <div className="flex-shrink-0 w-20 text-center">
               <div className="bg-muted rounded-xl p-3">
                 <p className="text-xs text-muted-foreground font-body uppercase">
-                  {format(new Date(event.starts_at), "MMM")}
+                  {format(new Date(event.starts_at), "MMM", { 
+                    locale: localStorage.getItem("language") === "fi" ? fi : 
+                            localStorage.getItem("language") === "sv" ? sv : enUS 
+                  })}
                 </p>
                 <p className="text-2xl font-display font-bold text-foreground">
                   {format(new Date(event.starts_at), "dd")}
@@ -546,7 +550,10 @@ const Events = () => {
               <span className="flex items-center gap-1">
                 <Clock className="h-3.5 w-3.5" />
                 {isPastEvent
-                  ? format(new Date(event.starts_at), "MMM dd, yyyy")
+                  ? format(new Date(event.starts_at), "MMM dd, yyyy", { 
+                      locale: localStorage.getItem("language") === "fi" ? fi : 
+                              localStorage.getItem("language") === "sv" ? sv : enUS 
+                    })
                   : (
                     <>
                       {format(new Date(event.starts_at), "HH:mm")}
