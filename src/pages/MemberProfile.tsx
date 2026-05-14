@@ -179,17 +179,17 @@ const MemberProfile = () => {
           </Link>
 
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-            <Card>
-              <CardContent className="p-8">
+            <Card className="overflow-hidden">
+              <CardContent className="p-6 md:p-8">
                 {/* Header */}
-                <div className="flex items-center gap-6 mb-6">
-                  <Avatar className="h-20 w-20">
+                <div className="flex items-center gap-4 md:gap-6 mb-6">
+                  <Avatar className="h-20 w-20 shrink-0">
                     <AvatarImage src={member.avatar_url ?? undefined} alt={member.display_name ?? "Member"} />
                     <AvatarFallback className="text-lg font-semibold">
                       {initials(member.display_name)}
                     </AvatarFallback>
                   </Avatar>
-                  <div>
+                  <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-2 flex-wrap">
                       <h1 className="font-display text-2xl font-bold">
                         {member.display_name || "Anonymous"}
