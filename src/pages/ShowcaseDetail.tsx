@@ -56,6 +56,8 @@ const ShowcaseDetail = () => {
   const { id } = useParams<{ id: string }>();
   const { t } = useTranslation();
   const { user } = useAuth();
+  const { data: profile } = useProfile();
+  const hasViber = profile?.membership_tier === "viber" || profile?.membership_tier === "vibetor";
   const { toast } = useToast();
   const { data: item, isLoading, error } = useShowcaseItem(id ?? "");
   const { data: reviews } = useShowcaseReviews(id ?? "");
