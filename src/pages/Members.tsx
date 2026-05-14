@@ -94,7 +94,7 @@ const Members = () => {
     queryFn: async () => {
       const { data: rawData, error } = await supabase.rpc("list_public_profiles");
       if (error) throw error;
-      const data = ((rawData ?? []) as MemberProfile[])
+      const data = ((rawData ?? []) as unknown as MemberProfile[])
         .slice()
         .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
 
