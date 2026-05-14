@@ -542,11 +542,11 @@ const Events = () => {
             </div>
 
             <h2 className={`font-display font-bold text-foreground mb-2 ${isPastEvent ? "text-base" : "text-xl"}`}>
-              {event.title}
+              {localizedTitle}
             </h2>
-            {!isPastEvent && event.description && (
+            {!isPastEvent && localizedDescription && (
               <p className="text-sm text-muted-foreground font-body mb-4">
-                {event.description}
+                {localizedDescription}
               </p>
             )}
 
