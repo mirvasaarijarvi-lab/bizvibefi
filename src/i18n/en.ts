@@ -440,6 +440,7 @@ const en = {
     subtitle: "Meetups, webinars, workshops, and hackathons. Show up, build, connect.",
     createEvent: "Create Event",
     going: "Going",
+    goingPlural: "Going",
     cancel: "Cancel",
     spots: "spots",
   },

@@ -569,7 +569,7 @@ const Events = () => {
               {!isPastEvent && (
                 <span className="flex items-center gap-1">
                   <Users className="h-3.5 w-3.5" />
-                  {attendeeCount} {t("events.going")}
+                  {attendeeCount} {attendeeCount === 1 ? t("events.going") : t("events.goingPlural")}
                   {event.max_attendees && ` / ${event.max_attendees} ${t("events.spots")}`}
                 </span>
               )}
