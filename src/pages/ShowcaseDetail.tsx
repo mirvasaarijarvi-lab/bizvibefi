@@ -161,12 +161,21 @@ const ShowcaseDetail = () => {
                   ? item.file_urls
                   : item.file_url ? [{ url: item.file_url, name: item.file_name ?? "" }] : [];
                 return allFiles.map((f, i) => (
-                  <Button key={i} size="lg" asChild className="shadow-lg">
-                    <a href={f.url} target="_blank" rel="noopener noreferrer" download={f.name || undefined}>
-                      <Download className="mr-2 h-5 w-5" />
-                      {f.name || t("showcase.file.download")}
-                    </a>
-                  </Button>
+                  hasViber ? (
+                    <Button key={i} size="lg" asChild className="shadow-lg">
+                      <a href={f.url} target="_blank" rel="noopener noreferrer" download={f.name || undefined}>
+                        <Download className="mr-2 h-5 w-5" />
+                        {f.name || t("showcase.file.download")}
+                      </a>
+                    </Button>
+                  ) : (
+                    <Button key={i} size="lg" asChild variant="outline" className="shadow-sm">
+                      <Link to="/apply-viber">
+                        <Lock className="mr-2 h-5 w-5" />
+                        {t("showcase.lockedViber")}
+                      </Link>
+                    </Button>
+                  )
                 ));
               })()}
               {[...(item.link_urls ?? []), ...(item.link_url ? [{ url: item.link_url }] : [])].map((l, i) => (
