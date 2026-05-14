@@ -33,6 +33,7 @@ const AuditLog = lazy(() => import("./pages/AuditLog.tsx"));
 const AdminUsers = lazy(() => import("./pages/AdminUsers.tsx"));
 const ApplyVibetor = lazy(() => import("./pages/ApplyVibetor.tsx"));
 const ApplyViber = lazy(() => import("./pages/ApplyViber.tsx"));
+const ApplyStarter = lazy(() => import("./pages/ApplyStarter.tsx"));
 const Badges = lazy(() => import("./pages/Badges.tsx"));
 const AdminBadges = lazy(() => import("./pages/AdminBadges.tsx"));
 const AdminCertificates = lazy(() => import("./pages/AdminCertificates.tsx"));
@@ -76,6 +77,7 @@ const App = () => (
                 <Route path="/admin/users" element={<AdminUsers />} />
                 <Route path="/apply-vibetor" element={<ApplyVibetor />} />
                 <Route path="/apply-viber" element={<ApplyViber />} />
+                <Route path="/apply-starter" element={<ApplyStarter />} />
                 <Route path="/badges" element={<Badges />} />
                 <Route path="/admin/badges" element={<AdminBadges />} />
                 <Route path="/admin/certificates" element={<AdminCertificates />} />

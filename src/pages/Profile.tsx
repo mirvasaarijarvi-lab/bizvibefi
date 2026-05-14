@@ -313,6 +313,14 @@ const Profile = () => {
                     User Management
                   </Link>
                 )}
+                {!isSuperAdmin && profile?.membership_tier === "starter" && (
+                  <Link
+                    to="/apply-viber"
+                    className="inline-flex items-center gap-1.5 mt-1 text-xs font-body text-primary hover:underline"
+                  >
+                    Upgrade to Viber
+                  </Link>
+                )}
               </div>
             </div>
 

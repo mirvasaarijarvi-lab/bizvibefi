@@ -75,8 +75,8 @@ const Community = () => {
                 </Link>
               ))}
             </div>
-            <Button variant="heroOutline" size="lg" className="mt-8">
-              {t("community.free.cta")} <ArrowRight className="ml-2 h-4 w-4" />
+            <Button variant="heroOutline" size="lg" className="mt-8" asChild>
+              <Link to="/apply-starter">{t("community.free.cta")} <ArrowRight className="ml-2 h-4 w-4" /></Link>
             </Button>
           </motion.div>
         </div>
