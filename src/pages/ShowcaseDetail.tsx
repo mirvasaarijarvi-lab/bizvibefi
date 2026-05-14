@@ -12,12 +12,13 @@ import { Textarea } from "@/components/ui/textarea";
 import { motion } from "framer-motion";
 import { useTranslation } from "@/i18n/useTranslation";
 import { useAuth } from "@/hooks/useAuth";
+import { useProfile } from "@/hooks/useProfile";
 import { useShowcaseItem, useShowcaseReviews, useCreateReview, type KeyFigure } from "@/hooks/useShowcase";
 import FilePreview from "@/components/FilePreview";
 import { useToast } from "@/hooks/use-toast";
 import {
   ArrowLeft, ExternalLink, Lightbulb, MessageSquare, Wrench, Star,
-  Target, Zap, CheckCircle2, BarChart3, FileText, Download,
+  Target, Zap, CheckCircle2, BarChart3, FileText, Download, Lock,
 } from "lucide-react";
 
 const typeIcons: Record<string, React.ElementType> = {
@@ -55,6 +56,8 @@ const ShowcaseDetail = () => {
   const { id } = useParams<{ id: string }>();
   const { t } = useTranslation();
   const { user } = useAuth();
+  const { data: profile } = useProfile();
+  const hasViber = profile?.membership_tier === "viber" || profile?.membership_tier === "vibetor";
   const { toast } = useToast();
   const { data: item, isLoading, error } = useShowcaseItem(id ?? "");
   const { data: reviews } = useShowcaseReviews(id ?? "");
@@ -158,12 +161,21 @@ const ShowcaseDetail = () => {
                   ? item.file_urls
                   : item.file_url ? [{ url: item.file_url, name: item.file_name ?? "" }] : [];
                 return allFiles.map((f, i) => (
-                  <Button key={i} size="lg" asChild className="shadow-lg">
-                    <a href={f.url} target="_blank" rel="noopener noreferrer" download={f.name || undefined}>
-                      <Download className="mr-2 h-5 w-5" />
-                      {f.name || t("showcase.file.download")}
-                    </a>
-                  </Button>
+                  hasViber ? (
+                    <Button key={i} size="lg" asChild className="shadow-lg">
+                      <a href={f.url} target="_blank" rel="noopener noreferrer" download={f.name || undefined}>
+                        <Download className="mr-2 h-5 w-5" />
+                        {f.name || t("showcase.file.download")}
+                      </a>
+                    </Button>
+                  ) : (
+                    <Button key={i} size="lg" asChild variant="outline" className="shadow-sm">
+                      <Link to="/apply-viber">
+                        <Lock className="mr-2 h-5 w-5" />
+                        {t("showcase.lockedViber")}
+                      </Link>
+                    </Button>
+                  )
                 ));
               })()}
               {[...(item.link_urls ?? []), ...(item.link_url ? [{ url: item.link_url }] : [])].map((l, i) => (
@@ -300,12 +312,21 @@ const ShowcaseDetail = () => {
                       </div>
                     )}
                     {fileList.map((f, i) => (
-                      <Button key={i} asChild size="lg" className="w-full shadow-lg">
-                        <a href={f.url} target="_blank" rel="noopener noreferrer" download={f.name || undefined}>
-                          <Download className="mr-2 h-5 w-5" />
-                          {f.name || t("showcase.file.download")}
-                        </a>
-                      </Button>
+                      hasViber ? (
+                        <Button key={i} asChild size="lg" className="w-full shadow-lg">
+                          <a href={f.url} target="_blank" rel="noopener noreferrer" download={f.name || undefined}>
+                            <Download className="mr-2 h-5 w-5" />
+                            {f.name || t("showcase.file.download")}
+                          </a>
+                        </Button>
+                      ) : (
+                        <Button key={i} asChild size="lg" variant="outline" className="w-full">
+                          <Link to="/apply-viber">
+                            <Lock className="mr-2 h-5 w-5" />
+                            {t("showcase.lockedViber")}
+                          </Link>
+                        </Button>
+                      )
                     ))}
                     {fileList.length === 0 && imgs[0] && (
                       <Button asChild size="lg" className="w-full shadow-lg">

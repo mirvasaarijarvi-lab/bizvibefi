@@ -171,7 +171,8 @@ const Index = () => {
   );
 };
 
-const freeTierLinks = ["/contact", "/events", "/events", "/members"];
+const freeTierLinks = ["/contact", "/showcase", "/events", "/showcase", "/badges"];
+const freeTierIndices = [0, 1, 2, 3, 4];
 
 const FreeTierCard = () => {
   const { t } = useTranslation();
@@ -188,7 +189,7 @@ const FreeTierCard = () => {
       <h3 className="font-display text-2xl font-bold tracking-[-0.01em]">{t("tiers.free.name")}</h3>
       <p className="text-turquoise font-display text-lg font-semibold mt-1">{t("tiers.free.price")}</p>
       <ul className="mt-6 space-y-3 font-body text-sm text-muted-foreground">
-        {[0, 1, 2, 3].map((i) => (
+        {freeTierIndices.map((i) => (
           <li key={i}>
             <Link to={freeTierLinks[i]} className="flex items-start gap-2 hover:text-primary transition-colors group/item">
               <Zap className="h-4 w-4 text-turquoise mt-0.5 shrink-0" />
@@ -204,7 +205,8 @@ const FreeTierCard = () => {
   );
 };
 
-const proTierLinks = ["/community", "/get-going", "/get-going", "/events", "/contact"];
+const proTierLinks = ["/community", "/showcase", "/get-going", "/members", "/contact", "/badges"];
+const proTierIndices = [0, 1, 2, 3, 4, 5];
 
 const ProTierCard = () => {
   const { t } = useTranslation();
@@ -224,7 +226,7 @@ const ProTierCard = () => {
       <h3 className="font-display text-2xl font-bold tracking-[-0.01em]">{t("tiers.pro.name")}</h3>
       <p className="text-purple-soft font-display text-lg font-semibold mt-1">{t("tiers.pro.price")}</p>
       <ul className="mt-6 space-y-3 font-body text-sm text-muted-foreground">
-        {[0, 1, 2, 3, 4].map((i) => (
+        {proTierIndices.map((i) => (
           <li key={i}>
             <Link to={proTierLinks[i]} className="flex items-start gap-2 hover:text-primary transition-colors group/item">
               <Zap className="h-4 w-4 text-purple-soft mt-0.5 shrink-0" />
@@ -240,7 +242,7 @@ const ProTierCard = () => {
   );
 };
 
-const vibetorTierLinks = ["/community", "/profile", "/members", "/showcase", "/events"];
+const vibetorTierLinks = ["/community", "/contact", "/showcase", "/events", "/badges"];
 
 const VibetorTierCard = () => {
   const { t } = useTranslation();
