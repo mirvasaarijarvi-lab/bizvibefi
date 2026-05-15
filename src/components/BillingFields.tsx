@@ -19,7 +19,7 @@ export const billingSchema = {
 };
 
 interface BillingFieldsProps {
-  control: Control<any>;
+  control: Control<Record<string, unknown>>;
   isCompany?: boolean;
   title?: string;
   description?: string;
