@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { Control, FieldValues } from "react-hook-form";
+import { Control } from "react-hook-form";
 import { FormField, FormItem, FormLabel, FormControl, FormMessage, FormDescription } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Receipt } from "lucide-react";
