@@ -19,13 +19,14 @@ export const billingSchema = {
 };
 
 interface BillingFieldsProps {
-  control: Control<Record<string, unknown>>;
+  control: Control<FieldValues>;
   isCompany?: boolean;
   title?: string;
   description?: string;
 }
 
-const BillingFields = ({ control, isCompany = false, title = "Invoicing details", description }: BillingFieldsProps) => {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const BillingFields = ({ control, isCompany = false, title = "Invoicing details", description }: { control: Control<any>; isCompany?: boolean; title?: string; description?: string }) => {
   return (
     <div className="space-y-5 rounded-xl border border-border bg-muted/30 p-5">
       <div className="flex items-start gap-3">
