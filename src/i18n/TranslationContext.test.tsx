@@ -47,7 +47,7 @@ describe("Translation System", () => {
 
   it("resolves array items by index", () => {
     renderWithProvider();
-    expect(screen.getByTestId("array-item")).toHaveTextContent("WhatsApp community with guidance");
+    expect(screen.getByTestId("array-item")).toHaveTextContent("Starter WhatsApp community");
   });
 
   it("returns key path for missing keys", () => {
