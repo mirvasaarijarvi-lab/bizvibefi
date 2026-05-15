@@ -19,6 +19,7 @@ export const billingSchema = {
 };
 
 interface BillingFieldsProps {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   control: Control<any>;
   isCompany?: boolean;
   title?: string;
