@@ -83,7 +83,7 @@ const ApplyStarter = () => {
               <CheckCircle className="h-16 w-16 text-primary mx-auto mb-6" />
               <h1 className="font-display text-3xl md:text-4xl font-bold mb-4">You're in!</h1>
               <p className="text-muted-foreground font-body text-lg">
-                Welcome to <Good Vibes Café/> Starter. When you're ready for leads, courses, and the inner circle, upgrade to Viber.
+                Welcome to {"<Good Vibes Café/>"} Starter. When you're ready for leads, courses, and the inner circle, upgrade to Viber.
               </p>
               <div className="mt-8 flex flex-col sm:flex-row gap-3 justify-center">
                 <Button asChild variant="hero" size="lg"><Link to="/community">Explore the community</Link></Button>

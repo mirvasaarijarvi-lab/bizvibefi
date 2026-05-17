@@ -158,7 +158,7 @@ const Community = () => {
                 Meet the <span className="text-gradient-storm">Members</span>
               </h2>
               <p className="mt-3 text-muted-foreground font-body max-w-lg">
-                Discover builders, strategists, and connectors in the <Good Vibes Café/> collective. Browse profiles, find collaborators, and grow your network.
+                Discover builders, strategists, and connectors in the {"<Good Vibes Café/>"} collective. Browse profiles, find collaborators, and grow your network.
               </p>
             </div>
             <Button variant="hero" size="lg" asChild>

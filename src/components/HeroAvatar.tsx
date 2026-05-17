@@ -15,7 +15,7 @@ const sizeMap = {
 };
 
 /**
- * Friendly <Good Vibes Café/> mascot avatar for page headers.
+ * Friendly {"<Good Vibes Café/>"} mascot avatar for page headers.
  * Renders the transparent mascot directly on the page background — no disc,
  * no ring, no tiling. The PNG itself carries true alpha transparency.
  */

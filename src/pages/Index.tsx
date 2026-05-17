@@ -33,7 +33,7 @@ const Index = () => {
           >
             <HeroAvatar size="lg" />
             <h1 className="font-display text-5xl md:text-8xl lg:text-[96px] font-extrabold tracking-[-0.03em] leading-[1.05] text-gradient-storm">
-              <Good Vibes Café/>
+              {"<Good Vibes Café/>"}
             </h1>
             <p className="font-body text-sm font-semibold text-turquoise tracking-widest uppercase mt-3 mb-6">
               {t("hero.tag")}

@@ -190,7 +190,7 @@ const Members = () => {
               Meet the <span className="text-gradient-storm">Members</span>
             </h1>
             <p className="mt-6 text-lg text-muted-foreground font-body max-w-xl mx-auto">
-              Discover builders, strategists, and connectors in the <Good Vibes Café/> collective.
+              Discover builders, strategists, and connectors in the {"<Good Vibes Café/>"} collective.
             </p>
           </motion.div>
 

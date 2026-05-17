@@ -143,7 +143,7 @@ const AdminCertificates = () => {
             <h1 className="font-display text-4xl md:text-5xl font-extrabold tracking-[-0.03em]">
               Issue a <span className="text-gradient-storm">Certificate</span>
             </h1>
-            <p className="mt-4 text-muted-foreground font-body">Generate a branded <Good Vibes Café/> certificate, auto-award the linked badge, and share it on LinkedIn.</p>
+            <p className="mt-4 text-muted-foreground font-body">Generate a branded {"<Good Vibes Café/>"} certificate, auto-award the linked badge, and share it on LinkedIn.</p>
           </div>
 
           <Card>

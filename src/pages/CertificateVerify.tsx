@@ -97,7 +97,7 @@ const CertificateVerify = () => {
                   <div>
                     <p className="text-xs font-body font-semibold uppercase tracking-widest text-muted-foreground">Issued by</p>
                     <p className="font-body font-medium">{cert.issued_by_name}</p>
-                    <p className="text-xs text-muted-foreground"><Good Vibes Café/> Founder</p>
+                    <p className="text-xs text-muted-foreground">{"<Good Vibes Café/>"} Founder</p>
                   </div>
                 </div>
                 <div className="flex items-start gap-3">

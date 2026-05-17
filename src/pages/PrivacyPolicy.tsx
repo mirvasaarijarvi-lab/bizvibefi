@@ -18,7 +18,7 @@ const PrivacyPolicy = () => (
       <section className="space-y-4 font-body text-foreground/90 leading-relaxed">
         <h2 className="font-display text-2xl font-semibold text-foreground">1. Data Controller</h2>
         <p>
-          <Good Vibes Café/> Collective ("<strong><Good Vibes Café/></strong>", "we", "us") is the data controller for
+          {"<Good Vibes Café/>"} Collective ("<strong><Good Vibes Café/></strong>", "we", "us") is the data controller for
           personal data processed through this website. You can contact us at{" "}
           <a href="mailto:shipping@goodvibescafe.fi" className="text-primary hover:underline">
             shipping@goodvibescafe.fi
@@ -197,7 +197,7 @@ const PrivacyPolicy = () => (
           9. Children's Privacy
         </h2>
         <p>
-          <Good Vibes Café/> is not intended for individuals under the age of 16. We do not knowingly collect
+          {"<Good Vibes Café/>"} is not intended for individuals under the age of 16. We do not knowingly collect
           personal data from children. If we become aware that we have collected data from a child
           under 16, we will take steps to delete it promptly.
         </p>
