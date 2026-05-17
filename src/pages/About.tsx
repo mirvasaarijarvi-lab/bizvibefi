@@ -90,8 +90,8 @@ const About = () => {
               {t("about.foundersHeading")} <span className="text-gradient-prism">{t("about.foundersHeadingHighlight")}</span>
             </h2>
           </div>
-          <div className="grid md:grid-cols-3 gap-8 max-w-4xl mx-auto">
-            {[0, 1, 2].map((i) => {
+          <div className="grid md:grid-cols-2 gap-8 max-w-3xl mx-auto">
+            {[0, 1].map((i) => {
               const name = t(`about.founders.${i}.name`);
               const avatarUrl = getFounderAvatar(name);
               const userId = getFounderUserId(name);
