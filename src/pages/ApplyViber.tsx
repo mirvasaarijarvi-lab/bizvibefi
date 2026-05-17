@@ -110,7 +110,7 @@ const ApplyViber = () => {
   if (!user) {
     return (
       <Layout>
-        <PageMeta title="Apply for Viber — GoodVibesCafe" description="Become a Viber member of GoodVibesCafe." />
+        <PageMeta title="Apply for Viber — <Good Vibes Café/>" description="Become a Viber member of <Good Vibes Café/>." />
         <section className="py-24 md:py-36">
           <div className="container max-w-lg text-center">
             <h1 className="font-display text-3xl md:text-4xl font-bold mb-4">Sign in required</h1>
@@ -125,7 +125,7 @@ const ApplyViber = () => {
   if (submitted) {
     return (
       <Layout>
-        <PageMeta title="Application Submitted — GoodVibesCafe" description="Your Viber application has been submitted." />
+        <PageMeta title="Application Submitted — <Good Vibes Café/>" description="Your Viber application has been submitted." />
         <section className="py-24 md:py-36">
           <div className="container max-w-lg text-center">
             <motion.div initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ duration: 0.5 }}>
@@ -143,7 +143,7 @@ const ApplyViber = () => {
 
   return (
     <Layout>
-      <PageMeta title="Become a Viber — GoodVibesCafe" description="Apply for Viber membership and get invoiced for €199/year (or €599/year for company partners)." />
+      <PageMeta title="Become a Viber — <Good Vibes Café/>" description="Apply for Viber membership and get invoiced for €199/year (or €599/year for company partners)." />
       <section className="py-20 md:py-28">
         <div className="container max-w-2xl">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-12">

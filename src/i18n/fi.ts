@@ -96,7 +96,7 @@ const fi = {
         { title: "Ilmaiset tapahtumat", desc: "Tapaa samanmielisiä livenä ja verkossa. Verkostoidu, opi ja rakenna." },
         { title: "Hackathonit", desc: "#ShipHappens, Vibetonit ja Shippingtonit. Rakenna jotain oikeaa, nopeasti." },
         { title: "Palkinto palveluostosta", desc: "Osta palveluita perustajiltamme ja saat 3 kk Viber-pääsyn ilmaiseksi." },
-        { title: "Starter LinkedIn -merkki", desc: "Näytä maailmalle, että kuulut GoodVibesCafe-kollektiiviin." },
+        { title: "Starter LinkedIn -merkki", desc: "Näytä maailmalle, että kuulut <Good Vibes Café/>-kollektiiviin." },
       ],
     },
     pro: {
@@ -120,7 +120,7 @@ const fi = {
       price: "Sijoittajat, Innovaattorit & Kumppanit. Kaikki Viberistä ja lisäksi:",
       cta: "Hae Vibetoriksi",
       benefits: [
-        { title: "Suora yhteys perustajiin", desc: "Ohita jono. Tavoita GoodVibesCafe-perustajat suoraan." },
+        { title: "Suora yhteys perustajiin", desc: "Ohita jono. Tavoita <Good Vibes Café/>-perustajat suoraan." },
         { title: "Suositellut portfoliot", desc: "Räätälöidyt sijoituslistat sijoitusteesisi mukaan." },
         { title: "Deal flow ja innovaationäyttelyt", desc: "Etusija startup-pitchauksiin ja eksklusiivisiin showcase-tapahtumiin." },
         { title: "Vibetor-verkosto", desc: "Yksityinen piiri sijoittajia, innovaattoreita ja kumppaneita." },
@@ -132,12 +132,12 @@ const fi = {
       titleHighlight: "tarinat",
       subtitle: "Oikeita rakentajia. Oikeita tuloksia. Tässä mitä yhteisömme jäsenet ovat saavuttaneet.",
       items: [
-        { quote: "Liityin GoodVibesCafeen pelkällä idealla ja puolivalmiilla prototyypillä. Kolmessa kuukaudessa kollektiivi auttoi validoimaan, rakentamaan uudelleen ja julkaisemaan 1 200 käyttäjälle.", name: "Antti K.", role: "SaaS-perustaja", tier: "Viber" },
+        { quote: "Liityin <Good Vibes Café/>en pelkällä idealla ja puolivalmiilla prototyypillä. Kolmessa kuukaudessa kollektiivi auttoi validoimaan, rakentamaan uudelleen ja julkaisemaan 1 200 käyttäjälle.", name: "Antti K.", role: "SaaS-perustaja", tier: "Viber" },
         { quote: "Pelkästään WhatsApp-yhteisö on sen arvoinen. Postasin nopean kysymyksen hinnoittelustrategiasta ja sain viisi harkittua vastausta tunnissa.", name: "Sara L.", role: "Freelance-kehittäjä", tier: "Starter" },
-        { quote: "GoodVibesCafen sijoittajatapahtuman kautta löysin enkelisijoittajan, joka rahoitti siemenkierroksen. Verkostovaikutus on todellinen.", name: "Mikael R.", role: "Startup-toimitusjohtaja", tier: "Viber" },
+        { quote: "<Good Vibes Café/>n sijoittajatapahtuman kautta löysin enkelisijoittajan, joka rahoitti siemenkierroksen. Verkostovaikutus on todellinen.", name: "Mikael R.", role: "Startup-toimitusjohtaja", tier: "Viber" },
         { quote: "#ShipHappens-hackathon pakotti minut rakentamaan ja julkaisemaan työkalun, jota olin viivytellyt kuukausia. 48 tuntia, valmis. Nyt sillä on maksavia asiakkaita.", name: "Liisa T.", role: "Tuoterakentaja", tier: "Starter" },
-        { quote: "Siirryin yksittäisestä freelancerista pienen toimiston pyörittäjäksi pitkälti GoodVibesCafe Viberin liidien ja kumppanuuksien ansiosta.", name: "Janne H.", role: "Toimiston omistaja", tier: "Viber" },
-        { quote: "Ei-teknisenä perustajana rakentajien verkosto oli käänteentekevä. Löysin teknisen perustajani GoodVibesCafe-tapaamisesta.", name: "Emma V.", role: "Kanssaperustaja", tier: "Starter" },
+        { quote: "Siirryin yksittäisestä freelancerista pienen toimiston pyörittäjäksi pitkälti <Good Vibes Café/> Viberin liidien ja kumppanuuksien ansiosta.", name: "Janne H.", role: "Toimiston omistaja", tier: "Viber" },
+        { quote: "Ei-teknisenä perustajana rakentajien verkosto oli käänteentekevä. Löysin teknisen perustajani <Good Vibes Café/>-tapaamisesta.", name: "Emma V.", role: "Kanssaperustaja", tier: "Starter" },
       ],
     },
   },
@@ -182,8 +182,8 @@ const fi = {
     tag: "Meistä",
     title: "Kolme rakentajaa.",
     titleHighlight: "Yksi kollektiivi.",
-    desc: "Aloitimme GoodVibesCafen koska olimme kyllästyneitä rakentamaan yksin. Parhaat asiat syntyvät kun yhdistää toisiaan täydentävää kaaosta, joten rakensimme kollektiivin sen ympärille.",
-    foundersHeading: "GoodVibesCafen",
+    desc: "Aloitimme <Good Vibes Café/>n koska olimme kyllästyneitä rakentamaan yksin. Parhaat asiat syntyvät kun yhdistää toisiaan täydentävää kaaosta, joten rakensimme kollektiivin sen ympärille.",
+    foundersHeading: "<Good Vibes Café/>n",
     foundersHeadingHighlight: "perustajat",
     founders: [
       { name: "Minna Blomster", role: "Yhdistäjä, Strategi, Rakentaja", bio: "Yhdistää pisteet joita muut eivät näe. Avaa ovia, rakentaa siltoja ja tekee mahdottomasta itsestään selvää.", linkedin: "https://www.linkedin.com/in/minnablomster/" },
@@ -235,7 +235,7 @@ const fi = {
     navigate: "Navigoi",
     company: "Yritys",
     connect: "Yhdistä",
-    rights: "GoodVibesCafe Collective. Kaikki oikeudet pidätetään.",
+    rights: "<Good Vibes Café/> Collective. Kaikki oikeudet pidätetään.",
   },
   showcase: {
     pageTitle: "Näytteitä, malleja ja esimerkkejä",
@@ -392,7 +392,7 @@ const fi = {
   },
   badges: {
     pageTitle: "Merkit",
-    pageDesc: "Ansaitse tunnustusta työstäsi GoodVibesCafe-kollektiivissa.",
+    pageDesc: "Ansaitse tunnustusta työstäsi <Good Vibes Café/>-kollektiivissa.",
     tag: "Tunnustus",
     title: "Ansaitse",
     titleHighlight: "merkit",

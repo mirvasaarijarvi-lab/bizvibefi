@@ -85,7 +85,7 @@ const AdminShowcase = () => {
 
   return (
     <Layout>
-      <PageMeta title={`${t("admin.showcase.pageTitle")} — GoodVibesCafe`} description={t("admin.showcase.pageDesc")} />
+      <PageMeta title={`${t("admin.showcase.pageTitle")} — <Good Vibes Café/>`} description={t("admin.showcase.pageDesc")} />
 
       <section className="py-16 md:py-24">
         <div className="container">

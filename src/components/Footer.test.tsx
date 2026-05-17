@@ -15,9 +15,9 @@ const renderFooter = () =>
   );
 
 describe("Footer", () => {
-  it("renders the GoodVibesCafe logo", () => {
+  it("renders the <Good Vibes Café/> logo", () => {
     renderFooter();
-    expect(screen.getByText("GoodVibesCafe")).toBeInTheDocument();
+    expect(screen.getByText("<Good Vibes Café/>")).toBeInTheDocument();
   });
 
   it("renders footer description", () => {

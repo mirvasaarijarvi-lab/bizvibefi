@@ -32,7 +32,7 @@ const CertificateVerify = () => {
   if (!cert) {
     return (
       <Layout>
-        <PageMeta title="Certificate not found — GoodVibesCafe" description="This certificate could not be verified." />
+        <PageMeta title="Certificate not found — <Good Vibes Café/>" description="This certificate could not be verified." />
         <section className="py-24 md:py-32">
           <div className="container max-w-2xl text-center">
             <h1 className="font-display text-4xl font-extrabold tracking-[-0.03em] mb-4">Not found</h1>
@@ -51,8 +51,8 @@ const CertificateVerify = () => {
   return (
     <Layout>
       <PageMeta
-        title={`${cert.participant_name} — ${cert.course_title} | GoodVibesCafe`}
-        description={`${cert.participant_name} completed ${cert.course_title} with GoodVibesCafe on ${formatDate(cert.completion_date)}.`}
+        title={`${cert.participant_name} — ${cert.course_title} | <Good Vibes Café/>`}
+        description={`${cert.participant_name} completed ${cert.course_title} with <Good Vibes Café/> on ${formatDate(cert.completion_date)}.`}
       />
       <section className="py-24 md:py-32">
         <div className="container max-w-3xl">
@@ -97,7 +97,7 @@ const CertificateVerify = () => {
                   <div>
                     <p className="text-xs font-body font-semibold uppercase tracking-widest text-muted-foreground">Issued by</p>
                     <p className="font-body font-medium">{cert.issued_by_name}</p>
-                    <p className="text-xs text-muted-foreground">GoodVibesCafe Founder</p>
+                    <p className="text-xs text-muted-foreground">{"<Good Vibes Café/>"} Founder</p>
                   </div>
                 </div>
                 <div className="flex items-start gap-3">

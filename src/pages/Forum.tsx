@@ -95,12 +95,12 @@ const Forum = () => {
   return (
     <Layout>
       <PageMeta
-        title="Forum — GoodVibesCafe"
-        description="Join the GoodVibesCafe community forum. Share ideas, ask questions, and connect with fellow builders."
+        title="Forum — <Good Vibes Café/>"
+        description="Join the <Good Vibes Café/> community forum. Share ideas, ask questions, and connect with fellow builders."
       />
       <section className="py-20 px-4">
         <div className="max-w-4xl mx-auto">
-          <HeroAvatar src={mascotForum} alt="GoodVibesCafe forum mascot" />
+          <HeroAvatar src={mascotForum} alt="<Good Vibes Café/> forum mascot" />
           <div className="flex items-center justify-between mb-8">
             <div>
               <h1 className="font-display text-3xl font-bold text-foreground">Community Forum</h1>
