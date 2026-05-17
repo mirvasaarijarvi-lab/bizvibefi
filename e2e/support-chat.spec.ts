@@ -55,9 +55,9 @@ test.describe("Support Chat Widget", () => {
   test("suggestion button fills input and submits", async ({ page }) => {
     await page.getByLabel("Open support chat").click();
 
-    await page.getByRole("button", { name: "What is GoodVibesCafe?" }).click();
+    await page.getByRole("button", { name: "What is <Good Vibes Café/>?" }).click();
 
-    await expect(page.getByText("What is GoodVibesCafe?").last()).toBeVisible({ timeout: 5000 });
+    await expect(page.getByText("What is <Good Vibes Café/>?").last()).toBeVisible({ timeout: 5000 });
   });
 
   test("input is focused when chat opens", async ({ page }) => {
