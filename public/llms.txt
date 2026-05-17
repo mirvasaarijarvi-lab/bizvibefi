@@ -1,0 +1,30 @@
+# Good Vibes Café
+
+> A Nordic collective of builders, strategists and connectors. Shoot first, fail spectacularly, ship solid.
+
+Good Vibes Café (formerly BizVibe) is a high-trust community for vibecoders: founders and builders who move fast, think in systems, and use AI as a co-founder. Membership is tiered (Starter, Viber, Vibetor), with events, a forum, a showcase of member work, badges, and certificates.
+
+## Pages
+
+- [Home](/): Overview of the collective.
+- [About](/about): Founders, mission, and values.
+- [Community](/community): What membership unlocks.
+- [Showcase](/showcase): Member projects and case studies.
+- [Forum](/forum): Discussions, leads, and the vault.
+- [Events](/events): Upcoming meetups and online sessions.
+- [Members](/members): Public member directory and leaderboard.
+- [Badges](/badges): Recognition for community contributions.
+- [Get Going](/get-going): How to start.
+- [Contact](/contact): Reach the founders.
+
+## Membership
+
+- [Apply Starter](/apply-starter): Free entry tier.
+- [Apply Viber](/apply-viber): Paid membership with full access.
+- [Apply Vibetor](/apply-vibetor): Invite-only investor and connector tier.
+
+## Optional
+
+- [Privacy Policy](/privacy)
+- [Terms of Service](/terms)
+- [Accessibility Statement](/accessibility)
