@@ -9,9 +9,9 @@ interface HeroAvatarProps {
 }
 
 const sizeMap = {
-  sm: "w-20 h-20",
-  md: "w-28 h-28",
-  lg: "w-36 h-36",
+  sm: { cls: "w-20 h-20", px: 80 },
+  md: { cls: "w-28 h-28", px: 112 },
+  lg: { cls: "w-36 h-36", px: 144 },
 };
 
 /**
@@ -20,6 +20,7 @@ const sizeMap = {
  * no ring, no tiling. The PNG itself carries true alpha transparency.
  */
 const HeroAvatar = ({ size = "md", className = "", src, alt }: HeroAvatarProps) => {
+  const { cls, px } = sizeMap[size];
   return (
     <motion.div
       initial={{ opacity: 0, scale: 0.7, y: -10 }}
@@ -30,7 +31,11 @@ const HeroAvatar = ({ size = "md", className = "", src, alt }: HeroAvatarProps) 
       <img
         src={src ?? botAvatar}
         alt={alt ?? "<Good Vibes Café/> mascot"}
-        className={`${sizeMap[size]} mx-auto object-contain drop-shadow-lg`}
+        width={px}
+        height={px}
+        fetchPriority="high"
+        decoding="async"
+        className={`${cls} mx-auto object-contain drop-shadow-lg`}
       />
     </motion.div>
   );

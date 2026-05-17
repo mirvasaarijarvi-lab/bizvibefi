@@ -91,7 +91,7 @@ const Breadcrumbs = () => {
           const isLast = i === crumbs.length - 1;
           return (
             <span key={crumb.path} className="inline-flex items-center gap-1.5">
-              <ChevronRight className="h-3 w-3 text-muted-foreground/50" />
+              <ChevronRight className="h-3 w-3 text-muted-foreground" />
               {isLast ? (
                 <span className="text-foreground font-medium">{crumb.label}</span>
               ) : (
