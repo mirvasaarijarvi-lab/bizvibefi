@@ -3,6 +3,7 @@ import { useParams, Link, Navigate } from "react-router-dom";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import Layout from "@/components/Layout";
 import PageMeta from "@/components/PageMeta";
+import JsonLd from "@/components/JsonLd";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -115,6 +116,27 @@ const ShowcaseDetail = () => {
         title={`${item.title} — Showcase`.slice(0, 60)}
         description={(item.description ?? "Member project featured in the Good Vibes Café showcase.").slice(0, 160)}
         ogType="article"
+      />
+      <JsonLd
+        id="showcase-item"
+        data={{
+          "@context": "https://schema.org",
+          "@type": "Article",
+          headline: item.title,
+          description: item.description,
+          image: item.image_urls?.length ? item.image_urls : item.image_url ? [item.image_url] : undefined,
+          url: `https://goodvibescafe.org/showcase/${item.id}`,
+          datePublished: item.created_at,
+          dateModified: item.updated_at ?? item.created_at,
+          author: { "@type": "Organization", name: "Good Vibes Café" },
+          aggregateRating: avgRating && reviews?.length
+            ? {
+                "@type": "AggregateRating",
+                ratingValue: avgRating,
+                reviewCount: reviews.length,
+              }
+            : undefined,
+        }}
       />
 
       {/* Hero */}
