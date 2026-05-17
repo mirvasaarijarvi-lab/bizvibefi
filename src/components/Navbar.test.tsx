@@ -24,7 +24,7 @@ const renderNavbar = () => {
 describe("Navbar", () => {
   it("renders the <Good Vibes Café/> logo", () => {
     renderNavbar();
-    expect(screen.getByText("<Good Vibes Café/>")).toBeInTheDocument();
+    expect(screen.getByLabelText(/good vibes café/i)).toBeInTheDocument();
   });
 
   it("renders all navigation links", () => {
