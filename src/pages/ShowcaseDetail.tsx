@@ -111,7 +111,11 @@ const ShowcaseDetail = () => {
 
   return (
     <Layout>
-      <PageMeta title={`${item.title} — Showcase — <Good Vibes Café/>`} description={item.description} />
+      <PageMeta
+        title={`${item.title} — Showcase`.slice(0, 60)}
+        description={(item.description ?? "Member project featured in the Good Vibes Café showcase.").slice(0, 160)}
+        ogType="article"
+      />
 
       {/* Hero */}
       <section className="py-12 md:py-20">

@@ -119,8 +119,9 @@ const ForumTopic = () => {
   return (
     <Layout>
       <PageMeta
-        title={`${topic?.title ?? "Topic"} — <Good Vibes Café/> Forum`}
-        description={topic?.content?.slice(0, 160) ?? "<Good Vibes Café/> community discussion"}
+        title={(topic?.title ?? "Forum topic").slice(0, 60)}
+        description={(topic?.content?.slice(0, 155) ?? "Community discussion thread in the Good Vibes Café forum, where members share leads, projects and feedback.")}
+        ogType="article"
       />
       <section className="py-20 px-4">
         <div className="max-w-4xl mx-auto">

@@ -13,4 +13,4 @@ Allow: /
 User-agent: *
 Allow: /
 
-Sitemap: https://bizvibefi.lovable.app/sitemap.xml
+Sitemap: https://goodvibescafe.org/sitemap.xml
