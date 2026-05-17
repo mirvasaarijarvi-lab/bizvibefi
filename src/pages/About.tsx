@@ -177,7 +177,7 @@ const About = () => {
             className="bg-card border border-border rounded-2xl p-8 md:p-12"
           >
             <h2 className="font-display text-2xl md:text-4xl font-bold tracking-[-0.02em] text-center">
-              Three builders. <span className="text-gradient-prism">One collective.</span>
+              Two builders. <span className="text-gradient-prism">One collective.</span>
             </h2>
             <div className="mt-8 space-y-5 text-muted-foreground font-body leading-relaxed">
               <p>
