@@ -4,8 +4,8 @@ import PageMeta from "@/components/PageMeta";
 const TermsOfService = () => (
   <Layout>
     <PageMeta
-      title="Terms of Service — GoodVibesCafe"
-      description="GoodVibesCafe Terms of Service covering usage rules, intellectual property, liability, and membership terms."
+      title="Terms of Service — <Good Vibes Café/>"
+      description="<Good Vibes Café/> Terms of Service covering usage rules, intellectual property, liability, and membership terms."
     />
     <div className="container max-w-3xl py-16 space-y-10">
       <header>
@@ -20,7 +20,7 @@ const TermsOfService = () => (
       <section className="space-y-4 font-body text-foreground/90 leading-relaxed">
         <h2 className="font-display text-2xl font-semibold text-foreground">1. Acceptance of Terms</h2>
         <p>
-          By accessing or using the GoodVibesCafe platform ("Service"), you agree to be bound by these
+          By accessing or using the <Good Vibes Café/> platform ("Service"), you agree to be bound by these
           Terms of Service ("Terms"). If you do not agree with any part of these Terms, you may not
           use the Service. We reserve the right to update these Terms at any time, and your continued
           use of the Service constitutes acceptance of any changes.
@@ -30,7 +30,7 @@ const TermsOfService = () => (
       <section className="space-y-4 font-body text-foreground/90 leading-relaxed">
         <h2 className="font-display text-2xl font-semibold text-foreground">2. Description of Service</h2>
         <p>
-          GoodVibesCafe is a community platform for builders, founders, and creators. The Service includes
+          <Good Vibes Café/> is a community platform for builders, founders, and creators. The Service includes
           community forums, event listings, member directories, newsletters, and related tools
           designed to help members build, ship, and grow together.
         </p>
@@ -50,7 +50,7 @@ const TermsOfService = () => (
       <section className="space-y-4 font-body text-foreground/90 leading-relaxed">
         <h2 className="font-display text-2xl font-semibold text-foreground">4. Membership Tiers</h2>
         <p>
-          GoodVibesCafe offers Free and Pro membership tiers. Free tier access is provided at no cost. Pro
+          <Good Vibes Café/> offers Free and Pro membership tiers. Free tier access is provided at no cost. Pro
           tier memberships are subject to applicable fees, which will be clearly communicated before
           purchase. We reserve the right to modify pricing and tier benefits with reasonable notice.
           Refund policies for paid memberships will be specified at the point of purchase.
@@ -75,7 +75,7 @@ const TermsOfService = () => (
         <h2 className="font-display text-2xl font-semibold text-foreground">6. User Content</h2>
         <p>
           You retain ownership of content you post on the Service ("User Content"). By posting User
-          Content, you grant GoodVibesCafe a non-exclusive, worldwide, royalty-free license to use,
+          Content, you grant <Good Vibes Café/> a non-exclusive, worldwide, royalty-free license to use,
           display, and distribute your content in connection with the Service. You are solely
           responsible for your User Content and represent that you have all necessary rights to post
           it. We reserve the right to remove any User Content that violates these Terms.
@@ -86,7 +86,7 @@ const TermsOfService = () => (
         <h2 className="font-display text-2xl font-semibold text-foreground">7. Intellectual Property</h2>
         <p>
           The Service and its original content (excluding User Content), features, and functionality
-          are owned by GoodVibesCafe Collective and are protected by international copyright, trademark,
+          are owned by <Good Vibes Café/> Collective and are protected by international copyright, trademark,
           and other intellectual property laws. You may not copy, modify, distribute, or create
           derivative works based on the Service without our express written permission.
         </p>
@@ -107,7 +107,7 @@ const TermsOfService = () => (
         <p>
           The Service is provided on an "as is" and "as available" basis without warranties of any
           kind, either express or implied, including but not limited to implied warranties of
-          merchantability, fitness for a particular purpose, and non-infringement. GoodVibesCafe does not
+          merchantability, fitness for a particular purpose, and non-infringement. <Good Vibes Café/> does not
           warrant that the Service will be uninterrupted, error-free, or secure.
         </p>
       </section>
@@ -115,20 +115,20 @@ const TermsOfService = () => (
       <section className="space-y-4 font-body text-foreground/90 leading-relaxed">
         <h2 className="font-display text-2xl font-semibold text-foreground">10. Limitation of Liability</h2>
         <p>
-          To the fullest extent permitted by applicable law, GoodVibesCafe Collective and its founders,
+          To the fullest extent permitted by applicable law, <Good Vibes Café/> Collective and its founders,
           members, employees, and affiliates shall not be liable for any indirect, incidental,
           special, consequential, or punitive damages, including but not limited to loss of profits,
           data, use, or goodwill, arising out of or in connection with your use of the Service,
           whether based on warranty, contract, tort, or any other legal theory, even if advised of
           the possibility of such damages. In no event shall our total liability exceed the amount
-          you paid to GoodVibesCafe in the twelve (12) months preceding the claim.
+          you paid to <Good Vibes Café/> in the twelve (12) months preceding the claim.
         </p>
       </section>
 
       <section className="space-y-4 font-body text-foreground/90 leading-relaxed">
         <h2 className="font-display text-2xl font-semibold text-foreground">11. Indemnification</h2>
         <p>
-          You agree to indemnify, defend, and hold harmless GoodVibesCafe Collective and its founders,
+          You agree to indemnify, defend, and hold harmless <Good Vibes Café/> Collective and its founders,
           members, and affiliates from and against any claims, liabilities, damages, losses, and
           expenses arising out of or in connection with your use of the Service, violation of these
           Terms, or infringement of any third-party rights.

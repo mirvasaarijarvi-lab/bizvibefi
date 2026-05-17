@@ -26,7 +26,7 @@ const GetGoing = () => {
 
   return (
     <Layout>
-      <PageMeta title="Get Going — GoodVibesCafe" description="Tools, templates, and resources to start building and never stop. From no-code to full-stack." />
+      <PageMeta title="Get Going — <Good Vibes Café/>" description="Tools, templates, and resources to start building and never stop. From no-code to full-stack." />
       <section className="py-24 md:py-32">
         <div className="container">
           <motion.div
@@ -34,7 +34,7 @@ const GetGoing = () => {
             animate={{ opacity: 1, y: 0 }}
             className="text-center max-w-3xl mx-auto"
           >
-            <HeroAvatar src={mascotRunning} alt="GoodVibesCafe running mascot" />
+            <HeroAvatar src={mascotRunning} alt="<Good Vibes Café/> running mascot" />
             <p className="font-body text-sm font-semibold text-turquoise tracking-widest uppercase mb-4">{t("getGoing.tag")}</p>
             <h1 className="font-display text-4xl md:text-6xl font-extrabold tracking-[-0.03em]">
               <span className="text-gradient-surge">{t("getGoing.title")}</span> {t("getGoing.titleEnd")}

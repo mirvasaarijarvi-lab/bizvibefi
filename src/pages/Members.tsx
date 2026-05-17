@@ -173,8 +173,8 @@ const Members = () => {
   return (
     <Layout>
       <PageMeta
-        title="Members Directory — GoodVibesCafe"
-        description="Discover and connect with fellow GoodVibesCafe members. Browse profiles, find collaborators, and grow your network."
+        title="Members Directory — <Good Vibes Café/>"
+        description="Discover and connect with fellow <Good Vibes Café/> members. Browse profiles, find collaborators, and grow your network."
       />
       <section className="py-24 md:py-32">
         <div className="container max-w-6xl">
@@ -190,7 +190,7 @@ const Members = () => {
               Meet the <span className="text-gradient-storm">Members</span>
             </h1>
             <p className="mt-6 text-lg text-muted-foreground font-body max-w-xl mx-auto">
-              Discover builders, strategists, and connectors in the GoodVibesCafe collective.
+              Discover builders, strategists, and connectors in the <Good Vibes Café/> collective.
             </p>
           </motion.div>
 

@@ -140,7 +140,7 @@ const ApplyVibetor = () => {
   if (submitted) {
     return (
       <Layout>
-        <PageMeta title="Application Submitted — GoodVibesCafe" description="Your Vibetor application has been submitted." />
+        <PageMeta title="Application Submitted — <Good Vibes Café/>" description="Your Vibetor application has been submitted." />
         <section className="py-24 md:py-36">
           <div className="container max-w-lg text-center">
             <motion.div initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ duration: 0.5 }}>
@@ -163,7 +163,7 @@ const ApplyVibetor = () => {
 
   return (
     <Layout>
-      <PageMeta title="Apply as Vibetor — GoodVibesCafe" description="Apply to join GoodVibesCafe as a Vibetor — investors, innovators, and partners." />
+      <PageMeta title="Apply as Vibetor — <Good Vibes Café/>" description="Apply to join <Good Vibes Café/> as a Vibetor — investors, innovators, and partners." />
       <section className="py-20 md:py-28">
         <div className="container max-w-2xl">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-12">

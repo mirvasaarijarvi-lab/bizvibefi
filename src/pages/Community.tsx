@@ -41,7 +41,7 @@ const Community = () => {
 
   return (
     <Layout>
-      <PageMeta title={`${t("nav.community")} — GoodVibesCafe`} description={t("community.subtitle")} />
+      <PageMeta title={`${t("nav.community")} — <Good Vibes Café/>`} description={t("community.subtitle")} />
       <section className="py-24 md:py-32">
         <div className="container">
           <motion.div
@@ -49,7 +49,7 @@ const Community = () => {
             animate={{ opacity: 1, y: 0 }}
             className="text-center max-w-3xl mx-auto"
           >
-            <HeroAvatar src={mascotHeart} alt="GoodVibesCafe heart mascot" />
+            <HeroAvatar src={mascotHeart} alt="<Good Vibes Café/> heart mascot" />
             <p className="font-body text-sm font-semibold text-turquoise tracking-widest uppercase mb-4">{t("community.tag")}</p>
             <h1 className="font-display text-4xl md:text-6xl font-extrabold tracking-[-0.03em]">
               {t("community.title")} <span className="text-gradient-storm">{t("community.titleHighlight")}</span> {t("community.titleEnd")}
@@ -158,7 +158,7 @@ const Community = () => {
                 Meet the <span className="text-gradient-storm">Members</span>
               </h2>
               <p className="mt-3 text-muted-foreground font-body max-w-lg">
-                Discover builders, strategists, and connectors in the GoodVibesCafe collective. Browse profiles, find collaborators, and grow your network.
+                Discover builders, strategists, and connectors in the <Good Vibes Café/> collective. Browse profiles, find collaborators, and grow your network.
               </p>
             </div>
             <Button variant="hero" size="lg" asChild>

@@ -353,8 +353,8 @@ const ForumCategory = () => {
   return (
     <Layout>
       <PageMeta
-        title={`${category?.name ?? "Forum"} — GoodVibesCafe`}
-        description={category?.description ?? "GoodVibesCafe community forum"}
+        title={`${category?.name ?? "Forum"} — <Good Vibes Café/>`}
+        description={category?.description ?? "<Good Vibes Café/> community forum"}
       />
       <section className="py-20 px-4">
         <div className="max-w-4xl mx-auto">

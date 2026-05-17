@@ -108,7 +108,7 @@ const BadgesPage = () => {
 
   return (
     <Layout>
-      <PageMeta title={`${t("badges.pageTitle")} — GoodVibesCafe`} description={t("badges.pageDesc")} />
+      <PageMeta title={`${t("badges.pageTitle")} — <Good Vibes Café/>`} description={t("badges.pageDesc")} />
       <section className="py-24 md:py-32">
         <div className="container max-w-6xl">
           <div className="text-center max-w-3xl mx-auto mb-12">
@@ -216,7 +216,7 @@ const BadgesPage = () => {
                         <p className="font-medium text-sm">{mb.badge.name}</p>
                         <p className="text-xs text-muted-foreground">{new Date(mb.awarded_at).toLocaleDateString()}</p>
                         <AddToLinkedInButton
-                          name={`GoodVibesCafe — ${mb.badge.name}`}
+                          name={`<Good Vibes Café/> — ${mb.badge.name}`}
                           issueDate={mb.awarded_at}
                           certUrl={`${window.location.origin}/members/${user.id}`}
                           certId={mb.id}

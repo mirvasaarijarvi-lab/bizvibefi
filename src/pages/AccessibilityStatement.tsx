@@ -4,8 +4,8 @@ import PageMeta from "@/components/PageMeta";
 const AccessibilityStatement = () => (
   <Layout>
     <PageMeta
-      title="Accessibility Statement — GoodVibesCafe"
-      description="GoodVibesCafe's commitment to digital accessibility, covering WCAG 2.1 AA, EU European Accessibility Act, ADA, and Section 508 compliance."
+      title="Accessibility Statement — <Good Vibes Café/>"
+      description="<Good Vibes Café/>'s commitment to digital accessibility, covering WCAG 2.1 AA, EU European Accessibility Act, ADA, and Section 508 compliance."
     />
     <div className="container max-w-3xl py-16 space-y-10">
       <header>
@@ -20,7 +20,7 @@ const AccessibilityStatement = () => (
       <section className="space-y-4 font-body text-foreground/90 leading-relaxed">
         <h2 className="font-display text-2xl font-semibold text-foreground">Our Commitment</h2>
         <p>
-          GoodVibesCafe is committed to ensuring digital accessibility for people of all abilities. We are
+          <Good Vibes Café/> is committed to ensuring digital accessibility for people of all abilities. We are
           continually improving the user experience for everyone and applying the relevant
           accessibility standards to ensure we provide equal access to all users.
         </p>
@@ -59,7 +59,7 @@ const AccessibilityStatement = () => (
         <p>
           The European Accessibility Act (Directive (EU) 2019/882) requires that products and
           services — including websites and mobile applications — placed on the EU market meet
-          defined accessibility requirements from June 28, 2025. GoodVibesCafe aligns with the EN 301 549
+          defined accessibility requirements from June 28, 2025. <Good Vibes Café/> aligns with the EN 301 549
           harmonized standard to meet these requirements and is committed to ongoing monitoring and
           improvement.
         </p>
@@ -72,7 +72,7 @@ const AccessibilityStatement = () => (
         <p>
           In the United States, the ADA and Section 508 require accessible digital experiences. In
           Canada, the Accessible Canada Act (ACA) and provincial legislation such as AODA (Ontario)
-          set similar standards. GoodVibesCafe's conformance with WCAG 2.1 AA addresses the technical
+          set similar standards. <Good Vibes Café/>'s conformance with WCAG 2.1 AA addresses the technical
           requirements referenced by all of these frameworks.
         </p>
       </section>
@@ -106,7 +106,7 @@ const AccessibilityStatement = () => (
           Feedback &amp; Contact
         </h2>
         <p>
-          We welcome your feedback on the accessibility of GoodVibesCafe. If you encounter accessibility
+          We welcome your feedback on the accessibility of <Good Vibes Café/>. If you encounter accessibility
           barriers or have suggestions, please contact us:
         </p>
         <ul className="list-disc pl-6 space-y-2">

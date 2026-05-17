@@ -10,7 +10,7 @@ const Footer = () => {
       <div className="container">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div>
-            <span className="font-display text-xl font-extrabold text-gradient-storm">GoodVibesCafe</span>
+            <span className="font-display text-xl font-extrabold text-gradient-storm"><Good Vibes Café/></span>
             <p className="mt-3 text-sm text-muted-foreground font-body">{t("footer.desc")}</p>
           </div>
           <div>

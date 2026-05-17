@@ -41,7 +41,7 @@ const ResetPassword = () => {
   if (!isRecovery) {
     return (
       <Layout>
-        <PageMeta title="Reset Password — GoodVibesCafe" description="Reset your password." />
+        <PageMeta title="Reset Password — <Good Vibes Café/>" description="Reset your password." />
         <section className="py-20 px-4 text-center">
           <p className="text-muted-foreground font-body">Invalid or expired reset link.</p>
         </section>
@@ -51,7 +51,7 @@ const ResetPassword = () => {
 
   return (
     <Layout>
-      <PageMeta title="Reset Password — GoodVibesCafe" description="Set a new password." />
+      <PageMeta title="Reset Password — <Good Vibes Café/>" description="Set a new password." />
       <section className="py-20 px-4">
         <div className="max-w-md mx-auto">
           <h1 className="font-display text-3xl font-bold text-foreground mb-6 text-center">Set New Password</h1>

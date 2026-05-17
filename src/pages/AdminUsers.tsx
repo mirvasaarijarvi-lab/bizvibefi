@@ -241,7 +241,7 @@ const AdminUsers = () => {
 
   return (
     <Layout>
-      <PageMeta title="User Management — GoodVibesCafe Admin" description="Manage user roles and permissions." />
+      <PageMeta title="User Management — <Good Vibes Café/> Admin" description="Manage user roles and permissions." />
       <section className="py-24 md:py-32">
         <div className="container max-w-5xl">
           <div className="flex items-center justify-between mb-2">

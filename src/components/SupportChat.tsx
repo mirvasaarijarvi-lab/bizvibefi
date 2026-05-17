@@ -156,7 +156,7 @@ const SupportChat = () => {
             <div className="flex items-center justify-between px-4 py-3 bg-secondary text-secondary-foreground rounded-t-2xl">
               <div className="flex items-center gap-2">
                 <img src={botAvatar} alt="" className="h-8 w-8 object-contain" />
-                <span className="font-display font-semibold text-sm">GoodVibesCafe Support</span>
+                <span className="font-display font-semibold text-sm"><Good Vibes Café/> Support</span>
               </div>
               <button onClick={() => setOpen(false)} aria-label="Close chat" className="hover:opacity-70">
                 <X className="h-5 w-5" />
@@ -170,10 +170,10 @@ const SupportChat = () => {
                   <img src={botAvatar} alt="" className="w-24 h-24 mx-auto mb-3 object-contain drop-shadow-md" />
                   <p className="font-display font-semibold text-foreground text-sm">Hi! How can I help?</p>
                   <p className="text-xs text-muted-foreground font-body mt-1">
-                    Ask me anything about GoodVibesCafe — membership, events, getting started, and more.
+                    Ask me anything about <Good Vibes Café/> — membership, events, getting started, and more.
                   </p>
                   <div className="flex flex-wrap gap-2 justify-center mt-4">
-                    {["What is GoodVibesCafe?", "Free vs Pro?", "How do I join?"].map((q) => (
+                    {["What is <Good Vibes Café/>?", "Free vs Pro?", "How do I join?"].map((q) => (
                       <button
                         key={q}
                         onClick={() => { setInput(q); setTimeout(() => inputRef.current?.form?.requestSubmit(), 0); }}

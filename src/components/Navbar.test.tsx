@@ -22,9 +22,9 @@ const renderNavbar = () => {
 };
 
 describe("Navbar", () => {
-  it("renders the GoodVibesCafe logo", () => {
+  it("renders the <Good Vibes Café/> logo", () => {
     renderNavbar();
-    expect(screen.getByText("GoodVibesCafe")).toBeInTheDocument();
+    expect(screen.getByText("<Good Vibes Café/>")).toBeInTheDocument();
   });
 
   it("renders all navigation links", () => {
