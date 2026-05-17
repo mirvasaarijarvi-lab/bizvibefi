@@ -11,7 +11,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 
-const FOUNDER_NAMES = ["Minna Blomster", "Mirva Saarijärvi", "Vesa Mattila"];
+const FOUNDER_NAMES = ["Minna Blomster", "Mirva Saarijärvi"];
 // Aliases / alternate display names some founders may use on their member profile
 const FOUNDER_ALIASES: Record<string, string[]> = {
   "Mirva Saarijärvi": ["Mimmi Saarijärvi"],
@@ -56,12 +56,12 @@ const About = () => {
 
   const getFounderAvatar = (name: string) => findFounderProfile(name)?.avatar_url ?? null;
   const getFounderUserId = (name: string) => findFounderProfile(name)?.user_id ?? null;
-  // All three founders are Vibetors by virtue of founding the collective
+  // Both founders are Vibetors by virtue of founding the collective
   const getFounderVibetorStatus = (_name: string) => true;
 
   return (
     <Layout>
-      <PageMeta title="About — <Good Vibes Café/>" description="Three builders, one collective. Meet the founders behind <Good Vibes Café/> and our values." />
+      <PageMeta title="About — <Good Vibes Café/>" description="Two builders, one collective. Meet the founders behind <Good Vibes Café/> and our values." />
       <section className="py-24 md:py-32">
         <div className="container">
           <motion.div
@@ -167,7 +167,7 @@ const About = () => {
         </div>
       </section>
 
-      {/* Three builders, one collective */}
+      {/* Two builders, one collective */}
       <section className="pb-20">
         <div className="container max-w-3xl">
           <motion.div
