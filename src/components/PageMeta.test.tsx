@@ -31,37 +31,37 @@ describe("PageMeta", () => {
   });
 
   it("sets document.title", () => {
-    render(<PageMeta title="Test Title" description="Test desc" />);
+    renderWithRouter(<PageMeta title="Test Title" description="Test desc" />);
     expect(document.title).toBe("Test Title");
   });
 
   it("sets meta description", () => {
-    render(<PageMeta title="T" description="My description" />);
+    renderWithRouter(<PageMeta title="T" description="My description" />);
     expect(document.querySelector('meta[name="description"]')?.getAttribute("content")).toBe("My description");
   });
 
   it("sets Open Graph title and description", () => {
-    render(<PageMeta title="OG Title" description="OG Desc" />);
+    renderWithRouter(<PageMeta title="OG Title" description="OG Desc" />);
     expect(document.querySelector('meta[property="og:title"]')?.getAttribute("content")).toBe("OG Title");
     expect(document.querySelector('meta[property="og:description"]')?.getAttribute("content")).toBe("OG Desc");
   });
 
   it("sets Twitter title and description", () => {
-    render(<PageMeta title="TW Title" description="TW Desc" />);
+    renderWithRouter(<PageMeta title="TW Title" description="TW Desc" />);
     expect(document.querySelector('meta[name="twitter:title"]')?.getAttribute("content")).toBe("TW Title");
     expect(document.querySelector('meta[name="twitter:description"]')?.getAttribute("content")).toBe("TW Desc");
   });
 
   it("updates when props change", () => {
-    const { rerender } = render(<PageMeta title="First" description="First desc" />);
+    const { rerender } = renderWithRouter(<PageMeta title="First" description="First desc" />);
     expect(document.title).toBe("First");
-    rerender(<PageMeta title="Second" description="Second desc" />);
+    rerenderWithRouter(<PageMeta title="Second" description="Second desc" />);
     expect(document.title).toBe("Second");
     expect(document.querySelector('meta[name="description"]')?.getAttribute("content")).toBe("Second desc");
   });
 
   it("renders nothing visually", () => {
-    const { container } = render(<PageMeta title="T" description="D" />);
+    const { container } = renderWithRouter(<PageMeta title="T" description="D" />);
     expect(container.innerHTML).toBe("");
   });
 });
