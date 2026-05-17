@@ -55,7 +55,7 @@ describe("PageMeta", () => {
   it("updates when props change", () => {
     const { rerender } = renderWithRouter(<PageMeta title="First" description="First desc" />);
     expect(document.title).toBe("First");
-    rerenderWithRouter(<PageMeta title="Second" description="Second desc" />);
+    rerender(<MemoryRouter><PageMeta title="Second" description="Second desc" /></MemoryRouter>);
     expect(document.title).toBe("Second");
     expect(document.querySelector('meta[name="description"]')?.getAttribute("content")).toBe("Second desc");
   });
