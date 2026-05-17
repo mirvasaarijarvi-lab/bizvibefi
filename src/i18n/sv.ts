@@ -180,7 +180,7 @@ const sv = {
   },
   about: {
     tag: "Om oss",
-    title: "Tre byggare.",
+    title: "Två byggare.",
     titleHighlight: "Ett kollektiv.",
     desc: "Vi startade <Good Vibes Café/> för att vi var trötta på att bygga ensamma. Det bästa händer när man kombinerar kompletterande kaos. Så vi byggde ett kollektiv kring det.",
     foundersHeading: "<Good Vibes Café/>s",
@@ -188,7 +188,6 @@ const sv = {
     founders: [
       { name: "Minna Blomster", role: "Superconnector, Strateg, Byggare", bio: "Ser kopplingar andra missar. Öppnar dörrar, bygger broar och gör det omöjliga till en självklarhet.", linkedin: "https://www.linkedin.com/in/minnablomster/" },
       { name: "Mirva Saarijärvi", role: "Strateg, Byggare, Kopplare", bio: "Gör kaos till klarhet. Kartlägger vägen från idé till genomförande och ser till att det faktiskt händer.", linkedin: "https://www.linkedin.com/in/mirvasaarijarvi/" },
-      { name: "Vesa Mattila", role: "Byggare, Strateg, Kopplare", bio: "Bygger först och optimerar sedan. Förvandlar koncept till fungerande produkter innan andra hunnit planera klart.", linkedin: "https://www.linkedin.com/in/vesa-mattila/" },
     ],
     valuesTitle: "Vad vi",
     valuesTitleHighlight: "tror på",
