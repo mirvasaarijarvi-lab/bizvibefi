@@ -15,13 +15,13 @@ interface Props {
 /**
  * "Add to LinkedIn Profile" button.
  * Sends the user to LinkedIn's certification add flow,
- * pre-filled with BizVibe as the issuing organization.
+ * pre-filled with GoodVibesCafe as the issuing organization.
  */
 const AddToLinkedInButton = ({ name, issueDate, certUrl, certId, className, size = "sm", label = "Add to LinkedIn" }: Props) => {
   const d = typeof issueDate === "string" ? new Date(issueDate) : issueDate;
   const url = linkedInAddToProfileUrl({
     name,
-    organizationName: "BizVibe",
+    organizationName: "GoodVibesCafe",
     issueYear: d.getFullYear(),
     issueMonth: d.getMonth() + 1,
     certUrl,

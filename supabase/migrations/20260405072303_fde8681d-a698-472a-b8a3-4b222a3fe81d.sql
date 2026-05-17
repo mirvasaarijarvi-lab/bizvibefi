@@ -74,7 +74,7 @@ $$;
 
 -- Seed some sample events
 INSERT INTO public.events (title, description, event_type, starts_at, ends_at, location, is_online, is_published) VALUES
-  ('BizVibe Monthly Meetup', 'Connect with fellow builders, share wins, and find collaborators. Casual networking with a purpose.', 'meetup', now() + interval '14 days', now() + interval '14 days' + interval '2 hours', 'Helsinki, Finland', false, true),
+  ('GoodVibesCafe Monthly Meetup', 'Connect with fellow builders, share wins, and find collaborators. Casual networking with a purpose.', 'meetup', now() + interval '14 days', now() + interval '14 days' + interval '2 hours', 'Helsinki, Finland', false, true),
   ('Vibecoding 101 — Build Your First App', 'A hands-on webinar where we build a real product from scratch in 90 minutes. No prior coding experience needed.', 'webinar', now() + interval '7 days', now() + interval '7 days' + interval '90 minutes', null, true, true),
   ('#ShipHappens Hackathon Q2', '48 hours. 3 builders. 1 shipped product. Join the quarterly hackathon and build something real.', 'hackathon', now() + interval '30 days', now() + interval '32 days', 'Helsinki, Finland', false, true),
   ('Growth Without Overhead Workshop', 'Learn how to scale your business using collective resources. Real strategies from real founders.', 'workshop', now() + interval '21 days', now() + interval '21 days' + interval '3 hours', null, true, true);

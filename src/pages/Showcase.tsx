@@ -310,14 +310,14 @@ const Showcase = () => {
   return (
     <Layout>
       <PageMeta
-        title={`${t("showcase.pageTitle")} — BizVibe`}
+        title={`${t("showcase.pageTitle")} — GoodVibesCafe`}
         description={t("showcase.pageDesc")}
       />
 
       <section className="py-24 md:py-32">
         <div className="container">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center max-w-3xl mx-auto">
-            <HeroAvatar src={mascotShowcase} alt="BizVibe showcase mascot" />
+            <HeroAvatar src={mascotShowcase} alt="GoodVibesCafe showcase mascot" />
             <p className="font-body text-sm font-semibold text-turquoise tracking-widest uppercase mb-4">{t("showcase.tag")}</p>
             <h1 className="font-display text-4xl md:text-6xl font-extrabold tracking-[-0.03em]">
               {t("showcase.title")} <span className="text-gradient-storm">{t("showcase.titleHighlight")}</span>

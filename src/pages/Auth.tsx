@@ -75,8 +75,8 @@ const Auth = () => {
   return (
     <Layout>
       <PageMeta
-        title="Sign In — BizVibe"
-        description="Sign in to BizVibe to access the community forum."
+        title="Sign In — GoodVibesCafe"
+        description="Sign in to GoodVibesCafe to access the community forum."
       />
       <section className="py-20 px-4">
         <div className="max-w-md mx-auto">

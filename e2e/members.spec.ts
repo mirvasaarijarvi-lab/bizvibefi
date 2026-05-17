@@ -13,7 +13,7 @@ unauthTest.describe("Members Directory — unauthenticated", () => {
 
   unauthTest("members page has correct title", async ({ page }) => {
     await page.goto("/members");
-    await unauthExpect(page).toHaveTitle(/BizVibe/);
+    await unauthExpect(page).toHaveTitle(/GoodVibesCafe/);
   });
 
   unauthTest("members page renders main content area", async ({ page }) => {

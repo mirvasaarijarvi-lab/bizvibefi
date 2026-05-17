@@ -96,7 +96,7 @@ const AdminCertificates = () => {
         method_details: method === "other" ? methodDetails.trim() || null : null,
         completion_date: completionDate,
         issued_by: user.id,
-        issued_by_name: profile?.display_name ?? "BizVibe Founder",
+        issued_by_name: profile?.display_name ?? "GoodVibesCafe Founder",
       });
 
       const verifyUrl = `${window.location.origin}/certificates/${cert.id}`;
@@ -135,7 +135,7 @@ const AdminCertificates = () => {
 
   return (
     <Layout>
-      <PageMeta title="Issue Certificate — BizVibe" description="Founder tool for issuing course completion certificates." />
+      <PageMeta title="Issue Certificate — GoodVibesCafe" description="Founder tool for issuing course completion certificates." />
       <section className="py-24 md:py-32">
         <div className="container max-w-3xl">
           <div className="text-center mb-10">
@@ -143,7 +143,7 @@ const AdminCertificates = () => {
             <h1 className="font-display text-4xl md:text-5xl font-extrabold tracking-[-0.03em]">
               Issue a <span className="text-gradient-storm">Certificate</span>
             </h1>
-            <p className="mt-4 text-muted-foreground font-body">Generate a branded BizVibe certificate, auto-award the linked badge, and share it on LinkedIn.</p>
+            <p className="mt-4 text-muted-foreground font-body">Generate a branded GoodVibesCafe certificate, auto-award the linked badge, and share it on LinkedIn.</p>
           </div>
 
           <Card>
@@ -240,7 +240,7 @@ const AdminCertificates = () => {
                     </a>
                   </Button>
                   <AddToLinkedInButton
-                    name={courseTitle || "BizVibe Course"}
+                    name={courseTitle || "GoodVibesCafe Course"}
                     issueDate={lastCertificate.date}
                     certUrl={`${window.location.origin}/certificates/${lastCertificate.id}`}
                     certId={lastCertificate.id}

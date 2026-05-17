@@ -15,7 +15,7 @@ const sizeMap = {
 };
 
 /**
- * Friendly BizVibe mascot avatar for page headers.
+ * Friendly GoodVibesCafe mascot avatar for page headers.
  * Renders the transparent mascot directly on the page background — no disc,
  * no ring, no tiling. The PNG itself carries true alpha transparency.
  */
@@ -29,7 +29,7 @@ const HeroAvatar = ({ size = "md", className = "", src, alt }: HeroAvatarProps) 
     >
       <img
         src={src ?? botAvatar}
-        alt={alt ?? "BizVibe mascot"}
+        alt={alt ?? "GoodVibesCafe mascot"}
         className={`${sizeMap[size]} mx-auto object-contain drop-shadow-lg`}
       />
     </motion.div>

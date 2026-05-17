@@ -106,7 +106,7 @@ const AdminNotifications = () => {
   return (
     <Layout>
       <PageMeta
-        title="Notifications — Admin — BizVibe"
+        title="Notifications — Admin — GoodVibesCafe"
         description="Admin notification history and management."
       />
       <section className="py-20 px-4">

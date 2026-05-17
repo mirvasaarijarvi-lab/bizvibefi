@@ -129,6 +129,6 @@ CREATE POLICY "Admins delete certificate files"
 
 -- Seed two starter courses
 INSERT INTO public.courses (title, summary, default_method) VALUES
-  ('BizVibe Foundations', 'Core principles of building with the BizVibe collective: mindset, tooling, and community practices.', 'webinar'),
-  ('Vibe-Coding Bootcamp', 'Hands-on session on shipping AI-assisted products using the BizVibe stack.', 'face_to_face')
+  ('GoodVibesCafe Foundations', 'Core principles of building with the GoodVibesCafe collective: mindset, tooling, and community practices.', 'webinar'),
+  ('Vibe-Coding Bootcamp', 'Hands-on session on shipping AI-assisted products using the GoodVibesCafe stack.', 'face_to_face')
 ON CONFLICT DO NOTHING;

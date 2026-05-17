@@ -33,7 +33,7 @@ const CookieConsent = () => {
         >
           <div className="container max-w-4xl mx-auto bg-card border border-border rounded-xl shadow-lg p-4 sm:p-6 flex flex-col sm:flex-row items-start sm:items-center gap-4">
             <p className="text-sm font-body text-muted-foreground flex-1">
-              We use essential cookies to make BizVibe work. We'd also like to use analytics cookies to improve your experience.
+              We use essential cookies to make GoodVibesCafe work. We'd also like to use analytics cookies to improve your experience.
               Read our{" "}
               <a href="/privacy" className="text-primary underline hover:text-primary/80">
                 privacy policy

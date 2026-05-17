@@ -61,7 +61,7 @@ const ApplyStarter = () => {
   if (!user) {
     return (
       <Layout>
-        <PageMeta title="Join Starter — BizVibe" description="Join BizVibe Starter for free." />
+        <PageMeta title="Join Starter — GoodVibesCafe" description="Join GoodVibesCafe Starter for free." />
         <section className="py-24 md:py-36">
           <div className="container max-w-lg text-center">
             <h1 className="font-display text-3xl md:text-4xl font-bold mb-4">Sign in to continue</h1>
@@ -76,14 +76,14 @@ const ApplyStarter = () => {
   if (submitted) {
     return (
       <Layout>
-        <PageMeta title="Welcome — BizVibe" description="You're in." />
+        <PageMeta title="Welcome — GoodVibesCafe" description="You're in." />
         <section className="py-24 md:py-36">
           <div className="container max-w-lg text-center">
             <motion.div initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ duration: 0.5 }}>
               <CheckCircle className="h-16 w-16 text-primary mx-auto mb-6" />
               <h1 className="font-display text-3xl md:text-4xl font-bold mb-4">You're in!</h1>
               <p className="text-muted-foreground font-body text-lg">
-                Welcome to BizVibe Starter. When you're ready for leads, courses, and the inner circle, upgrade to Viber.
+                Welcome to GoodVibesCafe Starter. When you're ready for leads, courses, and the inner circle, upgrade to Viber.
               </p>
               <div className="mt-8 flex flex-col sm:flex-row gap-3 justify-center">
                 <Button asChild variant="hero" size="lg"><Link to="/community">Explore the community</Link></Button>
@@ -100,7 +100,7 @@ const ApplyStarter = () => {
 
   return (
     <Layout>
-      <PageMeta title="Join Starter — BizVibe" description="Join BizVibe Starter for free. WhatsApp community, free events, and #ShipHappens hackathons." />
+      <PageMeta title="Join Starter — GoodVibesCafe" description="Join GoodVibesCafe Starter for free. WhatsApp community, free events, and #ShipHappens hackathons." />
       <section className="py-20 md:py-28">
         <div className="container max-w-2xl">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-12">
@@ -156,7 +156,7 @@ const ApplyStarter = () => {
                 <FormField control={form.control} name="notes" render={({ field }) => (
                   <FormItem>
                     <FormLabel>Anything else? (optional)</FormLabel>
-                    <FormControl><Textarea placeholder="What brings you to BizVibe?" rows={4} {...field} /></FormControl>
+                    <FormControl><Textarea placeholder="What brings you to GoodVibesCafe?" rows={4} {...field} /></FormControl>
                     <FormMessage />
                   </FormItem>
                 )} />

@@ -111,7 +111,7 @@ const ShowcaseDetail = () => {
 
   return (
     <Layout>
-      <PageMeta title={`${item.title} — Showcase — BizVibe`} description={item.description} />
+      <PageMeta title={`${item.title} — Showcase — GoodVibesCafe`} description={item.description} />
 
       {/* Hero */}
       <section className="py-12 md:py-20">

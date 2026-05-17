@@ -1,4 +1,4 @@
-# Contributing to BizVibeFI
+# Contributing to GoodVibesCafeFI
 
 Thank you for your interest in contributing! This guide will help you get started.
 
