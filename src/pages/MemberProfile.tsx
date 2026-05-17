@@ -164,8 +164,8 @@ const MemberProfile = () => {
   return (
     <Layout>
       <PageMeta
-        title={`${member.display_name || "Member"} — BizVibe`}
-        description={member.bio ? member.bio.slice(0, 155) : "BizVibe member profile."}
+        title={`${member.display_name || "Member"} — GoodVibesCafe`}
+        description={member.bio ? member.bio.slice(0, 155) : "GoodVibesCafe member profile."}
       />
       <section className="py-24 md:py-32">
         <div className="container max-w-2xl">

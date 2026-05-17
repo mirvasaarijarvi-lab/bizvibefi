@@ -41,7 +41,7 @@ const Navbar = () => {
     <nav className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-xl border-b border-border">
       <div className="container flex items-center justify-between h-16">
         <Link to="/" className="font-display text-2xl font-extrabold tracking-[-0.03em]">
-          <span className="text-gradient-storm">BizVibe</span>
+          <span className="text-gradient-storm">GoodVibesCafe</span>
         </Link>
 
         {/* Desktop */}

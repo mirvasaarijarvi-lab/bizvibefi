@@ -1,4 +1,4 @@
-# BizVibeFI
+# GoodVibesCafeFI
 
 [![CI](https://github.com/AminForou/bizvibefi/actions/workflows/ci.yml/badge.svg)](https://github.com/AminForou/bizvibefi/actions/workflows/ci.yml)
 [![E2E Tests](https://github.com/AminForou/bizvibefi/actions/workflows/e2e.yml/badge.svg)](https://github.com/AminForou/bizvibefi/actions/workflows/e2e.yml)

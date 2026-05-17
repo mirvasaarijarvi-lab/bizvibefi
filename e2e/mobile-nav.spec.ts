@@ -64,7 +64,7 @@ test.describe("Desktop Navigation", () => {
     await expect(page.locator("nav").getByRole("link", { name: /forum/i })).toBeVisible();
   });
 
-  test("BizVibe logo links to homepage", async ({ page }) => {
+  test("GoodVibesCafe logo links to homepage", async ({ page }) => {
     await page.goto("/about");
     await page.locator("nav").getByRole("link", { name: /bizvibe/i }).click();
     await expect(page).toHaveURL(/\/$/);

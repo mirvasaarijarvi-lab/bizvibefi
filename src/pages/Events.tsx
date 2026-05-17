@@ -664,13 +664,13 @@ const Events = () => {
   return (
     <Layout>
       <PageMeta
-        title={`${t("events.tag")} — BizVibe`}
+        title={`${t("events.tag")} — GoodVibesCafe`}
         description={t("events.subtitle")}
       />
       <section className="py-20 px-4">
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-12">
-            <HeroAvatar src={mascotEvents} alt="BizVibe events mascot" />
+            <HeroAvatar src={mascotEvents} alt="GoodVibesCafe events mascot" />
             <p className="font-body text-sm font-semibold text-turquoise tracking-widest uppercase mb-3">
               {t("events.tag")}
             </p>

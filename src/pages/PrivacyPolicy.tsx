@@ -4,8 +4,8 @@ import PageMeta from "@/components/PageMeta";
 const PrivacyPolicy = () => (
   <Layout>
     <PageMeta
-      title="Privacy Policy — BizVibe"
-      description="BizVibe's privacy policy explaining how we collect, use, and protect your personal data in compliance with GDPR and other applicable regulations."
+      title="Privacy Policy — GoodVibesCafe"
+      description="GoodVibesCafe's privacy policy explaining how we collect, use, and protect your personal data in compliance with GDPR and other applicable regulations."
     />
     <div className="container max-w-3xl py-16 space-y-10">
       <header>
@@ -18,10 +18,10 @@ const PrivacyPolicy = () => (
       <section className="space-y-4 font-body text-foreground/90 leading-relaxed">
         <h2 className="font-display text-2xl font-semibold text-foreground">1. Data Controller</h2>
         <p>
-          BizVibe Collective ("<strong>BizVibe</strong>", "we", "us") is the data controller for
+          GoodVibesCafe Collective ("<strong>GoodVibesCafe</strong>", "we", "us") is the data controller for
           personal data processed through this website. You can contact us at{" "}
-          <a href="mailto:shipping@bizvibe.fi" className="text-primary hover:underline">
-            shipping@bizvibe.fi
+          <a href="mailto:shipping@goodvibescafe.fi" className="text-primary hover:underline">
+            shipping@goodvibescafe.fi
           </a>.
         </p>
       </section>
@@ -185,8 +185,8 @@ const PrivacyPolicy = () => (
         </ul>
         <p>
           To exercise any of these rights, contact us at{" "}
-          <a href="mailto:shipping@bizvibe.fi" className="text-primary hover:underline">
-            shipping@bizvibe.fi
+          <a href="mailto:shipping@goodvibescafe.fi" className="text-primary hover:underline">
+            shipping@goodvibescafe.fi
           </a>
           . We will respond within 30 days.
         </p>
@@ -197,7 +197,7 @@ const PrivacyPolicy = () => (
           9. Children's Privacy
         </h2>
         <p>
-          BizVibe is not intended for individuals under the age of 16. We do not knowingly collect
+          GoodVibesCafe is not intended for individuals under the age of 16. We do not knowingly collect
           personal data from children. If we become aware that we have collected data from a child
           under 16, we will take steps to delete it promptly.
         </p>
@@ -251,14 +251,14 @@ const PrivacyPolicy = () => (
         <ul className="list-disc pl-6 space-y-2">
           <li>
             Email:{" "}
-            <a href="mailto:shipping@bizvibe.fi" className="text-primary hover:underline">
-              shipping@bizvibe.fi
+            <a href="mailto:shipping@goodvibescafe.fi" className="text-primary hover:underline">
+              shipping@goodvibescafe.fi
             </a>
           </li>
           <li>
             Contact page:{" "}
             <a href="/contact" className="text-primary hover:underline">
-              bizvibe.fi/contact
+              goodvibescafe.fi/contact
             </a>
           </li>
         </ul>

@@ -117,7 +117,7 @@ const AuditLog = () => {
   return (
     <Layout>
       <PageMeta
-        title="Audit Log — BizVibe Admin"
+        title="Audit Log — GoodVibesCafe Admin"
         description="Review history of tier changes and access overrides."
       />
       <section className="py-24 md:py-32">

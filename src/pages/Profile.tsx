@@ -258,7 +258,7 @@ const Profile = () => {
 
   return (
     <Layout>
-      <PageMeta title="Profile — BizVibe" description="Manage your BizVibe profile." />
+      <PageMeta title="Profile — GoodVibesCafe" description="Manage your GoodVibesCafe profile." />
       <section className="py-20 px-4">
         <div className="max-w-2xl mx-auto">
           <h1 className="font-display text-3xl font-bold text-foreground mb-8">Your Profile</h1>

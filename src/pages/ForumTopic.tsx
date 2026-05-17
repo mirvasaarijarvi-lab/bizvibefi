@@ -119,8 +119,8 @@ const ForumTopic = () => {
   return (
     <Layout>
       <PageMeta
-        title={`${topic?.title ?? "Topic"} — BizVibe Forum`}
-        description={topic?.content?.slice(0, 160) ?? "BizVibe community discussion"}
+        title={`${topic?.title ?? "Topic"} — GoodVibesCafe Forum`}
+        description={topic?.content?.slice(0, 160) ?? "GoodVibesCafe community discussion"}
       />
       <section className="py-20 px-4">
         <div className="max-w-4xl mx-auto">

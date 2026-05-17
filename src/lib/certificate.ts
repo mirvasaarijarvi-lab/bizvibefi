@@ -26,7 +26,7 @@ const formatDate = (iso: string) => {
 };
 
 /**
- * Generate a branded BizVibe certificate PDF (A4 landscape).
+ * Generate a branded GoodVibesCafe certificate PDF (A4 landscape).
  * Uses HSL brand tokens converted to RGB:
  *   - purple-vivid 270 95% 58%  -> #7B2CF5
  *   - electric    225 100% 57%  -> #2461FF
@@ -59,7 +59,7 @@ export const generateCertificatePdf = (data: CertificateData): Blob => {
   doc.setFont("helvetica", "bold");
   doc.setFontSize(28);
   doc.setTextColor(123, 44, 245);
-  doc.text("BizVibe", W / 2, 38, { align: "center" });
+  doc.text("GoodVibesCafe", W / 2, 38, { align: "center" });
 
   // Subtitle
   doc.setFont("helvetica", "normal");

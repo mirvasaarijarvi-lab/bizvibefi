@@ -12,16 +12,16 @@ DECLARE
 BEGIN
   ord := ord + 1;
   INSERT INTO public.badge_catalog(code,category,name,description,icon,color,sort_order,evidence_hint)
-  VALUES ('signin_welcome','signin','Welcome Aboard','Joined the BizVibe collective.','UserPlus','primary',ord,'Confirm your sign-up date.');
+  VALUES ('signin_welcome','signin','Welcome Aboard','Joined the GoodVibesCafe collective.','UserPlus','primary',ord,'Confirm your sign-up date.');
 
   ord := ord + 1;
   INSERT INTO public.badge_catalog(code,category,name,description,icon,color,sort_order,evidence_hint,requires_founder)
-  VALUES ('founder','founder','BizVibe Founder','Co-founder of BizVibe.','Crown','vibetor',ord,'Founders only.',true);
+  VALUES ('founder','founder','GoodVibesCafe Founder','Co-founder of GoodVibesCafe.','Crown','vibetor',ord,'Founders only.',true);
 
   FOREACH m IN ARRAY milestones LOOP
     ord := ord + 1;
     INSERT INTO public.badge_catalog(code,category,tier,name,description,icon,color,sort_order,evidence_hint)
-    VALUES ('event_attendance_'||m,'event_attendance',m,'Event Attendee, '||m,'Attended '||m||' BizVibe event'||CASE WHEN m=1 THEN '' ELSE 's' END||'.','CalendarCheck','primary',ord,'List event names and dates you attended.');
+    VALUES ('event_attendance_'||m,'event_attendance',m,'Event Attendee, '||m,'Attended '||m||' GoodVibesCafe event'||CASE WHEN m=1 THEN '' ELSE 's' END||'.','CalendarCheck','primary',ord,'List event names and dates you attended.');
   END LOOP;
 
   FOREACH sub IN ARRAY subs LOOP
@@ -119,7 +119,7 @@ BEGIN
 
   ord := ord + 1;
   INSERT INTO public.badge_catalog(code,category,name,description,icon,color,bonus_points,sort_order,evidence_hint)
-  VALUES ('publicity','publicity','Amplifier','Generated publicity and mentioned BizVibe.','Megaphone','primary',2,ord,'Link to article, post, podcast, or media.');
+  VALUES ('publicity','publicity','Amplifier','Generated publicity and mentioned GoodVibesCafe.','Megaphone','primary',2,ord,'Link to article, post, podcast, or media.');
 
   ord := ord + 1;
   INSERT INTO public.badge_catalog(code,category,name,description,icon,color,sort_order,evidence_hint)
@@ -131,15 +131,15 @@ BEGIN
 
   ord := ord + 1;
   INSERT INTO public.badge_catalog(code,category,name,description,icon,color,bonus_points,sort_order,evidence_hint)
-  VALUES ('launch_bizvibe','launch','BizVibe Launch','Launched a product with BizVibe.','Rocket','vibetor',2,ord,'Launch name, date, and link.');
+  VALUES ('launch_bizvibe','launch','GoodVibesCafe Launch','Launched a product with GoodVibesCafe.','Rocket','vibetor',2,ord,'Launch name, date, and link.');
 
   ord := ord + 1;
   INSERT INTO public.badge_catalog(code,category,name,description,icon,color,sort_order,evidence_hint)
-  VALUES ('ambassador','ambassador','BizVibe Ambassador','Recognised ambassador of BizVibe.','Star','vibetor',ord,'How you represent BizVibe; founders validate.');
+  VALUES ('ambassador','ambassador','GoodVibesCafe Ambassador','Recognised ambassador of GoodVibesCafe.','Star','vibetor',ord,'How you represent GoodVibesCafe; founders validate.');
 
   ord := ord + 1;
   INSERT INTO public.badge_catalog(code,category,name,description,icon,color,bonus_points,sort_order,evidence_hint)
-  VALUES ('partner','partner','Partner','Official BizVibe partner (person or company).','Handshake','vibetor',2,ord,'Partnership scope and start date.');
+  VALUES ('partner','partner','Partner','Official GoodVibesCafe partner (person or company).','Handshake','vibetor',2,ord,'Partnership scope and start date.');
 
   ord := ord + 1;
   INSERT INTO public.badge_catalog(code,category,name,description,icon,color,sort_order,evidence_hint)

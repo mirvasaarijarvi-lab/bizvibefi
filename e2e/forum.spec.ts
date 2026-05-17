@@ -3,7 +3,7 @@ import { test, expect } from "@playwright/test";
 test.describe("Forum", () => {
   test("forum page loads with categories", async ({ page }) => {
     await page.goto("/forum");
-    await expect(page).toHaveTitle(/Forum|BizVibe/);
+    await expect(page).toHaveTitle(/Forum|GoodVibesCafe/);
     await expect(page.getByRole("heading").first()).toBeVisible();
   });
 

@@ -88,7 +88,7 @@ const Contact = () => {
 
   return (
     <Layout>
-      <PageMeta title="Contact — BizVibe" description="Got an idea, question, or just want to say hi? Reach out to the BizVibe collective." />
+      <PageMeta title="Contact — GoodVibesCafe" description="Got an idea, question, or just want to say hi? Reach out to the GoodVibesCafe collective." />
       <section className="py-24 md:py-32">
         <div className="container max-w-4xl">
           <motion.div
@@ -96,7 +96,7 @@ const Contact = () => {
             animate={{ opacity: 1, y: 0 }}
             className="text-center mb-16"
           >
-            <HeroAvatar src={mascotPeek} alt="BizVibe peeking mascot" />
+            <HeroAvatar src={mascotPeek} alt="GoodVibesCafe peeking mascot" />
             <p className="font-body text-sm font-semibold text-turquoise tracking-widest uppercase mb-4">{t("contact.tag")}</p>
             <h1 className="font-display text-4xl md:text-6xl font-extrabold tracking-[-0.03em]">
               {t("contact.title")} <span className="text-gradient-surge">{t("contact.titleHighlight")}</span>

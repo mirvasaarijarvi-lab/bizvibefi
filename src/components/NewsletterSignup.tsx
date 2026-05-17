@@ -35,7 +35,7 @@ const NewsletterSignup = ({ variant = "inline" }: NewsletterSignupProps) => {
         }
       } else {
         setSubscribed(true);
-        toast({ title: "Subscribed!", description: "Welcome to the BizVibe newsletter." });
+        toast({ title: "Subscribed!", description: "Welcome to the GoodVibesCafe newsletter." });
       }
       setEmail("");
     } catch (error: unknown) {
