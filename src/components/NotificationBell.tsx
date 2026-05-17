@@ -101,7 +101,7 @@ const NotificationBell = () => {
                               {n.sender_name} · {n.sender_email}
                             </p>
                           )}
-                          <p className="text-[10px] text-muted-foreground/50 font-body mt-1">
+                          <p className="text-[10px] text-muted-foreground font-body mt-1">
                             {timeAgo(n.created_at)}
                           </p>
                         </div>

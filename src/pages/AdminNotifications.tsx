@@ -252,7 +252,7 @@ const AdminNotifications = () => {
                         </div>
                       )}
                       <div className="flex items-center justify-between mt-3">
-                        <span className="text-xs text-muted-foreground/60 font-body">
+                        <span className="text-xs text-muted-foreground font-body">
                           {formatDistanceToNow(new Date(n.created_at), {
                             addSuffix: true,
                           })}
