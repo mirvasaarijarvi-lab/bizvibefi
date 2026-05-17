@@ -4,6 +4,7 @@ import { useParams, Link } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import Layout from "@/components/Layout";
 import PageMeta from "@/components/PageMeta";
+import JsonLd from "@/components/JsonLd";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -123,6 +124,29 @@ const ForumTopic = () => {
         description={(topic?.content?.slice(0, 155) ?? "Community discussion thread in the Good Vibes Café forum, where members share leads, projects and feedback.")}
         ogType="article"
       />
+      {topic && (
+        <JsonLd
+          id="forum-topic"
+          data={{
+            "@context": "https://schema.org",
+            "@type": "DiscussionForumPosting",
+            headline: topic.title,
+            articleBody: topic.content,
+            url: `https://goodvibescafe.org/forum/${slug}/${topicId}`,
+            datePublished: topic.created_at,
+            dateModified: topic.updated_at ?? topic.created_at,
+            author: {
+              "@type": "Person",
+              name: topic.profile?.display_name ?? "Community member",
+            },
+            interactionStatistic: {
+              "@type": "InteractionCounter",
+              interactionType: "https://schema.org/CommentAction",
+              userInteractionCount: replies?.length ?? 0,
+            },
+          }}
+        />
+      )}
       <section className="py-20 px-4">
         <div className="max-w-4xl mx-auto">
           <Link to={`/forum/${slug}`} className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground font-body mb-4">
