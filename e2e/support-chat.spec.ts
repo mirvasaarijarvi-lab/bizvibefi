@@ -10,12 +10,12 @@ test.describe("Support Chat Widget", () => {
     await expect(trigger).toBeVisible();
 
     await trigger.click();
-    await expect(page.getByText("GoodVibesCafe Support")).toBeVisible();
+    await expect(page.getByText("<Good Vibes Café/> Support")).toBeVisible();
 
     await expect(trigger).not.toBeVisible();
 
     await page.getByLabel("Close chat").click();
-    await expect(page.getByText("GoodVibesCafe Support")).not.toBeVisible();
+    await expect(page.getByText("<Good Vibes Café/> Support")).not.toBeVisible();
     await expect(trigger).toBeVisible();
   });
 
@@ -23,7 +23,7 @@ test.describe("Support Chat Widget", () => {
     await page.getByLabel("Open support chat").click();
 
     await expect(page.getByText("Hi! How can I help?")).toBeVisible();
-    await expect(page.getByRole("button", { name: "What is GoodVibesCafe?" })).toBeVisible();
+    await expect(page.getByRole("button", { name: "What is <Good Vibes Café/>?" })).toBeVisible();
     await expect(page.getByRole("button", { name: "Free vs Pro?" })).toBeVisible();
     await expect(page.getByRole("button", { name: "How do I join?" })).toBeVisible();
   });
@@ -55,9 +55,9 @@ test.describe("Support Chat Widget", () => {
   test("suggestion button fills input and submits", async ({ page }) => {
     await page.getByLabel("Open support chat").click();
 
-    await page.getByRole("button", { name: "What is GoodVibesCafe?" }).click();
+    await page.getByRole("button", { name: "What is <Good Vibes Café/>?" }).click();
 
-    await expect(page.getByText("What is GoodVibesCafe?").last()).toBeVisible({ timeout: 5000 });
+    await expect(page.getByText("What is <Good Vibes Café/>?").last()).toBeVisible({ timeout: 5000 });
   });
 
   test("input is focused when chat opens", async ({ page }) => {
