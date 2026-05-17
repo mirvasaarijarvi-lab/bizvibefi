@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { useTranslation } from "@/i18n/useTranslation";
 import NewsletterSignup from "@/components/NewsletterSignup";
+import logoMark from "@/assets/logo-mark.png";
 
 const Footer = () => {
   const { t } = useTranslation();
@@ -12,6 +13,14 @@ const Footer = () => {
           <div>
             <span className="font-display text-xl font-extrabold text-gradient-storm">{"<Good Vibes Café/>"}</span>
             <p className="mt-3 text-sm text-muted-foreground font-body">{t("footer.desc")}</p>
+            <img
+              src={logoMark}
+              alt="<Good Vibes Café/> logo"
+              loading="lazy"
+              width={96}
+              height={96}
+              className="mt-5 h-24 w-24 rounded-full"
+            />
           </div>
           <div>
             <h4 className="font-display text-sm font-semibold text-foreground mb-3">{t("footer.navigate")}</h4>
