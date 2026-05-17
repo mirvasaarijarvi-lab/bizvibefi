@@ -124,7 +124,7 @@ const ShowcaseDetail = () => {
           "@type": "Article",
           headline: item.title,
           description: item.description,
-          image: Array.isArray(item.images) ? item.images : undefined,
+          image: item.image_urls?.length ? item.image_urls : item.image_url ? [item.image_url] : undefined,
           url: `https://goodvibescafe.org/showcase/${item.id}`,
           datePublished: item.created_at,
           dateModified: item.updated_at ?? item.created_at,
