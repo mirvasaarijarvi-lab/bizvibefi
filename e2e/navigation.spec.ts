@@ -3,7 +3,7 @@ import { test, expect } from "@playwright/test";
 test.describe("Navigation", () => {
   test("homepage loads with correct title", async ({ page }) => {
     await page.goto("/");
-    await expect(page).toHaveTitle(/GoodVibesCafe/);
+    await expect(page).toHaveTitle(/Good Vibes Café/);
     await expect(page.locator("h1")).toBeVisible();
   });
 
