@@ -64,9 +64,9 @@ test.describe("Desktop Navigation", () => {
     await expect(page.locator("nav").getByRole("link", { name: /forum/i })).toBeVisible();
   });
 
-  test("GoodVibesCafe logo links to homepage", async ({ page }) => {
+  test("Good Vibes Café logo links to homepage", async ({ page }) => {
     await page.goto("/about");
-    await page.locator("nav").getByRole("link", { name: /bizvibe/i }).click();
+    await page.locator("nav").getByRole("link", { name: /good vibes café/i }).first().click();
     await expect(page).toHaveURL(/\/$/);
   });
 });
