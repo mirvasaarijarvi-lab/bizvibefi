@@ -40,7 +40,7 @@ const Navbar = () => {
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-xl border-b border-border">
       <div className="container flex items-center justify-between h-16">
-        <Link to="/" className="font-display text-[13px] sm:text-[15px] md:text-[17px] font-extrabold tracking-[-0.04em] leading-[0.92] shrink-0">
+        <Link to="/" aria-label="<Good Vibes Café/> — home" className="font-display text-[13px] sm:text-[15px] md:text-[17px] font-extrabold tracking-[-0.04em] leading-[0.92] shrink-0">
           <span className="text-gradient-storm flex flex-col items-start">
             <span>{"<Good"}</span>
             <span className="-mt-[1px]">Vibes</span>
