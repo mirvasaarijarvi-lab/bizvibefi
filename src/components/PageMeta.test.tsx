@@ -1,6 +1,11 @@
 import { describe, it, expect, beforeEach } from "vitest";
 import { render } from "@testing-library/react";
+import { MemoryRouter } from "react-router-dom";
+import { ReactElement } from "react";
 import PageMeta from "./PageMeta";
+
+const renderWithRouter = (ui: ReactElement) =>
+  render(<MemoryRouter>{ui}</MemoryRouter>);
 
 describe("PageMeta", () => {
   beforeEach(() => {
