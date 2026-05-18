@@ -5,12 +5,84 @@ import PageMeta from "@/components/PageMeta";
 import NewsletterSignup from "@/components/NewsletterSignup";
 import HeroAvatar from "@/components/HeroAvatar";
 import { motion, useInView } from "framer-motion";
-import { Rocket, Users, Zap, ArrowRight, Wrench, Search, Handshake, TrendingUp, CalendarCheck, Code2, Lightbulb, MessageSquare, Gem } from "lucide-react";
+import { Rocket, Users, Zap, ArrowRight, Wrench, Search, Handshake, TrendingUp, CalendarCheck, Code2, Lightbulb, MessageSquare, Gem, Calendar, MapPin } from "lucide-react";
+import { format } from "date-fns";
+import { fi as fiLocale, enUS, sv as svLocale } from "date-fns/locale";
 import { useTranslation } from "@/i18n/useTranslation";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useRef, useEffect, useState } from "react";
 import { Badge } from "@/components/ui/badge";
+
+const NextEventTeaser = () => {
+  const { t, lang } = useTranslation();
+  const locale = lang === "fi" ? fiLocale : lang === "sv" ? svLocale : enUS;
+
+  const { data: event } = useQuery({
+    queryKey: ["next-upcoming-event", lang],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("events")
+        .select("id, title, title_fi, title_sv, location, location_fi, location_sv, starts_at")
+        .eq("is_published", true)
+        .gte("starts_at", new Date().toISOString())
+        .order("starts_at", { ascending: true })
+        .limit(1)
+        .maybeSingle();
+      if (error) throw error;
+      return data;
+    },
+    staleTime: 60_000,
+  });
+
+  if (!event) return null;
+
+  const title =
+    (lang === "fi" && event.title_fi) ||
+    (lang === "sv" && event.title_sv) ||
+    event.title;
+  const location =
+    (lang === "fi" && event.location_fi) ||
+    (lang === "sv" && event.location_sv) ||
+    event.location;
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 12 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 0.3, duration: 0.5 }}
+      className="mt-8 flex justify-center"
+    >
+      <Link
+        to="/events"
+        className="group inline-flex items-center gap-3 sm:gap-4 max-w-full bg-card/80 backdrop-blur border border-border hover:border-purple-vivid/50 rounded-2xl px-4 py-3 sm:px-5 sm:py-4 shadow-sm hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300"
+      >
+        <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-gradient-storm flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
+          <Calendar className="h-5 w-5 text-primary-foreground" />
+        </div>
+        <div className="text-left min-w-0">
+          <p className="font-body text-[11px] font-semibold text-turquoise tracking-widest uppercase">
+            {t("events.nextUp")}
+          </p>
+          <p className="font-display text-sm sm:text-base font-semibold tracking-tight truncate">
+            {title}
+          </p>
+          <p className="font-body text-xs text-muted-foreground flex items-center gap-1.5 mt-0.5 truncate">
+            <span>{format(new Date(event.starts_at), "EEE d MMM, HH:mm", { locale })}</span>
+            {location && (
+              <>
+                <span aria-hidden>·</span>
+                <MapPin className="h-3 w-3 shrink-0" />
+                <span className="truncate">{location}</span>
+              </>
+            )}
+          </p>
+        </div>
+        <ArrowRight className="h-4 w-4 text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-all shrink-0" />
+      </Link>
+    </motion.div>
+  );
+};
 
 const Index = () => {
   const { t } = useTranslation();
@@ -56,6 +128,7 @@ const Index = () => {
                 <Link to="/get-going">{t("hero.ctaGo")}</Link>
               </Button>
             </div>
+            <NextEventTeaser />
           </motion.div>
         </div>
       </section>

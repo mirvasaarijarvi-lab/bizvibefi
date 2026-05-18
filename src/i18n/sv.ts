@@ -445,6 +445,8 @@ const sv = {
     agenda: "Agenda",
     agendaPlaceholder: "18:00 Välkomna\n18:15 Föredrag\n19:00 Nätverkande",
     agendaHint: "Ett objekt per rad.",
+    nextUp: "Härnäst",
+    viewEvent: "Visa evenemang",
   },
 };
 

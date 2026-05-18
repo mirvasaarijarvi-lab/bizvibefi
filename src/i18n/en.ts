@@ -451,6 +451,8 @@ const en = {
     agenda: "Agenda",
     agendaPlaceholder: "6:00 PM Welcome\n6:15 PM Talk\n7:00 PM Networking",
     agendaHint: "One item per line.",
+    nextUp: "Next up",
+    viewEvent: "View event",
   },
 };
 
