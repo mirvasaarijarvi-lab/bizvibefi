@@ -1387,6 +1387,19 @@ const Events = () => {
                 </Button>
               );
             })()}
+
+            {isPastEvent && (
+              <EventPresentationsViewer
+                eventId={event.id}
+                lang={lang}
+                hasAccess={
+                  !!user &&
+                  (rsvpStatus === "going" ||
+                    isSuperadmin ||
+                    event.created_by === user?.id)
+                }
+              />
+            )}
           </div>
         </div>
         </div>
