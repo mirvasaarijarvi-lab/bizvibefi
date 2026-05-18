@@ -419,37 +419,51 @@ const EventFormDialog = ({
             />
             <Label className="font-body text-sm">Published (visible to everyone)</Label>
           </div>
-          {!isSuperadmin && (
-            <div className="rounded-md border border-destructive/30 bg-destructive/5 p-3 text-sm font-body text-destructive">
-              {lang === "fi"
-                ? "Vain pääylläpitäjät voivat luoda tai muokata tapahtumia. Pyydä Mirvaa tai Minnaa tekemään muutos."
-                : lang === "sv"
-                ? "Endast superadministratörer kan skapa eller redigera evenemang. Be Mirva eller Minna att göra ändringen."
-                : "Only superadmins can create or edit events. Please ask Mirva or Minna to make this change."}
-            </div>
-          )}
-          <div className="flex gap-2 pt-2">
-            <Button
-              type="submit"
-              className="bg-gradient-storm hover:opacity-90 font-body"
-              disabled={saveMutation.isPending || !isSuperadmin}
-              title={!isSuperadmin ? "Superadmin access required" : undefined}
-            >
-              {saveMutation.isPending
-                ? "Saving..."
-                : editEvent
-                ? "Update Event"
-                : t("events.createEvent")}
-            </Button>
-            <Button
-              type="button"
-              variant="ghost"
-              onClick={() => onOpenChange(false)}
-              className="font-body"
-            >
-              {t("events.cancel")}
-            </Button>
-          </div>
+          {(() => {
+            const isCreator = !!editEvent && editEvent.created_by === user?.id;
+            const canSave = isSuperadmin || (editEvent ? isCreator : false);
+            return (
+              <>
+                {!canSave && (
+                  <div className="rounded-md border border-destructive/30 bg-destructive/5 p-3 text-sm font-body text-destructive">
+                    {editEvent
+                      ? (lang === "fi"
+                          ? "Vain pääylläpitäjät tai tapahtuman luoja voivat muokata tätä tapahtumaa."
+                          : lang === "sv"
+                          ? "Endast superadministratörer eller evenemangets skapare kan redigera detta evenemang."
+                          : "Only superadmins or the event creator can edit this event.")
+                      : (lang === "fi"
+                          ? "Vain pääylläpitäjät voivat luoda tapahtumia."
+                          : lang === "sv"
+                          ? "Endast superadministratörer kan skapa evenemang."
+                          : "Only superadmins can create events.")}
+                  </div>
+                )}
+                <div className="flex gap-2 pt-2">
+                  <Button
+                    type="submit"
+                    className="bg-gradient-storm hover:opacity-90 font-body"
+                    disabled={saveMutation.isPending || !canSave}
+                    title={!canSave ? "You don't have permission to save this event" : undefined}
+                  >
+                    {saveMutation.isPending
+                      ? "Saving..."
+                      : editEvent
+                      ? "Update Event"
+                      : t("events.createEvent")}
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    onClick={() => onOpenChange(false)}
+                    className="font-body"
+                  >
+                    {t("events.cancel")}
+                  </Button>
+                </div>
+              </>
+            );
+          })()}
         </form>
       </DialogContent>
     </Dialog>
@@ -620,7 +634,7 @@ const Events = () => {
                 </Badge>
               )}
               {/* Admin actions */}
-              {isSuperadmin && (
+              {(isSuperadmin || event.created_by === user?.id) && (
                 <div className="ml-auto flex items-center gap-1">
                   <Button
                     variant="ghost"
