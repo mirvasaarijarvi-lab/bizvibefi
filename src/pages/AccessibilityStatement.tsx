@@ -112,14 +112,14 @@ const AccessibilityStatement = () => (
         <ul className="list-disc pl-6 space-y-2">
           <li>
             Email:{" "}
-            <a href="mailto:shipping@goodvibescafe.fi" className="text-primary hover:underline">
-              shipping@goodvibescafe.fi
+            <a href="mailto:shipping@goodvibescafe.org" className="text-primary hover:underline">
+              shipping@goodvibescafe.org
             </a>
           </li>
           <li>
             Contact page:{" "}
             <a href="/contact" className="text-primary hover:underline">
-              goodvibescafe.fi/contact
+              goodvibescafe.org/contact
             </a>
           </li>
         </ul>
