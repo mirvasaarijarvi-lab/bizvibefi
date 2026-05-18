@@ -155,6 +155,7 @@ const EventFormDialog = ({
         max_attendees: form.max_attendees ? parseInt(form.max_attendees) : null,
         is_published: form.is_published,
         image_url: form.image_url.trim() || null,
+        requires_signin: form.requires_signin,
       };
       const updatePayload = {
         ...payload,
