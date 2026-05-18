@@ -118,7 +118,7 @@ Deno.serve(async (req) => {
 
   // Mint signed URL
   const expiresIn = 60 * 10; // 10 min
-  const fileName = (pres.title || "presentation").replace(/[^\w.\-]+/g, "_") + ".pdf";
+  const fileName = (pres.title || "presentation").replace(/[^\w.-]+/g, "_") + ".pdf";
   const { data: signed, error: signErr } = await admin.storage
     .from("event-presentations")
     .createSignedUrl(pres.file_path, expiresIn, wantDownload ? { download: fileName } : undefined);
