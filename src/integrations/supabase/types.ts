@@ -355,6 +355,41 @@ export type Database = {
           },
         ]
       }
+      event_signups: {
+        Row: {
+          created_at: string
+          email: string
+          event_id: string
+          full_name: string
+          id: string
+          phone: string | null
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          event_id: string
+          full_name: string
+          id?: string
+          phone?: string | null
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          event_id?: string
+          full_name?: string
+          id?: string
+          phone?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "event_signups_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "events"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       events: {
         Row: {
           agenda: string | null
@@ -376,6 +411,7 @@ export type Database = {
           location_sv: string | null
           max_attendees: number | null
           online_url: string | null
+          requires_signin: boolean
           starts_at: string
           title: string
           title_fi: string | null
@@ -402,6 +438,7 @@ export type Database = {
           location_sv?: string | null
           max_attendees?: number | null
           online_url?: string | null
+          requires_signin?: boolean
           starts_at: string
           title: string
           title_fi?: string | null
@@ -428,6 +465,7 @@ export type Database = {
           location_sv?: string | null
           max_attendees?: number | null
           online_url?: string | null
+          requires_signin?: boolean
           starts_at?: string
           title?: string
           title_fi?: string | null
