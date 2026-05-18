@@ -1392,12 +1392,7 @@ const Events = () => {
               <EventPresentationsViewer
                 eventId={event.id}
                 lang={lang}
-                hasAccess={
-                  !!user &&
-                  (rsvpStatus === "going" ||
-                    isSuperadmin ||
-                    event.created_by === user?.id)
-                }
+                hasAccess={!!user}
               />
             )}
           </div>
