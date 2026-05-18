@@ -65,12 +65,20 @@ interface Sponsor {
 
 interface EventFormData {
   title: string;
+  title_fi: string;
+  title_sv: string;
   description: string;
+  description_fi: string;
+  description_sv: string;
   agenda: string;
+  agenda_fi: string;
+  agenda_sv: string;
   event_type: "meetup" | "webinar" | "workshop" | "hackathon";
   starts_at: string;
   ends_at: string;
   location: string;
+  location_fi: string;
+  location_sv: string;
   is_online: boolean;
   online_url: string;
   max_attendees: string;
