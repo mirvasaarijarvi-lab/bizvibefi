@@ -1109,6 +1109,83 @@ const Events = () => {
               </div>
             )}
 
+            {!isPastEvent && speakers.length > 0 && (
+              <div className="mb-4">
+                <p className="text-xs font-display font-semibold uppercase tracking-wider text-foreground mb-2 flex items-center gap-1.5">
+                  <Mic className="h-3.5 w-3.5 text-turquoise" /> {speakersLabel}
+                </p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  {speakers.map((sp, i) => (
+                    <div key={i} className="flex items-center gap-3 bg-muted/40 border border-border rounded-lg p-2">
+                      {sp.image_url ? (
+                        <img src={sp.image_url} alt={sp.name} className="w-10 h-10 rounded-full object-cover border border-border shrink-0" />
+                      ) : (
+                        <div className="w-10 h-10 rounded-full bg-muted border border-border flex items-center justify-center shrink-0">
+                          <Users className="h-4 w-4 text-muted-foreground" />
+                        </div>
+                      )}
+                      <div className="min-w-0">
+                        <p className="font-display text-sm font-semibold text-foreground truncate">{sp.name}</p>
+                        {(sp.title || sp.company) && (
+                          <p className="text-xs text-muted-foreground font-body truncate flex items-center gap-1">
+                            {sp.title}
+                            {sp.title && sp.company && <span aria-hidden>·</span>}
+                            {sp.company && (
+                              <span className="flex items-center gap-1"><Building2 className="h-3 w-3" />{sp.company}</span>
+                            )}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {!isPastEvent && (partnerCompanies.length > 0 || sponsorCompanies.length > 0) && (
+              <div className="mb-4 space-y-3">
+                {[
+                  { label: partnersLabel, list: partnerCompanies },
+                  { label: sponsorsLabel, list: sponsorCompanies },
+                ].filter((g) => g.list.length > 0).map((group) => (
+                  <div key={group.label}>
+                    <p className="text-xs font-display font-semibold uppercase tracking-wider text-muted-foreground mb-2">
+                      {group.label}
+                    </p>
+                    <div className="flex flex-wrap items-center gap-3">
+                      {group.list.map((sp, i) => {
+                        const inner = sp.logo_url ? (
+                          <img
+                            src={sp.logo_url}
+                            alt={sp.name}
+                            title={sp.name}
+                            className="h-10 max-w-[140px] object-contain"
+                          />
+                        ) : (
+                          <span className="font-display text-sm font-semibold text-foreground">{sp.name}</span>
+                        );
+                        return sp.url ? (
+                          <a
+                            key={i}
+                            href={sp.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="bg-background border border-border rounded-md px-3 py-2 hover:border-primary/40 transition-colors"
+                          >
+                            {inner}
+                          </a>
+                        ) : (
+                          <div key={i} className="bg-background border border-border rounded-md px-3 py-2">
+                            {inner}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+
             <div className="flex flex-wrap items-center gap-4 text-xs text-muted-foreground font-body mb-4">
               <span className="flex items-center gap-1">
                 <Clock className="h-3.5 w-3.5" />
