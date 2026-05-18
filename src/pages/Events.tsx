@@ -1059,8 +1059,16 @@ const Events = () => {
     },
   });
 
-  const upcomingEvents = events?.filter((e) => !isPast(new Date(e.starts_at))) ?? [];
-  const pastEvents = (events?.filter((e) => isPast(new Date(e.starts_at))) ?? [])
+  const isEventPast = (e: LocalizedEvent) => {
+    const now = new Date();
+    if (e.ends_at) return new Date(e.ends_at) < now;
+    const dayAfter = new Date(e.starts_at);
+    dayAfter.setHours(0, 0, 0, 0);
+    dayAfter.setDate(dayAfter.getDate() + 1);
+    return now >= dayAfter;
+  };
+  const upcomingEvents = events?.filter((e) => !isEventPast(e)) ?? [];
+  const pastEvents = (events?.filter((e) => isEventPast(e)) ?? [])
     .slice()
     .sort((a, b) => new Date(b.starts_at).getTime() - new Date(a.starts_at).getTime());
 
