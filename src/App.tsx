@@ -38,6 +38,7 @@ const Badges = lazy(() => import("./pages/Badges.tsx"));
 const AdminBadges = lazy(() => import("./pages/AdminBadges.tsx"));
 const AdminCertificates = lazy(() => import("./pages/AdminCertificates.tsx"));
 const CertificateVerify = lazy(() => import("./pages/CertificateVerify.tsx"));
+const AdminEmailHealth = lazy(() => import("./pages/AdminEmailHealth.tsx"));
 const NotFound = lazy(() => import("./pages/NotFound.tsx"));
 
 const queryClient = new QueryClient();
@@ -82,6 +83,7 @@ const App = () => (
                 <Route path="/admin/badges" element={<AdminBadges />} />
                 <Route path="/admin/certificates" element={<AdminCertificates />} />
                 <Route path="/certificates/:id" element={<CertificateVerify />} />
+                <Route path="/admin/email-health" element={<AdminEmailHealth />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </Suspense>
