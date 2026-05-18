@@ -113,6 +113,7 @@ const EventFormDialog = ({
   const { user } = useAuth();
   const { toast } = useToast();
   const queryClient = useQueryClient();
+  const isSuperadmin = useIsSuperadmin();
 
   const [form, setForm] = useState<EventFormData>(() => {
     if (editEvent) {
