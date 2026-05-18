@@ -419,11 +419,21 @@ const EventFormDialog = ({
             />
             <Label className="font-body text-sm">Published (visible to everyone)</Label>
           </div>
+          {!isSuperadmin && (
+            <div className="rounded-md border border-destructive/30 bg-destructive/5 p-3 text-sm font-body text-destructive">
+              {lang === "fi"
+                ? "Vain pääylläpitäjät voivat luoda tai muokata tapahtumia. Pyydä Mirvaa tai Minnaa tekemään muutos."
+                : lang === "sv"
+                ? "Endast superadministratörer kan skapa eller redigera evenemang. Be Mirva eller Minna att göra ändringen."
+                : "Only superadmins can create or edit events. Please ask Mirva or Minna to make this change."}
+            </div>
+          )}
           <div className="flex gap-2 pt-2">
             <Button
               type="submit"
               className="bg-gradient-storm hover:opacity-90 font-body"
-              disabled={saveMutation.isPending}
+              disabled={saveMutation.isPending || !isSuperadmin}
+              title={!isSuperadmin ? "Superadmin access required" : undefined}
             >
               {saveMutation.isPending
                 ? "Saving..."
