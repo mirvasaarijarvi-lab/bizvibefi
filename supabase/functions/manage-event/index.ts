@@ -75,15 +75,12 @@ Deno.serve(async (req) => {
   }
   const userId = claimsData.claims.sub as string;
 
-  // Authorization: superadmin only
+  // Authorization: superadmin OR (for update/delete) the event creator
   const { data: isSuperadmin, error: roleErr } = await supabase.rpc("has_role", {
     _user_id: userId,
     _role: "superadmin",
   });
   if (roleErr) return json(500, { error: "Role check failed", details: roleErr.message });
-  if (!isSuperadmin) {
-    return json(403, { error: "Forbidden: superadmin role required to manage events" });
-  }
 
   let body: unknown;
   try {
@@ -102,6 +99,25 @@ Deno.serve(async (req) => {
   }
 
   const payload = parsed.data;
+
+  // Per-action authorization
+  if (payload.action === "create" && !isSuperadmin) {
+    return json(403, { error: "Forbidden: superadmin role required to create events" });
+  }
+  if (payload.action === "update" || payload.action === "delete") {
+    if (!isSuperadmin) {
+      const { data: existing, error: fetchErr } = await supabase
+        .from("events")
+        .select("created_by")
+        .eq("id", payload.id)
+        .maybeSingle();
+      if (fetchErr) return json(500, { error: "Lookup failed", details: fetchErr.message });
+      if (!existing) return json(404, { error: "Event not found" });
+      if (existing.created_by !== userId) {
+        return json(403, { error: "Forbidden: only the event creator or a superadmin can modify this event" });
+      }
+    }
+  }
 
   try {
     if (payload.action === "create") {
