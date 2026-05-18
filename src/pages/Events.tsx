@@ -1071,9 +1071,6 @@ const Events = () => {
   const pastEvents = (events?.filter((e) => isEventPast(e)) ?? [])
     .slice()
     .sort((a, b) => new Date(b.starts_at).getTime() - new Date(a.starts_at).getTime());
-  const pastEvents = (events?.filter((e) => isEventPast(e)) ?? [])
-    .slice()
-    .sort((a, b) => new Date(b.starts_at).getTime() - new Date(a.starts_at).getTime());
 
   const upcomingLabel = lang === "fi" ? "Tulevat" : lang === "sv" ? "Kommande" : "Upcoming";
   const pastLabel = lang === "fi" ? "Menneet" : lang === "sv" ? "Tidigare" : "Past";
