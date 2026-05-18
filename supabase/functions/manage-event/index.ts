@@ -36,6 +36,18 @@ const EventFields = z.object({
   location_sv: z.string().trim().max(500).nullable().optional(),
   agenda_fi: z.string().trim().max(5000).nullable().optional(),
   agenda_sv: z.string().trim().max(5000).nullable().optional(),
+  speakers: z.array(z.object({
+    name: z.string().trim().min(1).max(120),
+    title: z.string().trim().max(200).optional().default(""),
+    company: z.string().trim().max(200).optional().default(""),
+    image_url: z.union([z.string().trim().url().max(1000), z.literal("")]).optional().default(""),
+  })).max(50).optional().default([]),
+  sponsors: z.array(z.object({
+    name: z.string().trim().min(1).max(200),
+    logo_url: z.union([z.string().trim().url().max(1000), z.literal("")]).optional().default(""),
+    url: z.union([z.string().trim().url().max(500), z.literal("")]).optional().default(""),
+    kind: z.enum(["sponsor", "partner"]).default("sponsor"),
+  })).max(50).optional().default([]),
 }).superRefine((v, ctx) => {
   if (v.ends_at && new Date(v.ends_at) <= new Date(v.starts_at)) {
     ctx.addIssue({ code: z.ZodIssueCode.custom, path: ["ends_at"], message: "ends_at must be after starts_at" });
