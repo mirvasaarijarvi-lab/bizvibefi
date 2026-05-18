@@ -63,6 +63,28 @@ interface EventFormData {
   image_url: string;
 }
 
+type LocalizedEvent = Tables<"events"> & {
+  title_fi?: string | null;
+  title_sv?: string | null;
+  description_fi?: string | null;
+  description_sv?: string | null;
+  location_fi?: string | null;
+  location_sv?: string | null;
+  agenda?: string | null;
+  agenda_fi?: string | null;
+  agenda_sv?: string | null;
+};
+
+const localizedEventValue = (
+  event: LocalizedEvent,
+  lang: string,
+  field: "title" | "description" | "location" | "agenda",
+) => {
+  const localizedKey = `${field}_${lang}` as keyof LocalizedEvent;
+  const localized = lang === "fi" || lang === "sv" ? event[localizedKey] : null;
+  return typeof localized === "string" && localized.length > 0 ? localized : event[field];
+};
+
 const emptyForm: EventFormData = {
   title: "",
   description: "",
@@ -94,14 +116,15 @@ const EventFormDialog = ({
 
   const [form, setForm] = useState<EventFormData>(() => {
     if (editEvent) {
+      const event = editEvent as LocalizedEvent;
       return {
-        title: editEvent.title,
-        description: editEvent.description || "",
-        agenda: (editEvent as Tables<"events"> & { agenda?: string | null }).agenda || "",
+        title: localizedEventValue(event, lang, "title") || "",
+        description: localizedEventValue(event, lang, "description") || "",
+        agenda: localizedEventValue(event, lang, "agenda") || "",
         event_type: editEvent.event_type,
         starts_at: editEvent.starts_at ? format(new Date(editEvent.starts_at), "yyyy-MM-dd'T'HH:mm") : "",
         ends_at: editEvent.ends_at ? format(new Date(editEvent.ends_at), "yyyy-MM-dd'T'HH:mm") : "",
-        location: editEvent.location || "",
+        location: localizedEventValue(event, lang, "location") || "",
         is_online: editEvent.is_online,
         online_url: editEvent.online_url || "",
         max_attendees: editEvent.max_attendees?.toString() || "",
@@ -129,13 +152,31 @@ const EventFormDialog = ({
         is_published: form.is_published,
         image_url: form.image_url.trim() || null,
       };
+      const updatePayload = {
+        ...payload,
+        ...(lang === "fi" ? {
+          title_fi: payload.title,
+          description_fi: payload.description,
+          location_fi: payload.location,
+          agenda_fi: payload.agenda,
+        } : {}),
+        ...(lang === "sv" ? {
+          title_sv: payload.title,
+          description_sv: payload.description,
+          location_sv: payload.location,
+          agenda_sv: payload.agenda,
+        } : {}),
+      };
 
       if (editEvent) {
-        const { error } = await supabase
+        const { data, error } = await supabase
           .from("events")
-          .update(payload)
-          .eq("id", editEvent.id);
+          .update(updatePayload)
+          .eq("id", editEvent.id)
+          .select("id")
+          .maybeSingle();
         if (error) throw error;
+        if (!data) throw new Error("Event update did not save. Please check admin permissions and try again.");
       } else {
         const { error } = await supabase
           .from("events")
@@ -473,11 +514,11 @@ const Events = () => {
     const rsvpStatus = getRsvpStatus(event.id);
     const attendeeCount = rsvpCounts?.[event.id] ?? 0;
     const isFull = event.max_attendees ? attendeeCount >= event.max_attendees : false;
-    const e = event as Tables<"events"> & { title_fi?: string | null; title_sv?: string | null; description_fi?: string | null; description_sv?: string | null; location_fi?: string | null; location_sv?: string | null; agenda?: string | null; agenda_fi?: string | null; agenda_sv?: string | null };
-    const localizedTitle = (lang === "fi" && e.title_fi) || (lang === "sv" && e.title_sv) || event.title;
-    const localizedDescription = (lang === "fi" && e.description_fi) || (lang === "sv" && e.description_sv) || event.description;
-    const localizedLocation = (lang === "fi" && e.location_fi) || (lang === "sv" && e.location_sv) || event.location;
-    const localizedAgenda = (lang === "fi" && e.agenda_fi) || (lang === "sv" && e.agenda_sv) || e.agenda;
+    const e = event as LocalizedEvent;
+    const localizedTitle = localizedEventValue(e, lang, "title");
+    const localizedDescription = localizedEventValue(e, lang, "description");
+    const localizedLocation = localizedEventValue(e, lang, "location");
+    const localizedAgenda = localizedEventValue(e, lang, "agenda");
 
     return (
       <div
