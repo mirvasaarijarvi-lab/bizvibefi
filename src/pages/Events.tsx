@@ -118,6 +118,7 @@ const EventFormDialog = ({
       const payload = {
         title: form.title.trim(),
         description: form.description.trim() || null,
+        agenda: form.agenda.trim() || null,
         event_type: form.event_type,
         starts_at: new Date(form.starts_at).toISOString(),
         ends_at: form.ends_at ? new Date(form.ends_at).toISOString() : null,
