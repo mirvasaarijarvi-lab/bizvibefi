@@ -61,6 +61,7 @@ interface EventFormData {
   max_attendees: string;
   is_published: boolean;
   image_url: string;
+  requires_signin: boolean;
 }
 
 type LocalizedEvent = Tables<"events"> & {
