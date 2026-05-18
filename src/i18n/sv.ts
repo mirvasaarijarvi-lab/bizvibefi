@@ -225,7 +225,7 @@ const sv = {
     },
     toast: { title: "Meddelande skickat!", desc: "Vi återkommer snart." },
     emailTitle: "Maila oss",
-    emailAddr: "shipping@goodvibescafe.fi",
+    emailAddr: "shipping@goodvibescafe.org",
     whatsappTitle: "WhatsApp",
     whatsappDesc: "Gå med i vår gemenskapsgrupp för direkt tillgång.",
   },

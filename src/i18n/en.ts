@@ -226,7 +226,7 @@ const en = {
     },
     toast: { title: "Message sent!", desc: "We'll get back to you soon." },
     emailTitle: "Email us",
-    emailAddr: "shipping@goodvibescafe.fi",
+    emailAddr: "shipping@goodvibescafe.org",
     whatsappTitle: "WhatsApp",
     whatsappDesc: "Join our community group for instant access.",
   },

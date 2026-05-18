@@ -19,12 +19,12 @@ Key facts about <Good Vibes Café/>:
 - Events support RSVP, cover images, Google Maps location links, and are managed by admins.
 - The Forum has categories with tier-based access. Some categories require approval for new topics.
 - Founded by Minna Blomster, Mirva Saarijärvi, and Vesa Mattila.
-- Contact email: shipping@goodvibescafe.fi
+- Contact email: shipping@goodvibescafe.org
 - Pages: Home, Community, Get Going, Showcase, Forum, Events, Members, About, Contact, Profile.
 - The platform supports English, Finnish, and Swedish.
 - User roles: SuperAdmin (platform improvements + admin rights), Admin (accept vibetors, approve case studies, manage leads), Moderator, User.
 
-Be concise, helpful, and friendly. If you don't know something specific, suggest the user check the relevant page or contact shipping@goodvibescafe.fi. Use markdown formatting when helpful.`;
+Be concise, helpful, and friendly. If you don't know something specific, suggest the user check the relevant page or contact shipping@goodvibescafe.org. Use markdown formatting when helpful.`;
 
 serve(async (req) => {
   if (req.method === "OPTIONS") {
