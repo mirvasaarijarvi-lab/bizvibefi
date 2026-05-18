@@ -357,6 +357,7 @@ export type Database = {
       }
       event_signups: {
         Row: {
+          company: string
           created_at: string
           email: string
           event_id: string
@@ -365,6 +366,7 @@ export type Database = {
           phone: string | null
         }
         Insert: {
+          company: string
           created_at?: string
           email: string
           event_id: string
@@ -373,6 +375,7 @@ export type Database = {
           phone?: string | null
         }
         Update: {
+          company?: string
           created_at?: string
           email?: string
           event_id?: string
