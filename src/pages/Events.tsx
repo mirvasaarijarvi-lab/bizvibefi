@@ -426,11 +426,17 @@ const EventFormDialog = ({
               <>
                 {!canSave && (
                   <div className="rounded-md border border-destructive/30 bg-destructive/5 p-3 text-sm font-body text-destructive">
-                    {lang === "fi"
-                      ? "Vain pääylläpitäjät tai tapahtuman luoja voivat muokata tätä tapahtumaa."
-                      : lang === "sv"
-                      ? "Endast superadministratörer eller evenemangets skapare kan redigera detta evenemang."
-                      : "Only superadmins or the event creator can edit this event."}
+                    {editEvent
+                      ? (lang === "fi"
+                          ? "Vain pääylläpitäjät tai tapahtuman luoja voivat muokata tätä tapahtumaa."
+                          : lang === "sv"
+                          ? "Endast superadministratörer eller evenemangets skapare kan redigera detta evenemang."
+                          : "Only superadmins or the event creator can edit this event.")
+                      : (lang === "fi"
+                          ? "Vain pääylläpitäjät voivat luoda tapahtumia."
+                          : lang === "sv"
+                          ? "Endast superadministratörer kan skapa evenemang."
+                          : "Only superadmins can create events.")}
                   </div>
                 )}
                 <div className="flex gap-2 pt-2">
@@ -439,32 +445,25 @@ const EventFormDialog = ({
                     className="bg-gradient-storm hover:opacity-90 font-body"
                     disabled={saveMutation.isPending || !canSave}
                     title={!canSave ? "You don't have permission to save this event" : undefined}
-                  ></Button>
+                  >
+                    {saveMutation.isPending
+                      ? "Saving..."
+                      : editEvent
+                      ? "Update Event"
+                      : t("events.createEvent")}
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    onClick={() => onOpenChange(false)}
+                    className="font-body"
+                  >
+                    {t("events.cancel")}
+                  </Button>
                 </div>
               </>
             );
           })()}
-          <div className="hidden">
-            <Button
-              type="submit"
-              className="bg-gradient-storm hover:opacity-90 font-body"
-              disabled
-            >
-              {saveMutation.isPending
-                ? "Saving..."
-                : editEvent
-                ? "Update Event"
-                : t("events.createEvent")}
-            </Button>
-            <Button
-              type="button"
-              variant="ghost"
-              onClick={() => onOpenChange(false)}
-              className="font-body"
-            >
-              {t("events.cancel")}
-            </Button>
-          </div>
         </form>
       </DialogContent>
     </Dialog>
