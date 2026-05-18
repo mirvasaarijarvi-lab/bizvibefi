@@ -502,7 +502,125 @@ const EventFormDialog = ({
   );
 };
 
-const Events = () => {
+const GuestSignupDialog = ({
+  event,
+  onOpenChange,
+}: {
+  event: Tables<"events"> | null;
+  onOpenChange: (open: boolean) => void;
+}) => {
+  const { lang } = useTranslation();
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
+  const [fullName, setFullName] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+
+  const labels = {
+    title: lang === "fi" ? "Ilmoittaudu tapahtumaan" : lang === "sv" ? "Anmäl dig till evenemanget" : "Sign up for the event",
+    name: lang === "fi" ? "Nimi" : lang === "sv" ? "Namn" : "Name",
+    email: lang === "fi" ? "Sähköposti" : lang === "sv" ? "E-post" : "Email",
+    phone: lang === "fi" ? "Puhelin (valinnainen)" : lang === "sv" ? "Telefon (valfritt)" : "Phone (optional)",
+    submit: lang === "fi" ? "Ilmoittaudu" : lang === "sv" ? "Anmäl" : "Sign up",
+    cancel: lang === "fi" ? "Peruuta" : lang === "sv" ? "Avbryt" : "Cancel",
+    success: lang === "fi" ? "Kiitos ilmoittautumisesta!" : lang === "sv" ? "Tack för din anmälan!" : "Thanks for signing up!",
+    invalidEmail: lang === "fi" ? "Virheellinen sähköposti" : lang === "sv" ? "Ogiltig e-post" : "Invalid email",
+  };
+
+  const signupMutation = useMutation({
+    mutationFn: async () => {
+      if (!event) throw new Error("No event selected");
+      const trimmedName = fullName.trim();
+      const trimmedEmail = email.trim().toLowerCase();
+      if (trimmedName.length < 1 || trimmedName.length > 120) {
+        throw new Error(lang === "fi" ? "Anna nimi (1-120 merkkiä)" : lang === "sv" ? "Ange namn (1-120 tecken)" : "Please enter a name (1-120 chars)");
+      }
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmedEmail) || trimmedEmail.length > 255) {
+        throw new Error(labels.invalidEmail);
+      }
+      const trimmedPhone = phone.trim();
+      const { error } = await supabase.from("event_signups").insert({
+        event_id: event.id,
+        full_name: trimmedName,
+        email: trimmedEmail,
+        phone: trimmedPhone || null,
+      } as never);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      toast({ title: labels.success });
+      queryClient.invalidateQueries({ queryKey: ["rsvp-counts"] });
+      setFullName("");
+      setEmail("");
+      setPhone("");
+      onOpenChange(false);
+    },
+    onError: (err: Error) => {
+      toast({ title: "Error", description: err.message, variant: "destructive" });
+    },
+  });
+
+  return (
+    <Dialog open={!!event} onOpenChange={onOpenChange}>
+      <DialogContent className="max-w-md">
+        <DialogHeader>
+          <DialogTitle className="font-display">{labels.title}</DialogTitle>
+        </DialogHeader>
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            signupMutation.mutate();
+          }}
+          className="space-y-4"
+        >
+          <div>
+            <Label className="font-body text-sm">{labels.name} *</Label>
+            <Input
+              value={fullName}
+              onChange={(e) => setFullName(e.target.value)}
+              required
+              maxLength={120}
+              className="font-body"
+            />
+          </div>
+          <div>
+            <Label className="font-body text-sm">{labels.email} *</Label>
+            <Input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              maxLength={255}
+              className="font-body"
+            />
+          </div>
+          <div>
+            <Label className="font-body text-sm">{labels.phone}</Label>
+            <Input
+              type="tel"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              maxLength={40}
+              className="font-body"
+            />
+          </div>
+          <div className="flex gap-2 pt-2">
+            <Button
+              type="submit"
+              className="bg-gradient-storm hover:opacity-90 font-body"
+              disabled={signupMutation.isPending}
+            >
+              {signupMutation.isPending ? "..." : labels.submit}
+            </Button>
+            <Button type="button" variant="ghost" onClick={() => onOpenChange(false)} className="font-body">
+              {labels.cancel}
+            </Button>
+          </div>
+        </form>
+      </DialogContent>
+    </Dialog>
+  );
+};
   const { user } = useAuth();
   const { t, lang } = useTranslation();
   const isAdmin = useIsAdmin();
