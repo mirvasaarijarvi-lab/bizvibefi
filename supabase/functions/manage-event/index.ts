@@ -132,6 +132,9 @@ Deno.serve(async (req) => {
     }
   }
 
+  // Auto-translate missing FI/SV fields from EN source
+  await autoTranslateFields(payload.data);
+
   try {
     if (payload.action === "create") {
       const { data, error } = await supabase
