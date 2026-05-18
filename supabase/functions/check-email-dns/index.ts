@@ -36,7 +36,7 @@ Deno.serve(async (req) => {
   ]);
 
   const spfRecords = Array.isArray(txt)
-    ? txt.filter((r: any) => /v=spf1/i.test(r.data))
+    ? txt.filter((r) => /v=spf1/i.test(r.data))
     : [];
 
   // Evaluate ImprovMX-specific health
@@ -48,7 +48,7 @@ Deno.serve(async (req) => {
       expected: 'mx1.improvmx.com (priority 10), mx2.improvmx.com (priority 20)',
     },
     spf: {
-      ok: spfRecords.some((r: any) => /include:spf\.improvmx\.com/i.test(r.data)),
+      ok: spfRecords.some((r) => /include:spf\.improvmx\.com/i.test(r.data)),
       label: 'SPF includes ImprovMX',
       expected: 'v=spf1 include:spf.improvmx.com ~all',
     },
@@ -58,7 +58,7 @@ Deno.serve(async (req) => {
       expected: 'Multiple SPF records break authentication',
     },
     dmarc: {
-      ok: Array.isArray(dmarc) && dmarc.some((r: any) => /v=DMARC1/i.test(r.data)),
+      ok: Array.isArray(dmarc) && dmarc.some((r) => /v=DMARC1/i.test(r.data)),
       label: 'DMARC policy published',
       expected: 'v=DMARC1; p=none; rua=mailto:you@domain',
     },
