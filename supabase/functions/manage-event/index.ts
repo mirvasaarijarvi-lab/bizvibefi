@@ -66,6 +66,83 @@ const RequestSchema = z.discriminatedUnion("action", [
   z.object({ action: z.literal("delete"), id: z.string().uuid() }),
 ]);
 
+type TranslatableData = {
+  title: string;
+  description?: string | null;
+  location?: string | null;
+  agenda?: string | null;
+  title_fi?: string | null; title_sv?: string | null;
+  description_fi?: string | null; description_sv?: string | null;
+  location_fi?: string | null; location_sv?: string | null;
+  agenda_fi?: string | null; agenda_sv?: string | null;
+};
+
+async function translateBatch(
+  source: Record<string, string>,
+  targetLang: "Finnish" | "Swedish",
+): Promise<Record<string, string>> {
+  const apiKey = Deno.env.get("LOVABLE_API_KEY");
+  if (!apiKey || Object.keys(source).length === 0) return {};
+  try {
+    const res = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${apiKey}`,
+      },
+      body: JSON.stringify({
+        model: "google/gemini-3-flash-preview",
+        messages: [
+          {
+            role: "system",
+            content: `You translate event copy from English to ${targetLang}. Preserve tone, line breaks, and proper nouns. Return ONLY a JSON object with the same keys, each value being the translation. No commentary.`,
+          },
+          { role: "user", content: JSON.stringify(source) },
+        ],
+        response_format: { type: "json_object" },
+      }),
+    });
+    if (!res.ok) {
+      console.error(`translate ${targetLang} failed`, res.status, await res.text());
+      return {};
+    }
+    const out = await res.json();
+    const text = out?.choices?.[0]?.message?.content ?? "{}";
+    return JSON.parse(text);
+  } catch (e) {
+    console.error("translation error", e);
+    return {};
+  }
+}
+
+async function autoTranslateFields(d: TranslatableData) {
+  const fieldMap: Array<[keyof TranslatableData, keyof TranslatableData, keyof TranslatableData]> = [
+    ["title", "title_fi", "title_sv"],
+    ["description", "description_fi", "description_sv"],
+    ["location", "location_fi", "location_sv"],
+    ["agenda", "agenda_fi", "agenda_sv"],
+  ];
+
+  const fiSource: Record<string, string> = {};
+  const svSource: Record<string, string> = {};
+  for (const [src, fi, sv] of fieldMap) {
+    const srcVal = (d[src] as string | null | undefined)?.trim();
+    if (!srcVal) continue;
+    if (!(d[fi] as string | null | undefined)?.trim()) fiSource[src as string] = srcVal;
+    if (!(d[sv] as string | null | undefined)?.trim()) svSource[src as string] = srcVal;
+  }
+
+  const [fiOut, svOut] = await Promise.all([
+    translateBatch(fiSource, "Finnish"),
+    translateBatch(svSource, "Swedish"),
+  ]);
+
+  for (const [src, fi, sv] of fieldMap) {
+    if (fiOut[src as string]) (d as Record<string, unknown>)[fi as string] = fiOut[src as string];
+    if (svOut[src as string]) (d as Record<string, unknown>)[sv as string] = svOut[src as string];
+  }
+}
+
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
   if (req.method !== "POST") return json(405, { error: "Method not allowed" });
@@ -131,6 +208,9 @@ Deno.serve(async (req) => {
       }
     }
   }
+
+  // Auto-translate missing FI/SV fields from EN source
+  await autoTranslateFields(payload.data);
 
   try {
     if (payload.action === "create") {
