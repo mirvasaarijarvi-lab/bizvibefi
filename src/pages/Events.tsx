@@ -34,6 +34,7 @@ import { useToast } from "@/hooks/use-toast";
 import {
   Calendar, MapPin, Globe, Users, Clock, CheckCircle, Zap,
   Video, Wrench, Rocket, Plus, Pencil, Trash2, ImagePlus, ExternalLink, X,
+  Mic, Building2, Handshake,
 } from "lucide-react";
 import { format, isPast } from "date-fns";
 import { fi, enUS, sv } from "date-fns/locale";
