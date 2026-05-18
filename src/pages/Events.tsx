@@ -1019,6 +1019,11 @@ const Events = () => {
         <EventFormDialog open={createOpen} onOpenChange={setCreateOpen} />
       )}
 
+      {/* Guest signup dialog (open events) */}
+      <GuestSignupDialog
+        event={guestSignupEvent}
+        onOpenChange={(open) => { if (!open) setGuestSignupEvent(null); }}
+      />
       {/* Edit dialog */}
       {editEvent && (
         <EventFormDialog
