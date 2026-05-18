@@ -214,6 +214,18 @@ const EventFormDialog = ({
               className="font-body"
             />
           </div>
+          <div>
+            <Label className="font-body text-sm">{t("events.agenda")}</Label>
+            <Textarea
+              value={form.agenda}
+              onChange={(e) => set("agenda", e.target.value)}
+              rows={5}
+              maxLength={5000}
+              placeholder={t("events.agendaPlaceholder")}
+              className="font-body"
+            />
+            <p className="text-xs text-muted-foreground font-body mt-1">{t("events.agendaHint")}</p>
+          </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <Label className="font-body text-sm">Type</Label>
