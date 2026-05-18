@@ -620,7 +620,7 @@ const Events = () => {
                 </Badge>
               )}
               {/* Admin actions */}
-              {isAdmin && (
+              {isSuperadmin && (
                 <div className="ml-auto flex items-center gap-1">
                   <Button
                     variant="ghost"
