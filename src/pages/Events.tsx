@@ -566,6 +566,21 @@ const Events = () => {
                 {localizedDescription}
               </p>
             )}
+            {!isPastEvent && localizedAgenda && (
+              <div className="mb-4 bg-muted/40 border border-border rounded-lg p-3">
+                <p className="text-xs font-display font-semibold uppercase tracking-wider text-foreground mb-2">
+                  {t("events.agenda")}
+                </p>
+                <ul className="space-y-1 text-sm text-muted-foreground font-body">
+                  {localizedAgenda.split("\n").filter((l) => l.trim()).map((line, i) => (
+                    <li key={i} className="flex gap-2">
+                      <span className="text-turquoise shrink-0">•</span>
+                      <span>{line.replace(/^[-*•]\s*/, "")}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
 
             <div className="flex flex-wrap items-center gap-4 text-xs text-muted-foreground font-body mb-4">
               <span className="flex items-center gap-1">
