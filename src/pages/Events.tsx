@@ -1057,7 +1057,17 @@ const Events = () => {
   });
 
   const upcomingEvents = events?.filter((e) => !isPast(new Date(e.starts_at))) ?? [];
-  const pastEvents = events?.filter((e) => isPast(new Date(e.starts_at))) ?? [];
+  const pastEvents = (events?.filter((e) => isPast(new Date(e.starts_at))) ?? [])
+    .slice()
+    .sort((a, b) => new Date(b.starts_at).getTime() - new Date(a.starts_at).getTime());
+
+  const upcomingLabel = lang === "fi" ? "Tulevat" : lang === "sv" ? "Kommande" : "Upcoming";
+  const pastLabel = lang === "fi" ? "Menneet" : lang === "sv" ? "Tidigare" : "Past";
+  const noPastLabel = lang === "fi"
+    ? "Ei aiempia tapahtumia vielä."
+    : lang === "sv"
+      ? "Inga tidigare evenemang ännu."
+      : "No past events yet.";
 
   const getRsvpStatus = (eventId: string) => {
     return myRsvps?.find((r) => r.event_id === eventId)?.status;
