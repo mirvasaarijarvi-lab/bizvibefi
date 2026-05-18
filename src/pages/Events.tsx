@@ -512,6 +512,7 @@ const Events = () => {
 
   const [createOpen, setCreateOpen] = useState(false);
   const [editEvent, setEditEvent] = useState<Tables<"events"> | null>(null);
+  const [guestSignupEvent, setGuestSignupEvent] = useState<Tables<"events"> | null>(null);
 
   const { data: events, isLoading } = useQuery({
     queryKey: ["events"],
