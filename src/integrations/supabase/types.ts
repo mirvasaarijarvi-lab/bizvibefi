@@ -412,6 +412,8 @@ export type Database = {
           max_attendees: number | null
           online_url: string | null
           requires_signin: boolean
+          speakers: Json
+          sponsors: Json
           starts_at: string
           title: string
           title_fi: string | null
@@ -439,6 +441,8 @@ export type Database = {
           max_attendees?: number | null
           online_url?: string | null
           requires_signin?: boolean
+          speakers?: Json
+          sponsors?: Json
           starts_at: string
           title: string
           title_fi?: string | null
@@ -466,6 +470,8 @@ export type Database = {
           max_attendees?: number | null
           online_url?: string | null
           requires_signin?: boolean
+          speakers?: Json
+          sponsors?: Json
           starts_at?: string
           title?: string
           title_fi?: string | null
