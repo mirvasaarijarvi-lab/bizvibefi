@@ -34,6 +34,7 @@ import { useToast } from "@/hooks/use-toast";
 import {
   Calendar, MapPin, Globe, Users, Clock, CheckCircle, Zap,
   Video, Wrench, Rocket, Plus, Pencil, Trash2, ImagePlus, ExternalLink, X,
+  Mic, Building2, Handshake,
 } from "lucide-react";
 import { format, isPast } from "date-fns";
 import { fi, enUS, sv } from "date-fns/locale";
@@ -47,6 +48,20 @@ const eventTypeConfig: Record<string, { label: string; icon: React.ElementType; 
   workshop: { label: "Workshop", icon: Wrench, color: "bg-primary/10 text-primary" },
   hackathon: { label: "Hackathon", icon: Rocket, color: "bg-destructive/10 text-destructive" },
 };
+
+interface Speaker {
+  name: string;
+  title: string;
+  company: string;
+  image_url: string;
+}
+
+interface Sponsor {
+  name: string;
+  logo_url: string;
+  url: string;
+  kind: "sponsor" | "partner";
+}
 
 interface EventFormData {
   title: string;
@@ -62,6 +77,8 @@ interface EventFormData {
   is_published: boolean;
   image_url: string;
   requires_signin: boolean;
+  speakers: Speaker[];
+  sponsors: Sponsor[];
 }
 
 type LocalizedEvent = Tables<"events"> & {
@@ -74,6 +91,34 @@ type LocalizedEvent = Tables<"events"> & {
   agenda?: string | null;
   agenda_fi?: string | null;
   agenda_sv?: string | null;
+  speakers?: unknown;
+  sponsors?: unknown;
+};
+
+const parseSpeakers = (raw: unknown): Speaker[] => {
+  if (!Array.isArray(raw)) return [];
+  return raw.map((s) => {
+    const o = (s ?? {}) as Record<string, unknown>;
+    return {
+      name: typeof o.name === "string" ? o.name : "",
+      title: typeof o.title === "string" ? o.title : "",
+      company: typeof o.company === "string" ? o.company : "",
+      image_url: typeof o.image_url === "string" ? o.image_url : "",
+    };
+  }).filter((s) => s.name.trim().length > 0);
+};
+
+const parseSponsors = (raw: unknown): Sponsor[] => {
+  if (!Array.isArray(raw)) return [];
+  return raw.map((s) => {
+    const o = (s ?? {}) as Record<string, unknown>;
+    return {
+      name: typeof o.name === "string" ? o.name : "",
+      logo_url: typeof o.logo_url === "string" ? o.logo_url : "",
+      url: typeof o.url === "string" ? o.url : "",
+      kind: o.kind === "partner" ? "partner" : "sponsor",
+    } as Sponsor;
+  }).filter((s) => s.name.trim().length > 0);
 };
 
 const localizedEventValue = (
@@ -100,6 +145,8 @@ const emptyForm: EventFormData = {
   is_published: true,
   image_url: "",
   requires_signin: true,
+  speakers: [],
+  sponsors: [],
 };
 
 const EventFormDialog = ({
@@ -134,6 +181,8 @@ const EventFormDialog = ({
         is_published: editEvent.is_published,
         image_url: editEvent.image_url || "",
         requires_signin: (editEvent as { requires_signin?: boolean | null }).requires_signin ?? true,
+        speakers: parseSpeakers((editEvent as LocalizedEvent).speakers),
+        sponsors: parseSponsors((editEvent as LocalizedEvent).sponsors),
       };
     }
     return emptyForm;
@@ -142,6 +191,22 @@ const EventFormDialog = ({
 
   const saveMutation = useMutation({
     mutationFn: async () => {
+      const cleanSpeakers = form.speakers
+        .map((s) => ({
+          name: s.name.trim(),
+          title: s.title.trim(),
+          company: s.company.trim(),
+          image_url: s.image_url.trim(),
+        }))
+        .filter((s) => s.name.length > 0);
+      const cleanSponsors = form.sponsors
+        .map((s) => ({
+          name: s.name.trim(),
+          logo_url: s.logo_url.trim(),
+          url: s.url.trim(),
+          kind: s.kind,
+        }))
+        .filter((s) => s.name.length > 0);
       const payload = {
         title: form.title.trim(),
         description: form.description.trim() || null,
@@ -156,6 +221,8 @@ const EventFormDialog = ({
         is_published: form.is_published,
         image_url: form.image_url.trim() || null,
         requires_signin: form.requires_signin,
+        speakers: cleanSpeakers,
+        sponsors: cleanSponsors,
       };
       const updatePayload = {
         ...payload,
@@ -256,6 +323,53 @@ const EventFormDialog = ({
     } finally {
       setUploading(false);
     }
+  };
+
+  const uploadFileToBucket = async (file: File): Promise<string> => {
+    const ext = file.name.split(".").pop();
+    const path = `${crypto.randomUUID()}.${ext}`;
+    const { error: uploadErr } = await supabase.storage
+      .from("event-images")
+      .upload(path, file, { upsert: false });
+    if (uploadErr) throw uploadErr;
+    const { data: { publicUrl } } = supabase.storage
+      .from("event-images")
+      .getPublicUrl(path);
+    return publicUrl;
+  };
+
+  const updateSpeaker = (i: number, patch: Partial<Speaker>) =>
+    setForm((p) => ({ ...p, speakers: p.speakers.map((s, idx) => idx === i ? { ...s, ...patch } : s) }));
+  const addSpeaker = () =>
+    setForm((p) => ({ ...p, speakers: [...p.speakers, { name: "", title: "", company: "", image_url: "" }] }));
+  const removeSpeaker = (i: number) =>
+    setForm((p) => ({ ...p, speakers: p.speakers.filter((_, idx) => idx !== i) }));
+
+  const updateSponsor = (i: number, patch: Partial<Sponsor>) =>
+    setForm((p) => ({ ...p, sponsors: p.sponsors.map((s, idx) => idx === i ? { ...s, ...patch } : s) }));
+  const addSponsor = (kind: "sponsor" | "partner" = "sponsor") =>
+    setForm((p) => ({ ...p, sponsors: [...p.sponsors, { name: "", logo_url: "", url: "", kind }] }));
+  const removeSponsor = (i: number) =>
+    setForm((p) => ({ ...p, sponsors: p.sponsors.filter((_, idx) => idx !== i) }));
+
+  const speakersLabels = {
+    section: lang === "fi" ? "Puhujat" : lang === "sv" ? "Talare" : "Speakers",
+    add: lang === "fi" ? "Lisää puhuja" : lang === "sv" ? "Lägg till talare" : "Add speaker",
+    name: lang === "fi" ? "Nimi" : lang === "sv" ? "Namn" : "Name",
+    title: lang === "fi" ? "Titteli" : lang === "sv" ? "Titel" : "Title",
+    company: lang === "fi" ? "Yritys" : lang === "sv" ? "Företag" : "Company",
+    photo: lang === "fi" ? "Kuva" : lang === "sv" ? "Foto" : "Photo",
+    upload: lang === "fi" ? "Lataa kuva" : lang === "sv" ? "Ladda upp" : "Upload",
+  };
+  const sponsorsLabels = {
+    section: lang === "fi" ? "Yhteistyökumppanit & sponsorit" : lang === "sv" ? "Samarbetspartners & sponsorer" : "Cooperation & sponsors",
+    addSponsor: lang === "fi" ? "Lisää sponsori" : lang === "sv" ? "Lägg till sponsor" : "Add sponsor",
+    addPartner: lang === "fi" ? "Lisää kumppani" : lang === "sv" ? "Lägg till partner" : "Add partner",
+    name: lang === "fi" ? "Yrityksen nimi" : lang === "sv" ? "Företagsnamn" : "Company name",
+    url: lang === "fi" ? "Verkkosivu (valinnainen)" : lang === "sv" ? "Webbplats (valfritt)" : "Website (optional)",
+    logo: lang === "fi" ? "Logo" : lang === "sv" ? "Logo" : "Logo",
+    sponsor: lang === "fi" ? "Sponsori" : lang === "sv" ? "Sponsor" : "Sponsor",
+    partner: lang === "fi" ? "Kumppani" : lang === "sv" ? "Partner" : "Partner",
   };
 
   return (
@@ -416,6 +530,156 @@ const EventFormDialog = ({
               </label>
             )}
           </div>
+
+          {/* Speakers */}
+          <div className="rounded-md border border-border bg-muted/20 p-3 space-y-3">
+            <div className="flex items-center justify-between">
+              <Label className="font-display text-sm font-semibold flex items-center gap-2">
+                <Mic className="h-4 w-4 text-turquoise" /> {speakersLabels.section}
+              </Label>
+              <Button type="button" size="sm" variant="outline" className="font-body h-7" onClick={addSpeaker}>
+                <Plus className="h-3.5 w-3.5 mr-1" /> {speakersLabels.add}
+              </Button>
+            </div>
+            {form.speakers.map((sp, i) => (
+              <div key={i} className="rounded-md border border-border bg-card p-3 space-y-2">
+                <div className="flex items-start gap-3">
+                  <label className="relative shrink-0 cursor-pointer group">
+                    {sp.image_url ? (
+                      <img src={sp.image_url} alt={sp.name} className="w-14 h-14 rounded-full object-cover border border-border" />
+                    ) : (
+                      <div className="w-14 h-14 rounded-full bg-muted border border-dashed border-border flex items-center justify-center">
+                        <ImagePlus className="h-5 w-5 text-muted-foreground" />
+                      </div>
+                    )}
+                    <input
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      onChange={async (e) => {
+                        const file = e.target.files?.[0];
+                        if (!file) return;
+                        setUploading(true);
+                        try {
+                          const url = await uploadFileToBucket(file);
+                          updateSpeaker(i, { image_url: url });
+                        } catch (err) {
+                          toast({ title: "Upload failed", description: err instanceof Error ? err.message : "Unknown error", variant: "destructive" });
+                        } finally {
+                          setUploading(false);
+                        }
+                      }}
+                    />
+                  </label>
+                  <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    <Input
+                      placeholder={speakersLabels.name + " *"}
+                      value={sp.name}
+                      onChange={(e) => updateSpeaker(i, { name: e.target.value })}
+                      maxLength={120}
+                      className="font-body"
+                    />
+                    <Input
+                      placeholder={speakersLabels.title}
+                      value={sp.title}
+                      onChange={(e) => updateSpeaker(i, { title: e.target.value })}
+                      maxLength={200}
+                      className="font-body"
+                    />
+                    <Input
+                      placeholder={speakersLabels.company}
+                      value={sp.company}
+                      onChange={(e) => updateSpeaker(i, { company: e.target.value })}
+                      maxLength={200}
+                      className="font-body sm:col-span-2"
+                    />
+                  </div>
+                  <Button type="button" variant="ghost" size="sm" className="h-7 w-7 p-0 text-destructive" onClick={() => removeSpeaker(i)}>
+                    <X className="h-3.5 w-3.5" />
+                  </Button>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Sponsors & Partners */}
+          <div className="rounded-md border border-border bg-muted/20 p-3 space-y-3">
+            <div className="flex items-center justify-between flex-wrap gap-2">
+              <Label className="font-display text-sm font-semibold flex items-center gap-2">
+                <Handshake className="h-4 w-4 text-turquoise" /> {sponsorsLabels.section}
+              </Label>
+              <div className="flex gap-2">
+                <Button type="button" size="sm" variant="outline" className="font-body h-7" onClick={() => addSponsor("partner")}>
+                  <Plus className="h-3.5 w-3.5 mr-1" /> {sponsorsLabels.addPartner}
+                </Button>
+                <Button type="button" size="sm" variant="outline" className="font-body h-7" onClick={() => addSponsor("sponsor")}>
+                  <Plus className="h-3.5 w-3.5 mr-1" /> {sponsorsLabels.addSponsor}
+                </Button>
+              </div>
+            </div>
+            {form.sponsors.map((sp, i) => (
+              <div key={i} className="rounded-md border border-border bg-card p-3 space-y-2">
+                <div className="flex items-start gap-3">
+                  <label className="relative shrink-0 cursor-pointer group">
+                    {sp.logo_url ? (
+                      <img src={sp.logo_url} alt={sp.name} className="w-14 h-14 rounded-md object-contain bg-background border border-border p-1" />
+                    ) : (
+                      <div className="w-14 h-14 rounded-md bg-muted border border-dashed border-border flex items-center justify-center">
+                        <ImagePlus className="h-5 w-5 text-muted-foreground" />
+                      </div>
+                    )}
+                    <input
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      onChange={async (e) => {
+                        const file = e.target.files?.[0];
+                        if (!file) return;
+                        setUploading(true);
+                        try {
+                          const url = await uploadFileToBucket(file);
+                          updateSponsor(i, { logo_url: url });
+                        } catch (err) {
+                          toast({ title: "Upload failed", description: err instanceof Error ? err.message : "Unknown error", variant: "destructive" });
+                        } finally {
+                          setUploading(false);
+                        }
+                      }}
+                    />
+                  </label>
+                  <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    <Input
+                      placeholder={sponsorsLabels.name + " *"}
+                      value={sp.name}
+                      onChange={(e) => updateSponsor(i, { name: e.target.value })}
+                      maxLength={200}
+                      className="font-body"
+                    />
+                    <Select value={sp.kind} onValueChange={(v) => updateSponsor(i, { kind: v as "sponsor" | "partner" })}>
+                      <SelectTrigger className="font-body">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="sponsor">{sponsorsLabels.sponsor}</SelectItem>
+                        <SelectItem value="partner">{sponsorsLabels.partner}</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <Input
+                      placeholder={sponsorsLabels.url}
+                      value={sp.url}
+                      onChange={(e) => updateSponsor(i, { url: e.target.value })}
+                      maxLength={500}
+                      className="font-body sm:col-span-2"
+                    />
+                  </div>
+                  <Button type="button" variant="ghost" size="sm" className="h-7 w-7 p-0 text-destructive" onClick={() => removeSponsor(i)}>
+                    <X className="h-3.5 w-3.5" />
+                  </Button>
+                </div>
+              </div>
+            ))}
+          </div>
+
           <div className="flex items-center gap-3">
             <Switch
               checked={form.is_published}
@@ -734,6 +998,13 @@ const Events = () => {
     const localizedDescription = localizedEventValue(e, lang, "description");
     const localizedLocation = localizedEventValue(e, lang, "location");
     const localizedAgenda = localizedEventValue(e, lang, "agenda");
+    const speakers = parseSpeakers(e.speakers);
+    const sponsors = parseSponsors(e.sponsors);
+    const partnerCompanies = sponsors.filter((s) => s.kind === "partner");
+    const sponsorCompanies = sponsors.filter((s) => s.kind === "sponsor");
+    const speakersLabel = lang === "fi" ? "Puhujat" : lang === "sv" ? "Talare" : "Speakers";
+    const partnersLabel = lang === "fi" ? "Yhteistyössä" : lang === "sv" ? "I samarbete med" : "In cooperation with";
+    const sponsorsLabel = lang === "fi" ? "Sponsorit" : lang === "sv" ? "Sponsorer" : "Sponsors";
 
     return (
       <div
@@ -835,6 +1106,83 @@ const Events = () => {
                     </li>
                   ))}
                 </ul>
+              </div>
+            )}
+
+            {!isPastEvent && speakers.length > 0 && (
+              <div className="mb-4">
+                <p className="text-xs font-display font-semibold uppercase tracking-wider text-foreground mb-2 flex items-center gap-1.5">
+                  <Mic className="h-3.5 w-3.5 text-turquoise" /> {speakersLabel}
+                </p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  {speakers.map((sp, i) => (
+                    <div key={i} className="flex items-center gap-3 bg-muted/40 border border-border rounded-lg p-2">
+                      {sp.image_url ? (
+                        <img src={sp.image_url} alt={sp.name} className="w-10 h-10 rounded-full object-cover border border-border shrink-0" />
+                      ) : (
+                        <div className="w-10 h-10 rounded-full bg-muted border border-border flex items-center justify-center shrink-0">
+                          <Users className="h-4 w-4 text-muted-foreground" />
+                        </div>
+                      )}
+                      <div className="min-w-0">
+                        <p className="font-display text-sm font-semibold text-foreground truncate">{sp.name}</p>
+                        {(sp.title || sp.company) && (
+                          <p className="text-xs text-muted-foreground font-body truncate flex items-center gap-1">
+                            {sp.title}
+                            {sp.title && sp.company && <span aria-hidden>·</span>}
+                            {sp.company && (
+                              <span className="flex items-center gap-1"><Building2 className="h-3 w-3" />{sp.company}</span>
+                            )}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {!isPastEvent && (partnerCompanies.length > 0 || sponsorCompanies.length > 0) && (
+              <div className="mb-4 space-y-3">
+                {[
+                  { label: partnersLabel, list: partnerCompanies },
+                  { label: sponsorsLabel, list: sponsorCompanies },
+                ].filter((g) => g.list.length > 0).map((group) => (
+                  <div key={group.label}>
+                    <p className="text-xs font-display font-semibold uppercase tracking-wider text-muted-foreground mb-2">
+                      {group.label}
+                    </p>
+                    <div className="flex flex-wrap items-center gap-3">
+                      {group.list.map((sp, i) => {
+                        const inner = sp.logo_url ? (
+                          <img
+                            src={sp.logo_url}
+                            alt={sp.name}
+                            title={sp.name}
+                            className="h-10 max-w-[140px] object-contain"
+                          />
+                        ) : (
+                          <span className="font-display text-sm font-semibold text-foreground">{sp.name}</span>
+                        );
+                        return sp.url ? (
+                          <a
+                            key={i}
+                            href={sp.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="bg-background border border-border rounded-md px-3 py-2 hover:border-primary/40 transition-colors"
+                          >
+                            {inner}
+                          </a>
+                        ) : (
+                          <div key={i} className="bg-background border border-border rounded-md px-3 py-2">
+                            {inner}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                ))}
               </div>
             )}
 
