@@ -1057,7 +1057,17 @@ const Events = () => {
   });
 
   const upcomingEvents = events?.filter((e) => !isPast(new Date(e.starts_at))) ?? [];
-  const pastEvents = events?.filter((e) => isPast(new Date(e.starts_at))) ?? [];
+  const pastEvents = (events?.filter((e) => isPast(new Date(e.starts_at))) ?? [])
+    .slice()
+    .sort((a, b) => new Date(b.starts_at).getTime() - new Date(a.starts_at).getTime());
+
+  const upcomingLabel = lang === "fi" ? "Tulevat" : lang === "sv" ? "Kommande" : "Upcoming";
+  const pastLabel = lang === "fi" ? "Menneet" : lang === "sv" ? "Tidigare" : "Past";
+  const noPastLabel = lang === "fi"
+    ? "Ei aiempia tapahtumia vielä."
+    : lang === "sv"
+      ? "Inga tidigare evenemang ännu."
+      : "No past events yet.";
 
   const getRsvpStatus = (eventId: string) => {
     return myRsvps?.find((r) => r.event_id === eventId)?.status;
@@ -1416,25 +1426,42 @@ const Events = () => {
             </div>
           ) : (
             <>
-              {upcomingEvents.length > 0 ? (
-                <div className="space-y-4 mb-12">
-                  {upcomingEvents.map((event) => renderEventCard(event))}
-                </div>
-              ) : (
-                <div className="text-center py-12 bg-card border border-border rounded-2xl mb-12">
-                  <Calendar className="h-12 w-12 text-muted-foreground mx-auto mb-3" />
-                  <p className="text-muted-foreground font-body">No upcoming events. Check back soon!</p>
-                </div>
-              )}
+            <Tabs defaultValue="upcoming" className="w-full">
+              <TabsList className="grid w-full grid-cols-2 max-w-sm mx-auto mb-6">
+                <TabsTrigger value="upcoming">
+                  {upcomingLabel} {upcomingEvents.length > 0 && `(${upcomingEvents.length})`}
+                </TabsTrigger>
+                <TabsTrigger value="past">
+                  {pastLabel} {pastEvents.length > 0 && `(${pastEvents.length})`}
+                </TabsTrigger>
+              </TabsList>
 
-              {pastEvents.length > 0 && (
-                <div>
-                  <h2 className="font-display text-xl font-bold text-foreground mb-4">Past Events</h2>
-                  <div className="space-y-3 opacity-60">
+              <TabsContent value="upcoming">
+                {upcomingEvents.length > 0 ? (
+                  <div className="space-y-4">
+                    {upcomingEvents.map((event) => renderEventCard(event))}
+                  </div>
+                ) : (
+                  <div className="text-center py-12 bg-card border border-border rounded-2xl">
+                    <Calendar className="h-12 w-12 text-muted-foreground mx-auto mb-3" />
+                    <p className="text-muted-foreground font-body">No upcoming events. Check back soon!</p>
+                  </div>
+                )}
+              </TabsContent>
+
+              <TabsContent value="past">
+                {pastEvents.length > 0 ? (
+                  <div className="space-y-4 opacity-80">
                     {pastEvents.map((event) => renderEventCard(event, true))}
                   </div>
-                </div>
-              )}
+                ) : (
+                  <div className="text-center py-12 bg-card border border-border rounded-2xl">
+                    <Calendar className="h-12 w-12 text-muted-foreground mx-auto mb-3" />
+                    <p className="text-muted-foreground font-body">{noPastLabel}</p>
+                  </div>
+                )}
+              </TabsContent>
+            </Tabs>
             </>
           )}
         </div>
