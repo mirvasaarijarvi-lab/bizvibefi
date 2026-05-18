@@ -530,6 +530,156 @@ const EventFormDialog = ({
               </label>
             )}
           </div>
+
+          {/* Speakers */}
+          <div className="rounded-md border border-border bg-muted/20 p-3 space-y-3">
+            <div className="flex items-center justify-between">
+              <Label className="font-display text-sm font-semibold flex items-center gap-2">
+                <Mic className="h-4 w-4 text-turquoise" /> {speakersLabels.section}
+              </Label>
+              <Button type="button" size="sm" variant="outline" className="font-body h-7" onClick={addSpeaker}>
+                <Plus className="h-3.5 w-3.5 mr-1" /> {speakersLabels.add}
+              </Button>
+            </div>
+            {form.speakers.map((sp, i) => (
+              <div key={i} className="rounded-md border border-border bg-card p-3 space-y-2">
+                <div className="flex items-start gap-3">
+                  <label className="relative shrink-0 cursor-pointer group">
+                    {sp.image_url ? (
+                      <img src={sp.image_url} alt={sp.name} className="w-14 h-14 rounded-full object-cover border border-border" />
+                    ) : (
+                      <div className="w-14 h-14 rounded-full bg-muted border border-dashed border-border flex items-center justify-center">
+                        <ImagePlus className="h-5 w-5 text-muted-foreground" />
+                      </div>
+                    )}
+                    <input
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      onChange={async (e) => {
+                        const file = e.target.files?.[0];
+                        if (!file) return;
+                        setUploading(true);
+                        try {
+                          const url = await uploadFileToBucket(file);
+                          updateSpeaker(i, { image_url: url });
+                        } catch (err) {
+                          toast({ title: "Upload failed", description: err instanceof Error ? err.message : "Unknown error", variant: "destructive" });
+                        } finally {
+                          setUploading(false);
+                        }
+                      }}
+                    />
+                  </label>
+                  <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    <Input
+                      placeholder={speakersLabels.name + " *"}
+                      value={sp.name}
+                      onChange={(e) => updateSpeaker(i, { name: e.target.value })}
+                      maxLength={120}
+                      className="font-body"
+                    />
+                    <Input
+                      placeholder={speakersLabels.title}
+                      value={sp.title}
+                      onChange={(e) => updateSpeaker(i, { title: e.target.value })}
+                      maxLength={200}
+                      className="font-body"
+                    />
+                    <Input
+                      placeholder={speakersLabels.company}
+                      value={sp.company}
+                      onChange={(e) => updateSpeaker(i, { company: e.target.value })}
+                      maxLength={200}
+                      className="font-body sm:col-span-2"
+                    />
+                  </div>
+                  <Button type="button" variant="ghost" size="sm" className="h-7 w-7 p-0 text-destructive" onClick={() => removeSpeaker(i)}>
+                    <X className="h-3.5 w-3.5" />
+                  </Button>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Sponsors & Partners */}
+          <div className="rounded-md border border-border bg-muted/20 p-3 space-y-3">
+            <div className="flex items-center justify-between flex-wrap gap-2">
+              <Label className="font-display text-sm font-semibold flex items-center gap-2">
+                <Handshake className="h-4 w-4 text-turquoise" /> {sponsorsLabels.section}
+              </Label>
+              <div className="flex gap-2">
+                <Button type="button" size="sm" variant="outline" className="font-body h-7" onClick={() => addSponsor("partner")}>
+                  <Plus className="h-3.5 w-3.5 mr-1" /> {sponsorsLabels.addPartner}
+                </Button>
+                <Button type="button" size="sm" variant="outline" className="font-body h-7" onClick={() => addSponsor("sponsor")}>
+                  <Plus className="h-3.5 w-3.5 mr-1" /> {sponsorsLabels.addSponsor}
+                </Button>
+              </div>
+            </div>
+            {form.sponsors.map((sp, i) => (
+              <div key={i} className="rounded-md border border-border bg-card p-3 space-y-2">
+                <div className="flex items-start gap-3">
+                  <label className="relative shrink-0 cursor-pointer group">
+                    {sp.logo_url ? (
+                      <img src={sp.logo_url} alt={sp.name} className="w-14 h-14 rounded-md object-contain bg-background border border-border p-1" />
+                    ) : (
+                      <div className="w-14 h-14 rounded-md bg-muted border border-dashed border-border flex items-center justify-center">
+                        <ImagePlus className="h-5 w-5 text-muted-foreground" />
+                      </div>
+                    )}
+                    <input
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      onChange={async (e) => {
+                        const file = e.target.files?.[0];
+                        if (!file) return;
+                        setUploading(true);
+                        try {
+                          const url = await uploadFileToBucket(file);
+                          updateSponsor(i, { logo_url: url });
+                        } catch (err) {
+                          toast({ title: "Upload failed", description: err instanceof Error ? err.message : "Unknown error", variant: "destructive" });
+                        } finally {
+                          setUploading(false);
+                        }
+                      }}
+                    />
+                  </label>
+                  <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    <Input
+                      placeholder={sponsorsLabels.name + " *"}
+                      value={sp.name}
+                      onChange={(e) => updateSponsor(i, { name: e.target.value })}
+                      maxLength={200}
+                      className="font-body"
+                    />
+                    <Select value={sp.kind} onValueChange={(v) => updateSponsor(i, { kind: v as "sponsor" | "partner" })}>
+                      <SelectTrigger className="font-body">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="sponsor">{sponsorsLabels.sponsor}</SelectItem>
+                        <SelectItem value="partner">{sponsorsLabels.partner}</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <Input
+                      placeholder={sponsorsLabels.url}
+                      value={sp.url}
+                      onChange={(e) => updateSponsor(i, { url: e.target.value })}
+                      maxLength={500}
+                      className="font-body sm:col-span-2"
+                    />
+                  </div>
+                  <Button type="button" variant="ghost" size="sm" className="h-7 w-7 p-0 text-destructive" onClick={() => removeSponsor(i)}>
+                    <X className="h-3.5 w-3.5" />
+                  </Button>
+                </div>
+              </div>
+            ))}
+          </div>
+
           <div className="flex items-center gap-3">
             <Switch
               checked={form.is_published}
