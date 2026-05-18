@@ -152,13 +152,31 @@ const EventFormDialog = ({
         is_published: form.is_published,
         image_url: form.image_url.trim() || null,
       };
+      const updatePayload = {
+        ...payload,
+        ...(lang === "fi" ? {
+          title_fi: payload.title,
+          description_fi: payload.description,
+          location_fi: payload.location,
+          agenda_fi: payload.agenda,
+        } : {}),
+        ...(lang === "sv" ? {
+          title_sv: payload.title,
+          description_sv: payload.description,
+          location_sv: payload.location,
+          agenda_sv: payload.agenda,
+        } : {}),
+      };
 
       if (editEvent) {
-        const { error } = await supabase
+        const { data, error } = await supabase
           .from("events")
-          .update(payload)
-          .eq("id", editEvent.id);
+          .update(updatePayload)
+          .eq("id", editEvent.id)
+          .select("id")
+          .maybeSingle();
         if (error) throw error;
+        if (!data) throw new Error("Event update did not save. Please check admin permissions and try again.");
       } else {
         const { error } = await supabase
           .from("events")
