@@ -63,6 +63,28 @@ interface EventFormData {
   image_url: string;
 }
 
+type LocalizedEvent = Tables<"events"> & {
+  title_fi?: string | null;
+  title_sv?: string | null;
+  description_fi?: string | null;
+  description_sv?: string | null;
+  location_fi?: string | null;
+  location_sv?: string | null;
+  agenda?: string | null;
+  agenda_fi?: string | null;
+  agenda_sv?: string | null;
+};
+
+const localizedEventValue = (
+  event: LocalizedEvent,
+  lang: string,
+  field: "title" | "description" | "location" | "agenda",
+) => {
+  const localizedKey = `${field}_${lang}` as keyof LocalizedEvent;
+  const localized = lang === "fi" || lang === "sv" ? event[localizedKey] : null;
+  return typeof localized === "string" && localized.length > 0 ? localized : event[field];
+};
+
 const emptyForm: EventFormData = {
   title: "",
   description: "",
@@ -94,14 +116,15 @@ const EventFormDialog = ({
 
   const [form, setForm] = useState<EventFormData>(() => {
     if (editEvent) {
+      const event = editEvent as LocalizedEvent;
       return {
-        title: editEvent.title,
-        description: editEvent.description || "",
-        agenda: (editEvent as Tables<"events"> & { agenda?: string | null }).agenda || "",
+        title: localizedEventValue(event, lang, "title") || "",
+        description: localizedEventValue(event, lang, "description") || "",
+        agenda: localizedEventValue(event, lang, "agenda") || "",
         event_type: editEvent.event_type,
         starts_at: editEvent.starts_at ? format(new Date(editEvent.starts_at), "yyyy-MM-dd'T'HH:mm") : "",
         ends_at: editEvent.ends_at ? format(new Date(editEvent.ends_at), "yyyy-MM-dd'T'HH:mm") : "",
-        location: editEvent.location || "",
+        location: localizedEventValue(event, lang, "location") || "",
         is_online: editEvent.is_online,
         online_url: editEvent.online_url || "",
         max_attendees: editEvent.max_attendees?.toString() || "",
