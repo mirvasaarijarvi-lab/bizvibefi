@@ -7,6 +7,7 @@ const fi = {
     contact: "Yhteystiedot",
     joinCta: "Liity mukaan",
     showcase: "Näytteitä, malleja ja esimerkkejä",
+    events: "Tapahtumat",
   },
   hero: {
     tag: "Kollektiivi",
