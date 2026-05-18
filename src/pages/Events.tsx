@@ -51,6 +51,7 @@ const eventTypeConfig: Record<string, { label: string; icon: React.ElementType; 
 interface EventFormData {
   title: string;
   description: string;
+  agenda: string;
   event_type: "meetup" | "webinar" | "workshop" | "hackathon";
   starts_at: string;
   ends_at: string;
@@ -65,6 +66,7 @@ interface EventFormData {
 const emptyForm: EventFormData = {
   title: "",
   description: "",
+  agenda: "",
   event_type: "meetup" as const,
   starts_at: "",
   ends_at: "",
