@@ -325,6 +325,53 @@ const EventFormDialog = ({
     }
   };
 
+  const uploadFileToBucket = async (file: File): Promise<string> => {
+    const ext = file.name.split(".").pop();
+    const path = `${crypto.randomUUID()}.${ext}`;
+    const { error: uploadErr } = await supabase.storage
+      .from("event-images")
+      .upload(path, file, { upsert: false });
+    if (uploadErr) throw uploadErr;
+    const { data: { publicUrl } } = supabase.storage
+      .from("event-images")
+      .getPublicUrl(path);
+    return publicUrl;
+  };
+
+  const updateSpeaker = (i: number, patch: Partial<Speaker>) =>
+    setForm((p) => ({ ...p, speakers: p.speakers.map((s, idx) => idx === i ? { ...s, ...patch } : s) }));
+  const addSpeaker = () =>
+    setForm((p) => ({ ...p, speakers: [...p.speakers, { name: "", title: "", company: "", image_url: "" }] }));
+  const removeSpeaker = (i: number) =>
+    setForm((p) => ({ ...p, speakers: p.speakers.filter((_, idx) => idx !== i) }));
+
+  const updateSponsor = (i: number, patch: Partial<Sponsor>) =>
+    setForm((p) => ({ ...p, sponsors: p.sponsors.map((s, idx) => idx === i ? { ...s, ...patch } : s) }));
+  const addSponsor = (kind: "sponsor" | "partner" = "sponsor") =>
+    setForm((p) => ({ ...p, sponsors: [...p.sponsors, { name: "", logo_url: "", url: "", kind }] }));
+  const removeSponsor = (i: number) =>
+    setForm((p) => ({ ...p, sponsors: p.sponsors.filter((_, idx) => idx !== i) }));
+
+  const speakersLabels = {
+    section: lang === "fi" ? "Puhujat" : lang === "sv" ? "Talare" : "Speakers",
+    add: lang === "fi" ? "Lisää puhuja" : lang === "sv" ? "Lägg till talare" : "Add speaker",
+    name: lang === "fi" ? "Nimi" : lang === "sv" ? "Namn" : "Name",
+    title: lang === "fi" ? "Titteli" : lang === "sv" ? "Titel" : "Title",
+    company: lang === "fi" ? "Yritys" : lang === "sv" ? "Företag" : "Company",
+    photo: lang === "fi" ? "Kuva" : lang === "sv" ? "Foto" : "Photo",
+    upload: lang === "fi" ? "Lataa kuva" : lang === "sv" ? "Ladda upp" : "Upload",
+  };
+  const sponsorsLabels = {
+    section: lang === "fi" ? "Yhteistyökumppanit & sponsorit" : lang === "sv" ? "Samarbetspartners & sponsorer" : "Cooperation & sponsors",
+    addSponsor: lang === "fi" ? "Lisää sponsori" : lang === "sv" ? "Lägg till sponsor" : "Add sponsor",
+    addPartner: lang === "fi" ? "Lisää kumppani" : lang === "sv" ? "Lägg till partner" : "Add partner",
+    name: lang === "fi" ? "Yrityksen nimi" : lang === "sv" ? "Företagsnamn" : "Company name",
+    url: lang === "fi" ? "Verkkosivu (valinnainen)" : lang === "sv" ? "Webbplats (valfritt)" : "Website (optional)",
+    logo: lang === "fi" ? "Logo" : lang === "sv" ? "Logo" : "Logo",
+    sponsor: lang === "fi" ? "Sponsori" : lang === "sv" ? "Sponsor" : "Sponsor",
+    partner: lang === "fi" ? "Kumppani" : lang === "sv" ? "Partner" : "Partner",
+  };
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
