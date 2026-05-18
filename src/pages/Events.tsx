@@ -9,6 +9,7 @@ import PageMeta from "@/components/PageMeta";
 import HeroAvatar from "@/components/HeroAvatar";
 import { useTranslation } from "@/i18n/useTranslation";
 import mascotEvents from "@/assets/mascot-events.png";
+import { EventPresentationsManager, EventPresentationsViewer } from "@/components/EventPresentations";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
@@ -737,6 +738,8 @@ const EventFormDialog = ({
             ))}
           </div>
 
+          <EventPresentationsManager eventId={editEvent?.id} lang={lang} />
+
           <div className="flex items-center gap-3">
             <Switch
               checked={form.is_published}
@@ -1384,6 +1387,14 @@ const Events = () => {
                 </Button>
               );
             })()}
+
+            {isPastEvent && (
+              <EventPresentationsViewer
+                eventId={event.id}
+                lang={lang}
+                hasAccess={!!user}
+              />
+            )}
           </div>
         </div>
         </div>
