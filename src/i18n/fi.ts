@@ -13,7 +13,7 @@ const fi = {
     line1: "Tykitä tyylillä.",
     line2: "Uskalla mokata.",
     line3: "Toimita timanttia.",
-    desc: "Kokeile kunnes jokin hajoaa. Joudu umpikujaan ja pyydä sitten apua kuin nero. Täällä vibecoding kohtaa oikean liiketoiminnan. Rakenna, julkaise ja kasva yhdessä.",
+    desc: "Kokeile kunnes jokin hajoaa. Päädy umpikujaan ja sitten saat apua muilta neroilta. Täällä vibecoding kohtaa oikean liiketoiminnan. Rakenna, julkaise ja kasva yhdessä.",
     ctaJoin: "Liity mukaan",
     ctaGo: "Aloita",
   },
