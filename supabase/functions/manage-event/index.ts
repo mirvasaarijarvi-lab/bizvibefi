@@ -27,6 +27,7 @@ const EventFields = z.object({
   max_attendees: z.number().int().positive().max(100000).nullable().optional(),
   is_published: z.boolean(),
   image_url: z.string().trim().url().max(1000).nullable().optional().or(z.literal("").transform(() => null)),
+  requires_signin: z.boolean().optional().default(true),
   title_fi: z.string().trim().max(200).nullable().optional(),
   title_sv: z.string().trim().max(200).nullable().optional(),
   description_fi: z.string().trim().max(2000).nullable().optional(),
