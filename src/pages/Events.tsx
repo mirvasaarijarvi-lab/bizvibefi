@@ -199,11 +199,16 @@ const EventFormDialog = ({
           image_url: s.image_url.trim(),
         }))
         .filter((s) => s.name.length > 0);
+      const normalizeUrl = (raw: string) => {
+        const v = raw.trim();
+        if (!v) return "";
+        return /^https?:\/\//i.test(v) ? v : `https://${v}`;
+      };
       const cleanSponsors = form.sponsors
         .map((s) => ({
           name: s.name.trim(),
           logo_url: s.logo_url.trim(),
-          url: s.url.trim(),
+          url: normalizeUrl(s.url),
           kind: s.kind,
         }))
         .filter((s) => s.name.length > 0);
