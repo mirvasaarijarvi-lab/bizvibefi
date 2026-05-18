@@ -22,7 +22,7 @@ const toolDefs = [
 ];
 
 const GetGoing = () => {
-  const { t } = useTranslation();
+  const { t, lang } = useTranslation();
 
   return (
     <Layout>
