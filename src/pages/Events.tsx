@@ -99,6 +99,7 @@ const emptyForm: EventFormData = {
   max_attendees: "",
   is_published: true,
   image_url: "",
+  requires_signin: true,
 };
 
 const EventFormDialog = ({
