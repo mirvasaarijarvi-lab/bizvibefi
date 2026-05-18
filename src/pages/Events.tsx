@@ -423,6 +423,34 @@ const EventFormDialog = ({
             />
             <Label className="font-body text-sm">Published (visible to everyone)</Label>
           </div>
+          <div className="rounded-md border border-border bg-muted/30 p-3 space-y-2">
+            <div className="flex items-center gap-3">
+              <Switch
+                checked={form.requires_signin}
+                onCheckedChange={(v) => set("requires_signin", v)}
+              />
+              <Label className="font-body text-sm">
+                {lang === "fi"
+                  ? "Vaadi kirjautuminen ilmoittautumiseen"
+                  : lang === "sv"
+                  ? "Kräv inloggning för anmälan"
+                  : "Require sign-in to sign up"}
+              </Label>
+            </div>
+            <p className="text-xs text-muted-foreground font-body">
+              {form.requires_signin
+                ? (lang === "fi"
+                    ? "Vain kirjautuneet jäsenet voivat ilmoittautua. Sopii kollektiivin sisäisille tapahtumille."
+                    : lang === "sv"
+                    ? "Endast inloggade medlemmar kan anmäla sig. Lämpligt för kollektivets interna evenemang."
+                    : "Only signed-in members can sign up. Best for collective-only events.")
+                : (lang === "fi"
+                    ? "Kuka tahansa voi ilmoittautua nimellä ja sähköpostilla. Avoin tapahtuma."
+                    : lang === "sv"
+                    ? "Vem som helst kan anmäla sig med namn och e-post. Öppet evenemang."
+                    : "Anyone can sign up with name and email. Open event.")}
+            </p>
+          </div>
           {(() => {
             const isCreator = !!editEvent && editEvent.created_by === user?.id;
             const canSave = isSuperadmin || (editEvent ? isCreator : false);
