@@ -621,6 +621,8 @@ const GuestSignupDialog = ({
     </Dialog>
   );
 };
+
+const Events = () => {
   const { user } = useAuth();
   const { t, lang } = useTranslation();
   const isAdmin = useIsAdmin();
