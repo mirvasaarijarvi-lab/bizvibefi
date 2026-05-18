@@ -798,9 +798,13 @@ const GuestSignupDialog = ({
     mutationFn: async () => {
       if (!event) throw new Error("No event selected");
       const trimmedName = fullName.trim();
+      const trimmedCompany = company.trim();
       const trimmedEmail = email.trim().toLowerCase();
       if (trimmedName.length < 1 || trimmedName.length > 120) {
         throw new Error(lang === "fi" ? "Anna nimi (1-120 merkkiä)" : lang === "sv" ? "Ange namn (1-120 tecken)" : "Please enter a name (1-120 chars)");
+      }
+      if (trimmedCompany.length < 1 || trimmedCompany.length > 160) {
+        throw new Error(labels.invalidCompany);
       }
       if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmedEmail) || trimmedEmail.length > 255) {
         throw new Error(labels.invalidEmail);
@@ -809,6 +813,7 @@ const GuestSignupDialog = ({
       const { error } = await supabase.from("event_signups").insert({
         event_id: event.id,
         full_name: trimmedName,
+        company: trimmedCompany,
         email: trimmedEmail,
         phone: trimmedPhone || null,
       } as never);
@@ -818,6 +823,7 @@ const GuestSignupDialog = ({
       toast({ title: labels.success });
       queryClient.invalidateQueries({ queryKey: ["rsvp-counts"] });
       setFullName("");
+      setCompany("");
       setEmail("");
       setPhone("");
       onOpenChange(false);
