@@ -451,6 +451,8 @@ const fi = {
     agenda: "Agenda",
     agendaPlaceholder: "18:00 Tervetuloa\n18:15 Puheenvuoro\n19:00 Verkostoituminen",
     agendaHint: "Yksi kohta riviä kohden.",
+    nextUp: "Seuraavaksi",
+    viewEvent: "Katso tapahtuma",
   },
 };
 
