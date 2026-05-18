@@ -501,8 +501,11 @@ const Events = () => {
 
   const deleteMutation = useMutation({
     mutationFn: async (eventId: string) => {
-      const { error } = await supabase.from("events").delete().eq("id", eventId);
+      const { data: result, error } = await supabase.functions.invoke("manage-event", {
+        body: { action: "delete", id: eventId },
+      });
       if (error) throw error;
+      if ((result as { error?: string })?.error) throw new Error((result as { error: string }).error);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["events"] });
