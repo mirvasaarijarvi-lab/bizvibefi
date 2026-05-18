@@ -168,20 +168,32 @@ const EventFormDialog = ({
         } : {}),
       };
 
-      if (editEvent) {
-        const { data, error } = await supabase
-          .from("events")
-          .update(updatePayload)
-          .eq("id", editEvent.id)
-          .select("id")
-          .maybeSingle();
-        if (error) throw error;
-        if (!data) throw new Error("Event update did not save. Please check admin permissions and try again.");
-      } else {
-        const { error } = await supabase
-          .from("events")
-          .insert([{ ...payload, created_by: user!.id }] as never);
-        if (error) throw error;
+      const { data: result, error } = await supabase.functions.invoke("manage-event", {
+        body: editEvent
+          ? { action: "update", id: editEvent.id, data: updatePayload }
+          : { action: "create", data: payload },
+      });
+      if (error) {
+        // Try to surface server-side validation details
+        const ctx = (error as { context?: Response }).context;
+        if (ctx) {
+          try {
+            const body = await ctx.json();
+            if (body?.fieldErrors) {
+              const msgs = Object.entries(body.fieldErrors as Record<string, string[]>)
+                .map(([f, errs]) => `${f}: ${errs.join(", ")}`)
+                .join("\n");
+              throw new Error(msgs || body.error || error.message);
+            }
+            throw new Error(body?.error || error.message);
+          } catch (parseErr) {
+            if (parseErr instanceof Error && parseErr.message !== error.message) throw parseErr;
+          }
+        }
+        throw error;
+      }
+      if ((result as { error?: string })?.error) {
+        throw new Error((result as { error: string }).error);
       }
     },
     onSuccess: () => {
@@ -489,8 +501,11 @@ const Events = () => {
 
   const deleteMutation = useMutation({
     mutationFn: async (eventId: string) => {
-      const { error } = await supabase.from("events").delete().eq("id", eventId);
+      const { data: result, error } = await supabase.functions.invoke("manage-event", {
+        body: { action: "delete", id: eventId },
+      });
       if (error) throw error;
+      if ((result as { error?: string })?.error) throw new Error((result as { error: string }).error);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["events"] });
