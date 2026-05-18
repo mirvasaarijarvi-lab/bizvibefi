@@ -11,14 +11,16 @@ import { Card } from "@/components/ui/card";
 
 import { ArrowLeft, Check, X, RefreshCw, ShieldCheck, AlertTriangle } from "lucide-react";
 
+type DnsRecord = { name: string; type: number; data: string };
+type DnsResult = DnsRecord[] | { error: string };
 type CheckResult = {
   domain: string;
   checked_at: string;
   records: {
-    mx: any[];
-    txt: any[];
-    dmarc: any[];
-    improvmxDkim: any[];
+    mx: DnsResult;
+    txt: DnsResult;
+    dmarc: DnsResult;
+    improvmxDkim: DnsResult;
   };
   spfRecords: { data: string }[];
   checks: Record<string, { ok: boolean; label: string; expected: string }>;
