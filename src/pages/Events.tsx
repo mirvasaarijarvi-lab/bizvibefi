@@ -97,6 +97,7 @@ const EventFormDialog = ({
       return {
         title: editEvent.title,
         description: editEvent.description || "",
+        agenda: (editEvent as Tables<"events"> & { agenda?: string | null }).agenda || "",
         event_type: editEvent.event_type,
         starts_at: editEvent.starts_at ? format(new Date(editEvent.starts_at), "yyyy-MM-dd'T'HH:mm") : "",
         ends_at: editEvent.ends_at ? format(new Date(editEvent.ends_at), "yyyy-MM-dd'T'HH:mm") : "",
