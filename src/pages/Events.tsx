@@ -133,6 +133,7 @@ const EventFormDialog = ({
         max_attendees: editEvent.max_attendees?.toString() || "",
         is_published: editEvent.is_published,
         image_url: editEvent.image_url || "",
+        requires_signin: (editEvent as { requires_signin?: boolean | null }).requires_signin ?? true,
       };
     }
     return emptyForm;
