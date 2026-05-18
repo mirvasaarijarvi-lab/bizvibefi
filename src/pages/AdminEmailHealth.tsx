@@ -48,7 +48,7 @@ const AdminEmailHealth = () => {
         { headers: { apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY } }
       );
       const json = (await r.json()) as CheckResult;
-      if (!r.ok) throw new Error((json as any).error || "Request failed");
+      if (!r.ok) throw new Error((json as unknown as { error?: string }).error || "Request failed");
       setData(json);
     } catch (e) {
       setError((e as Error).message);
