@@ -1437,14 +1437,42 @@ const Events = () => {
                 </div>
               )}
 
-              {pastEvents.length > 0 && (
-                <div>
-                  <h2 className="font-display text-xl font-bold text-foreground mb-4">Past Events</h2>
-                  <div className="space-y-3 opacity-60">
+            <Tabs defaultValue="upcoming" className="w-full">
+              <TabsList className="grid w-full grid-cols-2 max-w-sm mx-auto mb-6">
+                <TabsTrigger value="upcoming">
+                  {upcomingLabel} {upcomingEvents.length > 0 && `(${upcomingEvents.length})`}
+                </TabsTrigger>
+                <TabsTrigger value="past">
+                  {pastLabel} {pastEvents.length > 0 && `(${pastEvents.length})`}
+                </TabsTrigger>
+              </TabsList>
+
+              <TabsContent value="upcoming">
+                {upcomingEvents.length > 0 ? (
+                  <div className="space-y-4">
+                    {upcomingEvents.map((event) => renderEventCard(event))}
+                  </div>
+                ) : (
+                  <div className="text-center py-12 bg-card border border-border rounded-2xl">
+                    <Calendar className="h-12 w-12 text-muted-foreground mx-auto mb-3" />
+                    <p className="text-muted-foreground font-body">No upcoming events. Check back soon!</p>
+                  </div>
+                )}
+              </TabsContent>
+
+              <TabsContent value="past">
+                {pastEvents.length > 0 ? (
+                  <div className="space-y-4 opacity-80">
                     {pastEvents.map((event) => renderEventCard(event, true))}
                   </div>
-                </div>
-              )}
+                ) : (
+                  <div className="text-center py-12 bg-card border border-border rounded-2xl">
+                    <Calendar className="h-12 w-12 text-muted-foreground mx-auto mb-3" />
+                    <p className="text-muted-foreground font-body">{noPastLabel}</p>
+                  </div>
+                )}
+              </TabsContent>
+            </Tabs>
             </>
           )}
         </div>
