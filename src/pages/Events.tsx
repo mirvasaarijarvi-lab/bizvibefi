@@ -1039,11 +1039,13 @@ const Events = () => {
       >
         {/* Cover image */}
         {event.image_url && !isPastEvent && (
-          <img
-            src={event.image_url}
-            alt={event.title}
-            className="w-full h-48 object-cover"
-          />
+          <div className="w-full aspect-video bg-muted">
+            <img
+              src={event.image_url}
+              alt={event.title}
+              className="w-full h-full object-contain"
+            />
+          </div>
         )}
         <div className="p-6">
         <div className="flex flex-col md:flex-row gap-6">
