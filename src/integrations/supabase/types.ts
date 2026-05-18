@@ -323,6 +323,47 @@ export type Database = {
           },
         ]
       }
+      event_presentations: {
+        Row: {
+          created_at: string
+          event_id: string
+          file_path: string
+          file_size: number | null
+          id: string
+          mime_type: string
+          title: string
+          uploaded_by: string | null
+        }
+        Insert: {
+          created_at?: string
+          event_id: string
+          file_path: string
+          file_size?: number | null
+          id?: string
+          mime_type?: string
+          title: string
+          uploaded_by?: string | null
+        }
+        Update: {
+          created_at?: string
+          event_id?: string
+          file_path?: string
+          file_size?: number | null
+          id?: string
+          mime_type?: string
+          title?: string
+          uploaded_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "event_presentations_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "events"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       event_rsvps: {
         Row: {
           created_at: string
