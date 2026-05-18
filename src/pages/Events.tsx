@@ -738,6 +738,8 @@ const EventFormDialog = ({
             ))}
           </div>
 
+          <EventPresentationsManager eventId={editEvent?.id} lang={lang} />
+
           <div className="flex items-center gap-3">
             <Switch
               checked={form.is_published}
