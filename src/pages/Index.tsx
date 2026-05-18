@@ -58,6 +58,7 @@ const Index = () => {
                 <Link to="/get-going">{t("hero.ctaGo")}</Link>
               </Button>
             </div>
+            <NextEventTeaser />
           </motion.div>
         </div>
       </section>
