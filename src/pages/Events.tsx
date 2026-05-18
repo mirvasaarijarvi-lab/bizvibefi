@@ -1426,17 +1426,6 @@ const Events = () => {
             </div>
           ) : (
             <>
-              {upcomingEvents.length > 0 ? (
-                <div className="space-y-4 mb-12">
-                  {upcomingEvents.map((event) => renderEventCard(event))}
-                </div>
-              ) : (
-                <div className="text-center py-12 bg-card border border-border rounded-2xl mb-12">
-                  <Calendar className="h-12 w-12 text-muted-foreground mx-auto mb-3" />
-                  <p className="text-muted-foreground font-body">No upcoming events. Check back soon!</p>
-                </div>
-              )}
-
             <Tabs defaultValue="upcoming" className="w-full">
               <TabsList className="grid w-full grid-cols-2 max-w-sm mx-auto mb-6">
                 <TabsTrigger value="upcoming">
