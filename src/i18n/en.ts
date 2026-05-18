@@ -7,6 +7,7 @@ const en = {
     contact: "Contact",
     joinCta: "Join the Vibe",
     showcase: "Showcase",
+    events: "Events",
   },
   hero: {
     tag: "The Collective",

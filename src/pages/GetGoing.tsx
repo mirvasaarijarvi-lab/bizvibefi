@@ -22,7 +22,7 @@ const toolDefs = [
 ];
 
 const GetGoing = () => {
-  const { t } = useTranslation();
+  const { t, lang } = useTranslation();
 
   return (
     <Layout>
@@ -108,7 +108,7 @@ const GetGoing = () => {
       <section className="pb-20 md:pb-28">
         <div className="container">
           <h2 className="font-display text-2xl md:text-4xl font-bold tracking-[-0.02em] text-center mb-12">
-            {t("getGoing.casesTitle")} <span className="text-gradient-prism">{t("getGoing.casesTitleHighlight")}</span>
+            {t("getGoing.casesTitle")} <span className="text-gradient-prism">{t("getGoing.casesTitleHighlight")}</span> {lang === "fi" ? "tapahtumat" : ""}
           </h2>
           <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
             {[0, 1, 2].map((i) => (

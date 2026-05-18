@@ -7,6 +7,7 @@ const fi = {
     contact: "Yhteystiedot",
     joinCta: "Liity mukaan",
     showcase: "Näytteitä, malleja ja esimerkkejä",
+    events: "Tapahtumat",
   },
   hero: {
     tag: "Kollektiivi",
@@ -433,7 +434,7 @@ const fi = {
     },
   },
   events: {
-    tag: "Tapahtumia",
+    tag: "Tapahtumat",
     title: "Mitä seuraavaksi",
     titleHighlight: "meneillään?",
     subtitle: "Tapaamiset, webinsarit, workshopit ja hackathonit. Tule paikalle, rakenna, verkostoidu.",

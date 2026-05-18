@@ -85,7 +85,7 @@ const EventFormDialog = ({
   onOpenChange: (open: boolean) => void;
   editEvent?: Tables<"events"> | null;
 }) => {
-  const { t } = useTranslation();
+  const { t, lang } = useTranslation();
   const { user } = useAuth();
   const { toast } = useToast();
   const queryClient = useQueryClient();
@@ -180,7 +180,7 @@ const EventFormDialog = ({
       <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="font-display">
-            {editEvent ? "Edit Event" : t("events.createEvent")}
+            {editEvent ? (lang === "fi" ? "Muokkaa tapahtumaa" : lang === "sv" ? "Redigera evenemang" : "Edit Event") : t("events.createEvent")}
           </DialogTitle>
         </DialogHeader>
         <form
