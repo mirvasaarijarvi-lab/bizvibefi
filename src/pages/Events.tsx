@@ -512,12 +512,24 @@ const EventFormDialog = ({
               />
             </div>
           </div>
-          <div>
+          <div className="space-y-2">
             <Label className="font-body text-sm">Location</Label>
             <Input
               value={form.location}
               onChange={(e) => set("location", e.target.value)}
-              placeholder="Venue or address"
+              placeholder="Venue or address (EN)"
+              className="font-body"
+            />
+            <Input
+              value={form.location_fi}
+              onChange={(e) => set("location_fi", e.target.value)}
+              placeholder="Sijainti (FI) - optional, auto-translated if empty"
+              className="font-body"
+            />
+            <Input
+              value={form.location_sv}
+              onChange={(e) => set("location_sv", e.target.value)}
+              placeholder="Plats (SV) - optional, auto-translated if empty"
               className="font-body"
             />
           </div>
