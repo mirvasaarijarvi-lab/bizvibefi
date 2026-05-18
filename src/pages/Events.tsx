@@ -168,32 +168,43 @@ const EventFormDialog = ({
         } : {}),
       };
 
-      const { data: result, error } = await supabase.functions.invoke("manage-event", {
-        body: editEvent
-          ? { action: "update", id: editEvent.id, data: updatePayload }
-          : { action: "create", data: payload },
-      });
-      if (error) {
-        // Try to surface server-side validation details
-        const ctx = (error as { context?: Response }).context;
-        if (ctx) {
-          try {
-            const body = await ctx.json();
-            if (body?.fieldErrors) {
-              const msgs = Object.entries(body.fieldErrors as Record<string, string[]>)
-                .map(([f, errs]) => `${f}: ${errs.join(", ")}`)
-                .join("\n");
-              throw new Error(msgs || body.error || error.message);
-            }
-            throw new Error(body?.error || error.message);
-          } catch (parseErr) {
-            if (parseErr instanceof Error && parseErr.message !== error.message) throw parseErr;
-          }
-        }
-        throw error;
+      const { data: sessionData } = await supabase.auth.getSession();
+      const token = sessionData.session?.access_token;
+      const url = `https://${import.meta.env.VITE_SUPABASE_PROJECT_ID}.supabase.co/functions/v1/manage-event`;
+      const requestBody = editEvent
+        ? { action: "update", id: editEvent.id, data: updatePayload }
+        : { action: "create", data: payload };
+
+      let res: Response;
+      try {
+        res = await fetch(url, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
+            ...(token ? { Authorization: `Bearer ${token}` } : {}),
+          },
+          body: JSON.stringify(requestBody),
+        });
+      } catch (networkErr) {
+        throw new Error(`Network error: ${networkErr instanceof Error ? networkErr.message : String(networkErr)}`);
       }
-      if ((result as { error?: string })?.error) {
-        throw new Error((result as { error: string }).error);
+
+      const rawText = await res.text();
+      if (!res.ok) {
+        // Surface the exact status + body
+        let pretty = rawText;
+        try {
+          const parsed = JSON.parse(rawText);
+          pretty = JSON.stringify(parsed, null, 2);
+        } catch { /* keep raw */ }
+        throw new Error(`HTTP ${res.status} ${res.statusText}\n${pretty}`);
+      }
+
+      let result: { error?: string } = {};
+      try { result = JSON.parse(rawText); } catch { /* ignore */ }
+      if (result?.error) {
+        throw new Error(`HTTP ${res.status}\n${result.error}`);
       }
     },
     onSuccess: () => {
@@ -202,7 +213,17 @@ const EventFormDialog = ({
       onOpenChange(false);
     },
     onError: (err: Error) => {
-      toast({ title: "Error", description: err.message, variant: "destructive" });
+      console.error("[manage-event] error:", err);
+      toast({
+        title: "Error",
+        description: (
+          <pre className="whitespace-pre-wrap text-xs font-mono max-h-64 overflow-auto">
+            {err.message}
+          </pre>
+        ),
+        variant: "destructive",
+        duration: 15000,
+      });
     },
   });
 
