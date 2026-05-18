@@ -437,7 +437,7 @@ const fi = {
     tag: "Tapahtumat",
     title: "Mitä seuraavaksi",
     titleHighlight: "meneillään?",
-    subtitle: "Tapaamiset, webinsarit, workshopit ja hackathonit. Tule paikalle, rakenna, verkostoidu.",
+    subtitle: "Tapaamiset, webinaarit, workshopit ja hackathonit. Tule paikalle, rakenna, verkostoidu.",
     createEvent: "Lisää tapahtuma",
     going: "Mukana",
     goingPlural: "Osallistujaa",
