@@ -165,7 +165,7 @@ const EventFormDialog = ({
       const path = `${crypto.randomUUID()}.${ext}`;
       const { error: uploadErr } = await supabase.storage
         .from("event-images")
-        .upload(path, file, { upsert: true });
+        .upload(path, file, { upsert: false });
       if (uploadErr) throw uploadErr;
       const { data: { publicUrl } } = supabase.storage
         .from("event-images")
