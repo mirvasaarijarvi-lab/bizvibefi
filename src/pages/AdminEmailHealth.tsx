@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
-import { supabase } from "@/integrations/supabase/client";
+
 import { ArrowLeft, Check, X, RefreshCw, ShieldCheck, AlertTriangle } from "lucide-react";
 
 type CheckResult = {
