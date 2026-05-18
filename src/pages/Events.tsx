@@ -514,11 +514,11 @@ const Events = () => {
     const rsvpStatus = getRsvpStatus(event.id);
     const attendeeCount = rsvpCounts?.[event.id] ?? 0;
     const isFull = event.max_attendees ? attendeeCount >= event.max_attendees : false;
-    const e = event as Tables<"events"> & { title_fi?: string | null; title_sv?: string | null; description_fi?: string | null; description_sv?: string | null; location_fi?: string | null; location_sv?: string | null; agenda?: string | null; agenda_fi?: string | null; agenda_sv?: string | null };
-    const localizedTitle = (lang === "fi" && e.title_fi) || (lang === "sv" && e.title_sv) || event.title;
-    const localizedDescription = (lang === "fi" && e.description_fi) || (lang === "sv" && e.description_sv) || event.description;
-    const localizedLocation = (lang === "fi" && e.location_fi) || (lang === "sv" && e.location_sv) || event.location;
-    const localizedAgenda = (lang === "fi" && e.agenda_fi) || (lang === "sv" && e.agenda_sv) || e.agenda;
+    const e = event as LocalizedEvent;
+    const localizedTitle = localizedEventValue(e, lang, "title");
+    const localizedDescription = localizedEventValue(e, lang, "description");
+    const localizedLocation = localizedEventValue(e, lang, "location");
+    const localizedAgenda = localizedEventValue(e, lang, "agenda");
 
     return (
       <div
