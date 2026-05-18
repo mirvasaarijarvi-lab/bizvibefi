@@ -409,38 +409,60 @@ const EventFormDialog = ({
           }}
           className="space-y-4"
         >
-          <div>
-            <Label className="font-body text-sm">Title *</Label>
-            <Input
-              value={form.title}
-              onChange={(e) => set("title", e.target.value)}
-              required
-              maxLength={200}
-              className="font-body"
-            />
-          </div>
-          <div>
-            <Label className="font-body text-sm">Description</Label>
-            <Textarea
-              value={form.description}
-              onChange={(e) => set("description", e.target.value)}
-              rows={3}
-              maxLength={2000}
-              className="font-body"
-            />
-          </div>
-          <div>
-            <Label className="font-body text-sm">{t("events.agenda")}</Label>
-            <Textarea
-              value={form.agenda}
-              onChange={(e) => set("agenda", e.target.value)}
-              rows={5}
-              maxLength={5000}
-              placeholder={t("events.agendaPlaceholder")}
-              className="font-body"
-            />
-            <p className="text-xs text-muted-foreground font-body mt-1">{t("events.agendaHint")}</p>
-          </div>
+          <Tabs defaultValue="en" className="w-full">
+            <TabsList className="grid w-full grid-cols-3">
+              <TabsTrigger value="en">EN</TabsTrigger>
+              <TabsTrigger value="fi">FI</TabsTrigger>
+              <TabsTrigger value="sv">SV</TabsTrigger>
+            </TabsList>
+            {(["en", "fi", "sv"] as const).map((lc) => {
+              const sfx = lc === "en" ? "" : `_${lc}`;
+              const titleKey = `title${sfx}` as keyof EventFormData;
+              const descKey = `description${sfx}` as keyof EventFormData;
+              const agendaKey = `agenda${sfx}` as keyof EventFormData;
+              return (
+                <TabsContent key={lc} value={lc} className="space-y-4 mt-4">
+                  <div>
+                    <Label className="font-body text-sm">Title {lc === "en" ? "*" : `(${lc.toUpperCase()})`}</Label>
+                    <Input
+                      value={form[titleKey] as string}
+                      onChange={(e) => set(titleKey, e.target.value)}
+                      required={lc === "en"}
+                      maxLength={200}
+                      className="font-body"
+                    />
+                  </div>
+                  <div>
+                    <Label className="font-body text-sm">Description {lc !== "en" && `(${lc.toUpperCase()})`}</Label>
+                    <Textarea
+                      value={form[descKey] as string}
+                      onChange={(e) => set(descKey, e.target.value)}
+                      rows={3}
+                      maxLength={2000}
+                      className="font-body"
+                    />
+                  </div>
+                  <div>
+                    <Label className="font-body text-sm">{t("events.agenda")} {lc !== "en" && `(${lc.toUpperCase()})`}</Label>
+                    <Textarea
+                      value={form[agendaKey] as string}
+                      onChange={(e) => set(agendaKey, e.target.value)}
+                      rows={5}
+                      maxLength={5000}
+                      placeholder={t("events.agendaPlaceholder")}
+                      className="font-body"
+                    />
+                    {lc === "en" && (
+                      <p className="text-xs text-muted-foreground font-body mt-1">{t("events.agendaHint")}</p>
+                    )}
+                  </div>
+                </TabsContent>
+              );
+            })}
+          </Tabs>
+          <p className="text-xs text-muted-foreground font-body">
+            Leave FI/SV empty to auto-translate from English on save.
+          </p>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <Label className="font-body text-sm">Type</Label>
