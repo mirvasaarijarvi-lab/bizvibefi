@@ -15,6 +15,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Select,
   SelectContent,
@@ -65,12 +66,20 @@ interface Sponsor {
 
 interface EventFormData {
   title: string;
+  title_fi: string;
+  title_sv: string;
   description: string;
+  description_fi: string;
+  description_sv: string;
   agenda: string;
+  agenda_fi: string;
+  agenda_sv: string;
   event_type: "meetup" | "webinar" | "workshop" | "hackathon";
   starts_at: string;
   ends_at: string;
   location: string;
+  location_fi: string;
+  location_sv: string;
   is_online: boolean;
   online_url: string;
   max_attendees: string;
@@ -133,12 +142,20 @@ const localizedEventValue = (
 
 const emptyForm: EventFormData = {
   title: "",
+  title_fi: "",
+  title_sv: "",
   description: "",
+  description_fi: "",
+  description_sv: "",
   agenda: "",
+  agenda_fi: "",
+  agenda_sv: "",
   event_type: "meetup" as const,
   starts_at: "",
   ends_at: "",
   location: "",
+  location_fi: "",
+  location_sv: "",
   is_online: false,
   online_url: "",
   max_attendees: "",
@@ -168,13 +185,21 @@ const EventFormDialog = ({
     if (editEvent) {
       const event = editEvent as LocalizedEvent;
       return {
-        title: localizedEventValue(event, lang, "title") || "",
-        description: localizedEventValue(event, lang, "description") || "",
-        agenda: localizedEventValue(event, lang, "agenda") || "",
+        title: event.title || "",
+        title_fi: event.title_fi || "",
+        title_sv: event.title_sv || "",
+        description: event.description || "",
+        description_fi: event.description_fi || "",
+        description_sv: event.description_sv || "",
+        agenda: event.agenda || "",
+        agenda_fi: event.agenda_fi || "",
+        agenda_sv: event.agenda_sv || "",
         event_type: editEvent.event_type,
         starts_at: editEvent.starts_at ? format(new Date(editEvent.starts_at), "yyyy-MM-dd'T'HH:mm") : "",
         ends_at: editEvent.ends_at ? format(new Date(editEvent.ends_at), "yyyy-MM-dd'T'HH:mm") : "",
-        location: localizedEventValue(event, lang, "location") || "",
+        location: event.location || "",
+        location_fi: event.location_fi || "",
+        location_sv: event.location_sv || "",
         is_online: editEvent.is_online,
         online_url: editEvent.online_url || "",
         max_attendees: editEvent.max_attendees?.toString() || "",
@@ -228,28 +253,21 @@ const EventFormDialog = ({
         requires_signin: form.requires_signin,
         speakers: cleanSpeakers,
         sponsors: cleanSponsors,
-      };
-      const updatePayload = {
-        ...payload,
-        ...(lang === "fi" ? {
-          title_fi: payload.title,
-          description_fi: payload.description,
-          location_fi: payload.location,
-          agenda_fi: payload.agenda,
-        } : {}),
-        ...(lang === "sv" ? {
-          title_sv: payload.title,
-          description_sv: payload.description,
-          location_sv: payload.location,
-          agenda_sv: payload.agenda,
-        } : {}),
+        title_fi: form.title_fi.trim() || null,
+        title_sv: form.title_sv.trim() || null,
+        description_fi: form.description_fi.trim() || null,
+        description_sv: form.description_sv.trim() || null,
+        location_fi: form.location_fi.trim() || null,
+        location_sv: form.location_sv.trim() || null,
+        agenda_fi: form.agenda_fi.trim() || null,
+        agenda_sv: form.agenda_sv.trim() || null,
       };
 
       const { data: sessionData } = await supabase.auth.getSession();
       const token = sessionData.session?.access_token;
       const url = `https://${import.meta.env.VITE_SUPABASE_PROJECT_ID}.supabase.co/functions/v1/manage-event`;
       const requestBody = editEvent
-        ? { action: "update", id: editEvent.id, data: updatePayload }
+        ? { action: "update", id: editEvent.id, data: payload }
         : { action: "create", data: payload };
 
       let res: Response;
@@ -392,38 +410,60 @@ const EventFormDialog = ({
           }}
           className="space-y-4"
         >
-          <div>
-            <Label className="font-body text-sm">Title *</Label>
-            <Input
-              value={form.title}
-              onChange={(e) => set("title", e.target.value)}
-              required
-              maxLength={200}
-              className="font-body"
-            />
-          </div>
-          <div>
-            <Label className="font-body text-sm">Description</Label>
-            <Textarea
-              value={form.description}
-              onChange={(e) => set("description", e.target.value)}
-              rows={3}
-              maxLength={2000}
-              className="font-body"
-            />
-          </div>
-          <div>
-            <Label className="font-body text-sm">{t("events.agenda")}</Label>
-            <Textarea
-              value={form.agenda}
-              onChange={(e) => set("agenda", e.target.value)}
-              rows={5}
-              maxLength={5000}
-              placeholder={t("events.agendaPlaceholder")}
-              className="font-body"
-            />
-            <p className="text-xs text-muted-foreground font-body mt-1">{t("events.agendaHint")}</p>
-          </div>
+          <Tabs defaultValue="en" className="w-full">
+            <TabsList className="grid w-full grid-cols-3">
+              <TabsTrigger value="en">EN</TabsTrigger>
+              <TabsTrigger value="fi">FI</TabsTrigger>
+              <TabsTrigger value="sv">SV</TabsTrigger>
+            </TabsList>
+            {(["en", "fi", "sv"] as const).map((lc) => {
+              const sfx = lc === "en" ? "" : `_${lc}`;
+              const titleKey = `title${sfx}` as keyof EventFormData;
+              const descKey = `description${sfx}` as keyof EventFormData;
+              const agendaKey = `agenda${sfx}` as keyof EventFormData;
+              return (
+                <TabsContent key={lc} value={lc} className="space-y-4 mt-4">
+                  <div>
+                    <Label className="font-body text-sm">Title {lc === "en" ? "*" : `(${lc.toUpperCase()})`}</Label>
+                    <Input
+                      value={form[titleKey] as string}
+                      onChange={(e) => set(titleKey, e.target.value)}
+                      required={lc === "en"}
+                      maxLength={200}
+                      className="font-body"
+                    />
+                  </div>
+                  <div>
+                    <Label className="font-body text-sm">Description {lc !== "en" && `(${lc.toUpperCase()})`}</Label>
+                    <Textarea
+                      value={form[descKey] as string}
+                      onChange={(e) => set(descKey, e.target.value)}
+                      rows={3}
+                      maxLength={2000}
+                      className="font-body"
+                    />
+                  </div>
+                  <div>
+                    <Label className="font-body text-sm">{t("events.agenda")} {lc !== "en" && `(${lc.toUpperCase()})`}</Label>
+                    <Textarea
+                      value={form[agendaKey] as string}
+                      onChange={(e) => set(agendaKey, e.target.value)}
+                      rows={5}
+                      maxLength={5000}
+                      placeholder={t("events.agendaPlaceholder")}
+                      className="font-body"
+                    />
+                    {lc === "en" && (
+                      <p className="text-xs text-muted-foreground font-body mt-1">{t("events.agendaHint")}</p>
+                    )}
+                  </div>
+                </TabsContent>
+              );
+            })}
+          </Tabs>
+          <p className="text-xs text-muted-foreground font-body">
+            Leave FI/SV empty to auto-translate from English on save.
+          </p>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <Label className="font-body text-sm">Type</Label>
@@ -472,12 +512,24 @@ const EventFormDialog = ({
               />
             </div>
           </div>
-          <div>
+          <div className="space-y-2">
             <Label className="font-body text-sm">Location</Label>
             <Input
               value={form.location}
               onChange={(e) => set("location", e.target.value)}
-              placeholder="Venue or address"
+              placeholder="Venue or address (EN)"
+              className="font-body"
+            />
+            <Input
+              value={form.location_fi}
+              onChange={(e) => set("location_fi", e.target.value)}
+              placeholder="Sijainti (FI) - optional, auto-translated if empty"
+              className="font-body"
+            />
+            <Input
+              value={form.location_sv}
+              onChange={(e) => set("location_sv", e.target.value)}
+              placeholder="Plats (SV) - optional, auto-translated if empty"
               className="font-body"
             />
           </div>
