@@ -49,6 +49,20 @@ const eventTypeConfig: Record<string, { label: string; icon: React.ElementType; 
   hackathon: { label: "Hackathon", icon: Rocket, color: "bg-destructive/10 text-destructive" },
 };
 
+interface Speaker {
+  name: string;
+  title: string;
+  company: string;
+  image_url: string;
+}
+
+interface Sponsor {
+  name: string;
+  logo_url: string;
+  url: string;
+  kind: "sponsor" | "partner";
+}
+
 interface EventFormData {
   title: string;
   description: string;
@@ -63,6 +77,8 @@ interface EventFormData {
   is_published: boolean;
   image_url: string;
   requires_signin: boolean;
+  speakers: Speaker[];
+  sponsors: Sponsor[];
 }
 
 type LocalizedEvent = Tables<"events"> & {
@@ -75,6 +91,34 @@ type LocalizedEvent = Tables<"events"> & {
   agenda?: string | null;
   agenda_fi?: string | null;
   agenda_sv?: string | null;
+  speakers?: unknown;
+  sponsors?: unknown;
+};
+
+const parseSpeakers = (raw: unknown): Speaker[] => {
+  if (!Array.isArray(raw)) return [];
+  return raw.map((s) => {
+    const o = (s ?? {}) as Record<string, unknown>;
+    return {
+      name: typeof o.name === "string" ? o.name : "",
+      title: typeof o.title === "string" ? o.title : "",
+      company: typeof o.company === "string" ? o.company : "",
+      image_url: typeof o.image_url === "string" ? o.image_url : "",
+    };
+  }).filter((s) => s.name.trim().length > 0);
+};
+
+const parseSponsors = (raw: unknown): Sponsor[] => {
+  if (!Array.isArray(raw)) return [];
+  return raw.map((s) => {
+    const o = (s ?? {}) as Record<string, unknown>;
+    return {
+      name: typeof o.name === "string" ? o.name : "",
+      logo_url: typeof o.logo_url === "string" ? o.logo_url : "",
+      url: typeof o.url === "string" ? o.url : "",
+      kind: o.kind === "partner" ? "partner" : "sponsor",
+    } as Sponsor;
+  }).filter((s) => s.name.trim().length > 0);
 };
 
 const localizedEventValue = (
@@ -101,6 +145,8 @@ const emptyForm: EventFormData = {
   is_published: true,
   image_url: "",
   requires_signin: true,
+  speakers: [],
+  sponsors: [],
 };
 
 const EventFormDialog = ({
