@@ -40,11 +40,6 @@ const AdminEmailHealth = () => {
     setBusy(true);
     setError(null);
     try {
-      const { data: res, error: invokeErr } = await supabase.functions.invoke<CheckResult>(
-        "check-email-dns",
-        { method: "GET" as any, body: undefined, headers: undefined } as any
-      );
-      // fallback: use fetch since invoke doesn't do query params well
       const projectId = import.meta.env.VITE_SUPABASE_PROJECT_ID;
       const r = await fetch(
         `https://${projectId}.functions.supabase.co/check-email-dns?domain=${encodeURIComponent(domain)}`,
