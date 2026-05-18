@@ -801,7 +801,7 @@ const Events = () => {
             <p className="mt-4 text-muted-foreground font-body text-lg max-w-xl mx-auto">
               {t("events.subtitle")}
             </p>
-            {isAdmin && (
+            {isSuperadmin && (
               <Button
                 className="mt-6 bg-gradient-storm hover:opacity-90 font-body"
                 onClick={() => setCreateOpen(true)}
