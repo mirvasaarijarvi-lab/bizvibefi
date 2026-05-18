@@ -634,7 +634,7 @@ const Events = () => {
                 </Badge>
               )}
               {/* Admin actions */}
-              {isSuperadmin && (
+              {(isSuperadmin || event.created_by === user?.id) && (
                 <div className="ml-auto flex items-center gap-1">
                   <Button
                     variant="ghost"
