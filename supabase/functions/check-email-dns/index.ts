@@ -2,13 +2,15 @@ import { corsHeaders } from 'npm:@supabase/supabase-js@2/cors';
 
 const DOH = 'https://dns.google/resolve';
 
-async function dns(name: string, type: string) {
+type DnsAnswer = { name: string; type: number; data: string };
+
+async function dns(name: string, type: string): Promise<DnsAnswer[] | { error: string }> {
   try {
     const r = await fetch(`${DOH}?name=${encodeURIComponent(name)}&type=${type}`, {
       headers: { accept: 'application/dns-json' },
     });
-    const j = await r.json();
-    return (j.Answer ?? []).map((a: any) => ({ name: a.name, type: a.type, data: a.data }));
+    const j = (await r.json()) as { Answer?: DnsAnswer[] };
+    return (j.Answer ?? []).map((a) => ({ name: a.name, type: a.type, data: a.data }));
   } catch (e) {
     return { error: (e as Error).message };
   }
