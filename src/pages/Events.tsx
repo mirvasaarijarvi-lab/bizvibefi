@@ -460,6 +460,7 @@ const Events = () => {
   const { user } = useAuth();
   const { t, lang } = useTranslation();
   const isAdmin = useIsAdmin();
+  const isSuperadmin = useIsSuperadmin();
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
