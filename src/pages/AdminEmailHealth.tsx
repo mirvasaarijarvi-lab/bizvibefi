@@ -11,14 +11,16 @@ import { Card } from "@/components/ui/card";
 
 import { ArrowLeft, Check, X, RefreshCw, ShieldCheck, AlertTriangle } from "lucide-react";
 
+type DnsRecord = { name: string; type: number; data: string };
+type DnsResult = DnsRecord[] | { error: string };
 type CheckResult = {
   domain: string;
   checked_at: string;
   records: {
-    mx: any[];
-    txt: any[];
-    dmarc: any[];
-    improvmxDkim: any[];
+    mx: DnsResult;
+    txt: DnsResult;
+    dmarc: DnsResult;
+    improvmxDkim: DnsResult;
   };
   spfRecords: { data: string }[];
   checks: Record<string, { ok: boolean; label: string; expected: string }>;
@@ -46,7 +48,7 @@ const AdminEmailHealth = () => {
         { headers: { apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY } }
       );
       const json = (await r.json()) as CheckResult;
-      if (!r.ok) throw new Error((json as any).error || "Request failed");
+      if (!r.ok) throw new Error((json as unknown as { error?: string }).error || "Request failed");
       setData(json);
     } catch (e) {
       setError((e as Error).message);

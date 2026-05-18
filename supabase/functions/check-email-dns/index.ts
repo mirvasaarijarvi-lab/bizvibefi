@@ -2,13 +2,15 @@ import { corsHeaders } from 'npm:@supabase/supabase-js@2/cors';
 
 const DOH = 'https://dns.google/resolve';
 
-async function dns(name: string, type: string) {
+type DnsAnswer = { name: string; type: number; data: string };
+
+async function dns(name: string, type: string): Promise<DnsAnswer[] | { error: string }> {
   try {
     const r = await fetch(`${DOH}?name=${encodeURIComponent(name)}&type=${type}`, {
       headers: { accept: 'application/dns-json' },
     });
-    const j = await r.json();
-    return (j.Answer ?? []).map((a: any) => ({ name: a.name, type: a.type, data: a.data }));
+    const j = (await r.json()) as { Answer?: DnsAnswer[] };
+    return (j.Answer ?? []).map((a) => ({ name: a.name, type: a.type, data: a.data }));
   } catch (e) {
     return { error: (e as Error).message };
   }
@@ -34,7 +36,7 @@ Deno.serve(async (req) => {
   ]);
 
   const spfRecords = Array.isArray(txt)
-    ? txt.filter((r: any) => /v=spf1/i.test(r.data))
+    ? txt.filter((r) => /v=spf1/i.test(r.data))
     : [];
 
   // Evaluate ImprovMX-specific health
@@ -46,7 +48,7 @@ Deno.serve(async (req) => {
       expected: 'mx1.improvmx.com (priority 10), mx2.improvmx.com (priority 20)',
     },
     spf: {
-      ok: spfRecords.some((r: any) => /include:spf\.improvmx\.com/i.test(r.data)),
+      ok: spfRecords.some((r) => /include:spf\.improvmx\.com/i.test(r.data)),
       label: 'SPF includes ImprovMX',
       expected: 'v=spf1 include:spf.improvmx.com ~all',
     },
@@ -56,7 +58,7 @@ Deno.serve(async (req) => {
       expected: 'Multiple SPF records break authentication',
     },
     dmarc: {
-      ok: Array.isArray(dmarc) && dmarc.some((r: any) => /v=DMARC1/i.test(r.data)),
+      ok: Array.isArray(dmarc) && dmarc.some((r) => /v=DMARC1/i.test(r.data)),
       label: 'DMARC policy published',
       expected: 'v=DMARC1; p=none; rua=mailto:you@domain',
     },
