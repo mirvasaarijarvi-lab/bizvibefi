@@ -753,74 +753,80 @@ const Events = () => {
               )}
             </div>
 
-            {/* RSVP buttons - upcoming only */}
-            {!isPastEvent && (
-              user ? (
-                <div className="flex items-center gap-2">
-                  {rsvpStatus === "going" ? (
-                    <>
-                      <Button size="sm" className="bg-accent text-accent-foreground font-body" disabled>
-                        <CheckCircle className="h-4 w-4 mr-1" /> {t("events.going")}
-                      </Button>
-                      <Button
-                        size="sm"
-                        variant="ghost"
-                        className="font-body text-xs"
-                        onClick={() => rsvpMutation.mutate({ eventId: event.id, status: "cancelled" })}
-                        disabled={rsvpMutation.isPending}
-                      >
-                        {t("events.cancel")}
-                      </Button>
-                    </>
-                  ) : rsvpStatus === "maybe" ? (
-                    <>
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        className="font-body"
-                        onClick={() => rsvpMutation.mutate({ eventId: event.id, status: "going" })}
-                        disabled={rsvpMutation.isPending || isFull}
-                      >
-                        <Zap className="h-4 w-4 mr-1" /> {t("events.switchToGoing")}
-                      </Button>
-                      <Button
-                        size="sm"
-                        variant="ghost"
-                        className="font-body text-xs"
-                        onClick={() => rsvpMutation.mutate({ eventId: event.id, status: "cancelled" })}
-                        disabled={rsvpMutation.isPending}
-                      >
-                        {t("events.cancel")}
-                      </Button>
-                    </>
-                  ) : (
-                    <>
-                      <Button
-                        size="sm"
-                        className="bg-gradient-storm hover:opacity-90 font-body"
-                        onClick={() => rsvpMutation.mutate({ eventId: event.id, status: "going" })}
-                        disabled={rsvpMutation.isPending || isFull}
-                      >
-                        {isFull ? t("events.full") : t("events.imGoing")}
-                      </Button>
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        className="font-body"
-                        onClick={() => rsvpMutation.mutate({ eventId: event.id, status: "maybe" })}
-                        disabled={rsvpMutation.isPending}
-                      >
-                        {t("events.maybe")}
-                      </Button>
-                    </>
-                  )}
-                </div>
-              ) : (
-                <Button asChild size="sm" className="bg-gradient-storm hover:opacity-90 font-body">
-                  <Link to="/auth">{t("events.signInToRsvp")}</Link>
+            {/* Sign up CTAs - upcoming only */}
+            {!isPastEvent && (() => {
+              const requiresSignin = (event as { requires_signin?: boolean | null }).requires_signin ?? true;
+              const signUpLabel = lang === "fi"
+                ? "Ilmoittaudu tapahtumaan"
+                : lang === "sv"
+                ? "Anmäl dig till evenemanget"
+                : "Sign up for the event";
+              const signedUpLabel = lang === "fi"
+                ? "Olet ilmoittautunut"
+                : lang === "sv"
+                ? "Du är anmäld"
+                : "You're signed up";
+              const fullLabel = lang === "fi" ? "Täynnä" : lang === "sv" ? "Fullt" : "Full";
+
+              // Open event: anyone can sign up via guest form
+              if (!requiresSignin) {
+                return (
+                  <Button
+                    size="sm"
+                    className="bg-gradient-storm hover:opacity-90 font-body"
+                    onClick={() => setGuestSignupEvent(event)}
+                    disabled={isFull}
+                  >
+                    {isFull ? fullLabel : signUpLabel}
+                  </Button>
+                );
+              }
+
+              // Members-only: must sign in
+              if (!user) {
+                return (
+                  <Button asChild size="sm" className="bg-gradient-storm hover:opacity-90 font-body">
+                    <Link to="/auth">
+                      {lang === "fi"
+                        ? "Kirjaudu ilmoittautuaksesi"
+                        : lang === "sv"
+                        ? "Logga in för att anmäla dig"
+                        : "Sign in to sign up"}
+                    </Link>
+                  </Button>
+                );
+              }
+
+              if (rsvpStatus === "going") {
+                return (
+                  <div className="flex items-center gap-2">
+                    <Button size="sm" className="bg-accent text-accent-foreground font-body" disabled>
+                      <CheckCircle className="h-4 w-4 mr-1" /> {signedUpLabel}
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      className="font-body text-xs"
+                      onClick={() => rsvpMutation.mutate({ eventId: event.id, status: "cancelled" })}
+                      disabled={rsvpMutation.isPending}
+                    >
+                      {t("events.cancel")}
+                    </Button>
+                  </div>
+                );
+              }
+
+              return (
+                <Button
+                  size="sm"
+                  className="bg-gradient-storm hover:opacity-90 font-body"
+                  onClick={() => rsvpMutation.mutate({ eventId: event.id, status: "going" })}
+                  disabled={rsvpMutation.isPending || isFull}
+                >
+                  {isFull ? fullLabel : signUpLabel}
                 </Button>
-              )
-            )}
+              );
+            })()}
           </div>
         </div>
         </div>
