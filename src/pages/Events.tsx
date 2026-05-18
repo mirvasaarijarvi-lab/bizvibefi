@@ -998,6 +998,13 @@ const Events = () => {
     const localizedDescription = localizedEventValue(e, lang, "description");
     const localizedLocation = localizedEventValue(e, lang, "location");
     const localizedAgenda = localizedEventValue(e, lang, "agenda");
+    const speakers = parseSpeakers(e.speakers);
+    const sponsors = parseSponsors(e.sponsors);
+    const partnerCompanies = sponsors.filter((s) => s.kind === "partner");
+    const sponsorCompanies = sponsors.filter((s) => s.kind === "sponsor");
+    const speakersLabel = lang === "fi" ? "Puhujat" : lang === "sv" ? "Talare" : "Speakers";
+    const partnersLabel = lang === "fi" ? "Yhteistyössä" : lang === "sv" ? "I samarbete med" : "In cooperation with";
+    const sponsorsLabel = lang === "fi" ? "Sponsorit" : lang === "sv" ? "Sponsorer" : "Sponsors";
 
     return (
       <div
