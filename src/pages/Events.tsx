@@ -181,6 +181,8 @@ const EventFormDialog = ({
         is_published: editEvent.is_published,
         image_url: editEvent.image_url || "",
         requires_signin: (editEvent as { requires_signin?: boolean | null }).requires_signin ?? true,
+        speakers: parseSpeakers((editEvent as LocalizedEvent).speakers),
+        sponsors: parseSponsors((editEvent as LocalizedEvent).sponsors),
       };
     }
     return emptyForm;
@@ -189,6 +191,22 @@ const EventFormDialog = ({
 
   const saveMutation = useMutation({
     mutationFn: async () => {
+      const cleanSpeakers = form.speakers
+        .map((s) => ({
+          name: s.name.trim(),
+          title: s.title.trim(),
+          company: s.company.trim(),
+          image_url: s.image_url.trim(),
+        }))
+        .filter((s) => s.name.length > 0);
+      const cleanSponsors = form.sponsors
+        .map((s) => ({
+          name: s.name.trim(),
+          logo_url: s.logo_url.trim(),
+          url: s.url.trim(),
+          kind: s.kind,
+        }))
+        .filter((s) => s.name.length > 0);
       const payload = {
         title: form.title.trim(),
         description: form.description.trim() || null,
@@ -203,6 +221,8 @@ const EventFormDialog = ({
         is_published: form.is_published,
         image_url: form.image_url.trim() || null,
         requires_signin: form.requires_signin,
+        speakers: cleanSpeakers,
+        sponsors: cleanSponsors,
       };
       const updatePayload = {
         ...payload,
