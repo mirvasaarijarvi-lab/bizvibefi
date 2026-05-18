@@ -51,6 +51,7 @@ const eventTypeConfig: Record<string, { label: string; icon: React.ElementType; 
 interface EventFormData {
   title: string;
   description: string;
+  agenda: string;
   event_type: "meetup" | "webinar" | "workshop" | "hackathon";
   starts_at: string;
   ends_at: string;
@@ -65,6 +66,7 @@ interface EventFormData {
 const emptyForm: EventFormData = {
   title: "",
   description: "",
+  agenda: "",
   event_type: "meetup" as const,
   starts_at: "",
   ends_at: "",
@@ -95,6 +97,7 @@ const EventFormDialog = ({
       return {
         title: editEvent.title,
         description: editEvent.description || "",
+        agenda: (editEvent as Tables<"events"> & { agenda?: string | null }).agenda || "",
         event_type: editEvent.event_type,
         starts_at: editEvent.starts_at ? format(new Date(editEvent.starts_at), "yyyy-MM-dd'T'HH:mm") : "",
         ends_at: editEvent.ends_at ? format(new Date(editEvent.ends_at), "yyyy-MM-dd'T'HH:mm") : "",
@@ -115,6 +118,7 @@ const EventFormDialog = ({
       const payload = {
         title: form.title.trim(),
         description: form.description.trim() || null,
+        agenda: form.agenda.trim() || null,
         event_type: form.event_type,
         starts_at: new Date(form.starts_at).toISOString(),
         ends_at: form.ends_at ? new Date(form.ends_at).toISOString() : null,
@@ -209,6 +213,18 @@ const EventFormDialog = ({
               maxLength={2000}
               className="font-body"
             />
+          </div>
+          <div>
+            <Label className="font-body text-sm">{t("events.agenda")}</Label>
+            <Textarea
+              value={form.agenda}
+              onChange={(e) => set("agenda", e.target.value)}
+              rows={5}
+              maxLength={5000}
+              placeholder={t("events.agendaPlaceholder")}
+              className="font-body"
+            />
+            <p className="text-xs text-muted-foreground font-body mt-1">{t("events.agendaHint")}</p>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
@@ -457,10 +473,11 @@ const Events = () => {
     const rsvpStatus = getRsvpStatus(event.id);
     const attendeeCount = rsvpCounts?.[event.id] ?? 0;
     const isFull = event.max_attendees ? attendeeCount >= event.max_attendees : false;
-    const e = event as Tables<"events"> & { title_fi?: string | null; title_sv?: string | null; description_fi?: string | null; description_sv?: string | null; location_fi?: string | null; location_sv?: string | null };
+    const e = event as Tables<"events"> & { title_fi?: string | null; title_sv?: string | null; description_fi?: string | null; description_sv?: string | null; location_fi?: string | null; location_sv?: string | null; agenda?: string | null; agenda_fi?: string | null; agenda_sv?: string | null };
     const localizedTitle = (lang === "fi" && e.title_fi) || (lang === "sv" && e.title_sv) || event.title;
     const localizedDescription = (lang === "fi" && e.description_fi) || (lang === "sv" && e.description_sv) || event.description;
     const localizedLocation = (lang === "fi" && e.location_fi) || (lang === "sv" && e.location_sv) || event.location;
+    const localizedAgenda = (lang === "fi" && e.agenda_fi) || (lang === "sv" && e.agenda_sv) || e.agenda;
 
     return (
       <div
@@ -548,6 +565,21 @@ const Events = () => {
               <p className="text-sm text-muted-foreground font-body mb-4">
                 {localizedDescription}
               </p>
+            )}
+            {!isPastEvent && localizedAgenda && (
+              <div className="mb-4 bg-muted/40 border border-border rounded-lg p-3">
+                <p className="text-xs font-display font-semibold uppercase tracking-wider text-foreground mb-2">
+                  {t("events.agenda")}
+                </p>
+                <ul className="space-y-1 text-sm text-muted-foreground font-body">
+                  {localizedAgenda.split("\n").filter((l) => l.trim()).map((line, i) => (
+                    <li key={i} className="flex gap-2">
+                      <span className="text-turquoise shrink-0">•</span>
+                      <span>{line.replace(/^[-*•]\s*/, "")}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
             )}
 
             <div className="flex flex-wrap items-center gap-4 text-xs text-muted-foreground font-body mb-4">

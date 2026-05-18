@@ -357,6 +357,9 @@ export type Database = {
       }
       events: {
         Row: {
+          agenda: string | null
+          agenda_fi: string | null
+          agenda_sv: string | null
           created_at: string
           created_by: string | null
           description: string | null
@@ -380,6 +383,9 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          agenda?: string | null
+          agenda_fi?: string | null
+          agenda_sv?: string | null
           created_at?: string
           created_by?: string | null
           description?: string | null
@@ -403,6 +409,9 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          agenda?: string | null
+          agenda_fi?: string | null
+          agenda_sv?: string | null
           created_at?: string
           created_by?: string | null
           description?: string | null

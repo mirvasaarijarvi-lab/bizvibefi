@@ -448,6 +448,9 @@ const fi = {
     full: "Täynnä",
     signInToRsvp: "Kirjaudu sisään osallistuaksesi",
     spots: "paikkaa",
+    agenda: "Agenda",
+    agendaPlaceholder: "18:00 Tervetuloa\n18:15 Puheenvuoro\n19:00 Verkostoituminen",
+    agendaHint: "Yksi kohta riviä kohden.",
   },
 };
 
