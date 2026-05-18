@@ -857,6 +857,16 @@ const GuestSignupDialog = ({
             />
           </div>
           <div>
+            <Label className="font-body text-sm">{labels.company} *</Label>
+            <Input
+              value={company}
+              onChange={(e) => setCompany(e.target.value)}
+              required
+              maxLength={160}
+              className="font-body"
+            />
+          </div>
+          <div>
             <Label className="font-body text-sm">{labels.email} *</Label>
             <Input
               type="email"
