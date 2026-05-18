@@ -252,28 +252,21 @@ const EventFormDialog = ({
         requires_signin: form.requires_signin,
         speakers: cleanSpeakers,
         sponsors: cleanSponsors,
-      };
-      const updatePayload = {
-        ...payload,
-        ...(lang === "fi" ? {
-          title_fi: payload.title,
-          description_fi: payload.description,
-          location_fi: payload.location,
-          agenda_fi: payload.agenda,
-        } : {}),
-        ...(lang === "sv" ? {
-          title_sv: payload.title,
-          description_sv: payload.description,
-          location_sv: payload.location,
-          agenda_sv: payload.agenda,
-        } : {}),
+        title_fi: form.title_fi.trim() || null,
+        title_sv: form.title_sv.trim() || null,
+        description_fi: form.description_fi.trim() || null,
+        description_sv: form.description_sv.trim() || null,
+        location_fi: form.location_fi.trim() || null,
+        location_sv: form.location_sv.trim() || null,
+        agenda_fi: form.agenda_fi.trim() || null,
+        agenda_sv: form.agenda_sv.trim() || null,
       };
 
       const { data: sessionData } = await supabase.auth.getSession();
       const token = sessionData.session?.access_token;
       const url = `https://${import.meta.env.VITE_SUPABASE_PROJECT_ID}.supabase.co/functions/v1/manage-event`;
       const requestBody = editEvent
-        ? { action: "update", id: editEvent.id, data: updatePayload }
+        ? { action: "update", id: editEvent.id, data: payload }
         : { action: "create", data: payload };
 
       let res: Response;
