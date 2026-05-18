@@ -3,7 +3,7 @@ import type { Tables } from "@/integrations/supabase/types";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
-import { useIsAdmin } from "@/hooks/useAdminShowcase";
+import { useIsAdmin, useIsSuperadmin } from "@/hooks/useAdminShowcase";
 import Layout from "@/components/Layout";
 import PageMeta from "@/components/PageMeta";
 import HeroAvatar from "@/components/HeroAvatar";
@@ -113,6 +113,7 @@ const EventFormDialog = ({
   const { user } = useAuth();
   const { toast } = useToast();
   const queryClient = useQueryClient();
+  const isSuperadmin = useIsSuperadmin();
 
   const [form, setForm] = useState<EventFormData>(() => {
     if (editEvent) {
@@ -418,11 +419,21 @@ const EventFormDialog = ({
             />
             <Label className="font-body text-sm">Published (visible to everyone)</Label>
           </div>
+          {!isSuperadmin && (
+            <div className="rounded-md border border-destructive/30 bg-destructive/5 p-3 text-sm font-body text-destructive">
+              {lang === "fi"
+                ? "Vain pääylläpitäjät voivat luoda tai muokata tapahtumia. Pyydä Mirvaa tai Minnaa tekemään muutos."
+                : lang === "sv"
+                ? "Endast superadministratörer kan skapa eller redigera evenemang. Be Mirva eller Minna att göra ändringen."
+                : "Only superadmins can create or edit events. Please ask Mirva or Minna to make this change."}
+            </div>
+          )}
           <div className="flex gap-2 pt-2">
             <Button
               type="submit"
               className="bg-gradient-storm hover:opacity-90 font-body"
-              disabled={saveMutation.isPending}
+              disabled={saveMutation.isPending || !isSuperadmin}
+              title={!isSuperadmin ? "Superadmin access required" : undefined}
             >
               {saveMutation.isPending
                 ? "Saving..."
@@ -449,6 +460,7 @@ const Events = () => {
   const { user } = useAuth();
   const { t, lang } = useTranslation();
   const isAdmin = useIsAdmin();
+  const isSuperadmin = useIsSuperadmin();
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
@@ -608,7 +620,7 @@ const Events = () => {
                 </Badge>
               )}
               {/* Admin actions */}
-              {isAdmin && (
+              {isSuperadmin && (
                 <div className="ml-auto flex items-center gap-1">
                   <Button
                     variant="ghost"
@@ -789,7 +801,7 @@ const Events = () => {
             <p className="mt-4 text-muted-foreground font-body text-lg max-w-xl mx-auto">
               {t("events.subtitle")}
             </p>
-            {isAdmin && (
+            {isSuperadmin && (
               <Button
                 className="mt-6 bg-gradient-storm hover:opacity-90 font-body"
                 onClick={() => setCreateOpen(true)}

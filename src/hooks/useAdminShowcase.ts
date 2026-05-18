@@ -25,6 +25,11 @@ export const useIsAdmin = () => {
   return roles?.some((r) => r === "admin" || r === "superadmin") ?? false;
 };
 
+export const useIsSuperadmin = () => {
+  const { data: roles } = useUserRole();
+  return roles?.some((r) => r === "superadmin") ?? false;
+};
+
 export const usePendingShowcaseItems = () => {
   const isAdmin = useIsAdmin();
   return useQuery({
