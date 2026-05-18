@@ -777,27 +777,34 @@ const GuestSignupDialog = ({
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const [fullName, setFullName] = useState("");
+  const [company, setCompany] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
 
   const labels = {
     title: lang === "fi" ? "Ilmoittaudu tapahtumaan" : lang === "sv" ? "Anmäl dig till evenemanget" : "Sign up for the event",
     name: lang === "fi" ? "Nimi" : lang === "sv" ? "Namn" : "Name",
+    company: lang === "fi" ? "Yritys" : lang === "sv" ? "Företag" : "Company",
     email: lang === "fi" ? "Sähköposti" : lang === "sv" ? "E-post" : "Email",
     phone: lang === "fi" ? "Puhelin (valinnainen)" : lang === "sv" ? "Telefon (valfritt)" : "Phone (optional)",
     submit: lang === "fi" ? "Ilmoittaudu" : lang === "sv" ? "Anmäl" : "Sign up",
     cancel: lang === "fi" ? "Peruuta" : lang === "sv" ? "Avbryt" : "Cancel",
     success: lang === "fi" ? "Kiitos ilmoittautumisesta!" : lang === "sv" ? "Tack för din anmälan!" : "Thanks for signing up!",
     invalidEmail: lang === "fi" ? "Virheellinen sähköposti" : lang === "sv" ? "Ogiltig e-post" : "Invalid email",
+    invalidCompany: lang === "fi" ? "Anna yrityksen nimi (1-160 merkkiä)" : lang === "sv" ? "Ange företagsnamn (1-160 tecken)" : "Please enter a company (1-160 chars)",
   };
 
   const signupMutation = useMutation({
     mutationFn: async () => {
       if (!event) throw new Error("No event selected");
       const trimmedName = fullName.trim();
+      const trimmedCompany = company.trim();
       const trimmedEmail = email.trim().toLowerCase();
       if (trimmedName.length < 1 || trimmedName.length > 120) {
         throw new Error(lang === "fi" ? "Anna nimi (1-120 merkkiä)" : lang === "sv" ? "Ange namn (1-120 tecken)" : "Please enter a name (1-120 chars)");
+      }
+      if (trimmedCompany.length < 1 || trimmedCompany.length > 160) {
+        throw new Error(labels.invalidCompany);
       }
       if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmedEmail) || trimmedEmail.length > 255) {
         throw new Error(labels.invalidEmail);
@@ -806,6 +813,7 @@ const GuestSignupDialog = ({
       const { error } = await supabase.from("event_signups").insert({
         event_id: event.id,
         full_name: trimmedName,
+        company: trimmedCompany,
         email: trimmedEmail,
         phone: trimmedPhone || null,
       } as never);
@@ -815,6 +823,7 @@ const GuestSignupDialog = ({
       toast({ title: labels.success });
       queryClient.invalidateQueries({ queryKey: ["rsvp-counts"] });
       setFullName("");
+      setCompany("");
       setEmail("");
       setPhone("");
       onOpenChange(false);
@@ -844,6 +853,16 @@ const GuestSignupDialog = ({
               onChange={(e) => setFullName(e.target.value)}
               required
               maxLength={120}
+              className="font-body"
+            />
+          </div>
+          <div>
+            <Label className="font-body text-sm">{labels.company} *</Label>
+            <Input
+              value={company}
+              onChange={(e) => setCompany(e.target.value)}
+              required
+              maxLength={160}
               className="font-body"
             />
           </div>
