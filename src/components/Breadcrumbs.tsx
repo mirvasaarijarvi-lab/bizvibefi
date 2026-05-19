@@ -10,6 +10,7 @@ const ADMIN_PAGES: BreadcrumbItem[] = [
   { label: "Showcase", path: "/admin/showcase" },
   { label: "Notifications", path: "/admin/notifications" },
   { label: "Users", path: "/admin/users" },
+  { label: "Event Registrations", path: "/admin/event-registrations" },
   { label: "Audit Log", path: "/admin/audit-log" },
 ];
 
@@ -32,6 +33,7 @@ const ROUTE_LABELS: Record<string, string> = {
   "/admin/notifications": "Notifications",
   "/admin/users": "User Management",
   "/admin/audit-log": "Audit Log",
+  "/admin/event-registrations": "Event Registrations",
   "/reset-password": "Reset Password",
 };
 
