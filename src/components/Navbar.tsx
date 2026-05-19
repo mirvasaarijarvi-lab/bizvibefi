@@ -44,7 +44,7 @@ const Navbar = () => {
           <span className="text-gradient-storm flex flex-col items-start">
             <span>{"<Good"}</span>
             <span className="-mt-[1px]">Vibes</span>
-            <span className="-mt-[1px]">{"Café/>"}</span>
+            <span className="-mt-[1px] tracking-[-0.02em]">{"Café />"}</span>
           </span>
         </Link>
 
