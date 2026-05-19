@@ -85,6 +85,7 @@ const App = () => (
                 <Route path="/admin/certificates" element={<AdminCertificates />} />
                 <Route path="/certificates/:id" element={<CertificateVerify />} />
                 <Route path="/admin/email-health" element={<AdminEmailHealth />} />
+                <Route path="/admin/event-registrations" element={<AdminEventRegistrations />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </Suspense>
