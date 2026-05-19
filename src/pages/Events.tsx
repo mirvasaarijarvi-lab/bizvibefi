@@ -1269,12 +1269,12 @@ const Events = () => {
                             href={sp.url}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="bg-background border border-border rounded-md px-3 py-2 hover:border-primary/40 transition-colors"
+                            className="bg-muted dark:bg-background border border-border rounded-md px-3 py-2 hover:border-primary/40 transition-colors"
                           >
                             {inner}
                           </a>
                         ) : (
-                          <div key={i} className="bg-background border border-border rounded-md px-3 py-2">
+                          <div key={i} className="bg-muted dark:bg-background border border-border rounded-md px-3 py-2">
                             {inner}
                           </div>
                         );
