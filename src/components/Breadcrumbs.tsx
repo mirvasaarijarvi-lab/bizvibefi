@@ -33,6 +33,7 @@ const ROUTE_LABELS: Record<string, string> = {
   "/admin/notifications": "Notifications",
   "/admin/users": "User Management",
   "/admin/audit-log": "Audit Log",
+  "/admin/event-registrations": "Event Registrations",
   "/reset-password": "Reset Password",
 };
 
