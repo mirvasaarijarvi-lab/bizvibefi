@@ -789,6 +789,8 @@ export type Database = {
           rejection_reason: string | null
           solution: string | null
           status: Database["public"]["Enums"]["approval_status"]
+          test_reasons: string[] | null
+          test_reasons_other: string | null
           title: string
           type: Database["public"]["Enums"]["showcase_type"]
           updated_at: string
@@ -814,6 +816,8 @@ export type Database = {
           rejection_reason?: string | null
           solution?: string | null
           status?: Database["public"]["Enums"]["approval_status"]
+          test_reasons?: string[] | null
+          test_reasons_other?: string | null
           title: string
           type: Database["public"]["Enums"]["showcase_type"]
           updated_at?: string
@@ -839,6 +843,8 @@ export type Database = {
           rejection_reason?: string | null
           solution?: string | null
           status?: Database["public"]["Enums"]["approval_status"]
+          test_reasons?: string[] | null
+          test_reasons_other?: string | null
           title?: string
           type?: Database["public"]["Enums"]["showcase_type"]
           updated_at?: string
@@ -1219,6 +1225,7 @@ export type Database = {
         | "guidebook"
         | "sample_code"
         | "infographic"
+        | "tool_to_test"
       vibetor_type: "investor" | "innovator" | "partner" | "founder"
     }
     CompositeTypes: {
@@ -1372,6 +1379,7 @@ export const Constants = {
         "guidebook",
         "sample_code",
         "infographic",
+        "tool_to_test",
       ],
       vibetor_type: ["investor", "innovator", "partner", "founder"],
     },

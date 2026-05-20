@@ -2,7 +2,18 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "./useAuth";
 
-export type ShowcaseType = "case_study" | "testimonial" | "tool" | "guidebook" | "sample_code" | "infographic";
+export type ShowcaseType = "case_study" | "testimonial" | "tool" | "guidebook" | "sample_code" | "infographic" | "tool_to_test";
+
+export const TOOL_TEST_REASONS = [
+  "feedback",
+  "comments",
+  "beta_test",
+  "early_adoption",
+  "code_review",
+  "ux_review",
+  "bug_hunting",
+] as const;
+export type ToolTestReason = (typeof TOOL_TEST_REASONS)[number];
 export type ApprovalStatus = "pending" | "approved" | "rejected";
 
 export interface KeyFigure {
@@ -30,6 +41,8 @@ export interface ShowcaseItem {
   link_urls: { label?: string; url: string }[] | null;
   category_tags: string[];
   pricing_info: string | null;
+  test_reasons: string[] | null;
+  test_reasons_other: string | null;
   rejection_reason: string | null;
   status: ApprovalStatus;
   created_at: string;
@@ -143,6 +156,8 @@ export const useCreateShowcaseItem = () => {
       link_urls?: { label?: string; url: string }[];
       category_tags?: string[];
       pricing_info?: string;
+      test_reasons?: string[];
+      test_reasons_other?: string;
     }) => {
       if (!user) throw new Error("Not authenticated");
       const payload = {
@@ -163,6 +178,8 @@ export const useCreateShowcaseItem = () => {
         link_urls: item.link_urls as unknown as Record<string, unknown>[] | undefined,
         category_tags: item.category_tags,
         pricing_info: item.pricing_info,
+        test_reasons: item.test_reasons,
+        test_reasons_other: item.test_reasons_other,
         user_id: user.id,
       };
       const { data, error } = await supabase

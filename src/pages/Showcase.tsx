@@ -16,8 +16,9 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { motion } from "framer-motion";
 import { useTranslation } from "@/i18n/useTranslation";
 import { useAuth } from "@/hooks/useAuth";
-import { useShowcaseItems, useCreateShowcaseItem, type ShowcaseType, type ShowcaseItem, type KeyFigure } from "@/hooks/useShowcase";
-import { Plus, ExternalLink, ArrowRight, Lightbulb, MessageSquare, Wrench, Trash2, BookOpen, Code, BarChart3 } from "lucide-react";
+import { useShowcaseItems, useCreateShowcaseItem, type ShowcaseType, type ShowcaseItem, type KeyFigure, TOOL_TEST_REASONS, type ToolTestReason } from "@/hooks/useShowcase";
+import { Plus, ExternalLink, ArrowRight, Lightbulb, MessageSquare, Wrench, Trash2, BookOpen, Code, BarChart3, FlaskConical } from "lucide-react";
+import { Checkbox } from "@/components/ui/checkbox";
 import FilePreview from "@/components/FilePreview";
 import ShowcaseLinksField from "@/components/ShowcaseLinksField";
 import ShowcaseImagesField from "@/components/ShowcaseImagesField";
@@ -31,6 +32,17 @@ const typeIcons: Record<ShowcaseType, React.ElementType> = {
   guidebook: BookOpen,
   sample_code: Code,
   infographic: BarChart3,
+  tool_to_test: FlaskConical,
+};
+
+const TEST_REASON_LABELS: Record<ToolTestReason, string> = {
+  feedback: "Looking for feedback",
+  comments: "Want comments / opinions",
+  beta_test: "Recruiting beta testers",
+  early_adoption: "Looking for early adopters",
+  code_review: "Code review wanted",
+  ux_review: "UX / design review",
+  bug_hunting: "Help me find bugs",
 };
 
 const ShowcaseCard = ({ item }: { item: ShowcaseItem }) => {
@@ -191,6 +203,9 @@ const SubmitForm = ({ onClose }: { onClose: () => void }) => {
   const [pricingInfo, setPricingInfo] = useState("");
   const [images, setImages] = useState<string[]>([]);
   const [files, setFiles] = useState<{ url: string; name: string }[]>([]);
+  const [testReasons, setTestReasons] = useState<string[]>([]);
+  const [testReasonsOther, setTestReasonsOther] = useState("");
+  const [includeOther, setIncludeOther] = useState(false);
   const [submitting, setSubmitting] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -219,6 +234,8 @@ const SubmitForm = ({ onClose }: { onClose: () => void }) => {
         file_urls: files,
         category_tags: tags.split(",").map((t) => t.trim()).filter(Boolean),
         pricing_info: pricingInfo.trim() || undefined,
+        test_reasons: type === "tool_to_test" ? testReasons : undefined,
+        test_reasons_other: type === "tool_to_test" && includeOther ? testReasonsOther.trim() || undefined : undefined,
       });
       toast({ title: t("showcase.submitted"), description: t("showcase.submittedDesc") });
       onClose();
@@ -244,6 +261,7 @@ const SubmitForm = ({ onClose }: { onClose: () => void }) => {
             <SelectItem value="guidebook">{t("showcase.tabs.guidebooks")}</SelectItem>
             <SelectItem value="sample_code">{t("showcase.tabs.sampleCode")}</SelectItem>
             <SelectItem value="infographic">{t("showcase.tabs.infographics")}</SelectItem>
+            <SelectItem value="tool_to_test">{t("showcase.tabs.toolsToTest")}</SelectItem>
           </SelectContent>
         </Select>
       </div>
@@ -288,6 +306,38 @@ const SubmitForm = ({ onClose }: { onClose: () => void }) => {
         <div>
           <Label>{t("showcase.pricingLabel")}</Label>
           <Input value={pricingInfo} onChange={(e) => setPricingInfo(e.target.value)} placeholder={t("showcase.pricingPlaceholder")} />
+        </div>
+      )}
+      {type === "tool_to_test" && (
+        <div className="space-y-3 rounded-lg border p-4">
+          <Label className="text-sm font-semibold">Why are you sharing this tool?</Label>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            {TOOL_TEST_REASONS.map((r) => {
+              const checked = testReasons.includes(r);
+              return (
+                <label key={r} className="flex items-center gap-2 text-sm font-body cursor-pointer">
+                  <Checkbox
+                    checked={checked}
+                    onCheckedChange={(c) =>
+                      setTestReasons((prev) => (c ? [...prev, r] : prev.filter((x) => x !== r)))
+                    }
+                  />
+                  <span>{TEST_REASON_LABELS[r]}</span>
+                </label>
+              );
+            })}
+            <label className="flex items-center gap-2 text-sm font-body cursor-pointer">
+              <Checkbox checked={includeOther} onCheckedChange={(c) => setIncludeOther(!!c)} />
+              <span>Other</span>
+            </label>
+          </div>
+          {includeOther && (
+            <Input
+              value={testReasonsOther}
+              onChange={(e) => setTestReasonsOther(e.target.value)}
+              placeholder="Tell us why…"
+            />
+          )}
         </div>
       )}
       <Button type="submit" disabled={createItem.isPending || submitting} className="w-full">
@@ -359,6 +409,7 @@ const Showcase = () => {
                 <TabsTrigger value="guidebook" className="text-xs sm:text-sm">{t("showcase.tabs.guidebooks")}</TabsTrigger>
                 <TabsTrigger value="sample_code" className="text-xs sm:text-sm">{t("showcase.tabs.sampleCode")}</TabsTrigger>
                 <TabsTrigger value="infographic" className="text-xs sm:text-sm">{t("showcase.tabs.infographics")}</TabsTrigger>
+                <TabsTrigger value="tool_to_test" className="text-xs sm:text-sm">{t("showcase.tabs.toolsToTest")}</TabsTrigger>
               </TabsList>
             </div>
 

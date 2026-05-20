@@ -19,13 +19,27 @@ import FilePreview from "@/components/FilePreview";
 import { useToast } from "@/hooks/use-toast";
 import {
   ArrowLeft, ExternalLink, Lightbulb, MessageSquare, Wrench, Star,
-  Target, Zap, CheckCircle2, BarChart3, FileText, Download, Lock,
+  Target, Zap, CheckCircle2, BarChart3, FileText, Download, Lock, BookOpen, Code, FlaskConical,
 } from "lucide-react";
 
 const typeIcons: Record<string, React.ElementType> = {
   case_study: Lightbulb,
   testimonial: MessageSquare,
   tool: Wrench,
+  guidebook: BookOpen,
+  sample_code: Code,
+  infographic: BarChart3,
+  tool_to_test: FlaskConical,
+};
+
+const TEST_REASON_LABELS: Record<string, string> = {
+  feedback: "Looking for feedback",
+  comments: "Want comments / opinions",
+  beta_test: "Recruiting beta testers",
+  early_adoption: "Looking for early adopters",
+  code_review: "Code review wanted",
+  ux_review: "UX / design review",
+  bug_hunting: "Help me find bugs",
 };
 
 const StarRating = ({ value, onChange }: { value: number; onChange?: (v: number) => void }) => (
@@ -179,6 +193,20 @@ const ShowcaseDetail = () => {
 
             {item.pricing_info && (
               <p className="text-lg font-semibold text-primary font-body mb-6">{item.pricing_info}</p>
+            )}
+
+            {item.type === "tool_to_test" && ((item.test_reasons && item.test_reasons.length > 0) || item.test_reasons_other) && (
+              <div className="mb-6 rounded-lg border bg-muted/30 p-4">
+                <p className="text-sm font-semibold font-body mb-2">The creator is looking for:</p>
+                <div className="flex flex-wrap gap-2">
+                  {item.test_reasons?.map((r) => (
+                    <Badge key={r} variant="secondary">{TEST_REASON_LABELS[r] ?? r}</Badge>
+                  ))}
+                  {item.test_reasons_other && (
+                    <Badge variant="secondary">{item.test_reasons_other}</Badge>
+                  )}
+                </div>
+              </div>
             )}
 
             <div className="flex flex-wrap gap-3">

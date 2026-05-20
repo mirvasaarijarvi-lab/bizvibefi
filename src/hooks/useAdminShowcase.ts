@@ -156,7 +156,7 @@ export interface ShowcaseFieldsUpdate {
   file_url?: string | null;
   file_name?: string | null;
   file_urls?: { url: string; name: string }[] | null;
-  type?: "case_study" | "testimonial" | "tool" | "guidebook" | "sample_code" | "infographic";
+  type?: "case_study" | "testimonial" | "tool" | "guidebook" | "sample_code" | "infographic" | "tool_to_test";
 }
 
 export const useUpdateShowcaseFields = () => {
