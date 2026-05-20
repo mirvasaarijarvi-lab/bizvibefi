@@ -246,7 +246,7 @@ const sv = {
     submitCta: "Skicka in ditt",
     submitTitle: "Skicka in till skyltfönstret",
     signInToSubmit: "Logga in för att skicka in",
-    tabs: { all: "Alla", caseStudies: "Fallstudier", testimonials: "Omdömen", tools: "Verktyg", guidebooks: "Guider", sampleCode: "Koder & prompter", infographics: "Infografik" },
+    tabs: { all: "Alla", caseStudies: "Fallstudier", testimonials: "Omdömen", tools: "Verktyg", guidebooks: "Guider", sampleCode: "Koder & prompter", infographics: "Infografik", toolsToTest: "Verktyg att testa" },
     by: "av",
     visitLink: "Besök",
     reviews: "Recensioner",
