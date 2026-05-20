@@ -181,7 +181,9 @@ const About = () => {
             </h2>
             <div className="mt-8 space-y-5 text-muted-foreground font-body leading-relaxed">
               <p>
-                We started {"<Good Vibes Café/>"} because we were tired of building alone. The best things happen when complementary people work in the same direction, so we built a collective around that belief.
+                We started {"<Good Vibes Café/>"} because we were tired of building alone. The best things happen when you combine complementary chaos, so we built a collective around it.
+                <br />
+                Good vibes. Real work. No corners cut.
               </p>
               <p>
                 We believe smart speed and deep care aren't opposites. The best builders move fast because they have the right knowledge, the right people, and a community that fills the gaps they haven't filled yet. Not because they cut corners.
