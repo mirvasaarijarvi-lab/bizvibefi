@@ -16,8 +16,9 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { motion } from "framer-motion";
 import { useTranslation } from "@/i18n/useTranslation";
 import { useAuth } from "@/hooks/useAuth";
-import { useShowcaseItems, useCreateShowcaseItem, type ShowcaseType, type ShowcaseItem, type KeyFigure } from "@/hooks/useShowcase";
-import { Plus, ExternalLink, ArrowRight, Lightbulb, MessageSquare, Wrench, Trash2, BookOpen, Code, BarChart3 } from "lucide-react";
+import { useShowcaseItems, useCreateShowcaseItem, type ShowcaseType, type ShowcaseItem, type KeyFigure, TOOL_TEST_REASONS, type ToolTestReason } from "@/hooks/useShowcase";
+import { Plus, ExternalLink, ArrowRight, Lightbulb, MessageSquare, Wrench, Trash2, BookOpen, Code, BarChart3, FlaskConical } from "lucide-react";
+import { Checkbox } from "@/components/ui/checkbox";
 import FilePreview from "@/components/FilePreview";
 import ShowcaseLinksField from "@/components/ShowcaseLinksField";
 import ShowcaseImagesField from "@/components/ShowcaseImagesField";
@@ -31,6 +32,17 @@ const typeIcons: Record<ShowcaseType, React.ElementType> = {
   guidebook: BookOpen,
   sample_code: Code,
   infographic: BarChart3,
+  tool_to_test: FlaskConical,
+};
+
+const TEST_REASON_LABELS: Record<ToolTestReason, string> = {
+  feedback: "Looking for feedback",
+  comments: "Want comments / opinions",
+  beta_test: "Recruiting beta testers",
+  early_adoption: "Looking for early adopters",
+  code_review: "Code review wanted",
+  ux_review: "UX / design review",
+  bug_hunting: "Help me find bugs",
 };
 
 const ShowcaseCard = ({ item }: { item: ShowcaseItem }) => {
