@@ -178,6 +178,8 @@ export const useCreateShowcaseItem = () => {
         link_urls: item.link_urls as unknown as Record<string, unknown>[] | undefined,
         category_tags: item.category_tags,
         pricing_info: item.pricing_info,
+        test_reasons: item.test_reasons,
+        test_reasons_other: item.test_reasons_other,
         user_id: user.id,
       };
       const { data, error } = await supabase
