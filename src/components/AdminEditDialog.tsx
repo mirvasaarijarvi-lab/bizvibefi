@@ -115,6 +115,7 @@ const AdminEditDialog = ({ item, open, onOpenChange }: AdminEditDialogProps) => 
                <SelectItem value="guidebook">{t("showcase.tabs.guidebooks")}</SelectItem>
               <SelectItem value="sample_code">{t("showcase.tabs.sampleCode")}</SelectItem>
               <SelectItem value="infographic">{t("showcase.tabs.infographics")}</SelectItem>
+              <SelectItem value="tool_to_test">{t("showcase.tabs.toolsToTest")}</SelectItem>
               </SelectContent>
             </Select>
           </div>
