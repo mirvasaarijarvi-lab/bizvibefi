@@ -41,6 +41,8 @@ export interface ShowcaseItem {
   link_urls: { label?: string; url: string }[] | null;
   category_tags: string[];
   pricing_info: string | null;
+  test_reasons: string[] | null;
+  test_reasons_other: string | null;
   rejection_reason: string | null;
   status: ApprovalStatus;
   created_at: string;
