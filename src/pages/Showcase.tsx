@@ -203,6 +203,9 @@ const SubmitForm = ({ onClose }: { onClose: () => void }) => {
   const [pricingInfo, setPricingInfo] = useState("");
   const [images, setImages] = useState<string[]>([]);
   const [files, setFiles] = useState<{ url: string; name: string }[]>([]);
+  const [testReasons, setTestReasons] = useState<string[]>([]);
+  const [testReasonsOther, setTestReasonsOther] = useState("");
+  const [includeOther, setIncludeOther] = useState(false);
   const [submitting, setSubmitting] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
