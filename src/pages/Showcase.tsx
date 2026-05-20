@@ -234,6 +234,8 @@ const SubmitForm = ({ onClose }: { onClose: () => void }) => {
         file_urls: files,
         category_tags: tags.split(",").map((t) => t.trim()).filter(Boolean),
         pricing_info: pricingInfo.trim() || undefined,
+        test_reasons: type === "tool_to_test" ? testReasons : undefined,
+        test_reasons_other: type === "tool_to_test" && includeOther ? testReasonsOther.trim() || undefined : undefined,
       });
       toast({ title: t("showcase.submitted"), description: t("showcase.submittedDesc") });
       onClose();
