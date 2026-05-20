@@ -308,6 +308,38 @@ const SubmitForm = ({ onClose }: { onClose: () => void }) => {
           <Input value={pricingInfo} onChange={(e) => setPricingInfo(e.target.value)} placeholder={t("showcase.pricingPlaceholder")} />
         </div>
       )}
+      {type === "tool_to_test" && (
+        <div className="space-y-3 rounded-lg border p-4">
+          <Label className="text-sm font-semibold">Why are you sharing this tool?</Label>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            {TOOL_TEST_REASONS.map((r) => {
+              const checked = testReasons.includes(r);
+              return (
+                <label key={r} className="flex items-center gap-2 text-sm font-body cursor-pointer">
+                  <Checkbox
+                    checked={checked}
+                    onCheckedChange={(c) =>
+                      setTestReasons((prev) => (c ? [...prev, r] : prev.filter((x) => x !== r)))
+                    }
+                  />
+                  <span>{TEST_REASON_LABELS[r]}</span>
+                </label>
+              );
+            })}
+            <label className="flex items-center gap-2 text-sm font-body cursor-pointer">
+              <Checkbox checked={includeOther} onCheckedChange={(c) => setIncludeOther(!!c)} />
+              <span>Other</span>
+            </label>
+          </div>
+          {includeOther && (
+            <Input
+              value={testReasonsOther}
+              onChange={(e) => setTestReasonsOther(e.target.value)}
+              placeholder="Tell us why…"
+            />
+          )}
+        </div>
+      )}
       <Button type="submit" disabled={createItem.isPending || submitting} className="w-full">
         {submitting ? t("showcase.uploading") : t("showcase.submitBtn")}
       </Button>
