@@ -156,6 +156,8 @@ export const useCreateShowcaseItem = () => {
       link_urls?: { label?: string; url: string }[];
       category_tags?: string[];
       pricing_info?: string;
+      test_reasons?: string[];
+      test_reasons_other?: string;
     }) => {
       if (!user) throw new Error("Not authenticated");
       const payload = {
