@@ -47,6 +47,10 @@ const AdminSearchFilter = ({ search, onSearchChange, typeFilter, onTypeFilterCha
           <SelectItem value="case_study">{t("admin.showcase.search.casestudy")}</SelectItem>
           <SelectItem value="testimonial">{t("admin.showcase.search.testimonial")}</SelectItem>
           <SelectItem value="tool">{t("admin.showcase.search.tool")}</SelectItem>
+          <SelectItem value="guidebook">{t("showcase.tabs.guidebooks")}</SelectItem>
+          <SelectItem value="sample_code">{t("showcase.tabs.sampleCode")}</SelectItem>
+          <SelectItem value="infographic">{t("showcase.tabs.infographics")}</SelectItem>
+          <SelectItem value="tool_to_test">{t("showcase.tabs.toolsToTest")}</SelectItem>
         </SelectContent>
       </Select>
       <Select value={sortBy} onValueChange={(v) => onSortChange(v as SortOption)}>
