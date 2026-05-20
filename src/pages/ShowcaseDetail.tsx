@@ -19,13 +19,27 @@ import FilePreview from "@/components/FilePreview";
 import { useToast } from "@/hooks/use-toast";
 import {
   ArrowLeft, ExternalLink, Lightbulb, MessageSquare, Wrench, Star,
-  Target, Zap, CheckCircle2, BarChart3, FileText, Download, Lock,
+  Target, Zap, CheckCircle2, BarChart3, FileText, Download, Lock, BookOpen, Code, FlaskConical,
 } from "lucide-react";
 
 const typeIcons: Record<string, React.ElementType> = {
   case_study: Lightbulb,
   testimonial: MessageSquare,
   tool: Wrench,
+  guidebook: BookOpen,
+  sample_code: Code,
+  infographic: BarChart3,
+  tool_to_test: FlaskConical,
+};
+
+const TEST_REASON_LABELS: Record<string, string> = {
+  feedback: "Looking for feedback",
+  comments: "Want comments / opinions",
+  beta_test: "Recruiting beta testers",
+  early_adoption: "Looking for early adopters",
+  code_review: "Code review wanted",
+  ux_review: "UX / design review",
+  bug_hunting: "Help me find bugs",
 };
 
 const StarRating = ({ value, onChange }: { value: number; onChange?: (v: number) => void }) => (
