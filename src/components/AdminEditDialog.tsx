@@ -69,7 +69,7 @@ const AdminEditDialog = ({ item, open, onOpenChange }: AdminEditDialogProps) => 
       await updateFields.mutateAsync({
         id: item.id,
         fields: {
-          type: type as "case_study" | "guidebook" | "sample_code" | "testimonial" | "tool",
+          type: type as "case_study" | "guidebook" | "sample_code" | "testimonial" | "tool" | "infographic" | "tool_to_test",
           title: title.trim(),
           description: description.trim(),
           content: content.trim() || null,
