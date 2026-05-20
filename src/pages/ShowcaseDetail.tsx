@@ -195,6 +195,20 @@ const ShowcaseDetail = () => {
               <p className="text-lg font-semibold text-primary font-body mb-6">{item.pricing_info}</p>
             )}
 
+            {item.type === "tool_to_test" && ((item.test_reasons && item.test_reasons.length > 0) || item.test_reasons_other) && (
+              <div className="mb-6 rounded-lg border bg-muted/30 p-4">
+                <p className="text-sm font-semibold font-body mb-2">The creator is looking for:</p>
+                <div className="flex flex-wrap gap-2">
+                  {item.test_reasons?.map((r) => (
+                    <Badge key={r} variant="secondary">{TEST_REASON_LABELS[r] ?? r}</Badge>
+                  ))}
+                  {item.test_reasons_other && (
+                    <Badge variant="secondary">{item.test_reasons_other}</Badge>
+                  )}
+                </div>
+              </div>
+            )}
+
             <div className="flex flex-wrap gap-3">
               {(() => {
                 const allFiles = item.file_urls && item.file_urls.length > 0
