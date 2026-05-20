@@ -2,7 +2,18 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "./useAuth";
 
-export type ShowcaseType = "case_study" | "testimonial" | "tool" | "guidebook" | "sample_code" | "infographic";
+export type ShowcaseType = "case_study" | "testimonial" | "tool" | "guidebook" | "sample_code" | "infographic" | "tool_to_test";
+
+export const TOOL_TEST_REASONS = [
+  "feedback",
+  "comments",
+  "beta_test",
+  "early_adoption",
+  "code_review",
+  "ux_review",
+  "bug_hunting",
+] as const;
+export type ToolTestReason = (typeof TOOL_TEST_REASONS)[number];
 export type ApprovalStatus = "pending" | "approved" | "rejected";
 
 export interface KeyFigure {
