@@ -1,15 +1,53 @@
 import Layout from "@/components/Layout";
 import PageMeta from "@/components/PageMeta";
+import JsonLd from "@/components/JsonLd";
 import HeroAvatar from "@/components/HeroAvatar";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { ArrowRight, Linkedin, Gem, Sparkles, Star, Target, Eye, Compass, Rocket, Heart, Feather } from "lucide-react";
+import { ArrowRight, Linkedin, Gem, Sparkles, Star, Target, Eye, Compass, Rocket, Heart, Feather, HelpCircle } from "lucide-react";
 import { useTranslation } from "@/i18n/useTranslation";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+
+const ABOUT_FAQS = [
+  {
+    q: "How do I join the collective?",
+    a: "Start with a free Starter account from the Get Going page. From there you can apply for Viber (full membership, invoiced manually) or Vibetor (curated tier via application). Pick the tier that matches where you are as a builder.",
+  },
+  {
+    q: "What is the difference between Starter, Viber, and Vibetor?",
+    a: "Starter is free and gives you the community basics. Viber unlocks the full member experience, the Vault, events, Showcase file uploads, and deeper forum access. Vibetor is for connectors, investors, and expert builders accepted through a short application.",
+  },
+  {
+    q: "Do I have to be based in Finland or the Nordics?",
+    a: "We are a Nordic collective by gravity, not by gate. Most members are in Finland and the Nordics, but builders from anywhere are welcome as long as you ship and bring good vibes.",
+  },
+  {
+    q: "What support and resources do members get?",
+    a: "Members get the Vault (curated knowledge and templates), a Forum with peer feedback and structured Leads, the Showcase to publish tools and tests, events with RSVP, badges and a leaderboard, plus direct access to other builders, Vibetors, and the founders.",
+  },
+  {
+    q: "Can I share a tool or product to get feedback?",
+    a: "Yes. Post it in the Showcase under Tools to test. Tick the boxes for what you want (comments, beta testers, adoption) and the community will engage. Showcase file uploads are available from Viber and up.",
+  },
+  {
+    q: "How do events and pregames work?",
+    a: "Events are listed on the Events page with RSVP limits and maps. Some events include presentations and short discussions for members. Watch the events page or subscribe to the newsletter to catch them early.",
+  },
+  {
+    q: "What does it cost?",
+    a: "Starter is free. Viber is a paid membership invoiced manually after you apply. Vibetor is application-based. Exact pricing and benefits are shown on the Get Going page.",
+  },
+  {
+    q: "How do I get in touch before joining?",
+    a: "Use the Contact page or email shipping@goodvibescafe.fi. You can also drop into the Forum once you have a Starter account.",
+  },
+];
+
 
 const FOUNDER_NAMES = ["Minna Blomster", "Mirva Saarijärvi"];
 // Aliases / alternate display names some founders may use on their member profile
@@ -417,6 +455,33 @@ const About = () => {
             </div>
           </div>
 
+          {/* FAQ */}
+          <div className="mt-16">
+            <div className="text-center mb-8">
+              <div className="flex items-center justify-center gap-2 mb-4">
+                <HelpCircle className="h-6 w-6 text-primary" />
+              </div>
+              <h2 className="font-display text-2xl md:text-4xl font-bold tracking-[-0.02em]">
+                Frequently asked <span className="text-gradient-prism">questions</span>
+              </h2>
+              <p className="mt-3 text-muted-foreground font-body max-w-xl mx-auto">
+                How people join the collective, and what support you get once you are in.
+              </p>
+            </div>
+            <Accordion type="single" collapsible className="bg-card border border-border rounded-2xl px-2 md:px-4">
+              {ABOUT_FAQS.map((item, i) => (
+                <AccordionItem key={i} value={`faq-${i}`} className="border-border">
+                  <AccordionTrigger className="text-left font-display font-semibold tracking-[-0.01em] hover:no-underline">
+                    {item.q}
+                  </AccordionTrigger>
+                  <AccordionContent className="text-muted-foreground font-body leading-relaxed">
+                    {item.a}
+                  </AccordionContent>
+                </AccordionItem>
+              ))}
+            </Accordion>
+          </div>
+
           <div className="mt-12 text-center">
             <Button variant="hero" size="lg" asChild>
               <Link to="/community">{t("about.cta")} <ArrowRight className="ml-2 h-4 w-4" /></Link>
@@ -424,8 +489,22 @@ const About = () => {
           </div>
         </div>
       </section>
+
+      <JsonLd
+        id="about-faq-jsonld"
+        data={{
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          mainEntity: ABOUT_FAQS.map((item) => ({
+            "@type": "Question",
+            name: item.q,
+            acceptedAnswer: { "@type": "Answer", text: item.a },
+          })),
+        }}
+      />
     </Layout>
   );
 };
 
 export default About;
+
