@@ -491,6 +491,7 @@ const About = () => {
       </section>
 
       <JsonLd
+        id="about-faq-jsonld"
         data={{
           "@context": "https://schema.org",
           "@type": "FAQPage",
