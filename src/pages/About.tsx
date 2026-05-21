@@ -507,10 +507,5 @@ const About = () => {
 
 export default About;
 
-        </div>
-      </section>
-    </Layout>
-  );
-};
 
 export default About;
