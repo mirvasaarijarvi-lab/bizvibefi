@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { useTranslation } from "@/i18n/useTranslation";
 import NewsletterSignup from "@/components/NewsletterSignup";
-import logoMark from "@/assets/logo-mark.png";
+import logoMark from "@/assets/logo-mark-transparent.png";
 
 const Footer = () => {
   const { t } = useTranslation();
@@ -19,7 +19,7 @@ const Footer = () => {
               loading="lazy"
               width={96}
               height={96}
-              className="mt-5 h-24 w-24 rounded-full"
+              className="mt-5 h-24 w-24 object-contain"
             />
           </div>
           <div>
