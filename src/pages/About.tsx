@@ -455,11 +455,58 @@ const About = () => {
             </div>
           </div>
 
+          {/* FAQ */}
+          <div className="mt-16">
+            <div className="text-center mb-8">
+              <div className="flex items-center justify-center gap-2 mb-4">
+                <HelpCircle className="h-6 w-6 text-primary" />
+              </div>
+              <h2 className="font-display text-2xl md:text-4xl font-bold tracking-[-0.02em]">
+                Frequently asked <span className="text-gradient-prism">questions</span>
+              </h2>
+              <p className="mt-3 text-muted-foreground font-body max-w-xl mx-auto">
+                How people join the collective, and what support you get once you are in.
+              </p>
+            </div>
+            <Accordion type="single" collapsible className="bg-card border border-border rounded-2xl px-2 md:px-4">
+              {ABOUT_FAQS.map((item, i) => (
+                <AccordionItem key={i} value={`faq-${i}`} className="border-border">
+                  <AccordionTrigger className="text-left font-display font-semibold tracking-[-0.01em] hover:no-underline">
+                    {item.q}
+                  </AccordionTrigger>
+                  <AccordionContent className="text-muted-foreground font-body leading-relaxed">
+                    {item.a}
+                  </AccordionContent>
+                </AccordionItem>
+              ))}
+            </Accordion>
+          </div>
+
           <div className="mt-12 text-center">
             <Button variant="hero" size="lg" asChild>
               <Link to="/community">{t("about.cta")} <ArrowRight className="ml-2 h-4 w-4" /></Link>
             </Button>
           </div>
+        </div>
+      </section>
+
+      <JsonLd
+        data={{
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          mainEntity: ABOUT_FAQS.map((item) => ({
+            "@type": "Question",
+            name: item.q,
+            acceptedAnswer: { "@type": "Answer", text: item.a },
+          })),
+        }}
+      />
+    </Layout>
+  );
+};
+
+export default About;
+
         </div>
       </section>
     </Layout>
