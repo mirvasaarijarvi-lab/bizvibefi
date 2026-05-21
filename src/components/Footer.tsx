@@ -19,7 +19,7 @@ const Footer = () => {
               loading="lazy"
               width={96}
               height={96}
-              className="mt-5 h-24 w-24 rounded-full"
+              className="mt-5 h-24 w-24 object-contain"
             />
           </div>
           <div>
