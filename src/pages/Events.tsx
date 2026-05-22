@@ -1130,7 +1130,8 @@ const Events = () => {
     return (
       <div
         key={event.id}
-        className={`bg-card border border-border rounded-2xl overflow-hidden transition-colors ${
+        id={`event-${event.id}`}
+        className={`bg-card border border-border rounded-2xl overflow-hidden transition-colors scroll-mt-24 ${
           isPastEvent ? "" : "hover:border-primary/30"
         }`}
       >
