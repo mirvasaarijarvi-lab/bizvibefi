@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { Tables } from "@/integrations/supabase/types";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -36,7 +36,7 @@ import { useToast } from "@/hooks/use-toast";
 import {
   Calendar, MapPin, Globe, Users, Clock, CheckCircle, Zap,
   Video, Wrench, Rocket, Plus, Pencil, Trash2, ImagePlus, ExternalLink, X,
-  Mic, Building2, Handshake,
+  Mic, Building2, Handshake, Link2,
 } from "lucide-react";
 import { format, isPast } from "date-fns";
 import { fi, enUS, sv } from "date-fns/locale";
@@ -989,6 +989,30 @@ const Events = () => {
     },
   });
 
+  // Scroll to the event referenced by the URL hash (e.g. #event-<id>) once events load
+  useEffect(() => {
+    if (!events || events.length === 0) return;
+    const hash = window.location.hash;
+    if (!hash.startsWith("#event-")) return;
+    const el = document.getElementById(hash.slice(1));
+    if (el) {
+      requestAnimationFrame(() => {
+        el.scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+    }
+  }, [events]);
+
+  const copyEventLink = async (eventId: string) => {
+    const url = `${window.location.origin}/events#event-${eventId}`;
+    try {
+      await navigator.clipboard.writeText(url);
+      window.history.replaceState(null, "", `/events#event-${eventId}`);
+      toast({ title: lang === "fi" ? "Linkki kopioitu" : lang === "sv" ? "Länk kopierad" : "Link copied" });
+    } catch {
+      toast({ title: "Copy failed", description: url, variant: "destructive" });
+    }
+  };
+
   const { data: myRsvps } = useQuery({
     queryKey: ["my-rsvps"],
     queryFn: async () => {
@@ -1106,7 +1130,8 @@ const Events = () => {
     return (
       <div
         key={event.id}
-        className={`bg-card border border-border rounded-2xl overflow-hidden transition-colors ${
+        id={`event-${event.id}`}
+        className={`bg-card border border-border rounded-2xl overflow-hidden transition-colors scroll-mt-24 ${
           isPastEvent ? "" : "hover:border-primary/30"
         }`}
       >
@@ -1184,9 +1209,21 @@ const Events = () => {
               )}
             </div>
 
-            <h2 className={`font-display font-bold text-foreground mb-2 ${isPastEvent ? "text-base" : "text-xl"}`}>
-              {localizedTitle}
-            </h2>
+            <div className="flex items-start gap-2 mb-2">
+              <h2 className={`font-display font-bold text-foreground flex-1 ${isPastEvent ? "text-base" : "text-xl"}`}>
+                {localizedTitle}
+              </h2>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="h-7 w-7 p-0 shrink-0 text-muted-foreground hover:text-foreground"
+                onClick={() => copyEventLink(event.id)}
+                title={lang === "fi" ? "Kopioi linkki tapahtumaan" : lang === "sv" ? "Kopiera länk till evenemanget" : "Copy link to this event"}
+                aria-label={lang === "fi" ? "Kopioi linkki tapahtumaan" : lang === "sv" ? "Kopiera länk till evenemanget" : "Copy link to this event"}
+              >
+                <Link2 className="h-3.5 w-3.5" />
+              </Button>
+            </div>
             {!isPastEvent && localizedDescription && (
               <p className="text-sm text-muted-foreground font-body mb-4">
                 {localizedDescription}
