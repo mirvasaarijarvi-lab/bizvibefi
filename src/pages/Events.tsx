@@ -989,6 +989,30 @@ const Events = () => {
     },
   });
 
+  // Scroll to the event referenced by the URL hash (e.g. #event-<id>) once events load
+  useEffect(() => {
+    if (!events || events.length === 0) return;
+    const hash = window.location.hash;
+    if (!hash.startsWith("#event-")) return;
+    const el = document.getElementById(hash.slice(1));
+    if (el) {
+      requestAnimationFrame(() => {
+        el.scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+    }
+  }, [events]);
+
+  const copyEventLink = async (eventId: string) => {
+    const url = `${window.location.origin}/events#event-${eventId}`;
+    try {
+      await navigator.clipboard.writeText(url);
+      window.history.replaceState(null, "", `/events#event-${eventId}`);
+      toast({ title: lang === "fi" ? "Linkki kopioitu" : lang === "sv" ? "Länk kopierad" : "Link copied" });
+    } catch {
+      toast({ title: "Copy failed", description: url, variant: "destructive" });
+    }
+  };
+
   const { data: myRsvps } = useQuery({
     queryKey: ["my-rsvps"],
     queryFn: async () => {
