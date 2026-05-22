@@ -1209,9 +1209,21 @@ const Events = () => {
               )}
             </div>
 
-            <h2 className={`font-display font-bold text-foreground mb-2 ${isPastEvent ? "text-base" : "text-xl"}`}>
-              {localizedTitle}
-            </h2>
+            <div className="flex items-start gap-2 mb-2">
+              <h2 className={`font-display font-bold text-foreground flex-1 ${isPastEvent ? "text-base" : "text-xl"}`}>
+                {localizedTitle}
+              </h2>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="h-7 w-7 p-0 shrink-0 text-muted-foreground hover:text-foreground"
+                onClick={() => copyEventLink(event.id)}
+                title={lang === "fi" ? "Kopioi linkki tapahtumaan" : lang === "sv" ? "Kopiera länk till evenemanget" : "Copy link to this event"}
+                aria-label={lang === "fi" ? "Kopioi linkki tapahtumaan" : lang === "sv" ? "Kopiera länk till evenemanget" : "Copy link to this event"}
+              >
+                <Link2 className="h-3.5 w-3.5" />
+              </Button>
+            </div>
             {!isPastEvent && localizedDescription && (
               <p className="text-sm text-muted-foreground font-body mb-4">
                 {localizedDescription}
