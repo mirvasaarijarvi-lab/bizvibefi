@@ -1214,14 +1214,15 @@ const Events = () => {
                 {localizedTitle}
               </h2>
               <Button
-                variant="ghost"
+                variant="outline"
                 size="sm"
-                className="h-7 w-7 p-0 shrink-0 text-muted-foreground hover:text-foreground"
+                className="h-8 shrink-0 gap-1.5 text-xs font-body"
                 onClick={() => copyEventLink(event.id)}
                 title={lang === "fi" ? "Kopioi linkki tapahtumaan" : lang === "sv" ? "Kopiera länk till evenemanget" : "Copy link to this event"}
-                aria-label={lang === "fi" ? "Kopioi linkki tapahtumaan" : lang === "sv" ? "Kopiera länk till evenemanget" : "Copy link to this event"}
+                aria-label={lang === "fi" ? "Jaa tapahtuma" : lang === "sv" ? "Dela evenemang" : "Share event"}
               >
                 <Link2 className="h-3.5 w-3.5" />
+                {lang === "fi" ? "Jaa tapahtuma" : lang === "sv" ? "Dela evenemang" : "Share event"}
               </Button>
             </div>
             {!isPastEvent && localizedDescription && (
