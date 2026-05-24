@@ -1037,6 +1037,10 @@ const Events = () => {
       return counts;
     },
     enabled: !!events && events.length > 0,
+    staleTime: 0,
+    refetchOnMount: "always",
+    refetchOnWindowFocus: true,
+    refetchInterval: 30000,
   });
 
   const rsvpMutation = useMutation({
