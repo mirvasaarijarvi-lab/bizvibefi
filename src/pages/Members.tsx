@@ -17,6 +17,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Navigate, Link } from "react-router-dom";
 import { useIsAdmin } from "@/hooks/useAdminShowcase";
 import { toast } from "sonner";
+import { safeUrl } from "@/lib/safeUrl";
 import {
   Select,
   SelectContent,
@@ -307,13 +308,16 @@ const Members = () => {
                           {member.company && (
                             <p className="text-sm text-muted-foreground flex items-center gap-1 truncate">
                               <Building2 className="h-3 w-3 shrink-0" />
-                              {(member as Record<string, unknown>).company_url ? (
-                                <a href={(member as Record<string, unknown>).company_url as string} target="_blank" rel="noopener noreferrer" className="hover:text-primary hover:underline transition-colors" onClick={(e) => e.stopPropagation()}>
-                                  {member.company}
-                                </a>
-                              ) : (
-                                member.company
-                              )}
+                              {(() => {
+                                const companyHref = safeUrl((member as Record<string, unknown>).company_url as string | undefined);
+                                return companyHref ? (
+                                  <a href={companyHref} target="_blank" rel="noopener noreferrer" className="hover:text-primary hover:underline transition-colors" onClick={(e) => e.stopPropagation()}>
+                                    {member.company}
+                                  </a>
+                                ) : (
+                                  member.company
+                                );
+                              })()}
                             </p>
                           )}
                         </div>
@@ -353,36 +357,44 @@ const Members = () => {
                             {member.contact_phone}
                           </a>
                         )}
-                        {member.linkedin_url && (
-                          <a
-                            href={member.linkedin_url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="inline-flex items-center gap-1.5 text-sm text-primary hover:underline"
-                          >
-                            <Linkedin className="h-4 w-4 shrink-0" />
-                            LinkedIn
-                            <ExternalLink className="h-3 w-3" />
-                          </a>
-                        )}
+                        {(() => {
+                          const liHref = safeUrl(member.linkedin_url);
+                          return liHref ? (
+                            <a
+                              href={liHref}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-flex items-center gap-1.5 text-sm text-primary hover:underline"
+                            >
+                              <Linkedin className="h-4 w-4 shrink-0" />
+                              LinkedIn
+                              <ExternalLink className="h-3 w-3" />
+                            </a>
+                          ) : null;
+                        })()}
                         {Array.isArray(member.website_links) && member.website_links.length > 0 && (
                           <div className="flex flex-col gap-1">
-                            {member.website_links.map((link, idx) => (
-                              <a
-                                key={idx}
-                                href={link.url}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="inline-flex items-center gap-1.5 text-sm text-primary hover:underline"
-                              >
-                                <Globe className="h-3.5 w-3.5 shrink-0" />
-                                <span className="truncate">{link.label || link.url}</span>
-                                <ExternalLink className="h-3 w-3 shrink-0" />
-                              </a>
-                            ))}
+                            {member.website_links.map((link, idx) => {
+                              const href = safeUrl(link.url);
+                              if (!href) return null;
+                              return (
+                                <a
+                                  key={idx}
+                                  href={href}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="inline-flex items-center gap-1.5 text-sm text-primary hover:underline"
+                                >
+                                  <Globe className="h-3.5 w-3.5 shrink-0" />
+                                  <span className="truncate">{link.label || link.url}</span>
+                                  <ExternalLink className="h-3 w-3 shrink-0" />
+                                </a>
+                              );
+                            })}
                           </div>
                         )}
                       </div>
+
 
                       {isAdmin && (
                         <div className="mt-4 pt-3 border-t border-border space-y-2">
