@@ -17,6 +17,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Navigate, Link } from "react-router-dom";
 import { useIsAdmin } from "@/hooks/useAdminShowcase";
 import { toast } from "sonner";
+import { safeUrl } from "@/lib/safeUrl";
 import {
   Select,
   SelectContent,
