@@ -1,4 +1,7 @@
 import { corsHeaders } from 'npm:@supabase/supabase-js@2/cors';
+import { createClient } from 'npm:@supabase/supabase-js@2';
+
+
 
 const DOH = 'https://dns.google/resolve';
 
@@ -18,6 +21,40 @@ async function dns(name: string, type: string): Promise<DnsAnswer[] | { error: s
 
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders });
+
+  // Require authenticated admin/superadmin — this endpoint is only used by the
+  // AdminEmailHealth page and exposes the app's email infrastructure.
+  const authHeader = req.headers.get('Authorization');
+  if (!authHeader?.startsWith('Bearer ')) {
+    return new Response(JSON.stringify({ error: 'Unauthorized' }), {
+      status: 401,
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    });
+  }
+  const supabase = createClient(
+    Deno.env.get('SUPABASE_URL')!,
+    Deno.env.get('SUPABASE_ANON_KEY')!,
+    { global: { headers: { Authorization: authHeader } } },
+  );
+  const token = authHeader.replace('Bearer ', '');
+  const { data: claimsData, error: authErr } = await supabase.auth.getClaims(token);
+  if (authErr || !claimsData?.claims) {
+    return new Response(JSON.stringify({ error: 'Unauthorized' }), {
+      status: 401,
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    });
+  }
+  const userId = claimsData.claims.sub as string;
+  const [{ data: isAdmin }, { data: isSuperadmin }] = await Promise.all([
+    supabase.rpc('has_role', { _user_id: userId, _role: 'admin' }),
+    supabase.rpc('has_role', { _user_id: userId, _role: 'superadmin' }),
+  ]);
+  if (!isAdmin && !isSuperadmin) {
+    return new Response(JSON.stringify({ error: 'Forbidden' }), {
+      status: 403,
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    });
+  }
 
   const url = new URL(req.url);
   const domain = (url.searchParams.get('domain') || 'goodvibescafe.org').toLowerCase().trim();

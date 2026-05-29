@@ -3,6 +3,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useProfile, useUpdateProfile, type WebsiteLink } from "@/hooks/useProfile";
 import { useUserRole } from "@/hooks/useAdminShowcase";
 import { supabase } from "@/integrations/supabase/client";
+import { safeUrl } from "@/lib/safeUrl";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
@@ -194,14 +195,17 @@ const Profile = () => {
 
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
-    const cleanLinks = websiteLinks.filter((l) => l.url.trim());
+    // Sanitize URLs: strip javascript:/data: and other unsafe schemes
+    const cleanLinks = websiteLinks
+      .map((l) => ({ ...l, url: safeUrl(l.url) ?? "" }))
+      .filter((l) => l.url.trim());
     try {
       await updateProfile.mutateAsync({
         display_name: displayName.trim(),
         bio: bio.trim(),
         company: company.trim(),
-        company_url: companyUrl.trim() || null,
-        linkedin_url: linkedinUrl.trim(),
+        company_url: safeUrl(companyUrl),
+        linkedin_url: safeUrl(linkedinUrl) ?? "",
         contact_email: contactEmail.trim() || null,
         contact_phone: contactPhone.trim() || null,
         website_links: cleanLinks.length > 0 ? cleanLinks : [],

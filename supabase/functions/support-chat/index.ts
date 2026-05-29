@@ -64,6 +64,26 @@ serve(async (req) => {
       );
     }
 
+    // Sanitize messages: only allow user/assistant roles, cap content length,
+    // and cap total messages to prevent prompt injection and cost abuse.
+    const MAX_MESSAGES = 20;
+    const MAX_CONTENT_LENGTH = 2000;
+    const validRoles = new Set(["user", "assistant"]);
+    const cleaned = (messages as Array<{ role?: unknown; content?: unknown }>)
+      .filter((m) => m && validRoles.has(String(m.role)) && typeof m.content === "string")
+      .map((m) => ({
+        role: String(m.role),
+        content: (m.content as string).slice(0, MAX_CONTENT_LENGTH),
+      }))
+      .slice(-MAX_MESSAGES);
+
+    if (cleaned.length === 0) {
+      return new Response(
+        JSON.stringify({ error: "No valid messages provided" }),
+        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) {
       throw new Error("LOVABLE_API_KEY is not configured");
@@ -79,7 +99,7 @@ serve(async (req) => {
         model: "google/gemini-3-flash-preview",
         messages: [
           { role: "system", content: SYSTEM_PROMPT },
-          ...messages,
+          ...cleaned,
         ],
         stream: true,
       }),

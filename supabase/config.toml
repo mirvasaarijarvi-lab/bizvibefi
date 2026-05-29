@@ -1,4 +1,1 @@
 project_id = "ztfbgbcevtrxdchbjeck"
-
-[functions.check-email-dns]
-verify_jwt = false
