@@ -13,6 +13,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, Di
 import { Building2, Linkedin, ExternalLink, Globe, Mail, Phone, ArrowLeft, MessageSquare, Send } from "lucide-react";
 import { motion } from "framer-motion";
 import { useState } from "react";
+import { safeUrl } from "@/lib/safeUrl";
 import { useToast } from "@/hooks/use-toast";
 import { Link as RouterLink } from "react-router-dom";
 
@@ -215,8 +216,8 @@ const MemberProfile = () => {
                     {showField("company") && member.company && (
                       <p className="text-muted-foreground flex items-center gap-1.5 mt-1 min-w-0">
                         <Building2 className="h-4 w-4 shrink-0" />
-                        {showField("company_url") && member.company_url ? (
-                          <a href={member.company_url} target="_blank" rel="noopener noreferrer" className="hover:text-primary hover:underline transition-colors truncate">
+                        {showField("company_url") && safeUrl(member.company_url) ? (
+                          <a href={safeUrl(member.company_url)!} target="_blank" rel="noopener noreferrer" className="hover:text-primary hover:underline transition-colors truncate">
                             {member.company}
                           </a>
                         ) : (
@@ -265,9 +266,9 @@ const MemberProfile = () => {
                       <span className="truncate">{member.contact_phone}</span>
                     </a>
                   )}
-                  {showField("linkedin_url") && member.linkedin_url && (
+                  {showField("linkedin_url") && safeUrl(member.linkedin_url) && (
                     <a
-                      href={member.linkedin_url}
+                      href={safeUrl(member.linkedin_url)!}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="flex items-center gap-2 text-primary hover:underline font-body min-w-0"
@@ -279,19 +280,23 @@ const MemberProfile = () => {
                   )}
                   {showField("website_links") && websiteLinks.length > 0 && (
                     <div className="space-y-2">
-                      {websiteLinks.map((link: { url: string; label?: string }, idx: number) => (
-                        <a
-                          key={idx}
-                          href={link.url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="flex items-center gap-2 text-primary hover:underline font-body min-w-0"
-                        >
-                          <Globe className="h-4 w-4 shrink-0" />
-                          <span className="truncate">{link.label || link.url}</span>
-                          <ExternalLink className="h-3 w-3 shrink-0" />
-                        </a>
-                      ))}
+                      {websiteLinks.map((link: { url: string; label?: string }, idx: number) => {
+                        const href = safeUrl(link.url);
+                        if (!href) return null;
+                        return (
+                          <a
+                            key={idx}
+                            href={href}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center gap-2 text-primary hover:underline font-body min-w-0"
+                          >
+                            <Globe className="h-4 w-4 shrink-0" />
+                            <span className="truncate">{link.label || link.url}</span>
+                            <ExternalLink className="h-3 w-3 shrink-0" />
+                          </a>
+                        );
+                      })}
                     </div>
                   )}
                 </div>
