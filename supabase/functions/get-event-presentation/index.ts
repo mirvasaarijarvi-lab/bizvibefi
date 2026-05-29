@@ -61,7 +61,10 @@ Deno.serve(async (req) => {
     .select("id, event_id, title, file_path, mime_type")
     .eq("id", presentationId)
     .maybeSingle();
-  if (presErr) return json(500, { error: "Lookup failed", details: presErr.message });
+  if (presErr) {
+    console.error("get-event-presentation presentation lookup failed:", presErr);
+    return json(500, { error: "An internal error occurred" });
+  }
   if (!pres) return json(404, { error: "Presentation not found" });
 
   const { data: event, error: eventErr } = await admin
@@ -69,7 +72,10 @@ Deno.serve(async (req) => {
     .select("id, starts_at, is_published, created_by")
     .eq("id", pres.event_id)
     .maybeSingle();
-  if (eventErr) return json(500, { error: "Event lookup failed", details: eventErr.message });
+  if (eventErr) {
+    console.error("get-event-presentation event lookup failed:", eventErr);
+    return json(500, { error: "An internal error occurred" });
+  }
   if (!event) return json(404, { error: "Event not found" });
 
   // Role check
@@ -124,7 +130,8 @@ Deno.serve(async (req) => {
     .createSignedUrl(pres.file_path, expiresIn, wantDownload ? { download: fileName } : undefined);
 
   if (signErr || !signed?.signedUrl) {
-    return json(500, { error: "Could not create signed URL", details: signErr?.message });
+    console.error("get-event-presentation signed URL failed:", signErr);
+    return json(500, { error: "An internal error occurred" });
   }
 
   return json(200, {

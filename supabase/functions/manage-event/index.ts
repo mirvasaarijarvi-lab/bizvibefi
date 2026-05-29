@@ -170,7 +170,10 @@ Deno.serve(async (req) => {
     _user_id: userId,
     _role: "superadmin",
   });
-  if (roleErr) return json(500, { error: "Role check failed", details: roleErr.message });
+  if (roleErr) {
+    console.error("manage-event role check failed:", roleErr);
+    return json(500, { error: "An internal error occurred" });
+  }
 
   let body: unknown;
   try {
@@ -201,7 +204,10 @@ Deno.serve(async (req) => {
         .select("created_by")
         .eq("id", payload.id)
         .maybeSingle();
-      if (fetchErr) return json(500, { error: "Lookup failed", details: fetchErr.message });
+      if (fetchErr) {
+        console.error("manage-event event lookup failed:", fetchErr);
+        return json(500, { error: "An internal error occurred" });
+      }
       if (!existing) return json(404, { error: "Event not found" });
       if (existing.created_by !== userId) {
         return json(403, { error: "Forbidden: only the event creator or a superadmin can modify this event" });
@@ -240,9 +246,7 @@ Deno.serve(async (req) => {
     if (error) return json(400, { error: error.message });
     return json(200, { ok: true });
   } catch (err) {
-    return json(500, {
-      error: "Server error",
-      details: err instanceof Error ? err.message : String(err),
-    });
+    console.error("manage-event server error:", err);
+    return json(500, { error: "An internal error occurred" });
   }
 });
