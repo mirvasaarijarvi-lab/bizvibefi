@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { safeUrl } from "@/lib/safeUrl";
 import type { Tables } from "@/integrations/supabase/types";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
