@@ -1,4 +1,18 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { z } from "https://esm.sh/zod@3.23.8";
+
+const RoleEnum = z.enum(["admin", "moderator", "user", "superadmin"]);
+const CreateUserSchema = z.object({
+  email: z.string().trim().email().max(254),
+  password: z.string().min(12).max(200),
+  display_name: z.string().trim().min(1).max(100).optional(),
+  role: RoleEnum.optional(),
+});
+const DeleteUserSchema = z.object({ user_id: z.string().uuid() });
+const UpdatePasswordSchema = z.object({
+  user_id: z.string().uuid(),
+  password: z.string().min(12).max(200),
+});
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
