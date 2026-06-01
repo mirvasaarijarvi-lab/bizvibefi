@@ -24,6 +24,7 @@ import ShowcaseLinksField from "@/components/ShowcaseLinksField";
 import ShowcaseImagesField from "@/components/ShowcaseImagesField";
 import ShowcaseFileField from "@/components/ShowcaseFileField";
 import { useToast } from "@/hooks/use-toast";
+import { safeUrl } from "@/lib/safeUrl";
 
 const typeIcons: Record<ShowcaseType, React.ElementType> = {
   case_study: Lightbulb,
@@ -93,9 +94,10 @@ const ShowcaseCard = ({ item }: { item: ShowcaseItem }) => {
           <CardFooter className="gap-2 flex-wrap">
             {(() => {
               const all = [...(item.link_urls ?? []), ...(item.link_url ? [{ url: item.link_url }] : [])];
-              return all[0] ? (
+              const safe = all[0] ? safeUrl(all[0].url) : null;
+              return safe ? (
                 <Button variant="outline" size="sm" asChild onClick={(e) => e.stopPropagation()}>
-                  <a href={all[0].url} target="_blank" rel="noopener noreferrer">
+                  <a href={safe} target="_blank" rel="noopener noreferrer">
                     {all[0].label || t("showcase.visitLink")} <ExternalLink className="ml-1 h-3 w-3" />
                   </a>
                 </Button>
