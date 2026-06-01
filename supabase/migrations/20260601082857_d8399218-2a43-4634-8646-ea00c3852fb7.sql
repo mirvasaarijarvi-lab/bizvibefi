@@ -1,0 +1,2 @@
+ALTER TABLE public.contact_requests ADD CONSTRAINT contact_requests_message_length CHECK (length(message) BETWEEN 1 AND 2000) NOT VALID;
+ALTER TABLE public.contact_requests VALIDATE CONSTRAINT contact_requests_message_length;
