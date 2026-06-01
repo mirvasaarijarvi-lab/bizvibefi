@@ -52,7 +52,14 @@ Deno.serve(async (req) => {
     const { action, ...params } = await req.json();
 
     if (action === "create_user") {
-      const { email, password, display_name, role } = params;
+      const parsed = CreateUserSchema.safeParse(params);
+      if (!parsed.success) {
+        return new Response(JSON.stringify({ error: "Invalid input" }), {
+          status: 400,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+      const { email, password, display_name, role } = parsed.data;
       const { data, error } = await supabaseAdmin.auth.admin.createUser({
         email,
         password,
@@ -75,7 +82,14 @@ Deno.serve(async (req) => {
     }
 
     if (action === "delete_user") {
-      const { user_id } = params;
+      const parsed = DeleteUserSchema.safeParse(params);
+      if (!parsed.success) {
+        return new Response(JSON.stringify({ error: "Invalid input" }), {
+          status: 400,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+      const { user_id } = parsed.data;
       if (user_id === caller.id) throw new Error("Cannot delete your own account");
 
       const { error } = await supabaseAdmin.auth.admin.deleteUser(user_id);
@@ -87,7 +101,14 @@ Deno.serve(async (req) => {
     }
 
     if (action === "update_password") {
-      const { user_id, password } = params;
+      const parsed = UpdatePasswordSchema.safeParse(params);
+      if (!parsed.success) {
+        return new Response(JSON.stringify({ error: "Invalid input" }), {
+          status: 400,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+      const { user_id, password } = parsed.data;
       const { error } = await supabaseAdmin.auth.admin.updateUserById(user_id, { password });
       if (error) throw error;
 
