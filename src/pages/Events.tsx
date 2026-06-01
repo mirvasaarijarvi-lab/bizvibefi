@@ -1358,7 +1358,7 @@ const Events = () => {
                 <span className="flex items-center gap-1">
                   <Users className="h-3.5 w-3.5" />
                   {event.max_attendees
-                    ? `${attendeeCount} / ${event.max_attendees} ${t("events.spots")}`
+                    ? `${attendeeCount} / ${event.max_attendees}`
                     : `${attendeeCount} ${attendeeCount === 1 ? t("events.going") : t("events.goingPlural")}`}
                 </span>
               )}
