@@ -1357,9 +1357,15 @@ const Events = () => {
               {!isPastEvent && (
                 <span className="flex items-center gap-1">
                   <Users className="h-3.5 w-3.5" />
-                  {attendeeCount} {attendeeCount === 1 ? t("events.going") : t("events.goingPlural")}
-                  {event.max_attendees && ` / ${event.max_attendees} ${t("events.spots")}`}
+                  {event.max_attendees
+                    ? `${attendeeCount} / ${event.max_attendees} ${t("events.spots")}`
+                    : `${attendeeCount} ${attendeeCount === 1 ? t("events.going") : t("events.goingPlural")}`}
                 </span>
+              )}
+              {!isPastEvent && isFull && (
+                <Badge variant="destructive" className="font-body text-xs">
+                  {lang === "fi" ? "Tapahtuma on täynnä" : lang === "sv" ? "Evenemanget är fullt" : "Event is full"}
+                </Badge>
               )}
             </div>
 
