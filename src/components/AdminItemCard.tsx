@@ -15,6 +15,7 @@ import ImageCropDialog from "@/components/ImageCropDialog";
 import AdminEditDialog from "@/components/AdminEditDialog";
 import RejectDialog from "@/components/RejectDialog";
 import FilePreview from "@/components/FilePreview";
+import { safeUrl } from "@/lib/safeUrl";
 
 const typeIcons: Record<string, React.ElementType> = {
   case_study: Lightbulb,
@@ -196,7 +197,7 @@ const AdminItemCard = ({ item, selected, onSelectChange }: AdminItemCardProps) =
               <div key={i} className="space-y-1">
                 <FilePreview url={f.url} name={f.name} variant="thumbnail" />
                 <a
-                  href={f.url}
+                  href={safeUrl(f.url) ?? "#"}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-1.5 text-xs text-primary hover:underline font-body"
@@ -213,13 +214,17 @@ const AdminItemCard = ({ item, selected, onSelectChange }: AdminItemCardProps) =
         <Button variant="outline" size="sm" onClick={() => setEditOpen(true)}>
           <Pencil className="mr-1 h-3 w-3" /> {t("admin.showcase.edit.editBtn")}
         </Button>
-        {[...(item.link_urls ?? []), ...(item.link_url ? [{ url: item.link_url }] : [])].map((l, i) => (
-          <Button key={i} variant="outline" size="sm" asChild>
-            <a href={l.url} target="_blank" rel="noopener noreferrer">
-              {l.label || t("showcase.visitLink")} <ExternalLink className="ml-1 h-3 w-3" />
-            </a>
-          </Button>
-        ))}
+        {[...(item.link_urls ?? []), ...(item.link_url ? [{ url: item.link_url }] : [])].map((l, i) => {
+          const safe = safeUrl(l.url);
+          if (!safe) return null;
+          return (
+            <Button key={i} variant="outline" size="sm" asChild>
+              <a href={safe} target="_blank" rel="noopener noreferrer">
+                {l.label || t("showcase.visitLink")} <ExternalLink className="ml-1 h-3 w-3" />
+              </a>
+            </Button>
+          );
+        })}
         {item.status !== "approved" && (
           <Button
             size="sm"

@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { FileText, ExternalLink, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { safeUrl } from "@/lib/safeUrl";
 
 interface FilePreviewProps {
   url: string;
@@ -13,10 +14,14 @@ interface FilePreviewProps {
 const isImage = (url: string) => /\.(png|jpe?g|gif|webp|svg|avif)(\?|$)/i.test(url);
 const isPdf = (url: string) => /\.pdf(\?|$)/i.test(url);
 
-const FilePreview = ({ url, name, variant = "full" }: FilePreviewProps) => {
+const FilePreview = ({ url: rawUrl, name, variant = "full" }: FilePreviewProps) => {
   const [open, setOpen] = useState(false);
+  const url = safeUrl(rawUrl) ?? "";
   const image = isImage(url);
   const pdf = isPdf(url);
+
+  if (!url) return null;
+
 
   const handleOpen = (e: React.MouseEvent) => {
     e.preventDefault();

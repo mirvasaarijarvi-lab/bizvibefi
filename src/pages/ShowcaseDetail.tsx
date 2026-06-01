@@ -16,6 +16,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useProfile } from "@/hooks/useProfile";
 import { useShowcaseItem, useShowcaseReviews, useCreateReview, type KeyFigure } from "@/hooks/useShowcase";
 import FilePreview from "@/components/FilePreview";
+import { safeUrl } from "@/lib/safeUrl";
 import { useToast } from "@/hooks/use-toast";
 import {
   ArrowLeft, ExternalLink, Lightbulb, MessageSquare, Wrench, Star,
@@ -214,14 +215,17 @@ const ShowcaseDetail = () => {
                 const allFiles = item.file_urls && item.file_urls.length > 0
                   ? item.file_urls
                   : item.file_url ? [{ url: item.file_url, name: item.file_name ?? "" }] : [];
-                return allFiles.map((f, i) => (
-                  hasViber ? (
-                    <Button key={i} size="lg" asChild className="shadow-lg">
-                      <a href={f.url} target="_blank" rel="noopener noreferrer" download={f.name || undefined}>
-                        <Download className="mr-2 h-5 w-5" />
-                        {f.name || t("showcase.file.download")}
-                      </a>
-                    </Button>
+                return allFiles.map((f, i) => {
+                  const safe = safeUrl(f.url);
+                  return hasViber ? (
+                    safe ? (
+                      <Button key={i} size="lg" asChild className="shadow-lg">
+                        <a href={safe} target="_blank" rel="noopener noreferrer" download={f.name || undefined}>
+                          <Download className="mr-2 h-5 w-5" />
+                          {f.name || t("showcase.file.download")}
+                        </a>
+                      </Button>
+                    ) : null
                   ) : (
                     <Button key={i} size="lg" asChild variant="outline" className="shadow-sm">
                       <Link to="/apply-viber">
@@ -229,16 +233,20 @@ const ShowcaseDetail = () => {
                         {t("showcase.lockedViber")}
                       </Link>
                     </Button>
-                  )
-                ));
+                  );
+                });
               })()}
-              {[...(item.link_urls ?? []), ...(item.link_url ? [{ url: item.link_url }] : [])].map((l, i) => (
-                <Button key={i} asChild variant="outline">
-                  <a href={l.url} target="_blank" rel="noopener noreferrer">
-                    {l.label || t("showcase.visitLink")} <ExternalLink className="ml-2 h-4 w-4" />
-                  </a>
-                </Button>
-              ))}
+              {[...(item.link_urls ?? []), ...(item.link_url ? [{ url: item.link_url }] : [])].map((l, i) => {
+                const safe = safeUrl(l.url);
+                if (!safe) return null;
+                return (
+                  <Button key={i} asChild variant="outline">
+                    <a href={safe} target="_blank" rel="noopener noreferrer">
+                      {l.label || t("showcase.visitLink")} <ExternalLink className="ml-2 h-4 w-4" />
+                    </a>
+                  </Button>
+                );
+              })}
               {item.type === "tool" && avgRating && (
                 <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-muted">
                   <Star className="h-4 w-4 text-yellow-500 fill-yellow-500" />
@@ -365,14 +373,17 @@ const ShowcaseDetail = () => {
                         ))}
                       </div>
                     )}
-                    {fileList.map((f, i) => (
-                      hasViber ? (
-                        <Button key={i} asChild size="lg" className="w-full shadow-lg">
-                          <a href={f.url} target="_blank" rel="noopener noreferrer" download={f.name || undefined}>
-                            <Download className="mr-2 h-5 w-5" />
-                            {f.name || t("showcase.file.download")}
-                          </a>
-                        </Button>
+                    {fileList.map((f, i) => {
+                      const safe = safeUrl(f.url);
+                      return hasViber ? (
+                        safe ? (
+                          <Button key={i} asChild size="lg" className="w-full shadow-lg">
+                            <a href={safe} target="_blank" rel="noopener noreferrer" download={f.name || undefined}>
+                              <Download className="mr-2 h-5 w-5" />
+                              {f.name || t("showcase.file.download")}
+                            </a>
+                          </Button>
+                        ) : null
                       ) : (
                         <Button key={i} asChild size="lg" variant="outline" className="w-full">
                           <Link to="/apply-viber">
@@ -380,11 +391,11 @@ const ShowcaseDetail = () => {
                             {t("showcase.lockedViber")}
                           </Link>
                         </Button>
-                      )
-                    ))}
-                    {fileList.length === 0 && imgs[0] && (
+                      );
+                    })}
+                    {fileList.length === 0 && imgs[0] && safeUrl(imgs[0]) && (
                       <Button asChild size="lg" className="w-full shadow-lg">
-                        <a href={imgs[0]} target="_blank" rel="noopener noreferrer" download>
+                        <a href={safeUrl(imgs[0]) as string} target="_blank" rel="noopener noreferrer" download>
                           <Download className="mr-2 h-5 w-5" />
                           {t("showcase.file.download")}
                         </a>
