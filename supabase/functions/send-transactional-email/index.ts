@@ -49,6 +49,41 @@ Deno.serve(async (req) => {
     )
   }
 
+  // Auth: reject pure anon-key calls. Allow internal service-role callers or
+  // signed-in users (admin send flows, user-triggered confirmations).
+  const authHeader = req.headers.get('Authorization') || ''
+  const bearer = authHeader.replace(/^Bearer\s+/i, '')
+  if (!bearer) {
+    return new Response(JSON.stringify({ error: 'Unauthorized' }), {
+      status: 401,
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    })
+  }
+  let callerRole: string | null = null
+  if (bearer === supabaseServiceKey) {
+    callerRole = 'service_role'
+  } else {
+    try {
+      const authClient = createClient(supabaseUrl, Deno.env.get('SUPABASE_ANON_KEY')!, {
+        global: { headers: { Authorization: `Bearer ${bearer}` } },
+      })
+      const { data, error } = await authClient.auth.getClaims(bearer)
+      if (error || !data?.claims) throw new Error('invalid token')
+      callerRole = (data.claims.role as string) || null
+    } catch {
+      return new Response(JSON.stringify({ error: 'Unauthorized' }), {
+        status: 401,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      })
+    }
+  }
+  if (callerRole !== 'service_role' && callerRole !== 'authenticated') {
+    return new Response(JSON.stringify({ error: 'Forbidden' }), {
+      status: 403,
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    })
+  }
+
   // Parse request body
   let templateName: string
   let recipientEmail: string

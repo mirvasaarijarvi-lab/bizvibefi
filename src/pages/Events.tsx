@@ -879,28 +879,12 @@ const GuestSignupDialog = ({
         phone: trimmedPhone || null,
       } as never);
       if (error) throw error;
-      // Send confirmation email (non-blocking failure)
+      // Send confirmation email (non-blocking failure). Goes through a
+      // server-side validator that checks the signup row exists, so the
+      // public email relay cannot be abused with arbitrary recipients.
       try {
-        const when = new Date(event.starts_at).toLocaleString("en-GB", {
-          weekday: "short", year: "numeric", month: "short", day: "numeric",
-          hour: "2-digit", minute: "2-digit", timeZone: "Europe/Helsinki",
-        });
-        const where = (event as { is_online?: boolean }).is_online ? "Online" : (event.location || "TBA");
-        const intro = (event.description || "").replace(/\s+/g, " ").trim().slice(0, 240);
-        await supabase.functions.invoke("send-transactional-email", {
-          body: {
-            templateName: "event-confirmation",
-            recipientEmail: trimmedEmail,
-            idempotencyKey: `signup-${event.id}-${trimmedEmail}`,
-            templateData: {
-              name: trimmedName,
-              eventTitle: event.title,
-              eventIntro: intro,
-              eventTime: when,
-              eventLocation: where,
-              eventUrl: `${window.location.origin}/events`,
-            },
-          },
+        await supabase.functions.invoke("send-signup-confirmation", {
+          body: { eventId: event.id, email: trimmedEmail },
         });
       } catch (e) {
         console.warn("confirmation email failed", e);
