@@ -51,12 +51,10 @@ const Breadcrumbs = () => {
 
   // For admin pages, use "Admin" as a group
   if (isAdmin) {
-    crumbs.push({ label: "Admin", path: "/admin/showcase" });
+    crumbs.push({ label: "Admin", path: "/admin" });
     const label = ROUTE_LABELS[pathname];
-    if (label && pathname !== "/admin/showcase") {
+    if (label && pathname !== "/admin") {
       crumbs.push({ label, path: pathname });
-    } else if (pathname === "/admin/showcase") {
-      // Already shown via "Admin"
     }
   } else {
     // Try to match path directly, or build from segments
