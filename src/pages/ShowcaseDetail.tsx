@@ -47,6 +47,7 @@ const TEST_REASON_LABELS: Record<string, string> = {
   code_review: "Code review wanted",
   ux_review: "UX / design review",
   bug_hunting: "Help me find bugs",
+  competition_work: "Competition Work",
 };
 
 const StarRating = ({ value, onChange }: { value: number; onChange?: (v: number) => void }) => (
