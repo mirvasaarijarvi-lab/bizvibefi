@@ -981,14 +981,19 @@ const Events = () => {
   const { data: events, isLoading } = useQuery({
     queryKey: ["events"],
     queryFn: async () => {
+      // online_url is intentionally omitted: anon users cannot read it (column-level grant revoked).
+      // It's loaded separately for admins/creators when opening the edit dialog.
       const { data, error } = await supabase
         .from("events")
-        .select("*")
+        .select(
+          "id,title,description,event_type,starts_at,ends_at,location,is_online,max_attendees,image_url,is_published,created_by,created_at,updated_at,title_fi,title_sv,description_fi,description_sv,location_fi,location_sv,agenda,agenda_fi,agenda_sv,requires_signin,speakers,sponsors"
+        )
         .order("starts_at");
       if (error) throw error;
       return data;
     },
   });
+
 
   // Scroll to the event referenced by the URL hash (e.g. #event-<id>) once events load
   useEffect(() => {
