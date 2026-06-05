@@ -1404,6 +1404,7 @@ export type Database = {
         | "sample_code"
         | "infographic"
         | "tool_to_test"
+        | "lead"
       vibetor_type: "investor" | "innovator" | "partner" | "founder"
     }
     CompositeTypes: {
@@ -1558,6 +1559,7 @@ export const Constants = {
         "sample_code",
         "infographic",
         "tool_to_test",
+        "lead",
       ],
       vibetor_type: ["investor", "innovator", "partner", "founder"],
     },
