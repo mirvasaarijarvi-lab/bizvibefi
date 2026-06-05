@@ -425,7 +425,7 @@ const SubmitForm = ({ onClose, hasViberAccess }: { onClose: () => void; hasViber
         </>
       )}
 
-      {showStructuredFields && (
+      {!isLead && showStructuredFields && (
         <>
           <div>
             <Label>{t("showcase.challengeLabel")}</Label>
@@ -438,6 +438,13 @@ const SubmitForm = ({ onClose, hasViberAccess }: { onClose: () => void; hasViber
           <BenefitsInput benefits={benefits} onChange={setBenefits} />
           <KeyFigureInput figures={keyFigures} onChange={setKeyFigures} />
         </>
+      )}
+
+      {!isLead && (
+        <div>
+          <Label>{t("showcase.contentLabel")}</Label>
+          <Textarea value={content} onChange={(e) => setContent(e.target.value)} placeholder={t("showcase.contentPlaceholder")} />
+        </div>
       )}
 
       <div>
