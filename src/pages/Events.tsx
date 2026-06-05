@@ -216,6 +216,19 @@ const EventFormDialog = ({
   });
   const [uploading, setUploading] = useState(false);
 
+  // Fetch online_url on demand for the edit form (column-level RLS hides it from direct SELECT).
+  useEffect(() => {
+    if (!editEvent?.id || !editEvent.is_online) return;
+    let cancelled = false;
+    (async () => {
+      const { data, error } = await supabase.rpc("get_event_online_url", { _event_id: editEvent.id });
+      if (!cancelled && !error && typeof data === "string") {
+        setForm((f) => ({ ...f, online_url: data }));
+      }
+    })();
+    return () => { cancelled = true; };
+  }, [editEvent?.id, editEvent?.is_online]);
+
   const saveMutation = useMutation({
     mutationFn: async () => {
       const cleanSpeakers = form.speakers
@@ -989,21 +1002,16 @@ const Events = () => {
   const [guestSignupEvent, setGuestSignupEvent] = useState<Tables<"events"> | null>(null);
 
   const { data: events, isLoading } = useQuery({
-    queryKey: ["events", !!user],
+    queryKey: ["events"],
     queryFn: async () => {
-      // online_url is restricted at the DB level: anonymous users cannot read that column.
-      // Only request it when the viewer is signed in.
-      const baseCols =
+      // online_url is restricted at the DB level. Authorized members
+      // (creator, admins, RSVPed/signed-up attendees) fetch it on demand
+      // via the public.get_event_online_url() RPC.
+      const cols =
         "id,title,description,event_type,starts_at,ends_at,location,is_online,max_attendees,image_url,is_published,created_by,created_at,updated_at,title_fi,title_sv,description_fi,description_sv,location_fi,location_sv,agenda,agenda_fi,agenda_sv,requires_signin,speakers,sponsors";
-      const cols = user ? `${baseCols},online_url` : baseCols;
-      const { data, error } = await (supabase.from("events") as unknown as {
-        select: (c: string) => { order: (k: string) => Promise<{ data: unknown[] | null; error: unknown }> };
-      })
-        .select(cols)
-        .order("starts_at");
+      const { data, error } = await supabase.from("events").select(cols).order("starts_at");
       if (error) throw error;
       return (data ?? []).map((e) => ({ online_url: null, ...(e as Record<string, unknown>) })) as unknown as Tables<"events">[];
-
     },
   });
 

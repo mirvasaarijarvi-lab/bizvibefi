@@ -1286,6 +1286,7 @@ export type Database = {
           user_id: string
         }[]
       }
+      get_event_online_url: { Args: { _event_id: string }; Returns: string }
       get_event_rsvp_count: { Args: { _event_id: string }; Returns: number }
       get_membership_tier: {
         Args: { _user_id: string }
