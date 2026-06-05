@@ -376,8 +376,8 @@ const useCountUp = (target: number, duration = 2000) => {
   return { count, ref };
 };
 
-const MetricCard = ({ metric, index }: { metric: { label: string; value: number; icon: React.ElementType; color: string }; index: number }) => {
-  const { count, ref } = useCountUp(metric.value);
+const MetricCard = ({ metric, index }: { metric: { label: string; value: number; icon: React.ElementType; color: string; offset?: number }; index: number }) => {
+  const { count, ref } = useCountUp(metric.value + (metric.offset || 0));
   return (
     <motion.div
       ref={ref}
