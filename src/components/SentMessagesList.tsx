@@ -249,7 +249,7 @@ const SentMessagesList = () => {
                     </TableCell>
                   </TableRow>
                 )}
-              </>
+              </Fragment>
             );
           })}
         </TableBody>
