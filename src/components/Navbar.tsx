@@ -266,6 +266,15 @@ const Navbar = () => {
                   <Link to="/profile" onClick={() => setOpen(false)} className="font-body text-base font-medium text-silver">
                     Profile
                   </Link>
+                  {isAdmin && (
+                    <Link
+                      to="/admin"
+                      onClick={() => setOpen(false)}
+                      className="flex items-center gap-2 font-body text-base font-medium text-primary"
+                    >
+                      <Shield className="h-4 w-4" /> Admin
+                    </Link>
+                  )}
                   <button onClick={() => { signOut(); setOpen(false); }} className="font-body text-base font-medium text-destructive text-left">
                     Sign Out
                   </button>
