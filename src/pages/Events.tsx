@@ -1352,47 +1352,72 @@ const Events = () => {
               </div>
             )}
 
-            {!isPastEvent && (partnerCompanies.length > 0 || sponsorCompanies.length > 0) && (
-              <div className="mb-4 space-y-3">
-                {[
-                  { label: partnersLabel, list: partnerCompanies },
-                  { label: sponsorsLabel, list: sponsorCompanies },
-                ].filter((g) => g.list.length > 0).map((group) => (
-                  <div key={group.label}>
-                    <p className="text-xs font-display font-semibold uppercase tracking-wider text-muted-foreground mb-2">
-                      {group.label}
-                    </p>
-                    <div className="flex flex-wrap items-center gap-3">
-                      {group.list.map((sp, i) => {
-                        const inner = sp.logo_url ? (
-                          <img
-                            src={sp.logo_url}
-                            alt={sp.name}
-                            title={sp.name}
-                            className="h-10 max-w-[140px] object-contain"
-                          />
-                        ) : (
-                          <span className="font-display text-sm font-semibold text-foreground">{sp.name}</span>
-                        );
-                        return safeUrl(sp.url) ? (
-                          <a
-                            key={i}
-                            href={safeUrl(sp.url) ?? "#"}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="bg-muted dark:bg-background border border-border rounded-md px-3 py-2 hover:border-primary/40 transition-colors"
-                          >
-                            {inner}
-                          </a>
-                        ) : (
-                          <div key={i} className="bg-muted dark:bg-background border border-border rounded-md px-3 py-2">
-                            {inner}
-                          </div>
-                        );
-                      })}
+            {!isPastEvent && (partnerCompanies.length > 0 || sponsorCompanies.length > 0 || (localizedLocation && !event.is_online)) && (
+              <div className={`mb-4 grid gap-4 ${localizedLocation && !event.is_online ? "md:grid-cols-[1fr_280px]" : ""}`}>
+                <div className="space-y-3 min-w-0">
+                  {[
+                    { label: partnersLabel, list: partnerCompanies },
+                    { label: sponsorsLabel, list: sponsorCompanies },
+                  ].filter((g) => g.list.length > 0).map((group) => (
+                    <div key={group.label}>
+                      <p className="text-xs font-display font-semibold uppercase tracking-wider text-muted-foreground mb-2">
+                        {group.label}
+                      </p>
+                      <div className="flex flex-wrap items-center gap-3">
+                        {group.list.map((sp, i) => {
+                          const inner = sp.logo_url ? (
+                            <img
+                              src={sp.logo_url}
+                              alt={sp.name}
+                              title={sp.name}
+                              className="h-10 max-w-[140px] object-contain"
+                            />
+                          ) : (
+                            <span className="font-display text-sm font-semibold text-foreground">{sp.name}</span>
+                          );
+                          return safeUrl(sp.url) ? (
+                            <a
+                              key={i}
+                              href={safeUrl(sp.url) ?? "#"}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="bg-muted dark:bg-background border border-border rounded-md px-3 py-2 hover:border-primary/40 transition-colors"
+                            >
+                              {inner}
+                            </a>
+                          ) : (
+                            <div key={i} className="bg-muted dark:bg-background border border-border rounded-md px-3 py-2">
+                              {inner}
+                            </div>
+                          );
+                        })}
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
+
+                {localizedLocation && !event.is_online && (
+                  <a
+                    href={googleMapsUrl(localizedLocation)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block rounded-md overflow-hidden border border-border bg-muted dark:bg-background hover:border-primary/40 transition-colors group"
+                    aria-label={`Open ${localizedLocation} in Google Maps`}
+                  >
+                    <iframe
+                      title={`Map: ${localizedLocation}`}
+                      src={`https://www.google.com/maps?q=${encodeURIComponent(localizedLocation)}&output=embed`}
+                      loading="lazy"
+                      referrerPolicy="no-referrer-when-downgrade"
+                      className="w-full h-44 md:h-40 border-0 pointer-events-none group-hover:opacity-95"
+                    />
+                    <div className="flex items-center gap-1.5 px-3 py-2 text-xs text-muted-foreground font-body">
+                      <MapPin className="h-3.5 w-3.5 text-primary" />
+                      <span className="truncate">{localizedLocation}</span>
+                      <ExternalLink className="h-3 w-3 ml-auto shrink-0" />
+                    </div>
+                  </a>
+                )}
               </div>
             )}
 
