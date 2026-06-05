@@ -105,9 +105,6 @@
     "minimatch": "^10.0.1",
     "postcss": "^8.5.10",
     "ws": "^8.21.0",
-    "yaml": "^2.8.3",
-    "vite>esbuild": "^0.25.0",
-    "vite>rollup": "^4.59.0",
-    "vite>postcss": "^8.5.10"
+    "yaml": "^2.8.3"
   }
 }
