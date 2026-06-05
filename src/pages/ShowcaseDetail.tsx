@@ -33,6 +33,12 @@ const typeIcons: Record<string, React.ElementType> = {
   tool_to_test: FlaskConical,
 };
 
+const LEAD_PREFIX = "<!--LEAD_JSON-->";
+const parseLead = (content: string | null | undefined) => {
+  if (!content || !content.startsWith(LEAD_PREFIX)) return null;
+  try { return JSON.parse(content.slice(LEAD_PREFIX.length)); } catch { return null; }
+};
+
 const TEST_REASON_LABELS: Record<string, string> = {
   feedback: "Looking for feedback",
   comments: "Want comments / opinions",
