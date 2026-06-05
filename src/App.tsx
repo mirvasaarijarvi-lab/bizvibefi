@@ -43,6 +43,7 @@ const AdminEmailHealth = lazy(() => import("./pages/AdminEmailHealth.tsx"));
 const AdminEventRegistrations = lazy(() => import("./pages/AdminEventRegistrations.tsx"));
 const AdminMessages = lazy(() => import("./pages/AdminMessages.tsx"));
 const Unsubscribe = lazy(() => import("./pages/Unsubscribe.tsx"));
+const EventFeedback = lazy(() => import("./pages/EventFeedback.tsx"));
 const NotFound = lazy(() => import("./pages/NotFound.tsx"));
 
 const queryClient = new QueryClient();
@@ -68,6 +69,7 @@ const App = () => (
                 <Route path="/reset-password" element={<ResetPassword />} />
                 <Route path="/profile" element={<Profile />} />
                 <Route path="/events" element={<Events />} />
+                <Route path="/events/:id/feedback" element={<EventFeedback />} />
                 <Route path="/forum" element={<Forum />} />
                 <Route path="/forum/:slug" element={<ForumCategory />} />
                 <Route path="/forum/:slug/:topicId" element={<ForumTopic />} />
