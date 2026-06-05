@@ -505,6 +505,12 @@ const SubmitForm = ({ onClose, hasViberAccess }: { onClose: () => void; hasViber
 const Showcase = () => {
   const { t } = useTranslation();
   const { user } = useAuth();
+  const { data: profile } = useProfile();
+  const hasViberAccess =
+    !!profile &&
+    (profile.membership_tier === "viber" ||
+      profile.membership_tier === "vibetor" ||
+      (profile as unknown as { viber_access_override?: boolean }).viber_access_override === true);
   const [submitOpen, setSubmitOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<string>("all");
 
