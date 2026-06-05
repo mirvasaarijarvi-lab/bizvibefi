@@ -410,6 +410,47 @@ export type Database = {
         }
         Relationships: []
       }
+      event_feedback: {
+        Row: {
+          comments: string | null
+          created_at: string
+          email: string
+          event_id: string
+          id: string
+          name: string | null
+          overall_rating: number
+          program_ratings: Json
+        }
+        Insert: {
+          comments?: string | null
+          created_at?: string
+          email: string
+          event_id: string
+          id?: string
+          name?: string | null
+          overall_rating: number
+          program_ratings?: Json
+        }
+        Update: {
+          comments?: string | null
+          created_at?: string
+          email?: string
+          event_id?: string
+          id?: string
+          name?: string | null
+          overall_rating?: number
+          program_ratings?: Json
+        }
+        Relationships: [
+          {
+            foreignKeyName: "event_feedback_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "events"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       event_presentations: {
         Row: {
           created_at: string
