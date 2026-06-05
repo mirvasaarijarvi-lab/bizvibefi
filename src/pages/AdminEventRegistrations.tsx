@@ -13,8 +13,30 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
-import { CalendarDays, ChevronDown, Search, Users, Mail, Phone, Building2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { CalendarDays, ChevronDown, Search, Users, Mail, Phone, Building2, Download } from "lucide-react";
 import { format } from "date-fns";
+
+const csvEscape = (v: unknown) => {
+  const s = v == null ? "" : String(v);
+  return /[",\n\r]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+};
+
+const downloadCsv = (filename: string, rows: (string | null | undefined)[][]) => {
+  const csv = rows.map((r) => r.map(csvEscape).join(",")).join("\r\n");
+  const blob = new Blob(["\uFEFF" + csv], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+};
+
+const slugify = (s: string) =>
+  s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 60) || "event";
 
 type EventRow = {
   id: string;
@@ -206,6 +228,43 @@ const AdminEventRegistrations = () => {
                           </p>
                         ) : (
                           <div className="space-y-4 pt-3">
+                            <div className="flex justify-end">
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                onClick={() => {
+                                  const header = ["Type", "Name", "Email", "Phone", "Company", "Registered At"];
+                                  const rows: (string | null | undefined)[][] = [header];
+                                  eventRsvps.forEach((r) => {
+                                    const p = profileById.get(r.user_id);
+                                    rows.push([
+                                      "Member",
+                                      p?.display_name ?? "",
+                                      p?.contact_email ?? "",
+                                      "",
+                                      p?.company ?? "",
+                                      format(new Date(r.created_at), "yyyy-MM-dd HH:mm"),
+                                    ]);
+                                  });
+                                  eventSignups.forEach((s) => {
+                                    rows.push([
+                                      "Guest",
+                                      s.full_name,
+                                      s.email,
+                                      s.phone ?? "",
+                                      s.company,
+                                      format(new Date(s.created_at), "yyyy-MM-dd HH:mm"),
+                                    ]);
+                                  });
+                                  downloadCsv(
+                                    `registrations-${slugify(event.title)}-${format(new Date(event.starts_at), "yyyy-MM-dd")}.csv`,
+                                    rows,
+                                  );
+                                }}
+                              >
+                                <Download className="h-4 w-4 mr-1" /> Export CSV
+                              </Button>
+                            </div>
                             {eventRsvps.length > 0 && (
                               <div>
                                 <h3 className="text-xs font-display font-semibold uppercase tracking-wider text-muted-foreground mb-2">
