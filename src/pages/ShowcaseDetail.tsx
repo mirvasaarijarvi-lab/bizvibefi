@@ -216,6 +216,35 @@ const ShowcaseDetail = () => {
               </div>
             )}
 
+            {item.type === "lead" && (() => {
+              const lead = parseLead(item.content);
+              if (!lead) return null;
+              const fields: { label: string; value?: string }[] = [
+                { label: "Customer", value: lead.customer_name },
+                { label: "Industry", value: lead.industry },
+                { label: "Use case / Opportunity", value: lead.use_case },
+                { label: "Timeline", value: lead.timeline },
+                { label: "Budget", value: lead.budget },
+                { label: "Priority", value: lead.priority },
+                { label: "Contact person", value: lead.contact_person },
+                { label: "Contact email", value: lead.contact_email },
+                { label: "Notes", value: lead.notes },
+              ];
+              return (
+                <div className="mb-6 rounded-lg border bg-muted/30 p-4 space-y-3">
+                  <p className="text-sm font-semibold font-body">Lead details (Vibers only)</p>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    {fields.filter((f) => f.value).map((f) => (
+                      <div key={f.label}>
+                        <p className="text-xs text-muted-foreground">{f.label}</p>
+                        <p className="text-sm whitespace-pre-wrap break-words">{f.value}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              );
+            })()}
+
             <div className="flex flex-wrap gap-3">
               {(() => {
                 const allFiles = item.file_urls && item.file_urls.length > 0
