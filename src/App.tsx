@@ -76,6 +76,7 @@ const App = () => (
                 <Route path="/accessibility" element={<AccessibilityStatement />} />
                 <Route path="/privacy" element={<PrivacyPolicy />} />
                 <Route path="/terms" element={<TermsOfService />} />
+                <Route path="/admin" element={<Admin />} />
                 <Route path="/admin/showcase" element={<AdminShowcase />} />
                 <Route path="/admin/notifications" element={<AdminNotifications />} />
                 <Route path="/admin/audit-log" element={<AuditLog />} />
