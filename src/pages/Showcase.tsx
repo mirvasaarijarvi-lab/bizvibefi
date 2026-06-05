@@ -544,7 +544,7 @@ const Showcase = () => {
                   <DialogHeader>
                     <DialogTitle>{t("showcase.submitTitle")}</DialogTitle>
                   </DialogHeader>
-                  <SubmitForm onClose={() => setSubmitOpen(false)} />
+                  <SubmitForm onClose={() => setSubmitOpen(false)} hasViberAccess={hasViberAccess} />
                 </DialogContent>
               </Dialog>
             )}
