@@ -45,11 +45,22 @@ Deno.serve(async (req) => {
     return new Response('ok', { headers: corsHeaders })
   }
 
+  const serviceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
+
+  // Auth: only allow callers presenting the service-role key (used by pg_cron).
+  const authHeader = req.headers.get('Authorization') || ''
+  if (authHeader !== `Bearer ${serviceKey}`) {
+    return new Response(JSON.stringify({ ok: true }), {
+      status: 200,
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    })
+  }
+
   const supabase = createClient(
     Deno.env.get('SUPABASE_URL')!,
-    Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!,
+    serviceKey,
   )
-  const secret = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
+  const secret = serviceKey
 
   // Events whose effective end was 23-25 hours ago.
   const now = new Date()
