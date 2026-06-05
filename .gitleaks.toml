@@ -1,0 +1,20 @@
+# Gitleaks config for GoodVibesCafe
+# Extends the default ruleset and allowlists known-public values.
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Public/publishable identifiers that are safe to commit"
+# Supabase project ref (public) and publishable anon JWT (designed for client use, protected by RLS)
+regexTarget = "match"
+regexes = [
+  '''eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9\.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp0ZmJnYmNldnRyeGRjaGJqZWNrIiwicm9sZSI6ImFub24i[A-Za-z0-9_\.-]+''',
+]
+paths = [
+  '''\.env$''',
+  '''\.env\.example$''',
+  '''supabase/migrations/.*\.sql$''',
+  '''\.github/workflows/.*\.ya?ml$''',
+  '''bun\.lockb$''',
+  '''package-lock\.json$''',
+]

@@ -45,26 +45,10 @@ jobs:
       - name: Run npm audit
         run: npm audit --audit-level=high
 
-  codeql:
-    name: CodeQL (${{ matrix.language }})
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        language: ["javascript-typescript"]
-    steps:
-      - uses: actions/checkout@v4
+  # CodeQL runs via GitHub's "default setup" (Settings → Code security).
+  # No workflow job needed; an advanced job here would conflict with default setup.
 
-      - name: Initialize CodeQL
-        uses: github/codeql-action/init@v3
-        with:
-          languages: ${{ matrix.language }}
-          queries: security-and-quality
 
-      - name: Perform CodeQL analysis
-        uses: github/codeql-action/analyze@v3
-        with:
-          category: "/language:${{ matrix.language }}"
 
   gitleaks:
     name: Secret scan (gitleaks)
