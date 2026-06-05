@@ -80,6 +80,7 @@ const AdminMessages = () => {
             templateName: "admin-message",
             recipientEmail: r.email,
             idempotencyKey: `${batchId}-${r.email.toLowerCase()}`,
+            batchId,
             templateData: {
               subject: subj,
               bodyText: msg,
