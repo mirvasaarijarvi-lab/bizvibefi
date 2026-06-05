@@ -570,6 +570,11 @@ const Showcase = () => {
                 <TabsTrigger value="sample_code" className="text-xs sm:text-sm">{t("showcase.tabs.sampleCode")}</TabsTrigger>
                 <TabsTrigger value="infographic" className="text-xs sm:text-sm">{t("showcase.tabs.infographics")}</TabsTrigger>
                 <TabsTrigger value="tool_to_test" className="text-xs sm:text-sm">{t("showcase.tabs.toolsToTest")}</TabsTrigger>
+                {hasViberAccess && (
+                  <TabsTrigger value="lead" className="text-xs sm:text-sm gap-1">
+                    <Lock className="h-3 w-3" /> Leads
+                  </TabsTrigger>
+                )}
               </TabsList>
             </div>
 
