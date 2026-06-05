@@ -1,0 +1,213 @@
+// Sends reminder emails to attendees of events starting in ~24h.
+// Designed to be invoked once per hour by pg_cron. Idempotent: each
+// (event, recipient) pair uses a deterministic idempotency key so duplicate
+// runs within the same UTC date do not double-send.
+import { createClient } from 'npm:@supabase/supabase-js@2'
+import { corsHeaders } from 'npm:@supabase/supabase-js@2/cors'
+
+const SITE_URL = 'https://goodvibescafe.org'
+
+interface EventRow {
+  id: string
+  title: string
+  description: string | null
+  starts_at: string
+  location: string | null
+  is_online: boolean | null
+}
+
+interface SignupRow {
+  event_id: string
+  full_name: string
+  email: string
+}
+
+interface RsvpRow {
+  event_id: string
+  user_id: string
+}
+
+interface ProfileRow {
+  user_id: string
+  display_name: string | null
+  contact_email: string | null
+}
+
+function formatWhen(iso: string): string {
+  try {
+    const d = new Date(iso)
+    return d.toLocaleString('en-GB', {
+      weekday: 'short',
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      timeZone: 'Europe/Helsinki',
+    })
+  } catch {
+    return iso
+  }
+}
+
+function shortIntro(desc: string | null): string {
+  if (!desc) return ''
+  const trimmed = desc.replace(/\s+/g, ' ').trim()
+  return trimmed.length > 240 ? trimmed.slice(0, 237) + '...' : trimmed
+}
+
+Deno.serve(async (req) => {
+  if (req.method === 'OPTIONS') {
+    return new Response('ok', { headers: corsHeaders })
+  }
+
+  const supabaseUrl = Deno.env.get('SUPABASE_URL')!
+  const serviceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
+  const supabase = createClient(supabaseUrl, serviceKey)
+
+  // Events that start between 23 and 25 hours from now.
+  const now = new Date()
+  const lower = new Date(now.getTime() + 23 * 60 * 60 * 1000).toISOString()
+  const upper = new Date(now.getTime() + 25 * 60 * 60 * 1000).toISOString()
+
+  const { data: events, error: eventsErr } = await supabase
+    .from('events')
+    .select('id,title,description,starts_at,location,is_online')
+    .eq('is_published', true)
+    .gte('starts_at', lower)
+    .lte('starts_at', upper)
+
+  if (eventsErr) {
+    console.error('events query failed', eventsErr)
+    return new Response(JSON.stringify({ error: 'events query failed' }), {
+      status: 500,
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    })
+  }
+
+  let totalQueued = 0
+  let totalSkipped = 0
+  const eventIds = (events ?? []).map((e: EventRow) => e.id)
+
+  if (eventIds.length === 0) {
+    return new Response(
+      JSON.stringify({ events: 0, queued: 0, skipped: 0 }),
+      { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+    )
+  }
+
+  // Gather signups + rsvps in parallel
+  const [signupsRes, rsvpsRes] = await Promise.all([
+    supabase
+      .from('event_signups')
+      .select('event_id,full_name,email')
+      .in('event_id', eventIds),
+    supabase
+      .from('event_rsvps')
+      .select('event_id,user_id')
+      .in('event_id', eventIds)
+      .eq('status', 'going'),
+  ])
+
+  const signups = (signupsRes.data ?? []) as SignupRow[]
+  const rsvps = (rsvpsRes.data ?? []) as RsvpRow[]
+
+  // Fetch profile info for rsvp users
+  const userIds = Array.from(new Set(rsvps.map((r) => r.user_id)))
+  let profiles: Record<string, ProfileRow> = {}
+  if (userIds.length > 0) {
+    const { data: pData } = await supabase
+      .from('profiles')
+      .select('user_id,display_name,contact_email')
+      .in('user_id', userIds)
+    for (const p of (pData ?? []) as ProfileRow[]) {
+      profiles[p.user_id] = p
+    }
+    // For rsvps without contact_email on profile, fall back to auth email.
+    const missing = userIds.filter(
+      (uid) => !profiles[uid]?.contact_email
+    )
+    for (const uid of missing) {
+      const { data: authUser } = await supabase.auth.admin.getUserById(uid)
+      const email = authUser?.user?.email ?? null
+      profiles[uid] = {
+        user_id: uid,
+        display_name: profiles[uid]?.display_name ?? null,
+        contact_email: email,
+      }
+    }
+  }
+
+  const todayKey = now.toISOString().slice(0, 10) // YYYY-MM-DD
+
+  for (const ev of (events ?? []) as EventRow[]) {
+    const when = formatWhen(ev.starts_at)
+    const where = ev.is_online
+      ? 'Online'
+      : ev.location || 'TBA'
+    const intro = shortIntro(ev.description)
+    const url = `${SITE_URL}/events`
+
+    const recipients = new Map<
+      string,
+      { email: string; name: string }
+    >()
+
+    for (const s of signups.filter((x) => x.event_id === ev.id)) {
+      const key = s.email.toLowerCase()
+      if (!recipients.has(key)) {
+        recipients.set(key, { email: s.email, name: s.full_name || '' })
+      }
+    }
+    for (const r of rsvps.filter((x) => x.event_id === ev.id)) {
+      const p = profiles[r.user_id]
+      if (!p?.contact_email) continue
+      const key = p.contact_email.toLowerCase()
+      if (!recipients.has(key)) {
+        recipients.set(key, {
+          email: p.contact_email,
+          name: p.display_name || '',
+        })
+      }
+    }
+
+    for (const { email, name } of recipients.values()) {
+      const idempotencyKey = `reminder-${ev.id}-${email.toLowerCase()}-${todayKey}`
+      try {
+        const { data, error } = await supabase.functions.invoke(
+          'send-transactional-email',
+          {
+            body: {
+              templateName: 'event-reminder',
+              recipientEmail: email,
+              idempotencyKey,
+              templateData: {
+                name,
+                eventTitle: ev.title,
+                eventIntro: intro,
+                eventTime: when,
+                eventLocation: where,
+                eventUrl: url,
+              },
+            },
+          }
+        )
+        if (error) throw error
+        if (data?.success === false) totalSkipped++
+        else totalQueued++
+      } catch (err) {
+        console.error('reminder send failed', { event: ev.id, email, err })
+        totalSkipped++
+      }
+    }
+  }
+
+  return new Response(
+    JSON.stringify({
+      events: (events ?? []).length,
+      queued: totalQueued,
+      skipped: totalSkipped,
+    }),
+    { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+  )
+})
