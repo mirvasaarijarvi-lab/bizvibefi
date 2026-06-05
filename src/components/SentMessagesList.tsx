@@ -167,8 +167,8 @@ const SentMessagesList = () => {
             const isOpen = openKey === b.key;
             const isEvent = b.templateName.startsWith("event-");
             return (
-              <>
-                <TableRow key={b.key} className="align-top">
+              <Fragment key={b.key}>
+                <TableRow className="align-top">
                   <TableCell className="text-sm whitespace-nowrap">
                     {new Date(b.firstSentAt).toLocaleString(undefined, {
                       dateStyle: "medium",
