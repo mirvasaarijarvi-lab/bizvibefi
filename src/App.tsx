@@ -40,6 +40,8 @@ const AdminCertificates = lazy(() => import("./pages/AdminCertificates.tsx"));
 const CertificateVerify = lazy(() => import("./pages/CertificateVerify.tsx"));
 const AdminEmailHealth = lazy(() => import("./pages/AdminEmailHealth.tsx"));
 const AdminEventRegistrations = lazy(() => import("./pages/AdminEventRegistrations.tsx"));
+const AdminMessages = lazy(() => import("./pages/AdminMessages.tsx"));
+const Unsubscribe = lazy(() => import("./pages/Unsubscribe.tsx"));
 const NotFound = lazy(() => import("./pages/NotFound.tsx"));
 
 const queryClient = new QueryClient();
