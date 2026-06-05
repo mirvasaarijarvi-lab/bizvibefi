@@ -60,6 +60,8 @@ Deno.serve(async (req) => {
     })
   }
   let callerRole: string | null = null
+  let callerUserId: string | null = null
+  const adminClient = createClient(supabaseUrl, supabaseServiceKey)
   if (bearer === supabaseServiceKey) {
     callerRole = 'service_role'
   } else {
@@ -70,6 +72,7 @@ Deno.serve(async (req) => {
       const { data, error } = await authClient.auth.getClaims(bearer)
       if (error || !data?.claims) throw new Error('invalid token')
       callerRole = (data.claims.role as string) || null
+      callerUserId = (data.claims.sub as string) || null
     } catch {
       return new Response(JSON.stringify({ error: 'Unauthorized' }), {
         status: 401,
@@ -82,6 +85,26 @@ Deno.serve(async (req) => {
       status: 403,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     })
+  }
+  // For non-service callers, require admin/superadmin role to prevent
+  // abuse of the email relay by regular authenticated users.
+  if (callerRole !== 'service_role') {
+    if (!callerUserId) {
+      return new Response(JSON.stringify({ error: 'Forbidden' }), {
+        status: 403,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      })
+    }
+    const [{ data: isAdmin }, { data: isSuper }] = await Promise.all([
+      adminClient.rpc('has_role', { _user_id: callerUserId, _role: 'admin' }),
+      adminClient.rpc('has_role', { _user_id: callerUserId, _role: 'superadmin' }),
+    ])
+    if (!isAdmin && !isSuper) {
+      return new Response(JSON.stringify({ error: 'Forbidden' }), {
+        status: 403,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      })
+    }
   }
 
   // Parse request body
