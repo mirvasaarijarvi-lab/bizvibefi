@@ -123,10 +123,41 @@ const ShowcaseCard = ({ item }: { item: ShowcaseItem }) => {
             </div>
           </CardHeader>
           <CardContent className="flex-1">
-            <p className="text-sm text-muted-foreground font-body line-clamp-3">{item.description}</p>
-            {item.pricing_info && (
-              <p className="mt-2 text-sm font-semibold text-primary font-body">{item.pricing_info}</p>
-            )}
+            {(() => {
+              const lead = item.type === "lead" ? parseLead(item.content) : null;
+              if (lead) {
+                const priorityColor = lead.priority === "urgent"
+                  ? "text-destructive"
+                  : lead.priority === "high"
+                    ? "text-vibetor"
+                    : "text-muted-foreground";
+                return (
+                  <div className="space-y-2">
+                    <p className="text-sm text-muted-foreground font-body line-clamp-3">
+                      {lead.use_case || item.description}
+                    </p>
+                    <div className="flex flex-wrap gap-1.5">
+                      {lead.industry && <Badge variant="outline" className="text-xs">{lead.industry}</Badge>}
+                      {lead.timeline && <Badge variant="outline" className="text-xs">{lead.timeline}</Badge>}
+                      {lead.budget && <Badge variant="outline" className="text-xs">{lead.budget}</Badge>}
+                      {lead.priority && (
+                        <Badge variant="outline" className={`text-xs capitalize ${priorityColor}`}>
+                          {lead.priority}
+                        </Badge>
+                      )}
+                    </div>
+                  </div>
+                );
+              }
+              return (
+                <>
+                  <p className="text-sm text-muted-foreground font-body line-clamp-3">{item.description}</p>
+                  {item.pricing_info && (
+                    <p className="mt-2 text-sm font-semibold text-primary font-body">{item.pricing_info}</p>
+                  )}
+                </>
+              );
+            })()}
           </CardContent>
           <CardFooter className="gap-2 flex-wrap">
             {(() => {
