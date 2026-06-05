@@ -447,14 +447,6 @@ const SubmitForm = ({ onClose, hasViberAccess }: { onClose: () => void; hasViber
         </div>
       )}
 
-      <div>
-        <Label>{t("showcase.contentLabel")}</Label>
-        <Textarea value={content} onChange={(e) => setContent(e.target.value)} placeholder={t("showcase.contentPlaceholder")} />
-      </div>
-      <div>
-        <Label>{t("showcase.contentLabel")}</Label>
-        <Textarea value={content} onChange={(e) => setContent(e.target.value)} placeholder={t("showcase.contentPlaceholder")} />
-      </div>
       <ShowcaseLinksField links={links} onChange={setLinks} />
       {!isLead && <ShowcaseImagesField images={images} onChange={setImages} />}
       {user && !isLead && (
