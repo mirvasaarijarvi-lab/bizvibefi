@@ -11,6 +11,7 @@ const ADMIN_PAGES: BreadcrumbItem[] = [
   { label: "Notifications", path: "/admin/notifications" },
   { label: "Users", path: "/admin/users" },
   { label: "Event Registrations", path: "/admin/event-registrations" },
+  { label: "Messages", path: "/admin/messages" },
   { label: "Audit Log", path: "/admin/audit-log" },
 ];
 
