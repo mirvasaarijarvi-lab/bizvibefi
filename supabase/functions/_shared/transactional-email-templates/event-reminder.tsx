@@ -59,6 +59,17 @@ const EventReminder = ({
           </Button>
         ) : null}
 
+        <Section style={joinCard}>
+          <Text style={joinText}>
+            Stay in the loop with the latest news, discussions and vibecoding
+            insights. We recommend joining{' '}
+            <strong>&lt;Good Vibes Café/&gt;</strong> as a Starter or Viber member.
+          </Text>
+          <Button style={joinButton} href="https://goodvibescafe.org/membership">
+            Join the community
+          </Button>
+        </Section>
+
         <Hr style={hr} />
         <Text style={footer}>Good Vibes Café</Text>
       </Container>
@@ -130,3 +141,25 @@ const button = {
 }
 const hr = { borderColor: 'hsl(248, 18%, 90%)', margin: '24px 0' }
 const footer = { fontSize: '13px', color: 'hsl(270, 95%, 58%)', fontWeight: 600 as const, margin: 0 }
+const joinCard = {
+  backgroundColor: 'hsl(248, 30%, 97%)',
+  borderRadius: '12px',
+  padding: '20px 24px',
+  margin: '24px 0 0',
+  textAlign: 'center' as const,
+}
+const joinText = {
+  fontSize: '14px',
+  color: 'hsl(240, 10%, 25%)',
+  lineHeight: '1.6',
+  margin: '0 0 14px',
+}
+const joinButton = {
+  backgroundColor: 'hsl(270, 95%, 58%)',
+  color: '#ffffff',
+  fontSize: '14px',
+  fontWeight: 600 as const,
+  borderRadius: '10px',
+  padding: '12px 22px',
+  textDecoration: 'none',
+}
