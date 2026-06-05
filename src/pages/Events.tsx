@@ -1390,9 +1390,10 @@ const Events = () => {
                   >
                     <iframe
                       title={`Map: ${localizedLocation}`}
-                      src={`https://www.google.com/maps?q=${encodeURIComponent(localizedLocation)}&output=embed`}
+                      src={`https://maps.google.com/maps?q=${encodeURIComponent(localizedLocation)}&t=&z=15&ie=UTF8&iwloc=&output=embed`}
                       loading="lazy"
                       referrerPolicy="no-referrer-when-downgrade"
+                      sandbox="allow-scripts allow-same-origin allow-popups"
                       className="w-full h-44 md:h-40 border-0 pointer-events-none group-hover:opacity-95"
                     />
                     <div className="flex items-center gap-1.5 px-3 py-2 text-xs text-muted-foreground font-body">
