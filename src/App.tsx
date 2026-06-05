@@ -27,6 +27,7 @@ const AccessibilityStatement = lazy(() => import("./pages/AccessibilityStatement
 const PrivacyPolicy = lazy(() => import("./pages/PrivacyPolicy.tsx"));
 const TermsOfService = lazy(() => import("./pages/TermsOfService.tsx"));
 const AdminShowcase = lazy(() => import("./pages/AdminShowcase.tsx"));
+const Admin = lazy(() => import("./pages/Admin.tsx"));
 const ShowcaseDetail = lazy(() => import("./pages/ShowcaseDetail.tsx"));
 const AdminNotifications = lazy(() => import("./pages/AdminNotifications.tsx"));
 const AuditLog = lazy(() => import("./pages/AuditLog.tsx"));
@@ -75,6 +76,7 @@ const App = () => (
                 <Route path="/accessibility" element={<AccessibilityStatement />} />
                 <Route path="/privacy" element={<PrivacyPolicy />} />
                 <Route path="/terms" element={<TermsOfService />} />
+                <Route path="/admin" element={<Admin />} />
                 <Route path="/admin/showcase" element={<AdminShowcase />} />
                 <Route path="/admin/notifications" element={<AdminNotifications />} />
                 <Route path="/admin/audit-log" element={<AuditLog />} />
