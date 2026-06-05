@@ -228,6 +228,43 @@ const AdminEventRegistrations = () => {
                           </p>
                         ) : (
                           <div className="space-y-4 pt-3">
+                            <div className="flex justify-end">
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                onClick={() => {
+                                  const header = ["Type", "Name", "Email", "Phone", "Company", "Registered At"];
+                                  const rows: (string | null | undefined)[][] = [header];
+                                  eventRsvps.forEach((r) => {
+                                    const p = profileById.get(r.user_id);
+                                    rows.push([
+                                      "Member",
+                                      p?.display_name ?? "",
+                                      p?.contact_email ?? "",
+                                      "",
+                                      p?.company ?? "",
+                                      format(new Date(r.created_at), "yyyy-MM-dd HH:mm"),
+                                    ]);
+                                  });
+                                  eventSignups.forEach((s) => {
+                                    rows.push([
+                                      "Guest",
+                                      s.full_name,
+                                      s.email,
+                                      s.phone ?? "",
+                                      s.company,
+                                      format(new Date(s.created_at), "yyyy-MM-dd HH:mm"),
+                                    ]);
+                                  });
+                                  downloadCsv(
+                                    `registrations-${slugify(event.title)}-${format(new Date(event.starts_at), "yyyy-MM-dd")}.csv`,
+                                    rows,
+                                  );
+                                }}
+                              >
+                                <Download className="h-4 w-4 mr-1" /> Export CSV
+                              </Button>
+                            </div>
                             {eventRsvps.length > 0 && (
                               <div>
                                 <h3 className="text-xs font-display font-semibold uppercase tracking-wider text-muted-foreground mb-2">
