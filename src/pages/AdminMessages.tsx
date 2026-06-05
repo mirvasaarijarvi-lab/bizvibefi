@@ -51,7 +51,7 @@ const AdminMessages = () => {
   const handleSend = async () => {
     const parsed = formSchema.safeParse({ to, cc, bcc, subject, body });
     if (!parsed.success) {
-      toast.error(parsed.error.errors[0]?.message ?? "Invalid input");
+      toast.error(parsed.error.issues[0]?.message ?? "Invalid input");
       return;
     }
     const { to: toList, cc: ccList, bcc: bccList, subject: subj, body: msg } = parsed.data;
