@@ -376,8 +376,8 @@ const useCountUp = (target: number, duration = 2000) => {
   return { count, ref };
 };
 
-const MetricCard = ({ metric, index }: { metric: { label: string; value: number; icon: React.ElementType; color: string }; index: number }) => {
-  const { count, ref } = useCountUp(metric.value);
+const MetricCard = ({ metric, index }: { metric: { label: string; value: number; icon: React.ElementType; color: string; offset?: number }; index: number }) => {
+  const { count, ref } = useCountUp(metric.value + (metric.offset || 0));
   return (
     <motion.div
       ref={ref}
@@ -438,9 +438,9 @@ const MetricsCounter = () => {
   });
 
   const metrics = [
-    { label: t("community.free.name") + "s", value: memberCount ?? 0, icon: Users, color: "text-turquoise" },
-    { label: t("events.tag"), value: eventCount ?? 0, icon: CalendarCheck, color: "text-purple-soft" },
-    { label: t("nav.community") + " leads", value: topicCount ?? 0, icon: Code2, color: "text-electric" },
+    { label: t("community.free.name") + "s", value: memberCount ?? 0, icon: Users, color: "text-turquoise", offset: 0 },
+    { label: t("events.tag"), value: eventCount ?? 0, icon: CalendarCheck, color: "text-purple-soft", offset: 0 },
+    { label: t("nav.community") + " leads", value: topicCount ?? 0, icon: Code2, color: "text-electric", offset: 4 },
   ];
 
   return (
