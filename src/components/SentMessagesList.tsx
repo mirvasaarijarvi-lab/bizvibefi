@@ -59,6 +59,8 @@ const SentMessagesList = () => {
   const [rows, setRows] = useState<LogRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [openKey, setOpenKey] = useState<string | null>(null);
+  const [page, setPage] = useState(0);
+  const PAGE_SIZE = 20;
 
   useEffect(() => {
     let cancelled = false;
@@ -150,6 +152,13 @@ const SentMessagesList = () => {
     );
   }
 
+  const totalPages = Math.max(1, Math.ceil(batches.length / PAGE_SIZE));
+  const currentPage = Math.min(page, totalPages - 1);
+  const pageBatches = batches.slice(
+    currentPage * PAGE_SIZE,
+    currentPage * PAGE_SIZE + PAGE_SIZE
+  );
+
   return (
     <Card className="overflow-hidden">
       <Table>
@@ -163,7 +172,7 @@ const SentMessagesList = () => {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {batches.map((b) => {
+          {pageBatches.map((b) => {
             const isOpen = openKey === b.key;
             const isEvent = b.templateName.startsWith("event-");
             return (
@@ -254,6 +263,35 @@ const SentMessagesList = () => {
           })}
         </TableBody>
       </Table>
+      {totalPages > 1 && (
+        <div className="flex items-center justify-between px-4 py-3 border-t text-sm">
+          <div className="text-muted-foreground">
+            Showing {currentPage * PAGE_SIZE + 1}–
+            {Math.min((currentPage + 1) * PAGE_SIZE, batches.length)} of {batches.length}
+          </div>
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={() => setPage((p) => Math.max(0, p - 1))}
+              disabled={currentPage === 0}
+              className="px-3 py-1 rounded-md border hover:bg-muted disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              Previous
+            </button>
+            <span className="text-muted-foreground">
+              Page {currentPage + 1} of {totalPages}
+            </span>
+            <button
+              type="button"
+              onClick={() => setPage((p) => Math.min(totalPages - 1, p + 1))}
+              disabled={currentPage >= totalPages - 1}
+              className="px-3 py-1 rounded-md border hover:bg-muted disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              Next
+            </button>
+          </div>
+        </div>
+      )}
     </Card>
   );
 };
