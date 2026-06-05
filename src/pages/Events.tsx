@@ -885,7 +885,7 @@ const GuestSignupDialog = ({
           weekday: "short", year: "numeric", month: "short", day: "numeric",
           hour: "2-digit", minute: "2-digit", timeZone: "Europe/Helsinki",
         });
-        const where = (event as any).is_online ? "Online" : (event.location || "TBA");
+        const where = (event as { is_online?: boolean }).is_online ? "Online" : (event.location || "TBA");
         const intro = (event.description || "").replace(/\s+/g, " ").trim().slice(0, 240);
         await supabase.functions.invoke("send-transactional-email", {
           body: {

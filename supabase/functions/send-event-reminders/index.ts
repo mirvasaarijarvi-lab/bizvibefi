@@ -114,7 +114,7 @@ Deno.serve(async (req) => {
 
   // Fetch profile info for rsvp users
   const userIds = Array.from(new Set(rsvps.map((r) => r.user_id)))
-  let profiles: Record<string, ProfileRow> = {}
+  const profiles: Record<string, ProfileRow> = {}
   if (userIds.length > 0) {
     const { data: pData } = await supabase
       .from('profiles')

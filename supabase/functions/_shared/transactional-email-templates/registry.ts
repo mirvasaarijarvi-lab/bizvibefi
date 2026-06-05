@@ -5,8 +5,8 @@ import { template as eventReminder } from './event-reminder.tsx'
 import { template as eventFeedback } from './event-feedback.tsx'
 
 export interface TemplateEntry {
-  component: (props: any) => any
-  subject: string | ((data: any) => string)
+  component: (props: Record<string, unknown>) => unknown
+  subject: string | ((data: Record<string, unknown>) => string)
   displayName?: string
   previewData?: Record<string, unknown>
   to?: string
