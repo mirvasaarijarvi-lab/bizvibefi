@@ -3,7 +3,7 @@
 // truncated to 32 chars. Stateless: no DB lookup needed.
 
 function b64url(bytes: Uint8Array): string {
-  let s = btoa(String.fromCharCode(...bytes))
+  const s = btoa(String.fromCharCode(...bytes))
   return s.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '')
 }
 
