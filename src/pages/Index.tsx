@@ -391,7 +391,7 @@ const MetricCard = ({ metric, index }: { metric: { label: string; value: number;
         <metric.icon className="h-7 w-7" />
       </div>
       <p className="font-display text-4xl md:text-5xl font-extrabold tracking-tight">
-        {count + 2}+
+        {count}+
       </p>
       <p className="mt-1 text-sm text-muted-foreground font-body font-medium">
         {metric.label}
