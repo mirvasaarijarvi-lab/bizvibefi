@@ -13,6 +13,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Send, Loader2 } from "lucide-react";
 import { toast } from "sonner";
+import SentMessagesList from "@/components/SentMessagesList";
 
 const emailListSchema = z
   .string()
