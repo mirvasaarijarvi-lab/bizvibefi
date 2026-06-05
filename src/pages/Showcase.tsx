@@ -17,7 +17,7 @@ import { motion } from "framer-motion";
 import { useTranslation } from "@/i18n/useTranslation";
 import { useAuth } from "@/hooks/useAuth";
 import { useShowcaseItems, useCreateShowcaseItem, type ShowcaseType, type ShowcaseItem, type KeyFigure, TOOL_TEST_REASONS, type ToolTestReason } from "@/hooks/useShowcase";
-import { Plus, ExternalLink, ArrowRight, Lightbulb, MessageSquare, Wrench, Trash2, BookOpen, Code, BarChart3, FlaskConical } from "lucide-react";
+import { Plus, ExternalLink, ArrowRight, Lightbulb, MessageSquare, Wrench, Trash2, BookOpen, Code, BarChart3, FlaskConical, Briefcase, Lock } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
 import FilePreview from "@/components/FilePreview";
 import ShowcaseLinksField from "@/components/ShowcaseLinksField";
@@ -25,6 +25,42 @@ import ShowcaseImagesField from "@/components/ShowcaseImagesField";
 import ShowcaseFileField from "@/components/ShowcaseFileField";
 import { useToast } from "@/hooks/use-toast";
 import { safeUrl } from "@/lib/safeUrl";
+import { useProfile } from "@/hooks/useProfile";
+
+const LEAD_PREFIX = "<!--LEAD_JSON-->";
+
+interface LeadData {
+  customer_name: string;
+  industry: string;
+  use_case: string;
+  timeline: string;
+  budget: string;
+  priority: "low" | "normal" | "high" | "urgent" | "";
+  contact_person: string;
+  contact_email: string;
+  notes: string;
+}
+
+const emptyLead: LeadData = {
+  customer_name: "",
+  industry: "",
+  use_case: "",
+  timeline: "",
+  budget: "",
+  priority: "",
+  contact_person: "",
+  contact_email: "",
+  notes: "",
+};
+
+const parseLead = (content: string | null | undefined): LeadData | null => {
+  if (!content || !content.startsWith(LEAD_PREFIX)) return null;
+  try {
+    return JSON.parse(content.slice(LEAD_PREFIX.length));
+  } catch {
+    return null;
+  }
+};
 
 const typeIcons: Record<ShowcaseType, React.ElementType> = {
   case_study: Lightbulb,
@@ -34,6 +70,7 @@ const typeIcons: Record<ShowcaseType, React.ElementType> = {
   sample_code: Code,
   infographic: BarChart3,
   tool_to_test: FlaskConical,
+  lead: Briefcase,
 };
 
 const TEST_REASON_LABELS: Record<ToolTestReason, string> = {
@@ -86,10 +123,41 @@ const ShowcaseCard = ({ item }: { item: ShowcaseItem }) => {
             </div>
           </CardHeader>
           <CardContent className="flex-1">
-            <p className="text-sm text-muted-foreground font-body line-clamp-3">{item.description}</p>
-            {item.pricing_info && (
-              <p className="mt-2 text-sm font-semibold text-primary font-body">{item.pricing_info}</p>
-            )}
+            {(() => {
+              const lead = item.type === "lead" ? parseLead(item.content) : null;
+              if (lead) {
+                const priorityColor = lead.priority === "urgent"
+                  ? "text-destructive"
+                  : lead.priority === "high"
+                    ? "text-vibetor"
+                    : "text-muted-foreground";
+                return (
+                  <div className="space-y-2">
+                    <p className="text-sm text-muted-foreground font-body line-clamp-3">
+                      {lead.use_case || item.description}
+                    </p>
+                    <div className="flex flex-wrap gap-1.5">
+                      {lead.industry && <Badge variant="outline" className="text-xs">{lead.industry}</Badge>}
+                      {lead.timeline && <Badge variant="outline" className="text-xs">{lead.timeline}</Badge>}
+                      {lead.budget && <Badge variant="outline" className="text-xs">{lead.budget}</Badge>}
+                      {lead.priority && (
+                        <Badge variant="outline" className={`text-xs capitalize ${priorityColor}`}>
+                          {lead.priority}
+                        </Badge>
+                      )}
+                    </div>
+                  </div>
+                );
+              }
+              return (
+                <>
+                  <p className="text-sm text-muted-foreground font-body line-clamp-3">{item.description}</p>
+                  {item.pricing_info && (
+                    <p className="mt-2 text-sm font-semibold text-primary font-body">{item.pricing_info}</p>
+                  )}
+                </>
+              );
+            })()}
           </CardContent>
           <CardFooter className="gap-2 flex-wrap">
             {(() => {
@@ -187,7 +255,7 @@ const BenefitsInput = ({ benefits, onChange }: { benefits: string[]; onChange: (
   );
 };
 
-const SubmitForm = ({ onClose }: { onClose: () => void }) => {
+const SubmitForm = ({ onClose, hasViberAccess }: { onClose: () => void; hasViberAccess: boolean }) => {
   const { t } = useTranslation();
   const { user } = useAuth();
   const createItem = useCreateShowcaseItem();
@@ -208,11 +276,29 @@ const SubmitForm = ({ onClose }: { onClose: () => void }) => {
   const [testReasons, setTestReasons] = useState<string[]>([]);
   const [testReasonsOther, setTestReasonsOther] = useState("");
   const [includeOther, setIncludeOther] = useState(false);
+  const [lead, setLeadState] = useState<LeadData>(emptyLead);
   const [submitting, setSubmitting] = useState(false);
+
+  const setLead = (field: keyof LeadData, value: string) =>
+    setLeadState((prev) => ({ ...prev, [field]: value }));
+
+  const isLead = type === "lead";
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!title.trim() || !description.trim()) return;
+
+    let payloadTitle = title.trim();
+    let payloadDescription = description.trim();
+    let payloadContent: string | undefined = content.trim() || undefined;
+
+    if (isLead) {
+      if (!lead.customer_name.trim() || !lead.use_case.trim()) return;
+      payloadTitle = lead.customer_name.trim();
+      payloadDescription = lead.use_case.trim().slice(0, 240);
+      payloadContent = LEAD_PREFIX + JSON.stringify(lead);
+    } else if (!payloadTitle || !payloadDescription) {
+      return;
+    }
 
     setSubmitting(true);
     try {
@@ -221,13 +307,13 @@ const SubmitForm = ({ onClose }: { onClose: () => void }) => {
 
       await createItem.mutateAsync({
         type,
-        title: title.trim(),
-        description: description.trim(),
-        content: content.trim() || undefined,
-        challenge: challenge.trim() || undefined,
-        solution: solution.trim() || undefined,
-        benefits: cleanBenefits.length > 0 ? cleanBenefits : undefined,
-        key_figures: cleanFigures.length > 0 ? cleanFigures : undefined,
+        title: payloadTitle,
+        description: payloadDescription,
+        content: payloadContent,
+        challenge: !isLead ? challenge.trim() || undefined : undefined,
+        solution: !isLead ? solution.trim() || undefined : undefined,
+        benefits: !isLead && cleanBenefits.length > 0 ? cleanBenefits : undefined,
+        key_figures: !isLead && cleanFigures.length > 0 ? cleanFigures : undefined,
         link_urls: links.filter((l) => l.url.trim()).map((l) => ({ label: l.label?.trim() || undefined, url: l.url.trim() })),
         image_url: images[0],
         image_urls: images,
@@ -235,7 +321,7 @@ const SubmitForm = ({ onClose }: { onClose: () => void }) => {
         file_name: files[0]?.name,
         file_urls: files,
         category_tags: tags.split(",").map((t) => t.trim()).filter(Boolean),
-        pricing_info: pricingInfo.trim() || undefined,
+        pricing_info: !isLead ? pricingInfo.trim() || undefined : undefined,
         test_reasons: type === "tool_to_test" ? testReasons : undefined,
         test_reasons_other: type === "tool_to_test" && includeOther ? testReasonsOther.trim() || undefined : undefined,
       });
@@ -264,19 +350,82 @@ const SubmitForm = ({ onClose }: { onClose: () => void }) => {
             <SelectItem value="sample_code">{t("showcase.tabs.sampleCode")}</SelectItem>
             <SelectItem value="infographic">{t("showcase.tabs.infographics")}</SelectItem>
             <SelectItem value="tool_to_test">{t("showcase.tabs.toolsToTest")}</SelectItem>
+            {hasViberAccess && (
+              <SelectItem value="lead">Lead (Vibers only)</SelectItem>
+            )}
           </SelectContent>
         </Select>
       </div>
-      <div>
-        <Label>{t("showcase.titleLabel")}</Label>
-        <Input value={title} onChange={(e) => setTitle(e.target.value)} required />
-      </div>
-      <div>
-        <Label>{t("showcase.descriptionLabel")}</Label>
-        <Textarea value={description} onChange={(e) => setDescription(e.target.value)} required />
-      </div>
 
-      {showStructuredFields && (
+      {isLead ? (
+        <div className="space-y-3 rounded-lg border p-4">
+          <div className="flex items-center gap-2 text-sm font-semibold">
+            <Lock className="h-4 w-4 text-vibetor" />
+            Lead visible only to Vibers and Vibetor founders
+          </div>
+          <div>
+            <Label>Customer / Company name</Label>
+            <Input value={lead.customer_name} onChange={(e) => setLead("customer_name", e.target.value)} required />
+          </div>
+          <div>
+            <Label>Industry</Label>
+            <Input value={lead.industry} onChange={(e) => setLead("industry", e.target.value)} />
+          </div>
+          <div>
+            <Label>Use case / Opportunity</Label>
+            <Textarea value={lead.use_case} onChange={(e) => setLead("use_case", e.target.value)} required rows={3} />
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <Label>Timeline</Label>
+              <Input value={lead.timeline} onChange={(e) => setLead("timeline", e.target.value)} placeholder="e.g. Q3 2026" />
+            </div>
+            <div>
+              <Label>Budget</Label>
+              <Input value={lead.budget} onChange={(e) => setLead("budget", e.target.value)} placeholder="e.g. €5–10k" />
+            </div>
+          </div>
+          <div>
+            <Label>Priority</Label>
+            <Select value={lead.priority || undefined} onValueChange={(v) => setLead("priority", v)}>
+              <SelectTrigger><SelectValue placeholder="Select priority" /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="low">Low</SelectItem>
+                <SelectItem value="normal">Normal</SelectItem>
+                <SelectItem value="high">High</SelectItem>
+                <SelectItem value="urgent">Urgent</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <Label>Contact person</Label>
+              <Input value={lead.contact_person} onChange={(e) => setLead("contact_person", e.target.value)} />
+            </div>
+            <div>
+              <Label>Contact email</Label>
+              <Input type="email" value={lead.contact_email} onChange={(e) => setLead("contact_email", e.target.value)} />
+            </div>
+          </div>
+          <div>
+            <Label>Additional notes</Label>
+            <Textarea value={lead.notes} onChange={(e) => setLead("notes", e.target.value)} rows={2} />
+          </div>
+        </div>
+      ) : (
+        <>
+          <div>
+            <Label>{t("showcase.titleLabel")}</Label>
+            <Input value={title} onChange={(e) => setTitle(e.target.value)} required />
+          </div>
+          <div>
+            <Label>{t("showcase.descriptionLabel")}</Label>
+            <Textarea value={description} onChange={(e) => setDescription(e.target.value)} required />
+          </div>
+        </>
+      )}
+
+      {!isLead && showStructuredFields && (
         <>
           <div>
             <Label>{t("showcase.challengeLabel")}</Label>
@@ -291,13 +440,16 @@ const SubmitForm = ({ onClose }: { onClose: () => void }) => {
         </>
       )}
 
-      <div>
-        <Label>{t("showcase.contentLabel")}</Label>
-        <Textarea value={content} onChange={(e) => setContent(e.target.value)} placeholder={t("showcase.contentPlaceholder")} />
-      </div>
+      {!isLead && (
+        <div>
+          <Label>{t("showcase.contentLabel")}</Label>
+          <Textarea value={content} onChange={(e) => setContent(e.target.value)} placeholder={t("showcase.contentPlaceholder")} />
+        </div>
+      )}
+
       <ShowcaseLinksField links={links} onChange={setLinks} />
-      <ShowcaseImagesField images={images} onChange={setImages} />
-      {user && (
+      {!isLead && <ShowcaseImagesField images={images} onChange={setImages} />}
+      {user && !isLead && (
         <ShowcaseFileField files={files} onChange={setFiles} pathPrefix={user.id} />
       )}
       <div>
@@ -353,6 +505,12 @@ const SubmitForm = ({ onClose }: { onClose: () => void }) => {
 const Showcase = () => {
   const { t } = useTranslation();
   const { user } = useAuth();
+  const { data: profile } = useProfile();
+  const hasViberAccess =
+    !!profile &&
+    (profile.membership_tier === "viber" ||
+      profile.membership_tier === "vibetor" ||
+      (profile as unknown as { viber_access_override?: boolean }).viber_access_override === true);
   const [submitOpen, setSubmitOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<string>("all");
 
@@ -386,7 +544,7 @@ const Showcase = () => {
                   <DialogHeader>
                     <DialogTitle>{t("showcase.submitTitle")}</DialogTitle>
                   </DialogHeader>
-                  <SubmitForm onClose={() => setSubmitOpen(false)} />
+                  <SubmitForm onClose={() => setSubmitOpen(false)} hasViberAccess={hasViberAccess} />
                 </DialogContent>
               </Dialog>
             )}
@@ -412,6 +570,11 @@ const Showcase = () => {
                 <TabsTrigger value="sample_code" className="text-xs sm:text-sm">{t("showcase.tabs.sampleCode")}</TabsTrigger>
                 <TabsTrigger value="infographic" className="text-xs sm:text-sm">{t("showcase.tabs.infographics")}</TabsTrigger>
                 <TabsTrigger value="tool_to_test" className="text-xs sm:text-sm">{t("showcase.tabs.toolsToTest")}</TabsTrigger>
+                {hasViberAccess && (
+                  <TabsTrigger value="lead" className="text-xs sm:text-sm gap-1">
+                    <Lock className="h-3 w-3" /> Leads
+                  </TabsTrigger>
+                )}
               </TabsList>
             </div>
 
