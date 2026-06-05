@@ -263,6 +263,35 @@ const SentMessagesList = () => {
           })}
         </TableBody>
       </Table>
+      {totalPages > 1 && (
+        <div className="flex items-center justify-between px-4 py-3 border-t text-sm">
+          <div className="text-muted-foreground">
+            Showing {currentPage * PAGE_SIZE + 1}–
+            {Math.min((currentPage + 1) * PAGE_SIZE, batches.length)} of {batches.length}
+          </div>
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={() => setPage((p) => Math.max(0, p - 1))}
+              disabled={currentPage === 0}
+              className="px-3 py-1 rounded-md border hover:bg-muted disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              Previous
+            </button>
+            <span className="text-muted-foreground">
+              Page {currentPage + 1} of {totalPages}
+            </span>
+            <button
+              type="button"
+              onClick={() => setPage((p) => Math.min(totalPages - 1, p + 1))}
+              disabled={currentPage >= totalPages - 1}
+              className="px-3 py-1 rounded-md border hover:bg-muted disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              Next
+            </button>
+          </div>
+        </div>
+      )}
     </Card>
   );
 };
