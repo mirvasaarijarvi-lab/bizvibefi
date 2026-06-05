@@ -1083,6 +1083,7 @@ const Events = () => {
     mutationFn: async ({ eventId, status }: { eventId: string; status: "going" | "maybe" | "cancelled" }) => {
       if (!user) throw new Error("Not authenticated");
       const existing = myRsvps?.find((r) => r.event_id === eventId);
+      const wasGoing = existing?.status === "going";
       if (existing) {
         if (status === "cancelled") {
           const { error } = await supabase.from("event_rsvps").delete().eq("id", existing.id);
@@ -1094,6 +1095,38 @@ const Events = () => {
       } else {
         const { error } = await supabase.from("event_rsvps").insert({ event_id: eventId, user_id: user.id, status });
         if (error) throw error;
+      }
+      // Send confirmation when newly RSVPing as going
+      if (status === "going" && !wasGoing) {
+        const ev = events?.find((e) => e.id === eventId);
+        const recipient = user.email;
+        if (ev && recipient) {
+          try {
+            const when = new Date(ev.starts_at).toLocaleString("en-GB", {
+              weekday: "short", year: "numeric", month: "short", day: "numeric",
+              hour: "2-digit", minute: "2-digit", timeZone: "Europe/Helsinki",
+            });
+            const where = ev.is_online ? "Online" : (ev.location || "TBA");
+            const intro = (ev.description || "").replace(/\s+/g, " ").trim().slice(0, 240);
+            await supabase.functions.invoke("send-transactional-email", {
+              body: {
+                templateName: "event-confirmation",
+                recipientEmail: recipient,
+                idempotencyKey: `rsvp-${eventId}-${user.id}`,
+                templateData: {
+                  name: user.user_metadata?.full_name || user.email,
+                  eventTitle: ev.title,
+                  eventIntro: intro,
+                  eventTime: when,
+                  eventLocation: where,
+                  eventUrl: `${window.location.origin}/events`,
+                },
+              },
+            });
+          } catch (e) {
+            console.warn("confirmation email failed", e);
+          }
+        }
       }
     },
     onSuccess: () => {
