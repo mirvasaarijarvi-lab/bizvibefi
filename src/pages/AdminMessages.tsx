@@ -202,6 +202,15 @@ const AdminMessages = () => {
           Each recipient receives an individual email. Bcc recipients are hidden from the
           visible recipient list shown in the message footer.
         </p>
+
+        <div className="mt-12">
+          <h2 className="font-display text-2xl font-bold mb-1">Sent messages</h2>
+          <p className="text-sm text-muted-foreground mb-4">
+            Recent admin messages and event-related emails. Click the recipient count to
+            expand the full list.
+          </p>
+          <SentMessagesList />
+        </div>
       </div>
     </Layout>
   );
