@@ -216,6 +216,19 @@ const EventFormDialog = ({
   });
   const [uploading, setUploading] = useState(false);
 
+  // Fetch online_url on demand for the edit form (column-level RLS hides it from direct SELECT).
+  useEffect(() => {
+    if (!editEvent?.id || !editEvent.is_online) return;
+    let cancelled = false;
+    (async () => {
+      const { data, error } = await supabase.rpc("get_event_online_url", { _event_id: editEvent.id });
+      if (!cancelled && !error && typeof data === "string") {
+        setForm((f) => ({ ...f, online_url: data }));
+      }
+    })();
+    return () => { cancelled = true; };
+  }, [editEvent?.id, editEvent?.is_online]);
+
   const saveMutation = useMutation({
     mutationFn: async () => {
       const cleanSpeakers = form.speakers
