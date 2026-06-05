@@ -64,21 +64,20 @@ const Contact = () => {
 
     setErrors({});
 
-    // Detect Vibetor-related requests
-    const lowerMsg = message.toLowerCase();
-    const isVibetorRequest = lowerMsg.includes("vibetor") || lowerMsg.includes("investor") || lowerMsg.includes("viber status") || lowerMsg.includes("viber membership");
-
-    // Create admin notification
-    const notificationType = isVibetorRequest ? "vibetor_request" : "contact";
-    const notificationTitle = isVibetorRequest ? "Vibetor Status Request" : "New Contact Message";
-    
-    await supabase.from("admin_notifications").insert({
-      type: notificationType,
-      title: notificationTitle,
-      message: message.slice(0, 500),
-      sender_name: name,
-      sender_email: email,
-    } as never);
+    try {
+      const { error } = await supabase.functions.invoke("submit-contact-message", {
+        body: { name, email, message, website: honeypot },
+      });
+      if (error) throw error;
+    } catch (err) {
+      console.error("Contact submit failed:", err);
+      toast({
+        title: "Error",
+        description: "Could not send message. Please try again later.",
+        variant: "destructive",
+      });
+      return;
+    }
 
     toast({ title: t("contact.toast.title"), description: t("contact.toast.desc") });
     setName("");
