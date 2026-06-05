@@ -81,6 +81,7 @@ const TEST_REASON_LABELS: Record<ToolTestReason, string> = {
   code_review: "Code review wanted",
   ux_review: "UX / design review",
   bug_hunting: "Help me find bugs",
+  competition_work: "Competition Work",
 };
 
 const ShowcaseCard = ({ item }: { item: ShowcaseItem }) => {

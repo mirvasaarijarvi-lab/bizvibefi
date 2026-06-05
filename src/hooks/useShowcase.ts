@@ -12,6 +12,7 @@ export const TOOL_TEST_REASONS = [
   "code_review",
   "ux_review",
   "bug_hunting",
+  "competition_work",
 ] as const;
 export type ToolTestReason = (typeof TOOL_TEST_REASONS)[number];
 export type ApprovalStatus = "pending" | "approved" | "rejected";
