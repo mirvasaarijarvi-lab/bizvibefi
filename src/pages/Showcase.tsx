@@ -255,7 +255,7 @@ const BenefitsInput = ({ benefits, onChange }: { benefits: string[]; onChange: (
   );
 };
 
-const SubmitForm = ({ onClose }: { onClose: () => void }) => {
+const SubmitForm = ({ onClose, hasViberAccess }: { onClose: () => void; hasViberAccess: boolean }) => {
   const { t } = useTranslation();
   const { user } = useAuth();
   const createItem = useCreateShowcaseItem();
@@ -276,11 +276,29 @@ const SubmitForm = ({ onClose }: { onClose: () => void }) => {
   const [testReasons, setTestReasons] = useState<string[]>([]);
   const [testReasonsOther, setTestReasonsOther] = useState("");
   const [includeOther, setIncludeOther] = useState(false);
+  const [lead, setLeadState] = useState<LeadData>(emptyLead);
   const [submitting, setSubmitting] = useState(false);
+
+  const setLead = (field: keyof LeadData, value: string) =>
+    setLeadState((prev) => ({ ...prev, [field]: value }));
+
+  const isLead = type === "lead";
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!title.trim() || !description.trim()) return;
+
+    let payloadTitle = title.trim();
+    let payloadDescription = description.trim();
+    let payloadContent: string | undefined = content.trim() || undefined;
+
+    if (isLead) {
+      if (!lead.customer_name.trim() || !lead.use_case.trim()) return;
+      payloadTitle = lead.customer_name.trim();
+      payloadDescription = lead.use_case.trim().slice(0, 240);
+      payloadContent = LEAD_PREFIX + JSON.stringify(lead);
+    } else if (!payloadTitle || !payloadDescription) {
+      return;
+    }
 
     setSubmitting(true);
     try {
@@ -289,13 +307,13 @@ const SubmitForm = ({ onClose }: { onClose: () => void }) => {
 
       await createItem.mutateAsync({
         type,
-        title: title.trim(),
-        description: description.trim(),
-        content: content.trim() || undefined,
-        challenge: challenge.trim() || undefined,
-        solution: solution.trim() || undefined,
-        benefits: cleanBenefits.length > 0 ? cleanBenefits : undefined,
-        key_figures: cleanFigures.length > 0 ? cleanFigures : undefined,
+        title: payloadTitle,
+        description: payloadDescription,
+        content: payloadContent,
+        challenge: !isLead ? challenge.trim() || undefined : undefined,
+        solution: !isLead ? solution.trim() || undefined : undefined,
+        benefits: !isLead && cleanBenefits.length > 0 ? cleanBenefits : undefined,
+        key_figures: !isLead && cleanFigures.length > 0 ? cleanFigures : undefined,
         link_urls: links.filter((l) => l.url.trim()).map((l) => ({ label: l.label?.trim() || undefined, url: l.url.trim() })),
         image_url: images[0],
         image_urls: images,
@@ -303,7 +321,7 @@ const SubmitForm = ({ onClose }: { onClose: () => void }) => {
         file_name: files[0]?.name,
         file_urls: files,
         category_tags: tags.split(",").map((t) => t.trim()).filter(Boolean),
-        pricing_info: pricingInfo.trim() || undefined,
+        pricing_info: !isLead ? pricingInfo.trim() || undefined : undefined,
         test_reasons: type === "tool_to_test" ? testReasons : undefined,
         test_reasons_other: type === "tool_to_test" && includeOther ? testReasonsOther.trim() || undefined : undefined,
       });
@@ -332,17 +350,80 @@ const SubmitForm = ({ onClose }: { onClose: () => void }) => {
             <SelectItem value="sample_code">{t("showcase.tabs.sampleCode")}</SelectItem>
             <SelectItem value="infographic">{t("showcase.tabs.infographics")}</SelectItem>
             <SelectItem value="tool_to_test">{t("showcase.tabs.toolsToTest")}</SelectItem>
+            {hasViberAccess && (
+              <SelectItem value="lead">Lead (Vibers only)</SelectItem>
+            )}
           </SelectContent>
         </Select>
       </div>
-      <div>
-        <Label>{t("showcase.titleLabel")}</Label>
-        <Input value={title} onChange={(e) => setTitle(e.target.value)} required />
-      </div>
-      <div>
-        <Label>{t("showcase.descriptionLabel")}</Label>
-        <Textarea value={description} onChange={(e) => setDescription(e.target.value)} required />
-      </div>
+
+      {isLead ? (
+        <div className="space-y-3 rounded-lg border p-4">
+          <div className="flex items-center gap-2 text-sm font-semibold">
+            <Lock className="h-4 w-4 text-vibetor" />
+            Lead visible only to Vibers and Vibetor founders
+          </div>
+          <div>
+            <Label>Customer / Company name</Label>
+            <Input value={lead.customer_name} onChange={(e) => setLead("customer_name", e.target.value)} required />
+          </div>
+          <div>
+            <Label>Industry</Label>
+            <Input value={lead.industry} onChange={(e) => setLead("industry", e.target.value)} />
+          </div>
+          <div>
+            <Label>Use case / Opportunity</Label>
+            <Textarea value={lead.use_case} onChange={(e) => setLead("use_case", e.target.value)} required rows={3} />
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <Label>Timeline</Label>
+              <Input value={lead.timeline} onChange={(e) => setLead("timeline", e.target.value)} placeholder="e.g. Q3 2026" />
+            </div>
+            <div>
+              <Label>Budget</Label>
+              <Input value={lead.budget} onChange={(e) => setLead("budget", e.target.value)} placeholder="e.g. €5–10k" />
+            </div>
+          </div>
+          <div>
+            <Label>Priority</Label>
+            <Select value={lead.priority || undefined} onValueChange={(v) => setLead("priority", v)}>
+              <SelectTrigger><SelectValue placeholder="Select priority" /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="low">Low</SelectItem>
+                <SelectItem value="normal">Normal</SelectItem>
+                <SelectItem value="high">High</SelectItem>
+                <SelectItem value="urgent">Urgent</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <Label>Contact person</Label>
+              <Input value={lead.contact_person} onChange={(e) => setLead("contact_person", e.target.value)} />
+            </div>
+            <div>
+              <Label>Contact email</Label>
+              <Input type="email" value={lead.contact_email} onChange={(e) => setLead("contact_email", e.target.value)} />
+            </div>
+          </div>
+          <div>
+            <Label>Additional notes</Label>
+            <Textarea value={lead.notes} onChange={(e) => setLead("notes", e.target.value)} rows={2} />
+          </div>
+        </div>
+      ) : (
+        <>
+          <div>
+            <Label>{t("showcase.titleLabel")}</Label>
+            <Input value={title} onChange={(e) => setTitle(e.target.value)} required />
+          </div>
+          <div>
+            <Label>{t("showcase.descriptionLabel")}</Label>
+            <Textarea value={description} onChange={(e) => setDescription(e.target.value)} required />
+          </div>
+        </>
+      )}
 
       {showStructuredFields && (
         <>
