@@ -17,7 +17,7 @@ import { motion } from "framer-motion";
 import { useTranslation } from "@/i18n/useTranslation";
 import { useAuth } from "@/hooks/useAuth";
 import { useShowcaseItems, useCreateShowcaseItem, type ShowcaseType, type ShowcaseItem, type KeyFigure, TOOL_TEST_REASONS, type ToolTestReason } from "@/hooks/useShowcase";
-import { Plus, ExternalLink, ArrowRight, Lightbulb, MessageSquare, Wrench, Trash2, BookOpen, Code, BarChart3, FlaskConical } from "lucide-react";
+import { Plus, ExternalLink, ArrowRight, Lightbulb, MessageSquare, Wrench, Trash2, BookOpen, Code, BarChart3, FlaskConical, Briefcase, Lock } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
 import FilePreview from "@/components/FilePreview";
 import ShowcaseLinksField from "@/components/ShowcaseLinksField";
@@ -25,6 +25,42 @@ import ShowcaseImagesField from "@/components/ShowcaseImagesField";
 import ShowcaseFileField from "@/components/ShowcaseFileField";
 import { useToast } from "@/hooks/use-toast";
 import { safeUrl } from "@/lib/safeUrl";
+import { useProfile } from "@/hooks/useProfile";
+
+const LEAD_PREFIX = "<!--LEAD_JSON-->";
+
+interface LeadData {
+  customer_name: string;
+  industry: string;
+  use_case: string;
+  timeline: string;
+  budget: string;
+  priority: "low" | "normal" | "high" | "urgent" | "";
+  contact_person: string;
+  contact_email: string;
+  notes: string;
+}
+
+const emptyLead: LeadData = {
+  customer_name: "",
+  industry: "",
+  use_case: "",
+  timeline: "",
+  budget: "",
+  priority: "",
+  contact_person: "",
+  contact_email: "",
+  notes: "",
+};
+
+const parseLead = (content: string | null | undefined): LeadData | null => {
+  if (!content || !content.startsWith(LEAD_PREFIX)) return null;
+  try {
+    return JSON.parse(content.slice(LEAD_PREFIX.length));
+  } catch {
+    return null;
+  }
+};
 
 const typeIcons: Record<ShowcaseType, React.ElementType> = {
   case_study: Lightbulb,
@@ -34,6 +70,7 @@ const typeIcons: Record<ShowcaseType, React.ElementType> = {
   sample_code: Code,
   infographic: BarChart3,
   tool_to_test: FlaskConical,
+  lead: Briefcase,
 };
 
 const TEST_REASON_LABELS: Record<ToolTestReason, string> = {
