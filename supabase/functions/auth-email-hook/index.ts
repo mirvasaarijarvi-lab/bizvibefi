@@ -143,7 +143,22 @@ async function handleWebhook(req: Request): Promise<Response> {
   }
 
   // Verify signature + timestamp, then parse payload.
-  let payload: Record<string, unknown>
+  interface AuthEmailPayload {
+    version?: string
+    run_id?: string
+    type?: string
+    data: {
+      action_type: string
+      email: string
+      url?: string
+      token?: string
+      old_email?: string
+      new_email?: string
+      [key: string]: unknown
+    }
+    [key: string]: unknown
+  }
+  let payload: AuthEmailPayload
   let run_id = ''
   try {
     const verified = await verifyWebhookRequest({
@@ -151,8 +166,8 @@ async function handleWebhook(req: Request): Promise<Response> {
       secret: apiKey,
       parser: parseEmailWebhookPayload,
     })
-    payload = verified.payload
-    run_id = payload.run_id
+    payload = verified.payload as AuthEmailPayload
+    run_id = payload.run_id ?? ''
   } catch (error) {
     if (error instanceof WebhookError) {
       switch (error.code) {
