@@ -986,12 +986,14 @@ const Events = () => {
       const baseCols =
         "id,title,description,event_type,starts_at,ends_at,location,is_online,max_attendees,image_url,is_published,created_by,created_at,updated_at,title_fi,title_sv,description_fi,description_sv,location_fi,location_sv,agenda,agenda_fi,agenda_sv,requires_signin,speakers,sponsors";
       const cols = user ? `${baseCols},online_url` : baseCols;
-      const { data, error } = await supabase
-        .from("events")
+      const { data, error } = await (supabase.from("events") as unknown as {
+        select: (c: string) => { order: (k: string) => Promise<{ data: unknown[] | null; error: unknown }> };
+      })
         .select(cols)
         .order("starts_at");
       if (error) throw error;
       return (data ?? []).map((e) => ({ online_url: null, ...(e as Record<string, unknown>) })) as unknown as Tables<"events">[];
+
     },
   });
 
