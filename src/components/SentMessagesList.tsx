@@ -152,6 +152,13 @@ const SentMessagesList = () => {
     );
   }
 
+  const totalPages = Math.max(1, Math.ceil(batches.length / PAGE_SIZE));
+  const currentPage = Math.min(page, totalPages - 1);
+  const pageBatches = batches.slice(
+    currentPage * PAGE_SIZE,
+    currentPage * PAGE_SIZE + PAGE_SIZE
+  );
+
   return (
     <Card className="overflow-hidden">
       <Table>
@@ -165,7 +172,7 @@ const SentMessagesList = () => {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {batches.map((b) => {
+          {pageBatches.map((b) => {
             const isOpen = openKey === b.key;
             const isEvent = b.templateName.startsWith("event-");
             return (
