@@ -879,6 +879,32 @@ const GuestSignupDialog = ({
         phone: trimmedPhone || null,
       } as never);
       if (error) throw error;
+      // Send confirmation email (non-blocking failure)
+      try {
+        const when = new Date(event.starts_at).toLocaleString("en-GB", {
+          weekday: "short", year: "numeric", month: "short", day: "numeric",
+          hour: "2-digit", minute: "2-digit", timeZone: "Europe/Helsinki",
+        });
+        const where = (event as any).is_online ? "Online" : (event.location || "TBA");
+        const intro = (event.description || "").replace(/\s+/g, " ").trim().slice(0, 240);
+        await supabase.functions.invoke("send-transactional-email", {
+          body: {
+            templateName: "event-confirmation",
+            recipientEmail: trimmedEmail,
+            idempotencyKey: `signup-${event.id}-${trimmedEmail}`,
+            templateData: {
+              name: trimmedName,
+              eventTitle: event.title,
+              eventIntro: intro,
+              eventTime: when,
+              eventLocation: where,
+              eventUrl: `${window.location.origin}/events`,
+            },
+          },
+        });
+      } catch (e) {
+        console.warn("confirmation email failed", e);
+      }
     },
     onSuccess: () => {
       toast({ title: labels.success });
