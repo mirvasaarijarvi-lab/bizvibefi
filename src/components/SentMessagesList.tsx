@@ -167,92 +167,89 @@ const SentMessagesList = () => {
             const isOpen = openKey === b.key;
             const isEvent = b.templateName.startsWith("event-");
             return (
-              <Collapsible
-                key={b.key}
-                open={isOpen}
-                onOpenChange={(v) => setOpenKey(v ? b.key : null)}
-                asChild
-              >
-                <>
-                  <TableRow className="align-top">
-                    <TableCell className="text-sm whitespace-nowrap">
-                      {new Date(b.firstSentAt).toLocaleString(undefined, {
-                        dateStyle: "medium",
-                        timeStyle: "short",
-                      })}
-                    </TableCell>
-                    <TableCell>
-                      <Badge variant={isEvent ? "secondary" : "default"} className="gap-1">
-                        {isEvent ? (
-                          <CalendarClock className="h-3 w-3" />
-                        ) : (
-                          <Mail className="h-3 w-3" />
-                        )}
-                        {TEMPLATE_LABELS[b.templateName] || b.templateName}
-                      </Badge>
-                    </TableCell>
-                    <TableCell className="font-medium">
-                      <div className="line-clamp-1">{b.subject}</div>
-                      {b.eventTitle && b.eventTitle !== b.subject && (
-                        <div className="text-xs text-muted-foreground mt-0.5">
-                          Event: {b.eventTitle}
-                        </div>
+              <>
+                <TableRow key={b.key} className="align-top">
+                  <TableCell className="text-sm whitespace-nowrap">
+                    {new Date(b.firstSentAt).toLocaleString(undefined, {
+                      dateStyle: "medium",
+                      timeStyle: "short",
+                    })}
+                  </TableCell>
+                  <TableCell>
+                    <Badge variant={isEvent ? "secondary" : "default"} className="gap-1">
+                      {isEvent ? (
+                        <CalendarClock className="h-3 w-3" />
+                      ) : (
+                        <Mail className="h-3 w-3" />
                       )}
-                    </TableCell>
-                    <TableCell className="text-sm text-muted-foreground">
-                      <div className="line-clamp-2 max-w-md">
-                        {b.preview || "—"}
+                      {TEMPLATE_LABELS[b.templateName] || b.templateName}
+                    </Badge>
+                  </TableCell>
+                  <TableCell className="font-medium">
+                    <div className="line-clamp-1">{b.subject}</div>
+                    {b.eventTitle && b.eventTitle !== b.subject && (
+                      <div className="text-xs text-muted-foreground mt-0.5">
+                        Event: {b.eventTitle}
+                      </div>
+                    )}
+                  </TableCell>
+                  <TableCell className="text-sm text-muted-foreground">
+                    <div className="line-clamp-2 max-w-md">
+                      {b.preview || "—"}
+                    </div>
+                  </TableCell>
+                  <TableCell>
+                    <button
+                      type="button"
+                      onClick={() => setOpenKey(isOpen ? null : b.key)}
+                      className="flex items-center gap-1 text-sm hover:text-primary transition-colors"
+                    >
+                      <ChevronRight
+                        className={`h-3.5 w-3.5 transition-transform ${
+                          isOpen ? "rotate-90" : ""
+                        }`}
+                      />
+                      <span>
+                        {b.sentCount} sent
+                        {b.failedCount > 0 && (
+                          <span className="text-destructive">
+                            , {b.failedCount} failed
+                          </span>
+                        )}
+                      </span>
+                    </button>
+                  </TableCell>
+                </TableRow>
+                {isOpen && (
+                  <TableRow key={`${b.key}-detail`} className="bg-muted/30">
+                    <TableCell colSpan={5} className="py-3">
+                      <div className="text-xs font-medium text-muted-foreground mb-2">
+                        Recipient list ({b.recipients.length})
+                      </div>
+                      <div className="flex flex-wrap gap-1.5">
+                        {b.recipients.map((r) => (
+                          <Badge
+                            key={r.email}
+                            variant={
+                              r.status === "sent"
+                                ? "outline"
+                                : r.status === "pending"
+                                ? "secondary"
+                                : "destructive"
+                            }
+                            className="font-normal"
+                          >
+                            {r.email}
+                            {r.status !== "sent" && (
+                              <span className="ml-1 opacity-70">· {r.status}</span>
+                            )}
+                          </Badge>
+                        ))}
                       </div>
                     </TableCell>
-                    <TableCell>
-                      <CollapsibleTrigger className="flex items-center gap-1 text-sm hover:text-primary transition-colors">
-                        <ChevronRight
-                          className={`h-3.5 w-3.5 transition-transform ${
-                            isOpen ? "rotate-90" : ""
-                          }`}
-                        />
-                        <span>
-                          {b.sentCount} sent
-                          {b.failedCount > 0 && (
-                            <span className="text-destructive">
-                              , {b.failedCount} failed
-                            </span>
-                          )}
-                        </span>
-                      </CollapsibleTrigger>
-                    </TableCell>
                   </TableRow>
-                  <CollapsibleContent asChild>
-                    <TableRow className="bg-muted/30">
-                      <TableCell colSpan={5} className="py-3">
-                        <div className="text-xs font-medium text-muted-foreground mb-2">
-                          Recipient list ({b.recipients.length})
-                        </div>
-                        <div className="flex flex-wrap gap-1.5">
-                          {b.recipients.map((r) => (
-                            <Badge
-                              key={r.email}
-                              variant={
-                                r.status === "sent"
-                                  ? "outline"
-                                  : r.status === "pending"
-                                  ? "secondary"
-                                  : "destructive"
-                              }
-                              className="font-normal"
-                            >
-                              {r.email}
-                              {r.status !== "sent" && (
-                                <span className="ml-1 opacity-70">· {r.status}</span>
-                              )}
-                            </Badge>
-                          ))}
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  </CollapsibleContent>
-                </>
-              </Collapsible>
+                )}
+              </>
             );
           })}
         </TableBody>
