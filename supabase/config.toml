@@ -21,5 +21,7 @@ project_id = "ztfbgbcevtrxdchbjeck"
     verify_jwt = false
   [functions.send-signup-confirmation]
     verify_jwt = false
+  [functions.submit-contact-message]
+    verify_jwt = false
 
 
