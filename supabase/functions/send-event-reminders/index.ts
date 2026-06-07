@@ -79,7 +79,7 @@ Deno.serve(async (req) => {
 
   const { data: events, error: eventsErr } = await supabase
     .from('events')
-    .select('id,title,description,starts_at,location,is_online')
+    .select('id,title,description,starts_at,ends_at,location,is_online')
     .eq('is_published', true)
     .gte('starts_at', lower)
     .lte('starts_at', upper)
