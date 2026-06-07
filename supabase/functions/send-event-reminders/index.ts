@@ -148,7 +148,7 @@ Deno.serve(async (req) => {
   const todayKey = now.toISOString().slice(0, 10) // YYYY-MM-DD
 
   for (const ev of (events ?? []) as EventRow[]) {
-    const when = formatWhen(ev.starts_at)
+    const when = formatWhen(ev.starts_at, ev.ends_at)
     const where = ev.is_online
       ? 'Online'
       : ev.location || 'TBA'
