@@ -36,6 +36,8 @@ interface ProfileRow {
 function formatWhen(iso: string): string {
   try {
     const d = new Date(iso)
+    // Render in Europe/Helsinki without appending a timezone label
+    // (recipients found "(Helsinki)" confusing).
     return d.toLocaleString('en-GB', {
       weekday: 'short',
       year: 'numeric',
