@@ -12,43 +12,37 @@ interface EventRow {
   title: string
   description: string | null
   starts_at: string
+  ends_at: string | null
   location: string | null
   is_online: boolean | null
 }
 
-interface SignupRow {
-  event_id: string
-  full_name: string
-  email: string
-}
-
-interface RsvpRow {
-  event_id: string
-  user_id: string
-}
-
-interface ProfileRow {
-  user_id: string
-  display_name: string | null
-  contact_email: string | null
-}
-
-function formatWhen(iso: string): string {
+function formatWhen(startIso: string, endIso: string | null): string {
   try {
-    const d = new Date(iso)
-    // Render in Europe/Helsinki without appending a timezone label
-    // (recipients found "(Helsinki)" confusing).
-    return d.toLocaleString('en-GB', {
+    const start = new Date(startIso)
+    const datePart = start.toLocaleDateString('en-GB', {
       weekday: 'short',
       year: 'numeric',
       month: 'short',
       day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
       timeZone: 'Europe/Helsinki',
     })
+    const startTime = start.toLocaleTimeString('en-GB', {
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: false,
+      timeZone: 'Europe/Helsinki',
+    })
+    if (!endIso) return `${datePart}, ${startTime}`
+    const endTime = new Date(endIso).toLocaleTimeString('en-GB', {
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: false,
+      timeZone: 'Europe/Helsinki',
+    })
+    return `${datePart}, ${startTime} – ${endTime}`
   } catch {
-    return iso
+    return startIso
   }
 }
 
