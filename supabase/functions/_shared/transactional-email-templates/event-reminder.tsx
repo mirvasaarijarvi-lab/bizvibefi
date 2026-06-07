@@ -107,7 +107,7 @@ const EventReminder = ({
             Stay in the loop with the latest news, discussions and vibecoding
             insights. Join the collective as a Starter or Viber member.
           </Text>
-          <Button style={joinButton} href="https://goodvibescafe.org/membership">
+          <Button style={joinButton} href="https://goodvibescafe.org/get-going">
             Join the collective
           </Button>
         </Section>
