@@ -3,6 +3,7 @@ import { template as adminMessage } from './admin-message.tsx'
 import { template as eventConfirmation } from './event-confirmation.tsx'
 import { template as eventReminder } from './event-reminder.tsx'
 import { template as eventFeedback } from './event-feedback.tsx'
+import { template as viberExpiring } from './viber-expiring.tsx'
 
 export interface TemplateEntry {
   component: (props: Record<string, unknown>) => unknown
@@ -17,4 +18,5 @@ export const TEMPLATES: Record<string, TemplateEntry> = {
   'event-confirmation': eventConfirmation,
   'event-reminder': eventReminder,
   'event-feedback': eventFeedback,
+  'viber-expiring': viberExpiring,
 }
