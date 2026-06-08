@@ -89,6 +89,45 @@ const callAdminFn = async (action: string, params: Record<string, unknown>) => {
   return data;
 };
 
+const DateField = ({
+  label,
+  value,
+  onChange,
+}: {
+  label: string;
+  value: string | null;
+  onChange: (iso: string | null) => void | Promise<void>;
+}) => {
+  const date = value ? parseISO(value) : undefined;
+  return (
+    <Popover>
+      <PopoverTrigger asChild>
+        <Button
+          variant="outline"
+          size="sm"
+          className={cn(
+            "h-7 justify-start text-left font-body text-xs gap-1 px-2",
+            !value && "text-muted-foreground"
+          )}
+        >
+          <CalendarIcon className="h-3 w-3" />
+          <span className="opacity-70">{label}:</span>
+          {date ? format(date, "dd MMM yyyy") : "set"}
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent className="w-auto p-0" align="start">
+        <Calendar
+          mode="single"
+          selected={date}
+          onSelect={(d) => onChange(d ? format(d, "yyyy-MM-dd") : null)}
+          initialFocus
+          className={cn("p-3 pointer-events-auto")}
+        />
+      </PopoverContent>
+    </Popover>
+  );
+};
+
 const AdminUsers = () => {
   const { user, loading: authLoading } = useAuth();
   const { data: myRoles } = useUserRole();
