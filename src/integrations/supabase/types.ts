@@ -853,6 +853,8 @@ export type Database = {
           updated_at: string
           user_id: string
           viber_access_override: boolean
+          viber_ends_at: string | null
+          viber_started_at: string | null
           vibetor_type: Database["public"]["Enums"]["vibetor_type"] | null
           website_links: Json | null
         }
@@ -872,6 +874,8 @@ export type Database = {
           updated_at?: string
           user_id: string
           viber_access_override?: boolean
+          viber_ends_at?: string | null
+          viber_started_at?: string | null
           vibetor_type?: Database["public"]["Enums"]["vibetor_type"] | null
           website_links?: Json | null
         }
@@ -891,6 +895,8 @@ export type Database = {
           updated_at?: string
           user_id?: string
           viber_access_override?: boolean
+          viber_ends_at?: string | null
+          viber_started_at?: string | null
           vibetor_type?: Database["public"]["Enums"]["vibetor_type"] | null
           website_links?: Json | null
         }
