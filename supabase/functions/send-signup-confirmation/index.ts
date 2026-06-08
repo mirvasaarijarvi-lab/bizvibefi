@@ -20,15 +20,19 @@ Deno.serve(async (req) => {
   const serviceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
   const supabase = createClient(supabaseUrl, serviceKey)
 
+  console.log('signup-confirm: request received', { method: req.method })
+
   let body: Body
   try {
     body = await req.json()
-  } catch {
+  } catch (e) {
+    console.warn('signup-confirm: invalid JSON body', e)
     return new Response(JSON.stringify({ ok: true }), {
       status: 200,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     })
   }
+
 
   const eventId = (body.eventId || '').trim()
   const emailRaw = (body.email || '').trim().toLowerCase()
