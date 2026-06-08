@@ -115,7 +115,7 @@ const AdminUsers = () => {
     queryFn: async () => {
       const { data: profiles, error: pErr } = await supabase
         .from("profiles")
-        .select("user_id, display_name, avatar_url, membership_tier, vibetor_type")
+        .select("user_id, display_name, avatar_url, membership_tier, vibetor_type, viber_started_at, viber_ends_at")
         .order("created_at", { ascending: false });
       if (pErr) throw pErr;
 
