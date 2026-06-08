@@ -130,7 +130,7 @@ const DateField = ({
 
 const AdminUsers = () => {
   const { user, loading: authLoading } = useAuth();
-  const { data: myRoles } = useUserRole();
+  const { data: myRoles, isLoading: rolesLoading } = useUserRole();
   const isSuperAdmin = myRoles?.includes("superadmin") ?? false;
   const queryClient = useQueryClient();
   const [search, setSearch] = useState("");
@@ -258,7 +258,7 @@ const AdminUsers = () => {
     onError: (err: Error) => toast.error(err.message),
   });
 
-  if (authLoading) {
+  if (authLoading || (user && rolesLoading)) {
     return (
       <Layout>
         <div className="min-h-screen flex items-center justify-center">
