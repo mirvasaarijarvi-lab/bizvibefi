@@ -98,38 +98,37 @@ Deno.serve(async (req) => {
     eventTitle: event.title,
   })
 
-  // Invoke the relay using the service-role key so the auth gate accepts it.
+  // Use the Supabase client's functions.invoke so the gateway accepts the
+  // service-role credentials (raw fetch with the new sb_secret_* key gets
+  // rejected as "Invalid JWT" by the edge gateway).
   try {
-    const resp = await fetch(`${supabaseUrl}/functions/v1/send-transactional-email`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'apikey': serviceKey,
-        Authorization: `Bearer ${serviceKey}`,
-      },
-      body: JSON.stringify({
-        templateName: 'event-confirmation',
-        recipientEmail: signup.email,
-        idempotencyKey: `signup-${event.id}-${signup.email}`,
-        templateData: {
-          name: signup.full_name,
-          eventTitle: event.title,
-          eventIntro: intro,
-          eventTime: when,
-          eventLocation: where,
-          eventUrl: 'https://goodvibescafe.org/events',
+    const { data, error } = await supabase.functions.invoke(
+      'send-transactional-email',
+      {
+        body: {
+          templateName: 'event-confirmation',
+          recipientEmail: signup.email,
+          idempotencyKey: `signup-${event.id}-${signup.email}`,
+          templateData: {
+            name: signup.full_name,
+            eventTitle: event.title,
+            eventIntro: intro,
+            eventTime: when,
+            eventLocation: where,
+            eventUrl: 'https://goodvibescafe.org/events',
+          },
         },
-      }),
-    })
-    if (!resp.ok) {
-      const txt = await resp.text().catch(() => '')
-      console.error('signup-confirm: relay non-OK', resp.status, txt)
+      },
+    )
+    if (error) {
+      console.error('signup-confirm: relay error', error)
     } else {
-      console.log('signup-confirm: relay ok', resp.status)
+      console.log('signup-confirm: relay ok', data)
     }
   } catch (err) {
     console.warn('signup-confirm: relay threw', err)
   }
+
 
 
   return new Response(JSON.stringify({ ok: true }), {
