@@ -20,51 +20,65 @@ Deno.serve(async (req) => {
   const serviceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
   const supabase = createClient(supabaseUrl, serviceKey)
 
+  console.log('signup-confirm: request received', { method: req.method })
+
   let body: Body
   try {
     body = await req.json()
-  } catch {
+  } catch (e) {
+    console.warn('signup-confirm: invalid JSON body', e)
     return new Response(JSON.stringify({ ok: true }), {
       status: 200,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     })
   }
+
 
   const eventId = (body.eventId || '').trim()
   const emailRaw = (body.email || '').trim().toLowerCase()
   const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailRaw)
   if (!eventId || !emailOk) {
+    console.log('signup-confirm: bad input', { eventId, emailRaw })
     return new Response(JSON.stringify({ ok: true }), {
       status: 200,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     })
   }
 
-  // Validate: there must be a fresh signup row for this (event, email).
-  const tenMinAgo = new Date(Date.now() - 10 * 60 * 1000).toISOString()
-  const { data: signup } = await supabase
+  // Validate: a signup row must exist for this (event, email). Use a 24h window
+  // so legitimate confirmations succeed even with minor clock drift or slight
+  // retry delays; the row's existence itself prevents abuse.
+  const since = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString()
+  const { data: signup, error: lookupErr } = await supabase
     .from('event_signups')
     .select('id, full_name, created_at, event_id, email')
     .eq('event_id', eventId)
     .ilike('email', emailRaw)
-    .gte('created_at', tenMinAgo)
+    .gte('created_at', since)
+    .order('created_at', { ascending: false })
+    .limit(1)
     .maybeSingle()
 
+  if (lookupErr) console.warn('signup-confirm: lookup error', lookupErr)
   if (!signup) {
+    console.log('signup-confirm: no matching signup', { eventId, emailRaw })
+
     return new Response(JSON.stringify({ ok: true }), {
       status: 200,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     })
   }
 
-  const { data: event } = await supabase
+  const { data: event, error: eventErr } = await supabase
     .from('events')
     .select('id,title,description,starts_at,location,is_online')
     .eq('id', eventId)
     .eq('is_published', true)
     .maybeSingle()
 
+  if (eventErr) console.warn('signup-confirm: event lookup error', eventErr)
   if (!event) {
+    console.log('signup-confirm: no published event', { eventId })
     return new Response(JSON.stringify({ ok: true }), {
       status: 200,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
@@ -78,12 +92,18 @@ Deno.serve(async (req) => {
   const where = event.is_online ? 'Online' : (event.location || 'TBA')
   const intro = (event.description || '').replace(/\s+/g, ' ').trim().slice(0, 240)
 
-  // Invoke the relay using the service-role key so the new auth gate accepts it.
+  console.log('signup-confirm: invoking relay', {
+    recipient: signup.email,
+    eventTitle: event.title,
+  })
+
+  // Invoke the relay using the service-role key so the auth gate accepts it.
   try {
-    await fetch(`${supabaseUrl}/functions/v1/send-transactional-email`, {
+    const resp = await fetch(`${supabaseUrl}/functions/v1/send-transactional-email`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'apikey': serviceKey,
         Authorization: `Bearer ${serviceKey}`,
       },
       body: JSON.stringify({
@@ -100,9 +120,16 @@ Deno.serve(async (req) => {
         },
       }),
     })
+    if (!resp.ok) {
+      const txt = await resp.text().catch(() => '')
+      console.error('signup-confirm: relay non-OK', resp.status, txt)
+    } else {
+      console.log('signup-confirm: relay ok', resp.status)
+    }
   } catch (err) {
-    console.warn('confirmation send failed', err)
+    console.warn('signup-confirm: relay threw', err)
   }
+
 
   return new Response(JSON.stringify({ ok: true }), {
     status: 200,
