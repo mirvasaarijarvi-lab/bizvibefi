@@ -258,7 +258,7 @@ const AdminUsers = () => {
     onError: (err: Error) => toast.error(err.message),
   });
 
-  if (authLoading) {
+  if (authLoading || (user && rolesLoading)) {
     return (
       <Layout>
         <div className="min-h-screen flex items-center justify-center">
