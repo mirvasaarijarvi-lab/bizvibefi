@@ -48,7 +48,8 @@ Deno.serve(async (req) => {
   // Validate: a signup row must exist for this (event, email). Use a 24h window
   // so legitimate confirmations succeed even with minor clock drift or slight
   // retry delays; the row's existence itself prevents abuse.
-  const since = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString()
+  // 14-day window: protection is the signup row's existence, not freshness.
+  const since = new Date(Date.now() - 14 * 24 * 60 * 60 * 1000).toISOString()
   const { data: signup, error: lookupErr } = await supabase
     .from('event_signups')
     .select('id, full_name, created_at, event_id, email')
