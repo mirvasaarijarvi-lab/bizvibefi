@@ -277,6 +277,7 @@ const AdminUsers = () => {
                   <TableRow>
                     <TableHead className="font-body">User</TableHead>
                     <TableHead className="font-body">Tier</TableHead>
+                    <TableHead className="font-body">Viber window</TableHead>
                     <TableHead className="font-body">Vibetor Type</TableHead>
                     <TableHead className="font-body">Current Role</TableHead>
                     <TableHead className="font-body">Change Role</TableHead>
@@ -286,6 +287,9 @@ const AdminUsers = () => {
                 <TableBody>
                   {filtered.map((u) => {
                     const isMe = u.user_id === user.id;
+                    const viberStart = (u as Record<string, unknown>).viber_started_at as string | null;
+                    const viberEnd = (u as Record<string, unknown>).viber_ends_at as string | null;
+                    const expired = u.membership_tier === "viber" && viberEnd && isBefore(parseISO(viberEnd), new Date());
                     return (
                       <TableRow key={u.user_id}>
                         <TableCell>
@@ -298,7 +302,84 @@ const AdminUsers = () => {
                           </div>
                         </TableCell>
                         <TableCell>
-                          <Badge variant="outline" className="text-[10px] capitalize">{u.membership_tier}</Badge>
+                          {isMe ? (
+                            <Badge variant="outline" className="text-[10px] capitalize">{u.membership_tier}</Badge>
+                          ) : (
+                            <Select
+                              value={u.membership_tier}
+                              onValueChange={async (val) => {
+                                const oldTier = u.membership_tier;
+                                if (val === oldTier) return;
+                                const patch: Record<string, unknown> = { membership_tier: val };
+                                if (val === "viber" && !viberStart) {
+                                  patch.viber_started_at = new Date().toISOString().slice(0, 10);
+                                  patch.viber_ends_at = "2026-12-31";
+                                }
+                                if (val !== "viber") {
+                                  patch.viber_started_at = null;
+                                  patch.viber_ends_at = null;
+                                }
+                                const { error } = await supabase
+                                  .from("profiles")
+                                  .update(patch as never)
+                                  .eq("user_id", u.user_id);
+                                if (error) { toast.error(error.message); return; }
+                                await supabase.from("admin_notifications").insert({
+                                  title: "Membership tier changed",
+                                  message: `${u.display_name || "A member"}'s tier was changed from "${oldTier}" to "${val}".`,
+                                  type: "tier_change",
+                                });
+                                queryClient.invalidateQueries({ queryKey: ["admin-users"] });
+                                toast.success("Tier updated");
+                              }}
+                            >
+                              <SelectTrigger className={cn("h-8 text-xs w-28 font-body capitalize", expired && "border-destructive text-destructive")}>
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="starter">Starter</SelectItem>
+                                <SelectItem value="viber">Viber</SelectItem>
+                                <SelectItem value="vibetor">Vibetor</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          )}
+                          {expired && (
+                            <div className="text-[10px] text-destructive mt-1 font-body">Expired</div>
+                          )}
+                        </TableCell>
+                        <TableCell>
+                          {u.membership_tier === "viber" && !isMe ? (
+                            <div className="flex flex-col gap-1">
+                              <DateField
+                                label="Start"
+                                value={viberStart}
+                                onChange={async (iso) => {
+                                  const { error } = await supabase
+                                    .from("profiles")
+                                    .update({ viber_started_at: iso } as never)
+                                    .eq("user_id", u.user_id);
+                                  if (error) { toast.error(error.message); return; }
+                                  queryClient.invalidateQueries({ queryKey: ["admin-users"] });
+                                  toast.success("Viber start date updated");
+                                }}
+                              />
+                              <DateField
+                                label="End"
+                                value={viberEnd}
+                                onChange={async (iso) => {
+                                  const { error } = await supabase
+                                    .from("profiles")
+                                    .update({ viber_ends_at: iso } as never)
+                                    .eq("user_id", u.user_id);
+                                  if (error) { toast.error(error.message); return; }
+                                  queryClient.invalidateQueries({ queryKey: ["admin-users"] });
+                                  toast.success("Viber end date updated");
+                                }}
+                              />
+                            </div>
+                          ) : (
+                            <span className="text-xs text-muted-foreground">—</span>
+                          )}
                         </TableCell>
                         <TableCell>
                           {u.membership_tier === "vibetor" ? (
