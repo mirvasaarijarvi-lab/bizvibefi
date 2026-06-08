@@ -44,7 +44,11 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { Search, ShieldCheck, UserCog, Plus, Trash2, KeyRound, Gem } from "lucide-react";
+import { Search, ShieldCheck, UserCog, Plus, Trash2, KeyRound, Gem, CalendarIcon } from "lucide-react";
+import { format, parseISO, isBefore } from "date-fns";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Calendar } from "@/components/ui/calendar";
+import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 
 const roleBadge = (role: string) => {
