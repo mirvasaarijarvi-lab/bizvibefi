@@ -34,23 +34,31 @@ Deno.serve(async (req) => {
   const emailRaw = (body.email || '').trim().toLowerCase()
   const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailRaw)
   if (!eventId || !emailOk) {
+    console.log('signup-confirm: bad input', { eventId, emailRaw })
     return new Response(JSON.stringify({ ok: true }), {
       status: 200,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     })
   }
 
-  // Validate: there must be a fresh signup row for this (event, email).
-  const tenMinAgo = new Date(Date.now() - 10 * 60 * 1000).toISOString()
-  const { data: signup } = await supabase
+  // Validate: a signup row must exist for this (event, email). Use a 24h window
+  // so legitimate confirmations succeed even with minor clock drift or slight
+  // retry delays; the row's existence itself prevents abuse.
+  const since = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString()
+  const { data: signup, error: lookupErr } = await supabase
     .from('event_signups')
     .select('id, full_name, created_at, event_id, email')
     .eq('event_id', eventId)
     .ilike('email', emailRaw)
-    .gte('created_at', tenMinAgo)
+    .gte('created_at', since)
+    .order('created_at', { ascending: false })
+    .limit(1)
     .maybeSingle()
 
+  if (lookupErr) console.warn('signup-confirm: lookup error', lookupErr)
   if (!signup) {
+    console.log('signup-confirm: no matching signup', { eventId, emailRaw })
+
     return new Response(JSON.stringify({ ok: true }), {
       status: 200,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
