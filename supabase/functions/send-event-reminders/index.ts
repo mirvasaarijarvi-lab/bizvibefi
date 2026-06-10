@@ -220,7 +220,30 @@ Deno.serve(async (req) => {
       }
     }
 
-    for (const { email, name } of recipients.values()) {
+    // Skip recipients who already have an event-reminder log entry in the
+    // last 36h (handles previous timed-out catch-up runs without resending).
+    const recipientEmails = Array.from(recipients.keys())
+    const sinceIso = new Date(now.getTime() - 36 * 60 * 60 * 1000).toISOString()
+    let alreadySent = new Set<string>()
+    if (recipientEmails.length > 0) {
+      const { data: recent } = await supabase
+        .from('email_send_log')
+        .select('recipient_email')
+        .eq('template_name', 'event-reminder')
+        .gte('created_at', sinceIso)
+        .in('recipient_email', recipientEmails)
+      alreadySent = new Set(
+        (recent ?? []).map((r: { recipient_email: string }) =>
+          r.recipient_email.toLowerCase()
+        )
+      )
+    }
+
+    for (const [key, { email, name }] of recipients) {
+      if (alreadySent.has(key)) {
+        totalSkipped++
+        continue
+      }
       const idempotencyKey = `reminder-${ev.id}-${email.toLowerCase()}-${todayKey}`
       try {
         const { data, error } = await supabase.functions.invoke(
