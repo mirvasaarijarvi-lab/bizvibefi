@@ -100,17 +100,27 @@ Deno.serve(async (req) => {
 
   const supabase = createClient(supabaseUrl, serviceKey)
 
-  // Events that start between 23 and 25 hours from now.
+  // Window: by default events starting in 23-25h. Admins can override with
+  // ?eventId=<uuid> for a one-off send (e.g. catch-up for a missed reminder).
+  const url = new URL(req.url)
+  const eventIdOverride = url.searchParams.get('eventId')
+
   const now = new Date()
   const lower = new Date(now.getTime() + 23 * 60 * 60 * 1000).toISOString()
   const upper = new Date(now.getTime() + 25 * 60 * 60 * 1000).toISOString()
 
-  const { data: events, error: eventsErr } = await supabase
+  let eventsQuery = supabase
     .from('events')
     .select('id,title,description,starts_at,ends_at,location,is_online')
     .eq('is_published', true)
-    .gte('starts_at', lower)
-    .lte('starts_at', upper)
+
+  if (eventIdOverride) {
+    eventsQuery = eventsQuery.eq('id', eventIdOverride)
+  } else {
+    eventsQuery = eventsQuery.gte('starts_at', lower).lte('starts_at', upper)
+  }
+
+  const { data: events, error: eventsErr } = await eventsQuery
 
   if (eventsErr) {
     console.error('events query failed', eventsErr)
