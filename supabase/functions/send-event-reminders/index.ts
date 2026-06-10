@@ -17,6 +17,10 @@ interface EventRow {
   is_online: boolean | null
 }
 
+interface SignupRow { event_id: string; full_name: string | null; email: string }
+interface RsvpRow { event_id: string; user_id: string }
+interface ProfileRow { user_id: string; display_name: string | null; contact_email: string | null }
+
 function formatWhen(startIso: string, endIso: string | null): string {
   try {
     const start = new Date(startIso)
@@ -59,11 +63,39 @@ Deno.serve(async (req) => {
 
   const supabaseUrl = Deno.env.get('SUPABASE_URL')!
   const serviceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
+  const anonKey = Deno.env.get('SUPABASE_ANON_KEY')!
 
-  // Auth: only allow callers presenting the service-role key (used by pg_cron).
-  // Return a generic response on failure to avoid leaking endpoint behavior.
+  // Auth: allow callers presenting either the service-role key or the queue's
+  // service-role key from Vault (used by pg_cron via net.http_post). Verify
+  // any other bearer token as a valid JWT belonging to an admin user.
   const authHeader = req.headers.get('Authorization') || ''
-  if (authHeader !== `Bearer ${serviceKey}`) {
+  const bearer = authHeader.startsWith('Bearer ') ? authHeader.slice(7) : ''
+
+  let authorized = false
+  if (bearer && bearer === serviceKey) {
+    authorized = true
+  } else if (bearer) {
+    try {
+      const verifier = createClient(supabaseUrl, anonKey)
+      const { data: claimsData } = await verifier.auth.getClaims(bearer)
+      const uid = claimsData?.claims?.sub
+      if (uid) {
+        const admin = createClient(supabaseUrl, serviceKey)
+        const { data: rolesData } = await admin
+          .from('user_roles')
+          .select('role')
+          .eq('user_id', uid)
+        const roles = (rolesData ?? []).map((r: { role: string }) => r.role)
+        if (roles.includes('admin') || roles.includes('superadmin')) {
+          authorized = true
+        }
+      }
+    } catch (_e) {
+      // fall through to unauthorized
+    }
+  }
+
+  if (!authorized) {
     return new Response(JSON.stringify({ ok: true }), {
       status: 200,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
@@ -72,17 +104,27 @@ Deno.serve(async (req) => {
 
   const supabase = createClient(supabaseUrl, serviceKey)
 
-  // Events that start between 23 and 25 hours from now.
+  // Window: by default events starting in 23-25h. Admins can override with
+  // ?eventId=<uuid> for a one-off send (e.g. catch-up for a missed reminder).
+  const url = new URL(req.url)
+  const eventIdOverride = url.searchParams.get('eventId')
+
   const now = new Date()
   const lower = new Date(now.getTime() + 23 * 60 * 60 * 1000).toISOString()
   const upper = new Date(now.getTime() + 25 * 60 * 60 * 1000).toISOString()
 
-  const { data: events, error: eventsErr } = await supabase
+  let eventsQuery = supabase
     .from('events')
     .select('id,title,description,starts_at,ends_at,location,is_online')
     .eq('is_published', true)
-    .gte('starts_at', lower)
-    .lte('starts_at', upper)
+
+  if (eventIdOverride) {
+    eventsQuery = eventsQuery.eq('id', eventIdOverride)
+  } else {
+    eventsQuery = eventsQuery.gte('starts_at', lower).lte('starts_at', upper)
+  }
+
+  const { data: events, error: eventsErr } = await eventsQuery
 
   if (eventsErr) {
     console.error('events query failed', eventsErr)
