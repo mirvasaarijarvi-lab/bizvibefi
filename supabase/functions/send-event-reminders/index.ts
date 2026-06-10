@@ -17,6 +17,10 @@ interface EventRow {
   is_online: boolean | null
 }
 
+interface SignupRow { event_id: string; full_name: string | null; email: string }
+interface RsvpRow { event_id: string; user_id: string }
+interface ProfileRow { user_id: string; display_name: string | null; contact_email: string | null }
+
 function formatWhen(startIso: string, endIso: string | null): string {
   try {
     const start = new Date(startIso)
