@@ -59,11 +59,39 @@ Deno.serve(async (req) => {
 
   const supabaseUrl = Deno.env.get('SUPABASE_URL')!
   const serviceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
+  const anonKey = Deno.env.get('SUPABASE_ANON_KEY')!
 
-  // Auth: only allow callers presenting the service-role key (used by pg_cron).
-  // Return a generic response on failure to avoid leaking endpoint behavior.
+  // Auth: allow callers presenting either the service-role key or the queue's
+  // service-role key from Vault (used by pg_cron via net.http_post). Verify
+  // any other bearer token as a valid JWT belonging to an admin user.
   const authHeader = req.headers.get('Authorization') || ''
-  if (authHeader !== `Bearer ${serviceKey}`) {
+  const bearer = authHeader.startsWith('Bearer ') ? authHeader.slice(7) : ''
+
+  let authorized = false
+  if (bearer && bearer === serviceKey) {
+    authorized = true
+  } else if (bearer) {
+    try {
+      const verifier = createClient(supabaseUrl, anonKey)
+      const { data: claimsData } = await verifier.auth.getClaims(bearer)
+      const uid = claimsData?.claims?.sub
+      if (uid) {
+        const admin = createClient(supabaseUrl, serviceKey)
+        const { data: rolesData } = await admin
+          .from('user_roles')
+          .select('role')
+          .eq('user_id', uid)
+        const roles = (rolesData ?? []).map((r: { role: string }) => r.role)
+        if (roles.includes('admin') || roles.includes('superadmin')) {
+          authorized = true
+        }
+      }
+    } catch (_e) {
+      // fall through to unauthorized
+    }
+  }
+
+  if (!authorized) {
     return new Response(JSON.stringify({ ok: true }), {
       status: 200,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
