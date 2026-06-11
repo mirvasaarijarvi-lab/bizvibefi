@@ -39,6 +39,7 @@ const ROUTE_LABELS: Record<string, string> = {
   "/admin/event-registrations": "Event Registrations",
   "/admin/event-feedback": "Event Feedback",
   "/admin/messages": "Send Messages",
+  "/admin/presentation-access": "Presentation Access",
   "/reset-password": "Reset Password",
 };
 
