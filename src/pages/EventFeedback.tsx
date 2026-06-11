@@ -115,13 +115,22 @@ export default function EventFeedback() {
   const [params] = useSearchParams();
   const navigate = useNavigate();
   const token = params.get("token") ?? "";
-  const email = params.get("email") ?? "";
+  const emailParam = params.get("email") ?? "";
+  const share = params.get("s") ?? "";
   const initialOverall = Number(params.get("r")) || 0;
 
   const [event, setEvent] = useState<EventRow | null>(null);
+  const [mode, setMode] = useState<"personal" | "share">("personal");
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [done, setDone] = useState(false);
+
+  const [overall, setOverall] = useState<number>(initialOverall);
+  const [programRatings, setProgramRatings] = useState<Record<string, number>>({});
+  const [comments, setComments] = useState("");
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState(emailParam);
+
 
   const [overall, setOverall] = useState<number>(initialOverall);
   const [programRatings, setProgramRatings] = useState<Record<string, number>>({});
