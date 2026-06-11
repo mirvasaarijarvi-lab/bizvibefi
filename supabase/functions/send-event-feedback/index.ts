@@ -101,7 +101,6 @@ Deno.serve(async (req) => {
     eventsErr = res.error
   } else {
     // Events whose effective end was 23-25 hours ago.
-    const now = new Date()
     const upper = new Date(now.getTime() - 23 * 60 * 60 * 1000).toISOString()
     const lower = new Date(now.getTime() - 25 * 60 * 60 * 1000).toISOString()
     const res = await supabase
