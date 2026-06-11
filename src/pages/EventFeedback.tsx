@@ -136,22 +136,30 @@ export default function EventFeedback() {
   useEffect(() => {
     let cancelled = false;
     const run = async () => {
-      if (!eventId) return;
-      const { data } = await supabase
-        .from("events")
-        .select("id,title,agenda,starts_at")
-        .eq("id", eventId)
-        .maybeSingle();
-      if (!cancelled) {
-        setEvent((data as EventRow) ?? null);
+      if (!eventId || !token || !email) {
         setLoading(false);
+        return;
       }
+      const { data } = await supabase.functions.invoke(
+        "verify-event-feedback-token",
+        { body: { eventId, email, token } },
+      );
+      if (cancelled) return;
+      if (data?.valid && data.event) {
+        setEvent({
+          id: data.event.id,
+          title: data.event.title,
+          agenda: data.event.agenda ?? null,
+          starts_at: "",
+        });
+      }
+      setLoading(false);
     };
     run();
     return () => {
       cancelled = true;
     };
-  }, [eventId]);
+  }, [eventId, token, email]);
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -217,9 +225,14 @@ export default function EventFeedback() {
       <div className="min-h-screen flex items-center justify-center p-6">
         <Card className="max-w-md w-full">
           <CardHeader>
-            <CardTitle>Event not found</CardTitle>
+            <CardTitle>Feedback link not available</CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent className="space-y-4">
+            <p className="text-sm text-muted-foreground">
+              This feedback form is only accessible through the personal link
+              sent by email to event attendees. If you attended and didn't
+              receive the email, please contact us.
+            </p>
             <Button onClick={() => navigate("/events")}>Browse events</Button>
           </CardContent>
         </Card>
