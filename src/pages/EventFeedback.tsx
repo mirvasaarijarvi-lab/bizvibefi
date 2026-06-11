@@ -183,6 +183,15 @@ export default function EventFeedback() {
       });
       return;
     }
+    const trimmedName = name.trim();
+    if (!trimmedName) {
+      toast({
+        title: "Name required",
+        description: "Please enter your name.",
+        variant: "destructive",
+      });
+      return;
+    }
     const trimmedEmail = email.trim();
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmedEmail)) {
       toast({
@@ -192,6 +201,7 @@ export default function EventFeedback() {
       });
       return;
     }
+
     if (overall < 1 || overall > 5) {
       toast({
         title: "Overall rating required",
@@ -204,7 +214,7 @@ export default function EventFeedback() {
     const payload: Record<string, unknown> = {
       eventId,
       email: trimmedEmail,
-      name: name || undefined,
+      name: trimmedName,
       overallRating: overall,
       programRatings: Object.entries(programRatings)
         .filter(([, v]) => v >= 1 && v <= 5)
@@ -320,11 +330,13 @@ export default function EventFeedback() {
                 <input
                   id="name"
                   type="text"
+                  required
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
-                  placeholder="Optional, leave blank to stay anonymous"
+                  placeholder="Your name"
                 />
+
               </section>
 
               {mode === "share" && (
