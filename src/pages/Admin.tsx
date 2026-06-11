@@ -16,6 +16,7 @@ import {
   Send,
   Activity,
   MessageSquare,
+  FileSearch,
 } from "lucide-react";
 
 const TILES: Array<{
