@@ -132,13 +132,10 @@ export default function EventFeedback() {
   const [email, setEmail] = useState(emailParam);
 
 
-  const [overall, setOverall] = useState<number>(initialOverall);
-  const [programRatings, setProgramRatings] = useState<Record<string, number>>({});
-  const [comments, setComments] = useState("");
-  const [name, setName] = useState("");
   const [attendAgain, setAttendAgain] = useState<YesNoMaybe>("");
   const [wantPresent, setWantPresent] = useState<YesNoMaybe>("");
   const [bringDemo, setBringDemo] = useState<YesNoMaybe>("");
+
 
   const programItems = useMemo(() => parseAgenda(event?.agenda ?? null), [event]);
 
