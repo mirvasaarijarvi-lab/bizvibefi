@@ -839,6 +839,57 @@ export type Database = {
         }
         Relationships: []
       }
+      presentation_access_log: {
+        Row: {
+          allowed: boolean
+          created_at: string
+          event_id: string | null
+          http_status: number | null
+          id: string
+          presentation_id: string | null
+          reason: string | null
+          user_email: string | null
+          user_id: string | null
+        }
+        Insert: {
+          allowed: boolean
+          created_at?: string
+          event_id?: string | null
+          http_status?: number | null
+          id?: string
+          presentation_id?: string | null
+          reason?: string | null
+          user_email?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          allowed?: boolean
+          created_at?: string
+          event_id?: string | null
+          http_status?: number | null
+          id?: string
+          presentation_id?: string | null
+          reason?: string | null
+          user_email?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "presentation_access_log_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "events"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "presentation_access_log_presentation_id_fkey"
+            columns: ["presentation_id"]
+            isOneToOne: false
+            referencedRelation: "event_presentations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -1301,6 +1352,22 @@ export type Database = {
       get_membership_tier: {
         Args: { _user_id: string }
         Returns: Database["public"]["Enums"]["membership_tier"]
+      }
+      get_presentation_access_audit: {
+        Args: never
+        Returns: {
+          allowed_user_count: number
+          allowed_users: Json
+          denied_last_30d: number
+          event_id: string
+          event_starts_at: string
+          event_title: string
+          file_size: number
+          last_denial_at: string
+          last_denial_reason: string
+          presentation_id: string
+          presentation_title: string
+        }[]
       }
       get_public_profile: {
         Args: { _user_id: string }

@@ -55,6 +55,27 @@ Deno.serve(async (req) => {
     Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
   );
 
+  const logAccess = async (
+    eventId: string | null,
+    allowed: boolean,
+    status: number,
+    reason: string,
+  ) => {
+    try {
+      await admin.from("presentation_access_log").insert({
+        presentation_id: presentationId,
+        event_id: eventId,
+        user_id: userId,
+        user_email: userEmail,
+        allowed,
+        reason,
+        http_status: status,
+      });
+    } catch (e) {
+      console.error("presentation_access_log insert failed:", e);
+    }
+  };
+
   // Load presentation + event
   const { data: pres, error: presErr } = await admin
     .from("event_presentations")
@@ -65,7 +86,10 @@ Deno.serve(async (req) => {
     console.error("get-event-presentation presentation lookup failed:", presErr);
     return json(500, { error: "An internal error occurred" });
   }
-  if (!pres) return json(404, { error: "Presentation not found" });
+  if (!pres) {
+    await logAccess(null, false, 404, "presentation_not_found");
+    return json(404, { error: "Presentation not found" });
+  }
 
   const { data: event, error: eventErr } = await admin
     .from("events")
@@ -74,9 +98,13 @@ Deno.serve(async (req) => {
     .maybeSingle();
   if (eventErr) {
     console.error("get-event-presentation event lookup failed:", eventErr);
+    await logAccess(pres.event_id, false, 500, "event_lookup_failed");
     return json(500, { error: "An internal error occurred" });
   }
-  if (!event) return json(404, { error: "Event not found" });
+  if (!event) {
+    await logAccess(pres.event_id, false, 404, "event_not_found");
+    return json(404, { error: "Event not found" });
+  }
 
   // Role check
   const [{ data: isAdmin }, { data: isSuperadmin }] = await Promise.all([
@@ -90,9 +118,11 @@ Deno.serve(async (req) => {
   const now = Date.now();
   if (!isPrivileged) {
     if (!event.is_published) {
+      await logAccess(pres.event_id, false, 403, "event_not_published");
       return json(403, { error: "This presentation is not available" });
     }
     if (eventStart > now) {
+      await logAccess(pres.event_id, false, 403, "event_not_started");
       return json(403, { error: "Presentations become available after the event" });
     }
   }
@@ -118,6 +148,7 @@ Deno.serve(async (req) => {
       allowed = !!signup;
     }
     if (!allowed) {
+      await logAccess(pres.event_id, false, 403, "not_attendee");
       return json(403, { error: "Only attendees who signed up for this event can access the presentation" });
     }
   }
@@ -131,8 +162,16 @@ Deno.serve(async (req) => {
 
   if (signErr || !signed?.signedUrl) {
     console.error("get-event-presentation signed URL failed:", signErr);
+    await logAccess(pres.event_id, false, 500, "signed_url_failed");
     return json(500, { error: "An internal error occurred" });
   }
+
+  await logAccess(
+    pres.event_id,
+    true,
+    200,
+    isPrivileged ? (event.created_by === userId ? "creator" : "admin") : "attendee",
+  );
 
   return json(200, {
     url: signed.signedUrl,

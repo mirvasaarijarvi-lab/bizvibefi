@@ -16,6 +16,7 @@ import {
   Send,
   Activity,
   MessageSquare,
+  FileSearch,
 } from "lucide-react";
 
 const TILES: Array<{
@@ -77,6 +78,12 @@ const TILES: Array<{
     label: "Email Health",
     description: "Inspect delivery logs and suppression list.",
     Icon: Mail,
+  },
+  {
+    to: "/admin/presentation-access",
+    label: "Presentation Access",
+    description: "Audit who can access each event presentation, flag denials.",
+    Icon: FileSearch,
   },
   {
     to: "/admin/audit-log",
