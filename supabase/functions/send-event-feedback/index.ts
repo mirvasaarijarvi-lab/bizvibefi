@@ -88,6 +88,7 @@ Deno.serve(async (req) => {
   // event regardless of time window. Used for catch-up runs.
   const url = new URL(req.url)
   const overrideEventId = url.searchParams.get('eventId')
+  const now = new Date()
 
   let events: EventRow[] | null = null
   let eventsErr: unknown = null
