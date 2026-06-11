@@ -136,22 +136,30 @@ export default function EventFeedback() {
   useEffect(() => {
     let cancelled = false;
     const run = async () => {
-      if (!eventId) return;
-      const { data } = await supabase
-        .from("events")
-        .select("id,title,agenda,starts_at")
-        .eq("id", eventId)
-        .maybeSingle();
-      if (!cancelled) {
-        setEvent((data as EventRow) ?? null);
+      if (!eventId || !token || !email) {
         setLoading(false);
+        return;
       }
+      const { data } = await supabase.functions.invoke(
+        "verify-event-feedback-token",
+        { body: { eventId, email, token } },
+      );
+      if (cancelled) return;
+      if (data?.valid && data.event) {
+        setEvent({
+          id: data.event.id,
+          title: data.event.title,
+          agenda: data.event.agenda ?? null,
+          starts_at: "",
+        });
+      }
+      setLoading(false);
     };
     run();
     return () => {
       cancelled = true;
     };
-  }, [eventId]);
+  }, [eventId, token, email]);
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
