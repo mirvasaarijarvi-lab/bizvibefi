@@ -115,10 +115,12 @@ export default function EventFeedback() {
   const [params] = useSearchParams();
   const navigate = useNavigate();
   const token = params.get("token") ?? "";
-  const email = params.get("email") ?? "";
+  const emailParam = params.get("email") ?? "";
+  const share = params.get("s") ?? "";
   const initialOverall = Number(params.get("r")) || 0;
 
   const [event, setEvent] = useState<EventRow | null>(null);
+  const [mode, setMode] = useState<"personal" | "share">("personal");
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [done, setDone] = useState(false);
@@ -127,22 +129,30 @@ export default function EventFeedback() {
   const [programRatings, setProgramRatings] = useState<Record<string, number>>({});
   const [comments, setComments] = useState("");
   const [name, setName] = useState("");
+  const [email, setEmail] = useState(emailParam);
+
+
   const [attendAgain, setAttendAgain] = useState<YesNoMaybe>("");
   const [wantPresent, setWantPresent] = useState<YesNoMaybe>("");
   const [bringDemo, setBringDemo] = useState<YesNoMaybe>("");
+
 
   const programItems = useMemo(() => parseAgenda(event?.agenda ?? null), [event]);
 
   useEffect(() => {
     let cancelled = false;
     const run = async () => {
-      if (!eventId || !token || !email) {
+      if (!eventId || (!share && (!token || !emailParam))) {
         setLoading(false);
         return;
       }
       const { data } = await supabase.functions.invoke(
         "verify-event-feedback-token",
-        { body: { eventId, email, token } },
+        {
+          body: share
+            ? { eventId, share }
+            : { eventId, email: emailParam, token },
+        },
       );
       if (cancelled) return;
       if (data?.valid && data.event) {
@@ -152,6 +162,7 @@ export default function EventFeedback() {
           agenda: data.event.agenda ?? null,
           starts_at: "",
         });
+        setMode(data.mode === "share" ? "share" : "personal");
       }
       setLoading(false);
     };
@@ -159,14 +170,24 @@ export default function EventFeedback() {
     return () => {
       cancelled = true;
     };
-  }, [eventId, token, email]);
+  }, [eventId, token, emailParam, share]);
+
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!eventId || !token || !email) {
+    if (!eventId || (!share && (!token || !emailParam))) {
       toast({
         title: "Invalid link",
         description: "This feedback link is missing required information.",
+        variant: "destructive",
+      });
+      return;
+    }
+    const trimmedEmail = email.trim();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmedEmail)) {
+      toast({
+        title: "Email required",
+        description: "Please enter a valid email so we can record your feedback.",
         variant: "destructive",
       });
       return;
@@ -180,10 +201,9 @@ export default function EventFeedback() {
       return;
     }
     setSubmitting(true);
-    const payload = {
+    const payload: Record<string, unknown> = {
       eventId,
-      email,
-      token,
+      email: trimmedEmail,
       name: name || undefined,
       overallRating: overall,
       programRatings: Object.entries(programRatings)
@@ -196,10 +216,13 @@ export default function EventFeedback() {
         bring_demo_to_end_customer_event: bringDemo || null,
       },
     };
+    if (share) payload.share = share;
+    else payload.token = token;
     const { data, error } = await supabase.functions.invoke(
       "submit-event-feedback",
       { body: payload },
     );
+
     setSubmitting(false);
     if (error || !data?.success) {
       toast({
@@ -303,6 +326,27 @@ export default function EventFeedback() {
                   placeholder="Optional, leave blank to stay anonymous"
                 />
               </section>
+
+              {mode === "share" && (
+                <section className="space-y-2">
+                  <label className="text-sm font-medium" htmlFor="email">
+                    Your email
+                  </label>
+                  <input
+                    id="email"
+                    type="email"
+                    required
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+                    placeholder="you@example.com"
+                  />
+                  <p className="text-xs text-muted-foreground">
+                    Used only to dedupe responses and follow up if you ask us to.
+                  </p>
+                </section>
+              )}
+
 
               <section>
                 <h2 className="text-base font-semibold mb-2">
