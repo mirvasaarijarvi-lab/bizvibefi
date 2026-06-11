@@ -96,6 +96,7 @@ const App = () => (
                 <Route path="/admin/event-registrations" element={<AdminEventRegistrations />} />
                 <Route path="/admin/event-feedback" element={<AdminEventFeedback />} />
                 <Route path="/admin/messages" element={<AdminMessages />} />
+                <Route path="/admin/presentation-access" element={<AdminPresentationAccess />} />
                 <Route path="/unsubscribe" element={<Unsubscribe />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
