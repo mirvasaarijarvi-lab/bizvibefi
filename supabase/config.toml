@@ -21,6 +21,8 @@ project_id = "ztfbgbcevtrxdchbjeck"
     verify_jwt = false
   [functions.submit-event-feedback]
     verify_jwt = false
+  [functions.verify-event-feedback-token]
+    verify_jwt = false
   [functions.send-signup-confirmation]
     verify_jwt = false
   [functions.submit-contact-message]
