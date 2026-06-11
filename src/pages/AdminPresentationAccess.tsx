@@ -97,7 +97,7 @@ const AdminPresentationAccess = () => {
     enabled: !!user && !!isAdmin,
     queryFn: async (): Promise<AuditRow[]> => {
       const { data, error } = await supabase.rpc(
-        "get_presentation_access_audit" as never,
+        "get_presentation_access_audit",
       );
       if (error) throw error;
       return (data ?? []) as AuditRow[];
