@@ -214,7 +214,7 @@ export default function EventFeedback() {
     const payload: Record<string, unknown> = {
       eventId,
       email: trimmedEmail,
-      name: name || undefined,
+      name: trimmedName,
       overallRating: overall,
       programRatings: Object.entries(programRatings)
         .filter(([, v]) => v >= 1 && v <= 5)
