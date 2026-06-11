@@ -327,6 +327,27 @@ export default function EventFeedback() {
                 />
               </section>
 
+              {mode === "share" && (
+                <section className="space-y-2">
+                  <label className="text-sm font-medium" htmlFor="email">
+                    Your email
+                  </label>
+                  <input
+                    id="email"
+                    type="email"
+                    required
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+                    placeholder="you@example.com"
+                  />
+                  <p className="text-xs text-muted-foreground">
+                    Used only to dedupe responses and follow up if you ask us to.
+                  </p>
+                </section>
+              )}
+
+
               <section>
                 <h2 className="text-base font-semibold mb-2">
                   2. How would you rate the event overall?
