@@ -1,12 +1,16 @@
-// Validates an HMAC feedback token and stores an event feedback row.
+// Validates an HMAC feedback token (personal or shared) and stores a row.
 import { createClient } from 'npm:@supabase/supabase-js@2'
 import { corsHeaders } from 'npm:@supabase/supabase-js@2/cors'
-import { verifyFeedbackToken } from '../_shared/feedback-token.ts'
+import {
+  verifyFeedbackToken,
+  verifyShareToken,
+} from '../_shared/feedback-token.ts'
 
 interface Body {
   eventId: string
   email: string
-  token: string
+  token?: string
+  share?: string
   name?: string
   overallRating: number
   programRatings?: { label: string; rating: number }[]
@@ -36,6 +40,7 @@ Deno.serve(async (req) => {
     eventId,
     email,
     token,
+    share,
     name,
     overallRating,
     programRatings = [],
@@ -43,10 +48,13 @@ Deno.serve(async (req) => {
     responses,
   } = body || ({} as Body)
 
+  const emailOk =
+    typeof email === 'string' && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
+
   if (
     !eventId ||
-    !email ||
-    !token ||
+    !emailOk ||
+    (!token && !share) ||
     !Number.isInteger(overallRating) ||
     overallRating < 1 ||
     overallRating > 5
@@ -55,8 +63,11 @@ Deno.serve(async (req) => {
   }
 
   const secret = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
-  const ok = await verifyFeedbackToken(eventId, email, token, secret)
+  const ok = share
+    ? await verifyShareToken(eventId, share, secret)
+    : await verifyFeedbackToken(eventId, email, token!, secret)
   if (!ok) return json(401, { error: 'invalid_token' })
+
 
   // Sanitize program ratings
   const cleanedProgram = Array.isArray(programRatings)
