@@ -80,6 +80,12 @@ const TILES: Array<{
     Icon: Mail,
   },
   {
+    to: "/admin/presentation-access",
+    label: "Presentation Access",
+    description: "Audit who can access each event presentation, flag denials.",
+    Icon: FileSearch,
+  },
+  {
     to: "/admin/audit-log",
     label: "Audit Log",
     description: "Review administrative actions and changes.",
