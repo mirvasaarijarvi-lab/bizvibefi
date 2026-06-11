@@ -11,6 +11,7 @@ interface Body {
   overallRating: number
   programRatings?: { label: string; rating: number }[]
   comments?: string
+  responses?: Record<string, unknown>
 }
 
 Deno.serve(async (req) => {
@@ -39,6 +40,7 @@ Deno.serve(async (req) => {
     overallRating,
     programRatings = [],
     comments,
+    responses,
   } = body || ({} as Body)
 
   if (
@@ -74,6 +76,20 @@ Deno.serve(async (req) => {
   const cleanedComments =
     typeof comments === 'string' ? comments.slice(0, 4000) : null
 
+  // Sanitize responses: only keep string/number/boolean values, cap keys.
+  const cleanedResponses: Record<string, unknown> = {}
+  if (responses && typeof responses === 'object') {
+    let i = 0
+    for (const [k, v] of Object.entries(responses)) {
+      if (i++ >= 20) break
+      const key = String(k).slice(0, 80)
+      if (v === null) cleanedResponses[key] = null
+      else if (typeof v === 'string') cleanedResponses[key] = v.slice(0, 500)
+      else if (typeof v === 'number' || typeof v === 'boolean')
+        cleanedResponses[key] = v
+    }
+  }
+
   const supabase = createClient(
     Deno.env.get('SUPABASE_URL')!,
     Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!,
@@ -87,6 +103,7 @@ Deno.serve(async (req) => {
       overall_rating: overallRating,
       program_ratings: cleanedProgram,
       comments: cleanedComments,
+      responses: cleanedResponses,
     },
     { onConflict: 'event_id,email' },
   )

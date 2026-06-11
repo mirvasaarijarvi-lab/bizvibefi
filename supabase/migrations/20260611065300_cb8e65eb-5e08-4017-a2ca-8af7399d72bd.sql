@@ -1,0 +1,1 @@
+SELECT cron.unschedule('send-feedback-june10-oneoff');

@@ -47,9 +47,31 @@ Deno.serve(async (req) => {
 
   const serviceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
 
-  // Auth: only allow callers presenting the service-role key (used by pg_cron).
+  // Auth: accept the cron's vault token, the raw service-role key, or an
+  // admin-user JWT. Silent fallback returns 200 so unauth probes don't 500.
   const authHeader = req.headers.get('Authorization') || ''
-  if (authHeader !== `Bearer ${serviceKey}`) {
+  const bearer = authHeader.startsWith('Bearer ')
+    ? authHeader.slice(7).trim()
+    : ''
+
+  let authed = false
+  if (bearer && bearer === serviceKey) {
+    authed = true
+  } else if (bearer) {
+    const probe = createClient(Deno.env.get('SUPABASE_URL')!, serviceKey)
+    const { data: userRes } = await probe.auth.getUser(bearer)
+    const uid = userRes?.user?.id
+    if (uid) {
+      const { data: roleRow } = await probe
+        .from('user_roles')
+        .select('role')
+        .eq('user_id', uid)
+        .eq('role', 'admin')
+        .maybeSingle()
+      if (roleRow) authed = true
+    }
+  }
+  if (!authed) {
     return new Response(JSON.stringify({ ok: true }), {
       status: 200,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
@@ -62,19 +84,36 @@ Deno.serve(async (req) => {
   )
   const secret = serviceKey
 
-  // Events whose effective end was 23-25 hours ago.
+  // Optional manual override: ?eventId=<uuid> sends feedback for a specific
+  // event regardless of time window. Used for catch-up runs.
+  const url = new URL(req.url)
+  const overrideEventId = url.searchParams.get('eventId')
   const now = new Date()
-  const upper = new Date(now.getTime() - 23 * 60 * 60 * 1000).toISOString()
-  const lower = new Date(now.getTime() - 25 * 60 * 60 * 1000).toISOString()
 
-  // Query by ends_at if present, otherwise starts_at.
-  const { data: events, error: eventsErr } = await supabase
-    .from('events')
-    .select('id,title,ends_at,starts_at,agenda')
-    .eq('is_published', true)
-    .or(
-      `and(ends_at.gte.${lower},ends_at.lte.${upper}),and(ends_at.is.null,starts_at.gte.${lower},starts_at.lte.${upper})`,
-    )
+  let events: EventRow[] | null = null
+  let eventsErr: unknown = null
+  if (overrideEventId) {
+    const res = await supabase
+      .from('events')
+      .select('id,title,ends_at,starts_at,agenda')
+      .eq('id', overrideEventId)
+      .limit(1)
+    events = (res.data ?? []) as EventRow[]
+    eventsErr = res.error
+  } else {
+    // Events whose effective end was 23-25 hours ago.
+    const upper = new Date(now.getTime() - 23 * 60 * 60 * 1000).toISOString()
+    const lower = new Date(now.getTime() - 25 * 60 * 60 * 1000).toISOString()
+    const res = await supabase
+      .from('events')
+      .select('id,title,ends_at,starts_at,agenda')
+      .eq('is_published', true)
+      .or(
+        `and(ends_at.gte.${lower},ends_at.lte.${upper}),and(ends_at.is.null,starts_at.gte.${lower},starts_at.lte.${upper})`,
+      )
+    events = (res.data ?? []) as EventRow[]
+    eventsErr = res.error
+  }
 
   if (eventsErr) {
     console.error('events query failed', eventsErr)
