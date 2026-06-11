@@ -142,13 +142,17 @@ export default function EventFeedback() {
   useEffect(() => {
     let cancelled = false;
     const run = async () => {
-      if (!eventId || !token || !email) {
+      if (!eventId || (!share && (!token || !emailParam))) {
         setLoading(false);
         return;
       }
       const { data } = await supabase.functions.invoke(
         "verify-event-feedback-token",
-        { body: { eventId, email, token } },
+        {
+          body: share
+            ? { eventId, share }
+            : { eventId, email: emailParam, token },
+        },
       );
       if (cancelled) return;
       if (data?.valid && data.event) {
@@ -158,6 +162,7 @@ export default function EventFeedback() {
           agenda: data.event.agenda ?? null,
           starts_at: "",
         });
+        setMode(data.mode === "share" ? "share" : "personal");
       }
       setLoading(false);
     };
@@ -165,7 +170,8 @@ export default function EventFeedback() {
     return () => {
       cancelled = true;
     };
-  }, [eventId, token, email]);
+  }, [eventId, token, emailParam, share]);
+
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
