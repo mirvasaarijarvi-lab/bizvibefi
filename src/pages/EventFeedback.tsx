@@ -175,10 +175,19 @@ export default function EventFeedback() {
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!eventId || !token || !email) {
+    if (!eventId || (!share && (!token || !emailParam))) {
       toast({
         title: "Invalid link",
         description: "This feedback link is missing required information.",
+        variant: "destructive",
+      });
+      return;
+    }
+    const trimmedEmail = email.trim();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmedEmail)) {
+      toast({
+        title: "Email required",
+        description: "Please enter a valid email so we can record your feedback.",
         variant: "destructive",
       });
       return;
@@ -192,10 +201,9 @@ export default function EventFeedback() {
       return;
     }
     setSubmitting(true);
-    const payload = {
+    const payload: Record<string, unknown> = {
       eventId,
-      email,
-      token,
+      email: trimmedEmail,
       name: name || undefined,
       overallRating: overall,
       programRatings: Object.entries(programRatings)
@@ -208,10 +216,13 @@ export default function EventFeedback() {
         bring_demo_to_end_customer_event: bringDemo || null,
       },
     };
+    if (share) payload.share = share;
+    else payload.token = token;
     const { data, error } = await supabase.functions.invoke(
       "submit-event-feedback",
       { body: payload },
     );
+
     setSubmitting(false);
     if (error || !data?.success) {
       toast({
