@@ -11,6 +11,7 @@ interface Body {
   overallRating: number
   programRatings?: { label: string; rating: number }[]
   comments?: string
+  responses?: Record<string, unknown>
 }
 
 Deno.serve(async (req) => {
