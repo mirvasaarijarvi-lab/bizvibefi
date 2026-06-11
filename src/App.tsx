@@ -42,6 +42,7 @@ const CertificateVerify = lazy(() => import("./pages/CertificateVerify.tsx"));
 const AdminEmailHealth = lazy(() => import("./pages/AdminEmailHealth.tsx"));
 const AdminEventRegistrations = lazy(() => import("./pages/AdminEventRegistrations.tsx"));
 const AdminEventFeedback = lazy(() => import("./pages/AdminEventFeedback.tsx"));
+const AdminPresentationAccess = lazy(() => import("./pages/AdminPresentationAccess.tsx"));
 const AdminMessages = lazy(() => import("./pages/AdminMessages.tsx"));
 const Unsubscribe = lazy(() => import("./pages/Unsubscribe.tsx"));
 const EventFeedback = lazy(() => import("./pages/EventFeedback.tsx"));
