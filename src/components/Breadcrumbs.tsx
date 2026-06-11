@@ -11,6 +11,7 @@ const ADMIN_PAGES: BreadcrumbItem[] = [
   { label: "Notifications", path: "/admin/notifications" },
   { label: "Users", path: "/admin/users" },
   { label: "Event Registrations", path: "/admin/event-registrations" },
+  { label: "Event Feedback", path: "/admin/event-feedback" },
   { label: "Messages", path: "/admin/messages" },
   { label: "Audit Log", path: "/admin/audit-log" },
 ];
@@ -35,6 +36,7 @@ const ROUTE_LABELS: Record<string, string> = {
   "/admin/users": "User Management",
   "/admin/audit-log": "Audit Log",
   "/admin/event-registrations": "Event Registrations",
+  "/admin/event-feedback": "Event Feedback",
   "/admin/messages": "Send Messages",
   "/reset-password": "Reset Password",
 };

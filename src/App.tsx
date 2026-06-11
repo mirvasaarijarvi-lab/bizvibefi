@@ -41,6 +41,7 @@ const AdminCertificates = lazy(() => import("./pages/AdminCertificates.tsx"));
 const CertificateVerify = lazy(() => import("./pages/CertificateVerify.tsx"));
 const AdminEmailHealth = lazy(() => import("./pages/AdminEmailHealth.tsx"));
 const AdminEventRegistrations = lazy(() => import("./pages/AdminEventRegistrations.tsx"));
+const AdminEventFeedback = lazy(() => import("./pages/AdminEventFeedback.tsx"));
 const AdminMessages = lazy(() => import("./pages/AdminMessages.tsx"));
 const Unsubscribe = lazy(() => import("./pages/Unsubscribe.tsx"));
 const EventFeedback = lazy(() => import("./pages/EventFeedback.tsx"));
@@ -92,6 +93,7 @@ const App = () => (
                 <Route path="/certificates/:id" element={<CertificateVerify />} />
                 <Route path="/admin/email-health" element={<AdminEmailHealth />} />
                 <Route path="/admin/event-registrations" element={<AdminEventRegistrations />} />
+                <Route path="/admin/event-feedback" element={<AdminEventFeedback />} />
                 <Route path="/admin/messages" element={<AdminMessages />} />
                 <Route path="/unsubscribe" element={<Unsubscribe />} />
                 <Route path="*" element={<NotFound />} />
