@@ -320,11 +320,13 @@ export default function EventFeedback() {
                 <input
                   id="name"
                   type="text"
+                  required
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
-                  placeholder="Optional, leave blank to stay anonymous"
+                  placeholder="Your name"
                 />
+
               </section>
 
               {mode === "share" && (
