@@ -183,6 +183,15 @@ export default function EventFeedback() {
       });
       return;
     }
+    const trimmedName = name.trim();
+    if (!trimmedName) {
+      toast({
+        title: "Name required",
+        description: "Please enter your name.",
+        variant: "destructive",
+      });
+      return;
+    }
     const trimmedEmail = email.trim();
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmedEmail)) {
       toast({
@@ -192,6 +201,7 @@ export default function EventFeedback() {
       });
       return;
     }
+
     if (overall < 1 || overall > 5) {
       toast({
         title: "Overall rating required",
