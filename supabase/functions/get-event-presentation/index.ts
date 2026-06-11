@@ -55,6 +55,27 @@ Deno.serve(async (req) => {
     Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
   );
 
+  const logAccess = async (
+    eventId: string | null,
+    allowed: boolean,
+    status: number,
+    reason: string,
+  ) => {
+    try {
+      await admin.from("presentation_access_log").insert({
+        presentation_id: presentationId,
+        event_id: eventId,
+        user_id: userId,
+        user_email: userEmail,
+        allowed,
+        reason,
+        http_status: status,
+      });
+    } catch (e) {
+      console.error("presentation_access_log insert failed:", e);
+    }
+  };
+
   // Load presentation + event
   const { data: pres, error: presErr } = await admin
     .from("event_presentations")
