@@ -15,6 +15,7 @@ import {
   Mail,
   Send,
   Activity,
+  MessageSquare,
 } from "lucide-react";
 
 const TILES: Array<{
@@ -46,6 +47,12 @@ const TILES: Array<{
     label: "Event Registrations",
     description: "View and export attendees per event.",
     Icon: CalendarDays,
+  },
+  {
+    to: "/admin/event-feedback",
+    label: "Event Feedback",
+    description: "Read ratings, comments, and survey responses.",
+    Icon: MessageSquare,
   },
   {
     to: "/admin/messages",
