@@ -225,9 +225,14 @@ export default function EventFeedback() {
       <div className="min-h-screen flex items-center justify-center p-6">
         <Card className="max-w-md w-full">
           <CardHeader>
-            <CardTitle>Event not found</CardTitle>
+            <CardTitle>Feedback link not available</CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent className="space-y-4">
+            <p className="text-sm text-muted-foreground">
+              This feedback form is only accessible through the personal link
+              sent by email to event attendees. If you attended and didn't
+              receive the email, please contact us.
+            </p>
             <Button onClick={() => navigate("/events")}>Browse events</Button>
           </CardContent>
         </Card>
