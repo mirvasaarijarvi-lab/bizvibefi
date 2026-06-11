@@ -420,6 +420,7 @@ export type Database = {
           name: string | null
           overall_rating: number
           program_ratings: Json
+          responses: Json
         }
         Insert: {
           comments?: string | null
@@ -430,6 +431,7 @@ export type Database = {
           name?: string | null
           overall_rating: number
           program_ratings?: Json
+          responses?: Json
         }
         Update: {
           comments?: string | null
@@ -440,6 +442,7 @@ export type Database = {
           name?: string | null
           overall_rating?: number
           program_ratings?: Json
+          responses?: Json
         }
         Relationships: [
           {
