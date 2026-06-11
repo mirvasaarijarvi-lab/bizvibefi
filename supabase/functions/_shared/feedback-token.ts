@@ -45,3 +45,32 @@ export async function verifyFeedbackToken(
   }
   return mismatch === 0
 }
+
+// Shared "public link" token for an event. Anyone with the URL can submit.
+// Token = base64url(hmacSha256(secret, `${eventId}|__share__`)) truncated to 32.
+export async function signShareToken(
+  eventId: string,
+  secret: string,
+): Promise<string> {
+  const key = await hmacKey(secret)
+  const sig = await crypto.subtle.sign(
+    'HMAC',
+    key,
+    new TextEncoder().encode(`${eventId}|__share__`),
+  )
+  return b64url(new Uint8Array(sig)).slice(0, 32)
+}
+
+export async function verifyShareToken(
+  eventId: string,
+  token: string,
+  secret: string,
+): Promise<boolean> {
+  const expected = await signShareToken(eventId, secret)
+  if (expected.length !== token.length) return false
+  let mismatch = 0
+  for (let i = 0; i < expected.length; i++) {
+    mismatch |= expected.charCodeAt(i) ^ token.charCodeAt(i)
+  }
+  return mismatch === 0
+}
