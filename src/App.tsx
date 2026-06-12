@@ -83,6 +83,9 @@ const App = () => (
                 <Route path="/accessibility" element={<AccessibilityStatement />} />
                 <Route path="/privacy" element={<PrivacyPolicy />} />
                 <Route path="/terms" element={<TermsOfService />} />
+                <Route path="/cookies" element={<CookiePolicy />} />
+                <Route path="/security" element={<SecurityTrust />} />
+                <Route path="/data-requests" element={<DataRequests />} />
                 <Route path="/admin" element={<Admin />} />
                 <Route path="/admin/showcase" element={<AdminShowcase />} />
                 <Route path="/admin/notifications" element={<AdminNotifications />} />
