@@ -59,6 +59,22 @@ const Footer = () => {
             <NewsletterSignup variant="inline" />
           </div>
         </div>
+        <div className="mt-10 pt-8 border-t border-border">
+          <h4 className="font-display text-sm font-semibold text-foreground mb-3">Trust &amp; Compliance</h4>
+          <nav aria-label="Trust and compliance" className="flex flex-wrap gap-x-4 gap-y-2">
+            <Link to="/privacy" className="text-sm text-muted-foreground hover:text-purple-soft font-body">Privacy Policy</Link>
+            <span className="text-muted-foreground/40" aria-hidden="true">·</span>
+            <Link to="/terms" className="text-sm text-muted-foreground hover:text-purple-soft font-body">Terms of Service</Link>
+            <span className="text-muted-foreground/40" aria-hidden="true">·</span>
+            <Link to="/cookies" className="text-sm text-muted-foreground hover:text-purple-soft font-body">Cookie Policy</Link>
+            <span className="text-muted-foreground/40" aria-hidden="true">·</span>
+            <Link to="/accessibility" className="text-sm text-muted-foreground hover:text-purple-soft font-body">Accessibility</Link>
+            <span className="text-muted-foreground/40" aria-hidden="true">·</span>
+            <Link to="/security" className="text-sm text-muted-foreground hover:text-purple-soft font-body">Security Contact</Link>
+            <span className="text-muted-foreground/40" aria-hidden="true">·</span>
+            <Link to="/data-requests" className="text-sm text-muted-foreground hover:text-purple-soft font-body">Data Requests</Link>
+          </nav>
+        </div>
         <div className="mt-8 pt-8 border-t border-border text-center">
           <p className="text-xs text-muted-foreground font-body">© {new Date().getFullYear()} {t("footer.rights")}</p>
         </div>

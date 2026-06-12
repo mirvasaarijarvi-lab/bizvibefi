@@ -26,6 +26,9 @@ const MemberProfile = lazy(() => import("./pages/MemberProfile.tsx"));
 const AccessibilityStatement = lazy(() => import("./pages/AccessibilityStatement.tsx"));
 const PrivacyPolicy = lazy(() => import("./pages/PrivacyPolicy.tsx"));
 const TermsOfService = lazy(() => import("./pages/TermsOfService.tsx"));
+const CookiePolicy = lazy(() => import("./pages/CookiePolicy.tsx"));
+const SecurityTrust = lazy(() => import("./pages/SecurityTrust.tsx"));
+const DataRequests = lazy(() => import("./pages/DataRequests.tsx"));
 const AdminShowcase = lazy(() => import("./pages/AdminShowcase.tsx"));
 const Admin = lazy(() => import("./pages/Admin.tsx"));
 const ShowcaseDetail = lazy(() => import("./pages/ShowcaseDetail.tsx"));
@@ -80,6 +83,9 @@ const App = () => (
                 <Route path="/accessibility" element={<AccessibilityStatement />} />
                 <Route path="/privacy" element={<PrivacyPolicy />} />
                 <Route path="/terms" element={<TermsOfService />} />
+                <Route path="/cookies" element={<CookiePolicy />} />
+                <Route path="/security" element={<SecurityTrust />} />
+                <Route path="/data-requests" element={<DataRequests />} />
                 <Route path="/admin" element={<Admin />} />
                 <Route path="/admin/showcase" element={<AdminShowcase />} />
                 <Route path="/admin/notifications" element={<AdminNotifications />} />
