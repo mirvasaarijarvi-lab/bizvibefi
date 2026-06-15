@@ -25,6 +25,10 @@ bun run dev
 
 ## Security
 
+Pre-release regression checklist: [`docs/SECURITY_CHECKLIST.md`](docs/SECURITY_CHECKLIST.md).
+
+
+
 Resolved findings from the latest scan are tracked here with the exact policy/trigger change. See migration `supabase/migrations/20260615075940_c43ef78b-b359-450d-9e3c-c0def9e55824.sql` for the authoritative SQL.
 
 ### 1. `event_presentations` — overly broad past-event metadata read (Fixed)
