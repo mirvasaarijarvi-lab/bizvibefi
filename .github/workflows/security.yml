@@ -100,6 +100,14 @@ jobs:
           echo "npm=$NPM_V"       >> "$GITHUB_OUTPUT"
           echo "gitleaks=$GITLEAKS_V" >> "$GITHUB_OUTPUT"
 
+      - name: Download db lint artifact
+        if: needs.supabase-db-lint.result == 'failure'
+        uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: supabase-db-lint
+          path: dblint-artifact
+
       - name: Build markdown summary
         id: md
         env:
@@ -126,6 +134,7 @@ jobs:
           GITLEAKS_ICON=$(icon "$GITLEAKS_RESULT")
           DBLINT_ICON=$(icon "$DBLINT_RESULT")
           RUN_URL="$SERVER/$REPO/actions/runs/$RUN_ID"
+          ARTIFACTS_URL="$RUN_URL#artifacts"
           ALERTS_URL="$SERVER/$REPO/security/code-scanning"
           SECRETS_URL="$SERVER/$REPO/security/secret-scanning"
           DEPS_URL="$SERVER/$REPO/security/dependabot"
@@ -139,16 +148,43 @@ jobs:
             echo "| --- | --- | --- | --- |"
             echo "| npm audit | npm $NPM_V (node $NODE_V) | high+ | $AUDIT_ICON |"
             echo "| Secret scan | $GITLEAKS_V | any non-allowlisted match | $GITLEAKS_ICON |"
-            echo "| Supabase db lint | supabase/setup-cli@v1 (latest) | error | $DBLINT_ICON |"
+            echo "| Supabase db lint | supabase/setup-cli@v1 (pinned) | error | $DBLINT_ICON |"
             echo "| CodeQL | GitHub default setup | Error / Security: High+ | see [Code scanning alerts]($ALERTS_URL) |"
             echo "| Lovable platform scans | agent_security, supabase_lov, Wiz (connector_security_scan) | actionable only | see project Security panel |"
             echo ""
+
+            if [ "$DBLINT_RESULT" = "failure" ]; then
+              echo "### :x: supabase db lint output"
+              echo ""
+              echo "Full artifact: [\`supabase-db-lint\`]($ARTIFACTS_URL) (lint.json + lint.txt, 14-day retention)."
+              echo ""
+              SRC=""
+              if [ -s dblint-artifact/lint.txt ]; then SRC=dblint-artifact/lint.txt
+              elif [ -s dblint-artifact/lint.json ]; then SRC=dblint-artifact/lint.json
+              fi
+              if [ -n "$SRC" ]; then
+                TOTAL=$(wc -l < "$SRC")
+                echo "<details><summary>Last 80 lines of \`$(basename "$SRC")\` ($TOTAL lines total)</summary>"
+                echo ""
+                echo '```'
+                tail -n 80 "$SRC"
+                echo '```'
+                echo ""
+                echo "</details>"
+              else
+                echo "_Artifact unavailable — open the run log for full output._"
+              fi
+              echo ""
+            fi
+
             echo "**Result links**"
             echo "- [Code scanning alerts]($ALERTS_URL)"
             echo "- [Secret scanning alerts]($SECRETS_URL)"
             echo "- [Dependabot alerts]($DEPS_URL)"
+            echo "- [Workflow artifacts]($ARTIFACTS_URL)"
             echo "- Lovable platform scans: open the project in Lovable → Security panel"
           } | tee "$GITHUB_STEP_SUMMARY" > summary.md
+
 
           {
             echo "body<<__EOF__"
@@ -236,8 +272,19 @@ jobs:
           set -o pipefail
           # JSON output so we can emit precise GitHub annotations per finding.
           supabase db lint --level error --linked=false --output json | tee lint.json
-          # Surface human-readable form too, useful when reading raw logs.
-          supabase db lint --level error --linked=false || true
+          # Human-readable form captured to a file for the summary/artifact.
+          supabase db lint --level error --linked=false 2>&1 | tee lint.txt || true
+
+      - name: Upload db lint output artifact
+        if: always() && hashFiles('lint.json') != ''
+        uses: actions/upload-artifact@v4
+        with:
+          name: supabase-db-lint
+          path: |
+            lint.json
+            lint.txt
+          retention-days: 14
+          if-no-files-found: ignore
 
       - name: Annotate findings
         if: always() && hashFiles('lint.json') != ''
