@@ -70,10 +70,11 @@ RETURNS void LANGUAGE plpgsql AS $$
 BEGIN
   BEGIN
     EXECUTE _sql;
+    RAISE NOTICE 'RLS-ASSERT|FAIL|expect_denied|%|statement was allowed but should have been denied', _msg;
     RAISE EXCEPTION 'FAIL: % — statement was allowed but should have been denied. SQL: %', _msg, _sql;
   EXCEPTION
     WHEN insufficient_privilege OR check_violation THEN
-      RAISE NOTICE 'OK denied: %', _msg;
+      RAISE NOTICE 'RLS-ASSERT|PASS|expect_denied|%|', _msg;
   END;
 END
 $$;
@@ -84,8 +85,9 @@ RETURNS void LANGUAGE plpgsql AS $$
 BEGIN
   BEGIN
     EXECUTE _sql;
-    RAISE NOTICE 'OK allowed: %', _msg;
+    RAISE NOTICE 'RLS-ASSERT|PASS|expect_allowed|%|', _msg;
   EXCEPTION WHEN OTHERS THEN
+    RAISE NOTICE 'RLS-ASSERT|FAIL|expect_allowed|%|% / %', _msg, SQLSTATE, SQLERRM;
     RAISE EXCEPTION 'FAIL: % — statement was denied (% / %). SQL: %',
       _msg, SQLSTATE, SQLERRM, _sql;
   END;
@@ -99,10 +101,11 @@ DECLARE v_actual bigint;
 BEGIN
   EXECUTE _sql INTO v_actual;
   IF v_actual IS DISTINCT FROM _expected THEN
+    RAISE NOTICE 'RLS-ASSERT|FAIL|expect_count|%|expected %, got %', _msg, _expected, v_actual;
     RAISE EXCEPTION 'FAIL: % — expected %, got %. SQL: %',
       _msg, _expected, v_actual, _sql;
   END IF;
-  RAISE NOTICE 'OK count(%) = %', _msg, _expected;
+  RAISE NOTICE 'RLS-ASSERT|PASS|expect_count|%|count=%', _msg, _expected;
 END
 $$;
 
