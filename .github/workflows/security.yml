@@ -86,7 +86,7 @@ jobs:
 
   summary:
     name: Security summary
-    needs: [npm-audit, gitleaks]
+    needs: [npm-audit, gitleaks, supabase-db-lint]
     if: always()
     runs-on: ubuntu-latest
     steps:
