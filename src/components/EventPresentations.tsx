@@ -11,6 +11,7 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import { FileText, Upload, Trash2, Download, Eye, Loader2 } from "lucide-react";
 import type { Tables } from "@/integrations/supabase/types";
+import { EventPresentationDownloadStats } from "@/components/DownloadStatsBadge";
 
 type Presentation = Tables<"event_presentations">;
 
