@@ -391,11 +391,14 @@ jobs:
           fi
           : > rls-tests.txt
           for f in $(ls supabase/tests/rls/*.sql | sort); do
+            base=$(basename "$f")
+            # Files starting with "_" are includes (e.g. _helpers.sql), not tests.
+            case "$base" in _*) echo "==> Skipping include $f" | tee -a rls-tests.txt; continue ;; esac
             echo "==> Running $f" | tee -a rls-tests.txt
-            if ! psql "$DB_URL" \
+            if ! (cd "$(dirname "$f")" && psql "$DB_URL" \
                   --set ON_ERROR_STOP=1 \
                   -v VERBOSITY=verbose \
-                  -f "$f" 2>&1 | tee -a rls-tests.txt; then
+                  -f "$base") 2>&1 | tee -a rls-tests.txt; then
               echo "::error file=${f},title=RLS regression failed::See rls-tests.txt artifact for the failing assertion."
               exit 1
             fi
