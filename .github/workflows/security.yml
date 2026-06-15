@@ -627,31 +627,8 @@ jobs:
               service_role)        EXPECT_WRITE_SQLSTATE="00000"; EXPECT_LABEL="RPCs ok, write ok" ;;
             esac
 
-            OUT=$(psql "$DB_URL" --set ON_ERROR_STOP=0 -At <<SQL
-              SET ROLE $ROLE;
-              -- Public RPCs: both must return at least one tuple without error.
-              SELECT 'rpc_leaderboard_ok=' || (SELECT count(*) >= 0
-                FROM public.get_badge_leaderboard());
-              SELECT 'rpc_rsvp_count_ok=' || (
-                SELECT public.get_event_rsvp_count(id) IS NOT NULL
-                FROM public.events LIMIT 1
-              );
-              -- Direct write probe on a privileged table.
-              DO \$\$
-              DECLARE v_badge uuid; v_user uuid := gen_random_uuid();
-              BEGIN
-                SELECT id INTO v_badge FROM public.badge_catalog LIMIT 1;
-                BEGIN
-                  INSERT INTO public.member_badges(user_id, badge_id)
-                  VALUES (v_user, v_badge);
-                  RAISE NOTICE 'write_sqlstate=00000';
-                EXCEPTION WHEN OTHERS THEN
-                  RAISE NOTICE 'write_sqlstate=%', SQLSTATE;
-                END;
-              END
-              \$\$;
-SQL
-            ) 2>&1
+            OUT=$(psql "$DB_URL" --set ON_ERROR_STOP=0 -v "role=$ROLE" \
+                  -f supabase/tests/rls/role_probe.sql 2>&1)
             echo "----- role=$ROLE -----"
             echo "$OUT"
 
