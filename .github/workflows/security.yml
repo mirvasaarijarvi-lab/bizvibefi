@@ -84,9 +84,49 @@ jobs:
           GITLEAKS_ENABLE_SUMMARY: "true"
 
 
+  lovable-platform-findings:
+    name: Lovable platform findings (connector + agent)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      # The Lovable Security panel can export the full scan as JSON. CI expects
+      # the latest export at `.security/lovable-report.json` — committed by the
+      # release author, or dropped in by a preceding job that fetches it. The
+      # baseline at `.security/lovable-baseline.json` captures findings that
+      # have been triaged (fixed or `ignore`d with rationale in @security-memory).
+      - name: Ensure report exists
+        id: report
+        run: |
+          if [ ! -s .security/lovable-report.json ]; then
+            echo "::error::Missing .security/lovable-report.json. Export from Lovable → Security panel and commit before release."
+            echo "present=false" >> "$GITHUB_OUTPUT"
+            exit 1
+          fi
+          echo "present=true" >> "$GITHUB_OUTPUT"
+
+      - name: Diff against baseline (fail on new findings)
+        run: node scripts/security/check-lovable-findings.cjs
+
+      - name: Upload full report + baseline
+        if: always() && steps.report.outputs.present == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: lovable-security-report
+          path: |
+            .security/lovable-report.json
+            .security/lovable-baseline.json
+          retention-days: 30
+          if-no-files-found: warn
+
   summary:
     name: Security summary
-    needs: [npm-audit, gitleaks, supabase-db-lint]
+    needs: [npm-audit, gitleaks, supabase-db-lint, lovable-platform-findings]
+
     if: always()
     runs-on: ubuntu-latest
     steps:
@@ -117,6 +157,7 @@ jobs:
           AUDIT_RESULT:    ${{ needs.npm-audit.result }}
           GITLEAKS_RESULT: ${{ needs.gitleaks.result }}
           DBLINT_RESULT:   ${{ needs.supabase-db-lint.result }}
+          LOVABLE_RESULT:  ${{ needs.lovable-platform-findings.result }}
           NODE_V:          ${{ steps.versions.outputs.node }}
           NPM_V:           ${{ steps.versions.outputs.npm }}
           GITLEAKS_V:      ${{ steps.versions.outputs.gitleaks }}
@@ -136,6 +177,8 @@ jobs:
           AUDIT_ICON=$(icon "$AUDIT_RESULT")
           GITLEAKS_ICON=$(icon "$GITLEAKS_RESULT")
           DBLINT_ICON=$(icon "$DBLINT_RESULT")
+          LOVABLE_ICON=$(icon "$LOVABLE_RESULT")
+
           RUN_URL="$SERVER/$REPO/actions/runs/$RUN_ID"
           ARTIFACTS_URL="$RUN_URL#artifacts"
           ALERTS_URL="$SERVER/$REPO/security/code-scanning"
@@ -153,7 +196,7 @@ jobs:
             echo "| Secret scan | $GITLEAKS_V | any non-allowlisted match | $GITLEAKS_ICON |"
             echo "| Supabase db lint | supabase/setup-cli@v1 (pinned) | error | $DBLINT_ICON |"
             echo "| CodeQL | GitHub default setup | Error / Security: High+ | see [Code scanning alerts]($ALERTS_URL) |"
-            echo "| Lovable platform scans | agent_security, supabase_lov, Wiz (connector_security_scan) | actionable only | see project Security panel |"
+            echo "| Lovable platform scans | connector_security_scan + agent_security (diff vs baseline) | any new finding | $LOVABLE_ICON |"
             echo ""
 
             if [ "$DBLINT_RESULT" = "failure" ]; then
