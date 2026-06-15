@@ -109,6 +109,51 @@ BEGIN
 END
 $$;
 
+-- Run `_sql` and assert it returns a single scalar equal to `_expected_text`
+-- (cast both sides to text so the helper works for bool / uuid / int / null).
+-- Use the literal string 'NULL' to assert the result is SQL NULL.
+CREATE OR REPLACE FUNCTION rls_test.expect_equals(_sql text, _expected_text text, _msg text)
+RETURNS void LANGUAGE plpgsql AS $$
+DECLARE v_actual text;
+BEGIN
+  EXECUTE _sql INTO v_actual;
+  IF (v_actual IS NULL AND _expected_text = 'NULL')
+     OR (v_actual IS NOT DISTINCT FROM _expected_text) THEN
+    RAISE NOTICE 'RLS-ASSERT|PASS|expect_equals|%|value=%', _msg, COALESCE(v_actual,'NULL');
+    RETURN;
+  END IF;
+  RAISE NOTICE 'RLS-ASSERT|FAIL|expect_equals|%|expected %, got %',
+    _msg, _expected_text, COALESCE(v_actual,'NULL');
+  RAISE EXCEPTION 'FAIL: % — expected %, got %. SQL: %',
+    _msg, _expected_text, COALESCE(v_actual,'NULL'), _sql;
+END
+$$;
+
+-- Run `_sql` and assert it raises a Postgres error with the given SQLSTATE
+-- (e.g. '42501' for insufficient_privilege). Useful to lock down *which*
+-- error path triggers, not just "anything failed".
+CREATE OR REPLACE FUNCTION rls_test.expect_sqlstate(_sql text, _sqlstate text, _msg text)
+RETURNS void LANGUAGE plpgsql AS $$
+BEGIN
+  BEGIN
+    EXECUTE _sql;
+    RAISE NOTICE 'RLS-ASSERT|FAIL|expect_sqlstate|%|statement succeeded; expected SQLSTATE %', _msg, _sqlstate;
+    RAISE EXCEPTION 'FAIL: % — statement succeeded; expected SQLSTATE %. SQL: %',
+      _msg, _sqlstate, _sql;
+  EXCEPTION WHEN OTHERS THEN
+    IF SQLSTATE = _sqlstate THEN
+      RAISE NOTICE 'RLS-ASSERT|PASS|expect_sqlstate|%|sqlstate=%', _msg, SQLSTATE;
+    ELSE
+      RAISE NOTICE 'RLS-ASSERT|FAIL|expect_sqlstate|%|expected %, got % (%s)',
+        _msg, _sqlstate, SQLSTATE, SQLERRM;
+      RAISE EXCEPTION 'FAIL: % — expected SQLSTATE %, got % (%). SQL: %',
+        _msg, _sqlstate, SQLSTATE, SQLERRM, _sql;
+    END IF;
+  END;
+END
+$$;
+
+
 -- ---- Fixtures (lazy, GUC-cached) ------------------------------------------
 -- Each fixture function returns the id and stores it in a transaction-local
 -- GUC so repeat calls inside the same test transaction reuse the same row.
