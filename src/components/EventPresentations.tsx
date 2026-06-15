@@ -11,6 +11,7 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import { FileText, Upload, Trash2, Download, Eye, Loader2 } from "lucide-react";
 import type { Tables } from "@/integrations/supabase/types";
+import { EventPresentationDownloadStats } from "@/components/DownloadStatsBadge";
 
 type Presentation = Tables<"event_presentations">;
 
@@ -319,6 +320,7 @@ export function EventPresentationsViewer({
                 {p.file_size && (
                   <p className="text-xs text-muted-foreground font-body">{formatSize(p.file_size)}</p>
                 )}
+                <EventPresentationDownloadStats eventId={eventId} presentationId={p.id} />
               </div>
               <Button
                 type="button"

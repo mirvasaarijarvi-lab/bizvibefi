@@ -18,6 +18,17 @@ import { useShowcaseItem, useShowcaseReviews, useCreateReview, type KeyFigure } 
 import FilePreview from "@/components/FilePreview";
 import { safeUrl } from "@/lib/safeUrl";
 import { useToast } from "@/hooks/use-toast";
+import { ShowcaseFileDownloadStats } from "@/components/DownloadStatsBadge";
+import { supabase } from "@/integrations/supabase/client";
+
+/** Fire-and-forget download log (never blocks the user). */
+const logShowcaseDownload = (itemId: string, fileUrl: string, fileName?: string) => {
+  void supabase.rpc("log_showcase_download", {
+    _item_id: itemId,
+    _file_url: fileUrl,
+    _file_name: fileName ?? null,
+  });
+};
 import {
   ArrowLeft, ExternalLink, Lightbulb, MessageSquare, Wrench, Star,
   Target, Zap, CheckCircle2, BarChart3, FileText, Download, Lock, BookOpen, Code, FlaskConical,
@@ -255,12 +266,21 @@ const ShowcaseDetail = () => {
                   const safe = safeUrl(f.url);
                   return hasViber ? (
                     safe ? (
-                      <Button key={i} size="lg" asChild className="shadow-lg">
-                        <a href={safe} target="_blank" rel="noopener noreferrer" download={f.name || undefined}>
-                          <Download className="mr-2 h-5 w-5" />
-                          {f.name || t("showcase.file.download")}
-                        </a>
-                      </Button>
+                      <div key={i} className="flex flex-col">
+                        <Button size="lg" asChild className="shadow-lg">
+                          <a
+                            href={safe}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            download={f.name || undefined}
+                            onClick={() => logShowcaseDownload(item.id, f.url, f.name)}
+                          >
+                            <Download className="mr-2 h-5 w-5" />
+                            {f.name || t("showcase.file.download")}
+                          </a>
+                        </Button>
+                        <ShowcaseFileDownloadStats itemId={item.id} fileUrl={f.url} />
+                      </div>
                     ) : null
                   ) : (
                     <Button key={i} size="lg" asChild variant="outline" className="shadow-sm">
@@ -413,12 +433,21 @@ const ShowcaseDetail = () => {
                       const safe = safeUrl(f.url);
                       return hasViber ? (
                         safe ? (
-                          <Button key={i} asChild size="lg" className="w-full shadow-lg">
-                            <a href={safe} target="_blank" rel="noopener noreferrer" download={f.name || undefined}>
-                              <Download className="mr-2 h-5 w-5" />
-                              {f.name || t("showcase.file.download")}
-                            </a>
-                          </Button>
+                          <div key={i} className="flex flex-col">
+                            <Button asChild size="lg" className="w-full shadow-lg">
+                              <a
+                                href={safe}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                download={f.name || undefined}
+                                onClick={() => logShowcaseDownload(item.id, f.url, f.name)}
+                              >
+                                <Download className="mr-2 h-5 w-5" />
+                                {f.name || t("showcase.file.download")}
+                              </a>
+                            </Button>
+                            <ShowcaseFileDownloadStats itemId={item.id} fileUrl={f.url} />
+                          </div>
                         ) : null
                       ) : (
                         <Button key={i} asChild size="lg" variant="outline" className="w-full">
