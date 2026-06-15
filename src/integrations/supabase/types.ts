@@ -1347,6 +1347,17 @@ export type Database = {
           user_id: string
         }[]
       }
+      get_event_feedback_public: {
+        Args: { _event_id: string }
+        Returns: {
+          comments: string
+          created_at: string
+          id: string
+          name: string
+          overall_rating: number
+          program_ratings: Json
+        }[]
+      }
       get_event_online_url: { Args: { _event_id: string }; Returns: string }
       get_event_rsvp_count: { Args: { _event_id: string }; Returns: number }
       get_membership_tier: {
