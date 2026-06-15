@@ -433,12 +433,21 @@ const ShowcaseDetail = () => {
                       const safe = safeUrl(f.url);
                       return hasViber ? (
                         safe ? (
-                          <Button key={i} asChild size="lg" className="w-full shadow-lg">
-                            <a href={safe} target="_blank" rel="noopener noreferrer" download={f.name || undefined}>
-                              <Download className="mr-2 h-5 w-5" />
-                              {f.name || t("showcase.file.download")}
-                            </a>
-                          </Button>
+                          <div key={i} className="flex flex-col">
+                            <Button asChild size="lg" className="w-full shadow-lg">
+                              <a
+                                href={safe}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                download={f.name || undefined}
+                                onClick={() => logShowcaseDownload(item.id, f.url, f.name)}
+                              >
+                                <Download className="mr-2 h-5 w-5" />
+                                {f.name || t("showcase.file.download")}
+                              </a>
+                            </Button>
+                            <ShowcaseFileDownloadStats itemId={item.id} fileUrl={f.url} />
+                          </div>
                         ) : null
                       ) : (
                         <Button key={i} asChild size="lg" variant="outline" className="w-full">
