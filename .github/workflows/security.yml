@@ -100,13 +100,16 @@ jobs:
           echo "npm=$NPM_V"       >> "$GITHUB_OUTPUT"
           echo "gitleaks=$GITLEAKS_V" >> "$GITHUB_OUTPUT"
 
-      - name: Download db lint artifact
+      - name: Download db lint artifacts
         if: needs.supabase-db-lint.result == 'failure'
         uses: actions/download-artifact@v4
         continue-on-error: true
         with:
-          name: supabase-db-lint
+          # Matrix produces one artifact per pg_major; merge them all under
+          # dblint-artifact/ for the summary tail step.
+          pattern: supabase-db-lint-pg*
           path: dblint-artifact
+          merge-multiple: true
 
       - name: Build markdown summary
         id: md
@@ -200,10 +203,23 @@ jobs:
           message: ${{ steps.md.outputs.body }}
 
   supabase-db-lint:
-    name: Supabase db lint (error)
+    # Matrixed across Postgres major versions supported by the Supabase CLI
+    # so a guest-access RLS regression specific to one PG release (e.g. a
+    # planner change that lets a SECURITY DEFINER body see a row it
+    # shouldn't, or a new system role grant) is caught before merge.
+    # `fail-fast: false` keeps every cell running even if one fails — a
+    # PG17-only break shouldn't hide a still-present PG15 break.
+    name: Supabase db lint + RLS (pg${{ matrix.pg_major }})
     # Heavy job (boots local Supabase stack) — only run on PRs and manual dispatch.
     if: github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        # Supabase CLI 1.226.4 ships images for these two majors. Add 16
+        # here once Supabase publishes an image for it; the rest of the
+        # job is version-agnostic.
+        pg_major: [15, 17]
     steps:
       - uses: actions/checkout@v4
 
@@ -213,19 +229,39 @@ jobs:
           # Pin to avoid transient "Gateway Time-out" from the latest-release resolver.
           version: 1.226.4
 
+      # ----- Pin Postgres major version for this matrix cell -----
+      # Supabase CLI reads `[db].major_version` from config.toml. The
+      # checked-in config does not set it (defaults to 15), so we inject
+      # it per-cell. Idempotent: replaces any existing value.
+      - name: Pin config.toml to pg${{ matrix.pg_major }}
+        run: |
+          if grep -qE '^\[db\]' supabase/config.toml; then
+            if grep -qE '^\s*major_version\s*=' supabase/config.toml; then
+              sed -i -E 's/^\s*major_version\s*=.*/major_version = ${{ matrix.pg_major }}/' supabase/config.toml
+            else
+              awk '1; /^\[db\]/ && !done { print "major_version = ${{ matrix.pg_major }}"; done=1 }' \
+                supabase/config.toml > supabase/config.toml.new
+              mv supabase/config.toml.new supabase/config.toml
+            fi
+          else
+            printf '\n[db]\nmajor_version = %s\n' "${{ matrix.pg_major }}" >> supabase/config.toml
+          fi
+          echo "----- config.toml after pin -----"
+          grep -A2 -E '^\[db\]' supabase/config.toml || true
+
       # ----- Cache Docker images for the local Supabase stack -----
       # `supabase start` pulls ~1 GB of images (postgres, kong, gotrue,
       # postgrest, realtime, storage). Caching the saved tarball cuts the
       # boot step from ~3 min to ~30 s on warm runs. Key on CLI version +
-      # config.toml so an image set is invalidated when either changes.
+      # pg-major + config.toml so a major-version flip rebuilds the cache.
       - name: Restore Supabase Docker image cache
         id: docker-cache
         uses: actions/cache@v4
         with:
           path: ~/.cache/supabase-docker-images.tar
-          key: supabase-docker-${{ runner.os }}-cli-1.226.4-${{ hashFiles('supabase/config.toml') }}
+          key: supabase-docker-${{ runner.os }}-cli-1.226.4-pg${{ matrix.pg_major }}-${{ hashFiles('supabase/config.toml') }}
           restore-keys: |
-            supabase-docker-${{ runner.os }}-cli-1.226.4-
+            supabase-docker-${{ runner.os }}-cli-1.226.4-pg${{ matrix.pg_major }}-
 
       - name: Load cached Docker images
         if: steps.docker-cache.outputs.cache-hit == 'true'
@@ -243,9 +279,9 @@ jobs:
           path: |
             ~/.supabase
             supabase/.temp
-          key: supabase-cli-state-${{ runner.os }}-${{ hashFiles('supabase/config.toml', 'supabase/migrations/**/*.sql') }}
+          key: supabase-cli-state-${{ runner.os }}-pg${{ matrix.pg_major }}-${{ hashFiles('supabase/config.toml', 'supabase/migrations/**/*.sql') }}
           restore-keys: |
-            supabase-cli-state-${{ runner.os }}-
+            supabase-cli-state-${{ runner.os }}-pg${{ matrix.pg_major }}-
 
       - name: Start local Supabase stack
         run: supabase start -x studio,inbucket,imgproxy,edge-runtime,logflare,vector,pgadmin-schema-diff,migra
@@ -364,7 +400,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: supabase-db-reset-diff
+          name: supabase-db-reset-diff-pg${{ matrix.pg_major }}
           path: |
             db-reset.txt
             db-diff.txt
@@ -395,7 +431,10 @@ jobs:
           for f in $(ls supabase/tests/rls/*.sql | sort); do
             base=$(basename "$f")
             # Files starting with "_" are includes (e.g. _helpers.sql), not tests.
-            case "$base" in _*) echo "==> Skipping include $f" | tee -a rls-tests.txt; continue ;; esac
+            # Skip includes (_helpers.sql) and the parameterized role probe
+            # (role_probe.sql) — the probe is invoked separately by the
+            # connection-role matrix step with `-v role=...`.
+            case "$base" in _*|role_probe.sql) echo "==> Skipping $f" | tee -a rls-tests.txt; continue ;; esac
             echo "==> Running $f" | tee -a rls-tests.txt
             (cd "$(dirname "$f")" && psql "$DB_URL" \
                   --set ON_ERROR_STOP=1 \
@@ -541,13 +580,81 @@ jobs:
         if: always() && hashFiles('rls-tests.txt') != ''
         uses: actions/upload-artifact@v4
         with:
-          name: supabase-rls-tests
+          name: supabase-rls-tests-pg${{ matrix.pg_major }}
           path: |
             rls-tests.txt
             rls-report.md
             rls-fixtures.md
+            rls-role-matrix.md
           retention-days: 14
           if-no-files-found: ignore
+
+      # ----- Connection-role matrix smoke -----
+      # The RLS tests above switch roles internally via SET LOCAL ROLE under
+      # a postgres-owned connection. This step re-runs the guest-facing
+      # surface (public RPCs + write attempts on PII tables) under real
+      # connection roles — anon, authenticated, service_role — so we catch
+      # GRANT-level regressions (e.g. someone accidentally revoking EXECUTE
+      # from anon on get_event_rsvp_count, or widening write privileges).
+      #
+      # Per-role expected behaviour:
+      #   anon, authenticated  → public RPCs OK, direct writes raise 42501
+      #   service_role         → public RPCs OK, direct writes also OK
+      #                          (service_role bypasses RLS by design)
+      - name: RLS smoke per connection role
+        if: hashFiles('supabase/tests/rls/*.sql') != ''
+        run: |
+          set +e
+          DB_URL=$(supabase status -o env 2>/dev/null | awk -F= '/^DB_URL=/{gsub(/"/,"",$2); print $2}')
+          if [ -z "$DB_URL" ]; then
+            echo "::error::Could not resolve local DB_URL from 'supabase status'."
+            exit 1
+          fi
+
+          {
+            echo "# RLS connection-role matrix (pg${{ matrix.pg_major }})"
+            echo
+            echo "Commit: \`${GITHUB_SHA:0:7}\` — run: $GITHUB_RUN_ID"
+            echo
+            echo "| Role | Public RPC (leaderboard) | Public RPC (RSVP count) | Direct write (event_signups) | Expected | Result |"
+            echo "| --- | --- | --- | --- | --- | --- |"
+          } > rls-role-matrix.md
+
+          FAILED=0
+          # event_signups guest INSERT path is intentionally open to anon,
+          # so we probe member_badges instead — that one MUST be denied for
+          # anon/authenticated and MUST succeed for service_role.
+          for ROLE in anon authenticated service_role; do
+            case "$ROLE" in
+              anon|authenticated) EXPECT_WRITE_SQLSTATE="42501"; EXPECT_LABEL="RPCs ok, write 42501" ;;
+              service_role)        EXPECT_WRITE_SQLSTATE="00000"; EXPECT_LABEL="RPCs ok, write ok" ;;
+            esac
+
+            OUT=$(psql "$DB_URL" --set ON_ERROR_STOP=0 -v "role=$ROLE" \
+                  -f supabase/tests/rls/role_probe.sql 2>&1)
+            echo "----- role=$ROLE -----"
+            echo "$OUT"
+
+            RPC_LB=$(echo "$OUT" | grep -Eo 'rpc_leaderboard_ok=(t|true)' | head -1)
+            RPC_RC=$(echo "$OUT" | grep -Eo 'rpc_rsvp_count_ok=(t|true)' | head -1)
+            WRITE_STATE=$(echo "$OUT" | grep -Eo 'write_sqlstate=[0-9A-Z]+' | tail -1 | cut -d= -f2)
+            WRITE_STATE=${WRITE_STATE:-unknown}
+
+            STATUS=":white_check_mark: pass"
+            if [ -z "$RPC_LB" ] || [ -z "$RPC_RC" ] || [ "$WRITE_STATE" != "$EXPECT_WRITE_SQLSTATE" ]; then
+              STATUS=":x: fail"
+              FAILED=$((FAILED+1))
+              echo "::error title=RLS role matrix failed (pg${{ matrix.pg_major }} / $ROLE)::leaderboard=${RPC_LB:-MISSING}, rsvp=${RPC_RC:-MISSING}, write=$WRITE_STATE (expected $EXPECT_WRITE_SQLSTATE)"
+            fi
+
+            echo "| \`$ROLE\` | ${RPC_LB:-MISSING} | ${RPC_RC:-MISSING} | \`$WRITE_STATE\` | $EXPECT_LABEL | $STATUS |" >> rls-role-matrix.md
+          done
+
+          echo "" >> rls-role-matrix.md
+          echo "_Failures: $FAILED_" >> rls-role-matrix.md
+          cat rls-role-matrix.md >> "$GITHUB_STEP_SUMMARY"
+
+          if [ "$FAILED" -gt 0 ]; then exit 1; fi
 
 
 
@@ -567,7 +674,7 @@ jobs:
         if: always() && hashFiles('lint.json') != ''
         uses: actions/upload-artifact@v4
         with:
-          name: supabase-db-lint
+          name: supabase-db-lint-pg${{ matrix.pg_major }}
           path: |
             lint.json
             lint.txt

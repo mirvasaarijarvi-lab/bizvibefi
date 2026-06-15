@@ -25,6 +25,14 @@
 
 CREATE SCHEMA IF NOT EXISTS rls_test;
 
+-- Make the helper schema reachable when the CI matrix runs tests under a
+-- non-superuser connection role (anon / authenticated / service_role).
+-- Functions are SECURITY INVOKER and only switch roles inside DO blocks
+-- using SET LOCAL ROLE, so granting EXECUTE here does not bypass RLS.
+GRANT USAGE ON SCHEMA rls_test TO anon, authenticated, service_role;
+ALTER DEFAULT PRIVILEGES IN SCHEMA rls_test
+  GRANT EXECUTE ON FUNCTIONS TO anon, authenticated, service_role;
+
 -- ---- Role switching --------------------------------------------------------
 
 CREATE OR REPLACE FUNCTION rls_test.as_anon() RETURNS void
@@ -356,3 +364,10 @@ BEGIN
   $q$);
 END
 $$;
+
+
+-- Re-grant EXECUTE on every function defined above so the matrix job can
+-- run the suite under anon / authenticated / service_role connection roles.
+-- (ALTER DEFAULT PRIVILEGES only covers objects created *after* the ALTER.)
+GRANT EXECUTE ON ALL FUNCTIONS IN SCHEMA rls_test
+  TO anon, authenticated, service_role;
