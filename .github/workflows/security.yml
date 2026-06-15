@@ -266,6 +266,56 @@ jobs:
           fi
 
 
+      # ----- Validate migrations + seed apply cleanly from scratch -----
+      # `supabase db reset` drops the local DB, replays every migration in
+      # supabase/migrations in order, then runs supabase/seed.sql. Any SQL
+      # error (bad migration, broken seed, missing GRANT, type mismatch)
+      # exits non-zero and fails the PR before lint even runs.
+      - name: Validate migrations + seed (supabase db reset)
+        id: dbreset
+        run: |
+          set -o pipefail
+          supabase db reset --linked=false 2>&1 | tee db-reset.txt
+
+      # ----- Detect schema drift -----
+      # After a clean reset, the local DB should exactly match the migration
+      # history. `supabase db diff` prints any delta between the live local
+      # schema and what the migrations describe. A non-empty diff means
+      # someone changed the DB without committing a matching migration (or
+      # a migration is incomplete) — fail the PR so the drift is caught in
+      # review.
+      - name: Check for schema drift (supabase db diff)
+        id: dbdiff
+        run: |
+          set -o pipefail
+          # --schema public keeps the check focused on app-owned objects and
+          # skips noise from auth/storage/realtime/etc. which we never own.
+          supabase db diff --schema public --linked=false 2>&1 | tee db-diff.txt
+          # CLI exits 0 even when a diff exists; treat any non-empty,
+          # non-"No schema changes found" output as drift. Strip ANSI colour
+          # codes first so they don't fool the emptiness check.
+          BODY=$(sed -r 's/\x1B\[[0-9;]*[A-Za-z]//g' db-diff.txt \
+                 | grep -vE '^\s*$|No schema changes found' || true)
+          if [ -n "$BODY" ]; then
+            echo "::error::Schema drift detected by 'supabase db diff' — commit a migration that captures these changes."
+            echo "::group::supabase db diff output"
+            cat db-diff.txt
+            echo "::endgroup::"
+            exit 1
+          fi
+          echo "No schema drift detected."
+
+      - name: Upload db reset/diff output artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: supabase-db-reset-diff
+          path: |
+            db-reset.txt
+            db-diff.txt
+          retention-days: 14
+          if-no-files-found: ignore
+
       - name: Run db lint (JSON, fail on error-level)
         id: dblint
         run: |
