@@ -177,8 +177,58 @@ jobs:
           # Pin to avoid transient "Gateway Time-out" from the latest-release resolver.
           version: 1.226.4
 
+      # ----- Cache Docker images for the local Supabase stack -----
+      # `supabase start` pulls ~1 GB of images (postgres, kong, gotrue,
+      # postgrest, realtime, storage). Caching the saved tarball cuts the
+      # boot step from ~3 min to ~30 s on warm runs. Key on CLI version +
+      # config.toml so an image set is invalidated when either changes.
+      - name: Restore Supabase Docker image cache
+        id: docker-cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/supabase-docker-images.tar
+          key: supabase-docker-${{ runner.os }}-cli-1.226.4-${{ hashFiles('supabase/config.toml') }}
+          restore-keys: |
+            supabase-docker-${{ runner.os }}-cli-1.226.4-
+
+      - name: Load cached Docker images
+        if: steps.docker-cache.outputs.cache-hit == 'true'
+        run: |
+          if [ -f ~/.cache/supabase-docker-images.tar ]; then
+            echo "Loading cached Supabase images..."
+            docker load -i ~/.cache/supabase-docker-images.tar
+            docker images | grep -E 'supabase|postgres' || true
+          fi
+
+      # Cache the CLI's own state dir (migration history, generated keys).
+      - name: Cache Supabase CLI state
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.supabase
+            supabase/.temp
+          key: supabase-cli-state-${{ runner.os }}-${{ hashFiles('supabase/config.toml', 'supabase/migrations/**/*.sql') }}
+          restore-keys: |
+            supabase-cli-state-${{ runner.os }}-
+
       - name: Start local Supabase stack
         run: supabase start -x studio,inbucket,imgproxy,edge-runtime,logflare,vector,pgadmin-schema-diff,migra
+
+      - name: Save Docker images to cache
+        if: steps.docker-cache.outputs.cache-hit != 'true'
+        run: |
+          mkdir -p ~/.cache
+          IMAGES=$(docker images --format '{{.Repository}}:{{.Tag}}' \
+            | grep -Ei 'supabase|postgres|kong|gotrue|postgrest|realtime|storage' \
+            | grep -v '<none>' || true)
+          if [ -n "$IMAGES" ]; then
+            echo "Saving images:"; echo "$IMAGES"
+            docker save $IMAGES -o ~/.cache/supabase-docker-images.tar
+            ls -lh ~/.cache/supabase-docker-images.tar
+          else
+            echo "No Supabase images found to cache."
+          fi
+
 
       - name: Run db lint (JSON, fail on error-level)
         id: dblint
