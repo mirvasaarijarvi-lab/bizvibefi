@@ -543,6 +543,7 @@ jobs:
           path: |
             rls-tests.txt
             rls-report.md
+            rls-fixtures.md
           retention-days: 14
           if-no-files-found: ignore
 
