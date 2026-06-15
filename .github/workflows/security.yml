@@ -159,3 +159,30 @@ jobs:
         with:
           header: security-status
           message: ${{ steps.md.outputs.body }}
+
+  supabase-db-lint:
+    name: Supabase db lint (error)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Supabase CLI
+        uses: supabase/setup-cli@v1
+        with:
+          version: latest
+
+      - name: Start local Supabase stack
+        run: supabase start -x studio,inbucket,imgproxy,edge-runtime,logflare,vector,pgadmin-schema-diff,migra
+
+      - name: Run db lint (fail on error-level)
+        run: |
+          set -o pipefail
+          supabase db lint --level error --linked=false | tee lint.out
+          if grep -E "^(error|level=error)" -q lint.out; then
+            echo "::error::supabase db lint reported error-level issues"
+            exit 1
+          fi
+
+      - name: Stop local Supabase stack
+        if: always()
+        run: supabase stop --no-backup || true
