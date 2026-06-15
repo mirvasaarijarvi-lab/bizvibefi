@@ -1,0 +1,70 @@
+name: Release candidate smoke
+
+# Runs the SECURITY_CHECKLIST.md smoke checks (SQLSTATE/GRANT assertions +
+# signed-URL Vitest suite) against a release candidate. Triggered:
+#   - Automatically when a GitHub Release is published as a prerelease (rc.*)
+#   - Manually via workflow_dispatch (pick any ref/tag)
+#
+# Required repository secrets:
+#   RC_SUPABASE_DB_URL              postgres connection string for the RC env
+#   RC_SUPABASE_URL                 https://<ref>.supabase.co
+#   RC_SUPABASE_ANON_KEY
+#   RC_SUPABASE_SERVICE_ROLE_KEY
+#   RC_SMOKE_TEST_USER_UUID         (optional) auth.users uuid for the
+#                                   authenticated-role cross-user assertion
+
+on:
+  release:
+    types: [prereleased]
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: "Tag or branch to smoke-test"
+        required: true
+        default: "main"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: rc-smoke-${{ github.event.release.tag_name || inputs.ref }}
+  cancel-in-progress: true
+
+jobs:
+  checklist-smoke:
+    name: SECURITY_CHECKLIST smoke
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.release.tag_name || inputs.ref }}
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Install psql client
+        run: sudo apt-get update && sudo apt-get install -y --no-install-recommends postgresql-client
+
+      - name: Run security checklist smoke
+        env:
+          SUPABASE_DB_URL:               ${{ secrets.RC_SUPABASE_DB_URL }}
+          SUPABASE_URL:                  ${{ secrets.RC_SUPABASE_URL }}
+          SUPABASE_ANON_KEY:             ${{ secrets.RC_SUPABASE_ANON_KEY }}
+          SUPABASE_SERVICE_ROLE_KEY:     ${{ secrets.RC_SUPABASE_SERVICE_ROLE_KEY }}
+          SMOKE_TEST_USER_UUID:          ${{ secrets.RC_SMOKE_TEST_USER_UUID }}
+          SIGNED_URL_TEST_USER_PASSWORD: ${{ secrets.RC_SIGNED_URL_TEST_USER_PASSWORD || 'Test!Pass-9001' }}
+        run: ./scripts/security/checklist-smoke.sh
+
+      - name: Upload smoke logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: security-smoke-logs
+          path: /tmp/security-smoke/
+          retention-days: 14
+          if-no-files-found: warn
