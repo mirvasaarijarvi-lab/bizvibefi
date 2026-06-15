@@ -381,35 +381,112 @@ jobs:
       # SELECT policy on event_signups, or accidental EXECUTE to anon on an
       # admin RPC) aborts the run and fails the PR.
       - name: Run RLS regression tests
+        id: rlstests
         if: hashFiles('supabase/tests/rls/*.sql') != ''
         run: |
-          set -o pipefail
+          set +e   # capture per-file failures so we can finish the report
           DB_URL=$(supabase status -o env 2>/dev/null | awk -F= '/^DB_URL=/{gsub(/"/,"",$2); print $2}')
           if [ -z "$DB_URL" ]; then
             echo "::error::Could not resolve local DB_URL from 'supabase status'."
             exit 1
           fi
           : > rls-tests.txt
+          FAILED_FILES=()
           for f in $(ls supabase/tests/rls/*.sql | sort); do
             base=$(basename "$f")
             # Files starting with "_" are includes (e.g. _helpers.sql), not tests.
             case "$base" in _*) echo "==> Skipping include $f" | tee -a rls-tests.txt; continue ;; esac
             echo "==> Running $f" | tee -a rls-tests.txt
-            if ! (cd "$(dirname "$f")" && psql "$DB_URL" \
+            (cd "$(dirname "$f")" && psql "$DB_URL" \
                   --set ON_ERROR_STOP=1 \
                   -v VERBOSITY=verbose \
-                  -f "$base") 2>&1 | tee -a rls-tests.txt; then
-              echo "::error file=${f},title=RLS regression failed::See rls-tests.txt artifact for the failing assertion."
-              exit 1
+                  -f "$base") >> rls-tests.txt 2>&1
+            rc=$?
+            if [ $rc -ne 0 ]; then
+              echo "==> FAILED $f (exit $rc)" | tee -a rls-tests.txt
+              FAILED_FILES+=("$f")
+              echo "::error file=${f},title=RLS regression failed::See rls-tests.txt and rls-report.md artifacts."
             fi
           done
+
+          # ----- Build markdown report from RLS-ASSERT|... tagged NOTICEs -----
+          # Lines look like:  NOTICE:  RLS-ASSERT|PASS|expect_denied|<msg>|<detail>
+          {
+            echo "# RLS regression report"
+            echo
+            echo "Commit: \`${GITHUB_SHA:0:7}\` — run: $GITHUB_RUN_ID"
+            echo
+          } > rls-report.md
+
+          CURRENT_FILE=""
+          TOTAL=0; PASS=0; FAIL=0
+
+          # Per-file tables
+          while IFS= read -r line; do
+            if [[ "$line" =~ ^==\>\ Running\ (.+)$ ]]; then
+              CURRENT_FILE="${BASH_REMATCH[1]}"
+              echo ""                                 >> rls-report.md
+              echo "## \`$CURRENT_FILE\`"             >> rls-report.md
+              echo ""                                 >> rls-report.md
+              echo "| Status | Kind | Assertion | Detail |" >> rls-report.md
+              echo "| --- | --- | --- | --- |"        >> rls-report.md
+              continue
+            fi
+            # Strip leading "NOTICE:  " (psql VERBOSITY=verbose may add CONTEXT lines)
+            stripped="${line#*RLS-ASSERT|}"
+            if [ "$stripped" != "$line" ]; then
+              IFS='|' read -r status kind msg detail <<< "$stripped"
+              TOTAL=$((TOTAL+1))
+              case "$status" in
+                PASS) PASS=$((PASS+1)); icon=":white_check_mark:" ;;
+                FAIL) FAIL=$((FAIL+1)); icon=":x:" ;;
+                *)    icon=":grey_question:" ;;
+              esac
+              # Escape pipes in user content so the table doesn't break.
+              msg_esc="${msg//|/\\|}"
+              detail_esc="${detail//|/\\|}"
+              echo "| $icon $status | $kind | $msg_esc | ${detail_esc:--} |" >> rls-report.md
+            fi
+          done < rls-tests.txt
+
+          # Top-level summary
+          {
+            echo ""
+            echo "## Summary"
+            echo ""
+            echo "| Metric | Value |"
+            echo "| --- | --- |"
+            echo "| Assertions total | $TOTAL |"
+            echo "| Passed | $PASS |"
+            echo "| Failed | $FAIL |"
+            echo "| Files with errors | ${#FAILED_FILES[@]} |"
+            if [ ${#FAILED_FILES[@]} -gt 0 ]; then
+              echo ""
+              echo "### Failed files"
+              for ff in "${FAILED_FILES[@]}"; do echo "- \`$ff\`"; done
+            fi
+          } >> rls-report.md
+
+          # Mirror into the GitHub Actions step summary for easy inline viewing.
+          cat rls-report.md >> "$GITHUB_STEP_SUMMARY"
+
+          echo "total=$TOTAL"   >> "$GITHUB_OUTPUT"
+          echo "passed=$PASS"   >> "$GITHUB_OUTPUT"
+          echo "failed=$FAIL"   >> "$GITHUB_OUTPUT"
+
+          # Exit non-zero if any file failed so the PR check fails.
+          if [ ${#FAILED_FILES[@]} -gt 0 ] || [ "$FAIL" -gt 0 ]; then
+            exit 1
+          fi
 
       - name: Upload RLS test output artifact
         if: always() && hashFiles('rls-tests.txt') != ''
         uses: actions/upload-artifact@v4
         with:
           name: supabase-rls-tests
-          path: rls-tests.txt
+          path: |
+            rls-tests.txt
+            rls-report.md
           retention-days: 14
           if-no-files-found: ignore
 
