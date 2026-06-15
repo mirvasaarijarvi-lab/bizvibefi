@@ -124,6 +124,7 @@ jobs:
 
           AUDIT_ICON=$(icon "$AUDIT_RESULT")
           GITLEAKS_ICON=$(icon "$GITLEAKS_RESULT")
+          DBLINT_ICON=$(icon "$DBLINT_RESULT")
           RUN_URL="$SERVER/$REPO/actions/runs/$RUN_ID"
           ALERTS_URL="$SERVER/$REPO/security/code-scanning"
           SECRETS_URL="$SERVER/$REPO/security/secret-scanning"
