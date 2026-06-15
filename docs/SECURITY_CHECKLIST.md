@@ -2,6 +2,83 @@
 
 Quick pre-release checks for RLS and signed-URL paths. Run through this before every deploy that touches policies, triggers, storage, or RPCs. Pair with `supabase/tests/rls/` and `bun run test`.
 
+## Expected SQLSTATEs at a glance
+
+| Code     | Name                       | Where it should come from                                                  |
+| -------- | -------------------------- | -------------------------------------------------------------------------- |
+| `42501`  | insufficient_privilege     | Missing `GRANT`, or RLS policy denies the row                              |
+| `42P01`  | undefined_table            | Table dropped/renamed but client still references it (catch in migrations) |
+| `23505`  | unique_violation           | Idempotency guard hit (e.g. duplicate `member_badges (user_id, badge_id)`) |
+| `P0001` (`raise_exception`) | Trigger guard fired (e.g. `prevent_showcase_status_escalation`, `protect_membership_fields`) |
+
+`42501` is the headline signal. If a guest path returns `00000` (no error) on a write you expect to block, the policy or grant is wrong.
+
+## 0. Connection-role assertions (run before every release)
+
+Run these three blocks via `psql` against the target environment, switching the `SET ROLE` line for each role. They cover the GRANT layer that policies cannot enforce on their own.
+
+```sql
+-- A. anon: tracked-public RPCs must succeed; tracked writes must raise 42501
+SET ROLE anon;
+SELECT public.get_badge_leaderboard() LIMIT 1;                  -- expect: rows, no error
+SELECT public.get_event_rsvp_count('00000000-0000-0000-0000-000000000000'); -- expect: 0
+DO $$ BEGIN
+  BEGIN
+    INSERT INTO public.event_feedback (event_id, overall_rating)
+    VALUES ('00000000-0000-0000-0000-000000000000', 5);
+    RAISE EXCEPTION 'expected 42501, got success';
+  EXCEPTION WHEN insufficient_privilege THEN NULL;              -- 42501 ✓
+  END;
+END $$;
+RESET ROLE;
+
+-- B. authenticated (non-admin): own-row writes succeed, cross-user writes 42501
+SET ROLE authenticated;
+SET LOCAL request.jwt.claim.sub = '<test-user-uuid>';
+SELECT public.get_badge_leaderboard() LIMIT 1;                  -- expect: rows
+DO $$ BEGIN
+  BEGIN
+    INSERT INTO public.member_badges (user_id, badge_id)
+    VALUES ('<other-user-uuid>', '<some-badge-uuid>');
+    RAISE EXCEPTION 'expected 42501, got success';
+  EXCEPTION WHEN insufficient_privilege THEN NULL;              -- 42501 ✓
+  END;
+END $$;
+RESET ROLE;
+
+-- C. service_role: privileged writes succeed (no RLS, full GRANT)
+SET ROLE service_role;
+SELECT has_table_privilege('service_role', 'public.event_feedback', 'INSERT');  -- expect: true
+SELECT has_table_privilege('service_role', 'public.member_badges',  'DELETE');  -- expect: true
+SELECT has_table_privilege('service_role', 'public.event_rsvps',    'UPDATE');  -- expect: true
+RESET ROLE;
+```
+
+GRANT-only spot checks (run as superuser, no `SET ROLE` needed):
+
+```sql
+-- Every new public table must show explicit grants for the roles its policies target.
+SELECT grantee, privilege_type
+FROM information_schema.role_table_grants
+WHERE table_schema = 'public' AND table_name = '<new_table>'
+  AND grantee IN ('anon','authenticated','service_role')
+ORDER BY grantee, privilege_type;
+-- Expect:
+--   service_role → SELECT, INSERT, UPDATE, DELETE (always)
+--   authenticated → matches policy intent
+--   anon → ONLY if a policy explicitly allows anon reads
+
+-- Public RPCs must be EXECUTE-able by guests.
+SELECT has_function_privilege('anon',         'public.get_badge_leaderboard()',                   'EXECUTE'), -- true
+       has_function_privilege('authenticated','public.get_event_rsvp_count(uuid)',                'EXECUTE'), -- true
+       has_function_privilege('anon',         'public.get_event_feedback_public(uuid)',           'EXECUTE'); -- true
+
+-- Admin-only RPCs must NOT be EXECUTE-able by anon.
+SELECT has_function_privilege('anon', 'public.get_presentation_access_audit()', 'EXECUTE');       -- expect: false
+```
+
+
+
 ## 1. RLS posture (per touched table)
 
 - [ ] `ALTER TABLE ... ENABLE ROW LEVEL SECURITY` is on every new/changed public table (check `supabase--linter`).
