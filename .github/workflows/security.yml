@@ -177,14 +177,78 @@ jobs:
       - name: Start local Supabase stack
         run: supabase start -x studio,inbucket,imgproxy,edge-runtime,logflare,vector,pgadmin-schema-diff,migra
 
-      - name: Run db lint (fail on error-level)
+      - name: Run db lint (JSON, fail on error-level)
+        id: dblint
         run: |
           set -o pipefail
-          supabase db lint --level error --linked=false | tee lint.out
-          if grep -E "^(error|level=error)" -q lint.out; then
-            echo "::error::supabase db lint reported error-level issues"
+          # JSON output so we can emit precise GitHub annotations per finding.
+          supabase db lint --level error --linked=false --output json | tee lint.json
+          # Surface human-readable form too, useful when reading raw logs.
+          supabase db lint --level error --linked=false || true
+
+      - name: Annotate findings
+        if: always() && hashFiles('lint.json') != ''
+        run: |
+          # supabase db lint JSON shape (per schema):
+          # [ { "level": "...",
+          #     "lints": [ { "name", "level", "message", "detail", "function",
+          #                   "statement_position", "cache_key" }, ... ] }, ... ]
+          # Annotations need a file path. lint findings reference database
+          # objects, not files, so we best-effort map an object name back to
+          # the migration that last defines it via grep.
+          if ! command -v jq >/dev/null; then sudo apt-get update -y && sudo apt-get install -y jq; fi
+
+          ERRORS=0
+          # Flatten: one line per finding => "level<TAB>name<TAB>function<TAB>message"
+          jq -r '
+            (if type=="array" then . else [.] end)
+            | map(.lints // [])
+            | add // []
+            | .[]
+            | [ (.level // "error"),
+                (.name // ""),
+                (.function // .relation // .object // ""),
+                ((.message // "") + (if .detail then " — " + .detail else "" end))
+              ] | @tsv
+          ' lint.json > findings.tsv || true
+
+          while IFS=$'\t' read -r level name fn msg; do
+            [ -z "$level" ] && continue
+            # Map gh annotation level
+            case "$level" in
+              error)   gh_lvl="error" ;;
+              warning) gh_lvl="warning" ;;
+              *)       gh_lvl="notice" ;;
+            esac
+
+            file=""; line=""
+            if [ -n "$fn" ]; then
+              # Find the migration that mentions this object (function / table / policy).
+              match=$(grep -RInE "\b${fn}\b" supabase/migrations 2>/dev/null | head -n1 || true)
+              if [ -n "$match" ]; then
+                file=$(echo "$match" | cut -d: -f1)
+                line=$(echo "$match" | cut -d: -f2)
+              fi
+            fi
+
+            title="supabase db lint: ${name:-finding}${fn:+ ($fn)}"
+            esc_msg=$(printf '%s' "$msg" | tr '\n' ' ' | sed 's/::/:\\:/g')
+
+            if [ -n "$file" ] && [ -n "$line" ]; then
+              echo "::${gh_lvl} file=${file},line=${line},title=${title}::${esc_msg}"
+            else
+              echo "::${gh_lvl} title=${title}::${esc_msg}"
+            fi
+
+            if [ "$level" = "error" ]; then ERRORS=$((ERRORS+1)); fi
+          done < findings.tsv
+
+          echo "error_count=$ERRORS" >> "$GITHUB_OUTPUT"
+          if [ "$ERRORS" -gt 0 ]; then
+            echo "::error::supabase db lint reported $ERRORS error-level finding(s)"
             exit 1
           fi
+
 
       - name: Stop local Supabase stack
         if: always()
