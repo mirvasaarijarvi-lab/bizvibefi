@@ -27,6 +27,8 @@ bun run dev
 
 Pre-release regression checklist: [`docs/SECURITY_CHECKLIST.md`](docs/SECURITY_CHECKLIST.md).
 
+CI runs `npm audit`, `gitleaks`, `supabase db lint`, and a Lovable platform scan diff (`connector_security_scan` + `agent_security`) that fails the build on any new finding vs `.security/lovable-baseline.json`. The full report is uploaded as the `lovable-security-report` artifact on every run. After triaging a finding in Lovable (fix or ignore with rationale in `@security-memory`), refresh the baseline by replacing `.security/lovable-baseline.json` with the new export and commit.
+
 
 
 Resolved findings from the latest scan are tracked here with the exact policy/trigger change. See migration `supabase/migrations/20260615075940_c43ef78b-b359-450d-9e3c-c0def9e55824.sql` for the authoritative SQL.
