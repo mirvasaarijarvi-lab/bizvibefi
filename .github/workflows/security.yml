@@ -84,9 +84,49 @@ jobs:
           GITLEAKS_ENABLE_SUMMARY: "true"
 
 
+  lovable-platform-findings:
+    name: Lovable platform findings (connector + agent)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      # The Lovable Security panel can export the full scan as JSON. CI expects
+      # the latest export at `.security/lovable-report.json` — committed by the
+      # release author, or dropped in by a preceding job that fetches it. The
+      # baseline at `.security/lovable-baseline.json` captures findings that
+      # have been triaged (fixed or `ignore`d with rationale in @security-memory).
+      - name: Ensure report exists
+        id: report
+        run: |
+          if [ ! -s .security/lovable-report.json ]; then
+            echo "::error::Missing .security/lovable-report.json. Export from Lovable → Security panel and commit before release."
+            echo "present=false" >> "$GITHUB_OUTPUT"
+            exit 1
+          fi
+          echo "present=true" >> "$GITHUB_OUTPUT"
+
+      - name: Diff against baseline (fail on new findings)
+        run: node scripts/security/check-lovable-findings.cjs
+
+      - name: Upload full report + baseline
+        if: always() && steps.report.outputs.present == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: lovable-security-report
+          path: |
+            .security/lovable-report.json
+            .security/lovable-baseline.json
+          retention-days: 30
+          if-no-files-found: warn
+
   summary:
     name: Security summary
-    needs: [npm-audit, gitleaks, supabase-db-lint]
+    needs: [npm-audit, gitleaks, supabase-db-lint, lovable-platform-findings]
+
     if: always()
     runs-on: ubuntu-latest
     steps:
