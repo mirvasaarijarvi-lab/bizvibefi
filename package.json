@@ -11,7 +11,8 @@
     "db:lint": "npx -y supabase@latest db lint --level warning",
     "preview": "vite preview",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "test:signed-urls": "vitest run --config vitest.signed-urls.config.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
