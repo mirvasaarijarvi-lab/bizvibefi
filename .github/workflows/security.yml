@@ -196,7 +196,7 @@ jobs:
             echo "| Secret scan | $GITLEAKS_V | any non-allowlisted match | $GITLEAKS_ICON |"
             echo "| Supabase db lint | supabase/setup-cli@v1 (pinned) | error | $DBLINT_ICON |"
             echo "| CodeQL | GitHub default setup | Error / Security: High+ | see [Code scanning alerts]($ALERTS_URL) |"
-            echo "| Lovable platform scans | agent_security, supabase_lov, Wiz (connector_security_scan) | actionable only | see project Security panel |"
+            echo "| Lovable platform scans | connector_security_scan + agent_security (diff vs baseline) | any new finding | $LOVABLE_ICON |"
             echo ""
 
             if [ "$DBLINT_RESULT" = "failure" ]; then
