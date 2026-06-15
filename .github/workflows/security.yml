@@ -86,7 +86,7 @@ jobs:
 
   summary:
     name: Security summary
-    needs: [npm-audit, gitleaks]
+    needs: [npm-audit, gitleaks, supabase-db-lint]
     if: always()
     runs-on: ubuntu-latest
     steps:
@@ -105,6 +105,7 @@ jobs:
         env:
           AUDIT_RESULT:    ${{ needs.npm-audit.result }}
           GITLEAKS_RESULT: ${{ needs.gitleaks.result }}
+          DBLINT_RESULT:   ${{ needs.supabase-db-lint.result }}
           NODE_V:          ${{ steps.versions.outputs.node }}
           NPM_V:           ${{ steps.versions.outputs.npm }}
           GITLEAKS_V:      ${{ steps.versions.outputs.gitleaks }}
@@ -123,6 +124,7 @@ jobs:
 
           AUDIT_ICON=$(icon "$AUDIT_RESULT")
           GITLEAKS_ICON=$(icon "$GITLEAKS_RESULT")
+          DBLINT_ICON=$(icon "$DBLINT_RESULT")
           RUN_URL="$SERVER/$REPO/actions/runs/$RUN_ID"
           ALERTS_URL="$SERVER/$REPO/security/code-scanning"
           SECRETS_URL="$SERVER/$REPO/security/secret-scanning"
@@ -137,6 +139,7 @@ jobs:
             echo "| --- | --- | --- | --- |"
             echo "| npm audit | npm $NPM_V (node $NODE_V) | high+ | $AUDIT_ICON |"
             echo "| Secret scan | $GITLEAKS_V | any non-allowlisted match | $GITLEAKS_ICON |"
+            echo "| Supabase db lint | supabase/setup-cli@v1 (latest) | error | $DBLINT_ICON |"
             echo "| CodeQL | GitHub default setup | Error / Security: High+ | see [Code scanning alerts]($ALERTS_URL) |"
             echo "| Lovable platform scans | agent_security, supabase_lov, Wiz (connector_security_scan) | actionable only | see project Security panel |"
             echo ""
@@ -159,3 +162,30 @@ jobs:
         with:
           header: security-status
           message: ${{ steps.md.outputs.body }}
+
+  supabase-db-lint:
+    name: Supabase db lint (error)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Supabase CLI
+        uses: supabase/setup-cli@v1
+        with:
+          version: latest
+
+      - name: Start local Supabase stack
+        run: supabase start -x studio,inbucket,imgproxy,edge-runtime,logflare,vector,pgadmin-schema-diff,migra
+
+      - name: Run db lint (fail on error-level)
+        run: |
+          set -o pipefail
+          supabase db lint --level error --linked=false | tee lint.out
+          if grep -E "^(error|level=error)" -q lint.out; then
+            echo "::error::supabase db lint reported error-level issues"
+            exit 1
+          fi
+
+      - name: Stop local Supabase stack
+        if: always()
+        run: supabase stop --no-backup || true
