@@ -431,7 +431,10 @@ jobs:
           for f in $(ls supabase/tests/rls/*.sql | sort); do
             base=$(basename "$f")
             # Files starting with "_" are includes (e.g. _helpers.sql), not tests.
-            case "$base" in _*) echo "==> Skipping include $f" | tee -a rls-tests.txt; continue ;; esac
+            # Skip includes (_helpers.sql) and the parameterized role probe
+            # (role_probe.sql) — the probe is invoked separately by the
+            # connection-role matrix step with `-v role=...`.
+            case "$base" in _*|role_probe.sql) echo "==> Skipping $f" | tee -a rls-tests.txt; continue ;; esac
             echo "==> Running $f" | tee -a rls-tests.txt
             (cd "$(dirname "$f")" && psql "$DB_URL" \
                   --set ON_ERROR_STOP=1 \
