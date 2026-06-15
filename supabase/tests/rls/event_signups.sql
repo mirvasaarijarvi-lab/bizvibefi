@@ -16,6 +16,16 @@ BEGIN
   INSERT INTO public.event_signups (event_id, full_name, email, phone, company)
   VALUES (v_open, 'PII Probe', 'pii-probe@example.com', '+358000000', 'Probe Oy');
 
+  -- Snapshot the rows this file is asserting against so a mismatch in CI
+  -- ("expected 0, got 1") is debuggable from the rls-fixtures.md artifact
+  -- without re-running the suite locally.
+  PERFORM rls_test.snapshot_fixtures();
+  PERFORM rls_test.snapshot('event_signups.seeded', $q$
+    SELECT id, event_id, full_name, email FROM public.event_signups
+    WHERE email = 'pii-probe@example.com'
+  $q$);
+
+
   -- anon: zero rows visible
   PERFORM rls_test.as_anon();
   PERFORM rls_test.expect_count(
