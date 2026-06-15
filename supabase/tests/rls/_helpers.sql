@@ -290,3 +290,69 @@ CREATE OR REPLACE FUNCTION rls_test.fx_user() RETURNS uuid
 LANGUAGE plpgsql AS $$
 BEGIN RETURN gen_random_uuid(); END
 $$;
+
+
+-- ---- Fixture snapshots ----------------------------------------------------
+-- Emit the actual seeded rows a test relied on, so when CI says
+-- "expected 3, got 2" you can immediately see which fixture row went
+-- missing without re-running the suite locally. Every row is emitted as
+-- a single tagged NOTICE the workflow harvests into `rls-fixtures.md`:
+--
+--   RLS-FIXTURE|<label>|<row_json>
+--   RLS-FIXTURE-COUNT|<label>|<n>
+--
+-- Use rls_test.snapshot('label', $$ SELECT ... $$) for arbitrary
+-- projections, or rls_test.snapshot_fixtures() for the cached fixtures
+-- plus row counts on the tables tests usually assert against.
+
+CREATE OR REPLACE FUNCTION rls_test.snapshot(_label text, _sql text)
+RETURNS void LANGUAGE plpgsql AS $$
+DECLARE
+  rec   record;
+  n     int := 0;
+  saved text;
+BEGIN
+  -- Snapshot as table owner so it reflects ground truth, not what the
+  -- current test role can see through RLS.
+  saved := current_setting('role', true);
+  RESET ROLE;
+  FOR rec IN EXECUTE 'SELECT row_to_json(t)::text AS j FROM (' || _sql || ') t' LOOP
+    n := n + 1;
+    RAISE NOTICE 'RLS-FIXTURE|%|%', _label, rec.j;
+  END LOOP;
+  IF n = 0 THEN
+    RAISE NOTICE 'RLS-FIXTURE|%|{"_empty":true}', _label;
+  END IF;
+  RAISE NOTICE 'RLS-FIXTURE-COUNT|%|%', _label, n;
+  IF saved IS NOT NULL AND saved <> '' AND saved <> 'none' THEN
+    EXECUTE 'SET LOCAL ROLE ' || quote_ident(saved);
+  END IF;
+END
+$$;
+
+-- Compact snapshot of cached fixture ids + row counts on tables RLS tests
+-- touch most often. Call once per test file after fixtures are materialised.
+CREATE OR REPLACE FUNCTION rls_test.snapshot_fixtures() RETURNS void
+LANGUAGE plpgsql AS $$
+BEGIN
+  PERFORM rls_test.snapshot('cached_ids', $q$
+    SELECT
+      rls_test._cached('event_open')    AS event_open,
+      rls_test._cached('event_locked')  AS event_locked,
+      rls_test._cached('event_past')    AS event_past,
+      rls_test._cached('showcase_item') AS showcase_item
+  $q$);
+
+  PERFORM rls_test.snapshot('row_counts', $q$
+    SELECT
+      (SELECT count(*) FROM public.events)                  AS events,
+      (SELECT count(*) FROM public.event_rsvps)             AS event_rsvps,
+      (SELECT count(*) FROM public.event_signups)           AS event_signups,
+      (SELECT count(*) FROM public.event_feedback)          AS event_feedback,
+      (SELECT count(*) FROM public.showcase_items)          AS showcase_items,
+      (SELECT count(*) FROM public.showcase_file_downloads) AS showcase_downloads,
+      (SELECT count(*) FROM public.member_badges)           AS member_badges,
+      (SELECT count(*) FROM public.badge_catalog)           AS badge_catalog
+  $q$);
+END
+$$;

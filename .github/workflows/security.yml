@@ -449,6 +449,62 @@ jobs:
             fi
           done < rls-tests.txt
 
+          # ----- Build fixture snapshot report -----
+          # Lines look like:
+          #   NOTICE:  RLS-FIXTURE|<label>|<row_json>
+          #   NOTICE:  RLS-FIXTURE-COUNT|<label>|<n>
+          # Grouped per test file so a "count off by one" failure shows the
+          # exact rows that were seeded for that file's transaction.
+          {
+            echo "# RLS fixture snapshot"
+            echo
+            echo "Commit: \`${GITHUB_SHA:0:7}\` — run: $GITHUB_RUN_ID"
+            echo
+            echo "One entry per \`snapshot()\` / \`snapshot_fixtures()\` call, captured as table owner (RLS bypassed) so it reflects ground truth."
+          } > rls-fixtures.md
+
+          CURRENT_FILE=""
+          FX_TOTAL_ROWS=0
+          FX_GROUPS=0
+          while IFS= read -r line; do
+            if [[ "$line" =~ ^==\>\ Running\ (.+)$ ]]; then
+              CURRENT_FILE="${BASH_REMATCH[1]}"
+              echo ""                                  >> rls-fixtures.md
+              echo "## \`$CURRENT_FILE\`"              >> rls-fixtures.md
+              continue
+            fi
+            stripped="${line#*RLS-FIXTURE-COUNT|}"
+            if [ "$stripped" != "$line" ]; then
+              IFS='|' read -r label n <<< "$stripped"
+              echo ""                                  >> rls-fixtures.md
+              echo "_\`$label\`: $n row(s)_"           >> rls-fixtures.md
+              FX_GROUPS=$((FX_GROUPS+1))
+              FX_TOTAL_ROWS=$((FX_TOTAL_ROWS + n))
+              continue
+            fi
+            stripped="${line#*RLS-FIXTURE|}"
+            if [ "$stripped" != "$line" ]; then
+              IFS='|' read -r label payload <<< "$stripped"
+              # Render each row as a fenced JSON block under its label.
+              echo ""                                  >> rls-fixtures.md
+              echo "**$label**"                        >> rls-fixtures.md
+              echo '```json'                           >> rls-fixtures.md
+              echo "$payload"                          >> rls-fixtures.md
+              echo '```'                               >> rls-fixtures.md
+            fi
+          done < rls-tests.txt
+
+          {
+            echo ""
+            echo "## Snapshot summary"
+            echo ""
+            echo "| Metric | Value |"
+            echo "| --- | --- |"
+            echo "| Snapshot groups | $FX_GROUPS |"
+            echo "| Total rows captured | $FX_TOTAL_ROWS |"
+          } >> rls-fixtures.md
+
+
           # Top-level summary
           {
             echo ""
@@ -468,7 +524,9 @@ jobs:
           } >> rls-report.md
 
           # Mirror into the GitHub Actions step summary for easy inline viewing.
-          cat rls-report.md >> "$GITHUB_STEP_SUMMARY"
+          cat rls-report.md   >> "$GITHUB_STEP_SUMMARY"
+          echo ""             >> "$GITHUB_STEP_SUMMARY"
+          cat rls-fixtures.md >> "$GITHUB_STEP_SUMMARY"
 
           echo "total=$TOTAL"   >> "$GITHUB_OUTPUT"
           echo "passed=$PASS"   >> "$GITHUB_OUTPUT"
@@ -487,6 +545,7 @@ jobs:
           path: |
             rls-tests.txt
             rls-report.md
+            rls-fixtures.md
           retention-days: 14
           if-no-files-found: ignore
 
