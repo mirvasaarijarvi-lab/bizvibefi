@@ -34,7 +34,7 @@ jobs:
     name: npm audit (high+)
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - uses: actions/setup-node@v4
         with:
@@ -67,7 +67,7 @@ jobs:
     name: Secret scan (gitleaks)
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0
 
@@ -88,7 +88,7 @@ jobs:
     name: Lovable platform findings (connector + agent)
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - uses: actions/setup-node@v4
         with:
@@ -269,7 +269,7 @@ jobs:
         # job is version-agnostic.
         pg_major: [15, 17]
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Install Supabase CLI
         uses: supabase/setup-cli@v1
