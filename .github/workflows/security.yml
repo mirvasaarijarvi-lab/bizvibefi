@@ -524,7 +524,9 @@ jobs:
           } >> rls-report.md
 
           # Mirror into the GitHub Actions step summary for easy inline viewing.
-          cat rls-report.md >> "$GITHUB_STEP_SUMMARY"
+          cat rls-report.md   >> "$GITHUB_STEP_SUMMARY"
+          echo ""             >> "$GITHUB_STEP_SUMMARY"
+          cat rls-fixtures.md >> "$GITHUB_STEP_SUMMARY"
 
           echo "total=$TOTAL"   >> "$GITHUB_OUTPUT"
           echo "passed=$PASS"   >> "$GITHUB_OUTPUT"
