@@ -268,14 +268,47 @@ jobs:
 
       # ----- Validate migrations + seed apply cleanly from scratch -----
       # `supabase db reset` drops the local DB, replays every migration in
-      # supabase/migrations in order, then runs supabase/seed.sql. Any SQL
-      # error (bad migration, broken seed, missing GRANT, type mismatch)
-      # exits non-zero and fails the PR before lint even runs.
+      # supabase/migrations in order, then auto-runs supabase/seed.sql (if
+      # present). With `set -o pipefail` + `tee`, any non-zero exit from the
+      # CLI (failed migration, broken seed, missing GRANT, type mismatch)
+      # propagates out of the pipeline and fails the PR.
       - name: Validate migrations + seed (supabase db reset)
         id: dbreset
         run: |
           set -o pipefail
-          supabase db reset --linked=false 2>&1 | tee db-reset.txt
+          if ! supabase db reset --linked=false 2>&1 | tee db-reset.txt; then
+            echo "::error title=supabase db reset failed::Migrations or seed.sql raised a SQL error during reset. See db-reset.txt artifact and the log above."
+            exit 1
+          fi
+
+      # ----- Run any extra seed scripts under supabase/seeds/ -----
+      # `supabase db reset` only runs the single supabase/seed.sql file.
+      # If the project keeps additional ordered seed scripts in
+      # supabase/seeds/*.sql, replay them through psql with ON_ERROR_STOP=1
+      # so the first SQL error aborts and fails the PR.
+      - name: Run extra seed scripts (fail-fast on SQL error)
+        if: hashFiles('supabase/seeds/*.sql') != ''
+        run: |
+          set -o pipefail
+          DB_URL=$(supabase status -o env 2>/dev/null | awk -F= '/^DB_URL=/{gsub(/"/,"",$2); print $2}')
+          if [ -z "$DB_URL" ]; then
+            echo "::error::Could not resolve local DB_URL from 'supabase status'."
+            exit 1
+          fi
+          : > seed-run.txt
+          for f in $(ls supabase/seeds/*.sql | sort); do
+            echo "==> Applying $f" | tee -a seed-run.txt
+            if ! psql "$DB_URL" \
+                  --set ON_ERROR_STOP=1 \
+                  --single-transaction \
+                  -v VERBOSITY=verbose \
+                  -f "$f" 2>&1 | tee -a seed-run.txt; then
+              echo "::error file=${f},title=Seed script failed::SQL error while applying ${f}. See seed-run.txt artifact."
+              exit 1
+            fi
+          done
+
+
 
       # ----- Detect schema drift -----
       # After a clean reset, the local DB should exactly match the migration
