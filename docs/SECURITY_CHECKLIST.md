@@ -2,6 +2,91 @@
 
 Quick pre-release checks for RLS and signed-URL paths. Run through this before every deploy that touches policies, triggers, storage, or RPCs. Pair with `supabase/tests/rls/` and `bun run test`.
 
+## What changed since the last release
+
+Run this first — it tells you which sections below actually need re-verification.
+
+### Pick the release range
+
+```bash
+# Last published release tag (adjust the prefix to match your tag scheme).
+LAST=$(git describe --tags --abbrev=0 --match 'v*' 2>/dev/null || echo "main~50")
+HEAD_REF=HEAD
+echo "Comparing $LAST..$HEAD_REF"
+```
+
+### 1. Migrations touched
+
+```bash
+git diff --name-only "$LAST..$HEAD_REF" -- supabase/migrations/
+```
+
+If nothing prints, sections 1 (RLS) and 2 (RPC) can usually be skipped — re-run only the automated gate in section 6 to be safe.
+
+### 2. Policies / triggers / functions added or changed
+
+```bash
+git diff "$LAST..$HEAD_REF" -- supabase/migrations/ \
+  | grep -iE '^\+.*(CREATE|DROP|ALTER)[[:space:]]+(POLICY|TRIGGER|FUNCTION)' \
+  | sed 's/^+//' | sort -u
+```
+
+For each line, locate the owning table or function and re-verify:
+
+| If you see…                                | Re-verify section                                    |
+| ------------------------------------------ | ---------------------------------------------------- |
+| `CREATE POLICY` / `DROP POLICY`            | §0 (GRANT + SQLSTATE), §1 (RLS posture), §6          |
+| `CREATE TRIGGER` / `ALTER TRIGGER`         | §1 (privileged-column guard), §7 (preview smoke)     |
+| `CREATE FUNCTION ... SECURITY DEFINER`     | §1 (search_path + role check), §2 (RPC contract)     |
+| `GRANT` / `REVOKE`                         | §0 (connection-role assertions)                      |
+| `ALTER TABLE ... ENABLE ROW LEVEL SECURITY`| §1, §6 (`supabase--linter`)                          |
+
+### 3. Edge functions touched (signed URLs, admin RPCs)
+
+```bash
+git diff --name-only "$LAST..$HEAD_REF" -- supabase/functions/
+```
+
+Any file under `supabase/functions/` means re-run §3 (signed URLs) and the `bun run test:signed-urls` suite, even if no migration changed.
+
+### 4. Tables changed (column adds / drops)
+
+```bash
+git diff "$LAST..$HEAD_REF" -- supabase/migrations/ \
+  | grep -iE '^\+.*(CREATE TABLE|ADD COLUMN|DROP COLUMN|ALTER COLUMN)' \
+  | sed 's/^+//' | sort -u
+```
+
+For each table that gained a column, confirm: (a) it has a `GRANT` line in the same migration (§0), (b) every `SELECT` policy still omits hidden fields (§1, §7), (c) no edge function `select('*')` now leaks the new column.
+
+### 5. Storage buckets / policies
+
+```bash
+git diff "$LAST..$HEAD_REF" -- supabase/migrations/ \
+  | grep -iE '^\+.*(storage\.(buckets|objects)|create_bucket|update_bucket)' \
+  | sed 's/^+//' | sort -u
+```
+
+Any hit → re-verify §3 (signed URLs) and confirm public-bucket inventory in §3 still matches reality.
+
+### 6. Security memory / baseline drift
+
+```bash
+git diff --stat "$LAST..$HEAD_REF" -- .security/ docs/SECURITY_CHECKLIST.md
+```
+
+If `.security/lovable-baseline.json` changed, eyeball the diff: every removed finding must correspond to a real fix, not just a stale export.
+
+### Shortcut: one-shot report
+
+```bash
+./scripts/security/changes-since.sh "$LAST"   # if you've added the helper
+```
+
+Otherwise paste the five blocks above into a terminal and screenshot the output into the release ticket.
+
+
+
 ## Expected SQLSTATEs at a glance
 
 | Code     | Name                       | Where it should come from                                                  |
