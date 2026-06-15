@@ -157,6 +157,7 @@ jobs:
           AUDIT_RESULT:    ${{ needs.npm-audit.result }}
           GITLEAKS_RESULT: ${{ needs.gitleaks.result }}
           DBLINT_RESULT:   ${{ needs.supabase-db-lint.result }}
+          LOVABLE_RESULT:  ${{ needs.lovable-platform-findings.result }}
           NODE_V:          ${{ steps.versions.outputs.node }}
           NPM_V:           ${{ steps.versions.outputs.npm }}
           GITLEAKS_V:      ${{ steps.versions.outputs.gitleaks }}
