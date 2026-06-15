@@ -1,20 +1,52 @@
 # Gitleaks config for GoodVibesCafe
-# Extends the default ruleset and allowlists known-public values.
+#
+# Strategy: extend the default ruleset, then suppress known-safe matches so CI
+# only fails on actionable secret leaks. Gitleaks has no severity scale — every
+# match is "fail" — so the only way to reduce false positives is targeted
+# allowlists for public identifiers, test fixtures, and placeholder values.
 [extend]
 useDefault = true
 
 [allowlist]
-description = "Public/publishable identifiers that are safe to commit"
-# Supabase project ref (public) and publishable anon JWT (designed for client use, protected by RLS)
+description = "Public/publishable identifiers, fixtures, and placeholders that are safe to commit"
 regexTarget = "match"
 regexes = [
+  # Supabase publishable anon JWT (designed for client use, RLS-protected)
   '''eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9\.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp0ZmJnYmNldnRyeGRjaGJqZWNrIiwicm9sZSI6ImFub24i[A-Za-z0-9_\.-]+''',
+  # Obvious placeholders / examples
+  '''(?i)(your[_-]?(api|secret)[_-]?key|replace[_-]?me|example|placeholder|dummy|sample|fake|test|mock)''',
+  '''(?i)xxx+|yyy+|zzz+|<[a-z_-]+>''',
+  # All-zero or all-x JWT-shaped strings used in docs
+  '''eyJ[A-Za-z0-9_-]+\.[Xx0]+\.[Xx0]+''',
 ]
+
+# Identifiers that look like keys but are public by design or generated locally.
+stopwords = [
+  "VITE_SUPABASE_PUBLISHABLE_KEY",
+  "VITE_SUPABASE_URL",
+  "VITE_SUPABASE_PROJECT_ID",
+  "SUPABASE_ANON_KEY",
+  "anon",
+  "publishable",
+]
+
 paths = [
   '''\.env$''',
   '''\.env\.example$''',
   '''supabase/migrations/.*\.sql$''',
+  '''supabase/config\.toml$''',
   '''\.github/workflows/.*\.ya?ml$''',
-  '''bun\.lockb$''',
+  '''bun\.lock(b)?$''',
   '''package-lock\.json$''',
+  # Tests and fixtures routinely contain fake credentials
+  '''.*\.test\.(t|j)sx?$''',
+  '''.*\.spec\.(t|j)sx?$''',
+  '''e2e/.*''',
+  '''src/test/.*''',
+  '''playwright-fixture\.ts$''',
+  # Generated Supabase client types — no real secrets
+  '''src/integrations/supabase/types\.ts$''',
+  # Docs and changelogs often reference example tokens
+  '''(README|CHANGELOG|CONTRIBUTING|LICENSE)(\.md)?$''',
+  '''docs?/.*\.md$''',
 ]

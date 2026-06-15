@@ -45,10 +45,22 @@ jobs:
       - name: Run npm audit
         run: npm audit --audit-level=high
 
-  # CodeQL runs via GitHub's "default setup" (Settings → Code security).
-  # No workflow job needed; an advanced job here would conflict with default setup.
-
-
+  # ---------------------------------------------------------------------------
+  # CodeQL
+  # ---------------------------------------------------------------------------
+  # Runs via GitHub's "default setup" (Settings → Code security & analysis →
+  # Code scanning → CodeQL → Default). Adding an advanced job here would
+  # conflict with default setup, so severity thresholds are configured in the
+  # UI, not in this file:
+  #
+  #   Settings → Code security & analysis → Code scanning →
+  #     "Protection rules" → "Alerts that fail check runs"
+  #       Severity: Error (or High and above) — fail PRs only on actionable
+  #       Security severity: High and above
+  #
+  # That keeps Note/Warning-level CodeQL findings visible in the Security tab
+  # without blocking merges on noisy/style-level alerts.
+  # ---------------------------------------------------------------------------
 
   gitleaks:
     name: Secret scan (gitleaks)
@@ -58,7 +70,15 @@ jobs:
         with:
           fetch-depth: 0
 
+      # Gitleaks has no severity scale — every match fails. False-positive
+      # reduction lives in `.gitleaks.toml` via allowlists for publishable
+      # identifiers, test fixtures, and placeholder values. The action below
+      # fails the job only when a non-allowlisted secret is detected.
       - name: Run gitleaks
         uses: gitleaks/gitleaks-action@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITLEAKS_CONFIG: .gitleaks.toml
+          GITLEAKS_ENABLE_UPLOAD_ARTIFACT: "true"
+          GITLEAKS_ENABLE_SUMMARY: "true"
+
