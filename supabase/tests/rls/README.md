@@ -22,11 +22,15 @@ aborts the PR.
    - `rls_test.expect_allowed(sql, msg)`
    - `rls_test.expect_denied(sql, msg)` — passes on `insufficient_privilege` or `check_violation`
    - `rls_test.expect_count(sql, n, msg)`
+   - `rls_test.expect_equals(sql, expected_text, msg)` — pass `'NULL'` to assert SQL NULL
+   - `rls_test.expect_sqlstate(sql, sqlstate, msg)` — e.g. `'42501'` for `insufficient_privilege`
+   - `rls_test.expect_under_ms(sql, max_ms, msg [, runs=3])` — runs `runs` times and asserts the best (min) wall-clock duration is under `max_ms`. Use for performance regression checks; see `perf.sql`.
 
 4. Reuse fixtures instead of inserting your own:
 
    - `rls_test.fx_open_event()` — published, guest-signup OK
    - `rls_test.fx_locked_event()` — published, requires sign-in
+   - `rls_test.fx_past_event()` — ended >2 days ago, used by public feedback RPC
    - `rls_test.fx_showcase_item()` — approved showcase row
    - `rls_test.fx_user()` — fresh random uuid
 
