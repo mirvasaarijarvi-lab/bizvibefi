@@ -99,18 +99,23 @@ jobs:
       # release author, or dropped in by a preceding job that fetches it. The
       # baseline at `.security/lovable-baseline.json` captures findings that
       # have been triaged (fixed or `ignore`d with rationale in @security-memory).
+      # Missing report on a PR / regular push = warn and skip. The release
+      # workflow (rc-smoke.yml) is the hard gate that fails when the export
+      # is absent before a release.
       - name: Ensure report exists
         id: report
         run: |
           if [ ! -s .security/lovable-report.json ]; then
-            echo "::error::Missing .security/lovable-report.json. Export from Lovable → Security panel and commit before release."
+            echo "::warning::No .security/lovable-report.json in tree — skipping Lovable platform diff. Export from the Security panel and commit before a release."
             echo "present=false" >> "$GITHUB_OUTPUT"
-            exit 1
+            exit 0
           fi
           echo "present=true" >> "$GITHUB_OUTPUT"
 
       - name: Diff against baseline (fail on new findings)
+        if: steps.report.outputs.present == 'true'
         run: node scripts/security/check-lovable-findings.cjs
+
 
       - name: Upload full report + baseline
         if: always() && steps.report.outputs.present == 'true'
