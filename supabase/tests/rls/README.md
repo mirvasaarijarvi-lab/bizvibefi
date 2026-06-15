@@ -46,7 +46,33 @@ aborts the PR.
 supabase db reset --linked=false
 DB_URL=$(supabase status -o env | awk -F= '/^DB_URL=/{gsub(/"/,"",$2); print $2}')
 for f in supabase/tests/rls/*.sql; do
-  [ "$(basename "$f")" = "_helpers.sql" ] && continue
+  base=$(basename "$f")
+  case "$base" in _*|role_probe.sql) continue ;; esac
   psql "$DB_URL" --set ON_ERROR_STOP=1 -f "$f" || exit 1
+done
+```
+
+## CI matrix
+
+`.github/workflows/security.yml` runs the suite as a matrix:
+
+- **Postgres major version** — `pg_major: [15, 17]`. Each cell boots a
+  fresh Supabase stack pinned to that PG release (config.toml is patched
+  per-cell), so guest-access regressions specific to one major (planner
+  changes, new system role grants) are caught before merge.
+- **Connection role** — after the in-file role-switching tests, a smoke
+  step re-runs the guest-facing surface (`get_badge_leaderboard`,
+  `get_event_rsvp_count`, plus a privileged write probe) under real
+  connection roles `anon`, `authenticated`, `service_role`. This catches
+  GRANT-level regressions the inner `SET LOCAL ROLE` assertions miss
+  (e.g. EXECUTE accidentally revoked from anon). The probe lives in
+  `role_probe.sql`; results are mirrored into `rls-role-matrix.md`.
+
+Run the role probe locally:
+
+```bash
+for ROLE in anon authenticated service_role; do
+  echo "----- $ROLE -----"
+  psql "$DB_URL" -v "role=$ROLE" -f supabase/tests/rls/role_probe.sql
 done
 ```
