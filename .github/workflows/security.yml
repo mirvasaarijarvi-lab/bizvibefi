@@ -236,8 +236,19 @@ jobs:
           set -o pipefail
           # JSON output so we can emit precise GitHub annotations per finding.
           supabase db lint --level error --linked=false --output json | tee lint.json
-          # Surface human-readable form too, useful when reading raw logs.
-          supabase db lint --level error --linked=false || true
+          # Human-readable form captured to a file for the summary/artifact.
+          supabase db lint --level error --linked=false 2>&1 | tee lint.txt || true
+
+      - name: Upload db lint output artifact
+        if: always() && hashFiles('lint.json') != ''
+        uses: actions/upload-artifact@v4
+        with:
+          name: supabase-db-lint
+          path: |
+            lint.json
+            lint.txt
+          retention-days: 14
+          if-no-files-found: ignore
 
       - name: Annotate findings
         if: always() && hashFiles('lint.json') != ''
