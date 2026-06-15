@@ -691,7 +691,7 @@ SQL
         if: always() && hashFiles('lint.json') != ''
         uses: actions/upload-artifact@v4
         with:
-          name: supabase-db-lint
+          name: supabase-db-lint-pg${{ matrix.pg_major }}
           path: |
             lint.json
             lint.txt
