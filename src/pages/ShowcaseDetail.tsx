@@ -18,6 +18,17 @@ import { useShowcaseItem, useShowcaseReviews, useCreateReview, type KeyFigure } 
 import FilePreview from "@/components/FilePreview";
 import { safeUrl } from "@/lib/safeUrl";
 import { useToast } from "@/hooks/use-toast";
+import { ShowcaseFileDownloadStats } from "@/components/DownloadStatsBadge";
+import { supabase } from "@/integrations/supabase/client";
+
+/** Fire-and-forget download log (never blocks the user). */
+const logShowcaseDownload = (itemId: string, fileUrl: string, fileName?: string) => {
+  void supabase.rpc("log_showcase_download", {
+    _item_id: itemId,
+    _file_url: fileUrl,
+    _file_name: fileName ?? null,
+  });
+};
 import {
   ArrowLeft, ExternalLink, Lightbulb, MessageSquare, Wrench, Star,
   Target, Zap, CheckCircle2, BarChart3, FileText, Download, Lock, BookOpen, Code, FlaskConical,
