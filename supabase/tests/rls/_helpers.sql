@@ -364,3 +364,10 @@ BEGIN
   $q$);
 END
 $$;
+
+
+-- Re-grant EXECUTE on every function defined above so the matrix job can
+-- run the suite under anon / authenticated / service_role connection roles.
+-- (ALTER DEFAULT PRIVILEGES only covers objects created *after* the ALTER.)
+GRANT EXECUTE ON ALL FUNCTIONS IN SCHEMA rls_test
+  TO anon, authenticated, service_role;
