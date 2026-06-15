@@ -374,6 +374,46 @@ jobs:
           if-no-files-found: ignore
 
 
+      # ----- RLS regression tests for sensitive tables -----
+      # Replays supabase/tests/rls/*.sql against the freshly-reset DB through
+      # psql with ON_ERROR_STOP=1. Each test file uses DO blocks that RAISE
+      # on the unexpected outcome, so a regression (e.g. a new permissive
+      # SELECT policy on event_signups, or accidental EXECUTE to anon on an
+      # admin RPC) aborts the run and fails the PR.
+      - name: Run RLS regression tests
+        if: hashFiles('supabase/tests/rls/*.sql') != ''
+        run: |
+          set -o pipefail
+          DB_URL=$(supabase status -o env 2>/dev/null | awk -F= '/^DB_URL=/{gsub(/"/,"",$2); print $2}')
+          if [ -z "$DB_URL" ]; then
+            echo "::error::Could not resolve local DB_URL from 'supabase status'."
+            exit 1
+          fi
+          : > rls-tests.txt
+          for f in $(ls supabase/tests/rls/*.sql | sort); do
+            echo "==> Running $f" | tee -a rls-tests.txt
+            if ! psql "$DB_URL" \
+                  --set ON_ERROR_STOP=1 \
+                  -v VERBOSITY=verbose \
+                  -f "$f" 2>&1 | tee -a rls-tests.txt; then
+              echo "::error file=${f},title=RLS regression failed::See rls-tests.txt artifact for the failing assertion."
+              exit 1
+            fi
+          done
+
+      - name: Upload RLS test output artifact
+        if: always() && hashFiles('rls-tests.txt') != ''
+        uses: actions/upload-artifact@v4
+        with:
+          name: supabase-rls-tests
+          path: rls-tests.txt
+          retention-days: 14
+          if-no-files-found: ignore
+
+
+
+
+
 
       - name: Run db lint (JSON, fail on error-level)
         id: dblint
