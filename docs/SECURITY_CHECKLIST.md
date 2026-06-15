@@ -188,7 +188,97 @@ SELECT has_function_privilege('anon', 'public.get_presentation_access_audit()', 
 - [ ] Every signed-URL mint writes to `presentation_access_log` (allowed=true/false + reason) so denials are auditable.
 - [ ] Public buckets (`avatars`, `showcase-images`, `event-images`, `certificates`, `showcase-files`) only hold content meant to be world-readable. No PII, no draft/rejected uploads.
 - [ ] Storage RLS: INSERT pinned to `auth.uid()::text = (storage.foldername(name))[1]`. DELETE blocked for non-owners/non-admins.
-- [ ] `showcase-files` downloads gated to Viber+ at the edge function, not just in the UI.
+
+### 3a. Per-bucket allow/deny matrix
+
+Expected behaviour by role for every bucket in the project. If reality drifts from this table, fix `storage.objects` policies before shipping.
+
+| Bucket                | `anon` SELECT | `anon` INSERT/DELETE | `authenticated` SELECT | `authenticated` INSERT | `authenticated` DELETE | `service_role` |
+| --------------------- | ------------- | -------------------- | ---------------------- | ---------------------- | ---------------------- | -------------- |
+| `avatars` (public)    | allow         | deny                 | allow                  | own folder only        | own folder only        | full           |
+| `showcase-images` (public) | allow    | deny                 | allow                  | own folder only        | own folder + admin     | full           |
+| `event-images` (public)    | allow    | deny                 | allow                  | admin/creator only     | admin/creator only     | full           |
+| `certificates` (public)    | allow    | deny                 | allow                  | service-role only      | service-role only      | full           |
+| `showcase-files` (public)  | deny by edge function gate; direct URL guesses are non-secret but app must route through edge | deny | Viber+ via edge function only | own folder only | own folder + admin | full |
+| `event-presentations` (private) | deny | deny             | deny direct; allow via signed URL minted by `get-event-presentation` | admin/creator only | admin/creator only | full |
+
+### 3b. Concrete verification commands
+
+Run these against the target environment. They use the JS client because storage policies are evaluated in the storage service, not via `psql`.
+
+```bash
+# Env: ANON_KEY, SERVICE_KEY, SUPABASE_URL, AUTH_JWT (a non-admin user), ADMIN_JWT
+PROJECT="$SUPABASE_URL"
+
+curl_storage() {
+  local label="$1" method="$2" jwt="$3" path="$4" body="${5:-}"
+  local code
+  code=$(curl -sS -o /tmp/storage-out -w '%{http_code}' \
+    -X "$method" \
+    -H "Authorization: Bearer $jwt" \
+    -H "apikey: $ANON_KEY" \
+    ${body:+-H "Content-Type: application/octet-stream" --data-binary "@$body"} \
+    "$PROJECT/storage/v1/$path")
+  printf '%-60s %s\n' "$label" "$code"
+}
+```
+
+Then per bucket, expect:
+
+```bash
+# 1. event-presentations (private) — anon and non-attendee must be denied
+curl_storage "anon GET private object"        GET    "$ANON_KEY" "object/event-presentations/<event-id>/deck.pdf"   # 400/403
+curl_storage "auth GET private object direct" GET    "$AUTH_JWT" "object/event-presentations/<event-id>/deck.pdf"   # 400/403
+# The only allow path is the edge function:
+curl -sS -X POST -H "Authorization: Bearer $AUTH_JWT" -H "apikey: $ANON_KEY" \
+  -d '{"presentation_id":"<id>"}' "$PROJECT/functions/v1/get-event-presentation"  # 200 for attendee, 403 otherwise
+
+# 2. avatars (public) — anyone can read; only owner can write own folder
+curl_storage "anon GET avatar"                GET    "$ANON_KEY" "object/public/avatars/<uid>/me.jpg"               # 200
+curl_storage "auth PUT own avatar"            PUT    "$AUTH_JWT" "object/avatars/<uid>/me.jpg" /tmp/me.jpg          # 200
+curl_storage "auth PUT other user's avatar"   PUT    "$AUTH_JWT" "object/avatars/<other-uid>/x.jpg" /tmp/me.jpg     # 403
+curl_storage "anon PUT avatar"                PUT    "$ANON_KEY" "object/avatars/<uid>/me.jpg" /tmp/me.jpg          # 401/403
+curl_storage "auth DELETE other user's avatar" DELETE "$AUTH_JWT" "object/avatars/<other-uid>/x.jpg"                # 403
+
+# 3. showcase-files (public bucket, edge-gated) — direct PUT/DELETE only by owner
+curl_storage "auth PUT own showcase file"     PUT    "$AUTH_JWT" "object/showcase-files/<uid>/deck.pdf" /tmp/x.pdf  # 200
+curl_storage "auth PUT cross-user showcase"   PUT    "$AUTH_JWT" "object/showcase-files/<other-uid>/x.pdf" /tmp/x.pdf # 403
+curl_storage "anon DELETE showcase file"      DELETE "$ANON_KEY" "object/showcase-files/<uid>/deck.pdf"             # 401/403
+
+# 4. event-images / certificates — only admins (or service role) can write
+curl_storage "auth PUT event image (non-admin)"  PUT  "$AUTH_JWT"  "object/event-images/<event-id>/cover.jpg" /tmp/c.jpg  # 403
+curl_storage "admin PUT event image"             PUT  "$ADMIN_JWT" "object/event-images/<event-id>/cover.jpg" /tmp/c.jpg  # 200
+curl_storage "anon GET event image"              GET  "$ANON_KEY"  "object/public/event-images/<event-id>/cover.jpg"      # 200
+
+# 5. service_role bypass sanity — must succeed against the private bucket
+curl_storage "service_role HEAD private object"  HEAD "$SERVICE_KEY" "object/event-presentations/<event-id>/deck.pdf"     # 200
+```
+
+Map each non-matching status code to the row in the matrix above and fix the `storage.objects` policy whose `bucket_id` matches.
+
+### 3c. Policy introspection (run via psql)
+
+```sql
+-- Every bucket that backs sensitive data must be private.
+SELECT id, public FROM storage.buckets
+WHERE id IN ('event-presentations'); -- expect: public = false
+
+-- Every storage policy: which roles, which command, which bucket.
+SELECT polname, polcmd, polroles::regrole[] AS roles,
+       pg_get_expr(polqual,  polrelid) AS using_expr,
+       pg_get_expr(polwithcheck, polrelid) AS with_check_expr
+FROM pg_policy
+WHERE polrelid = 'storage.objects'::regclass
+ORDER BY polname;
+```
+
+For each row, confirm:
+
+- `INSERT` / `UPDATE` / `DELETE` policies pin ownership: `(storage.foldername(name))[1] = auth.uid()::text`, or check `has_role(auth.uid(),'admin')`.
+- No `SELECT` policy on a private bucket uses `USING (true)`.
+- No `INSERT` policy grants `anon` write access.
+
+
 
 ## 4. Auth boundaries
 
