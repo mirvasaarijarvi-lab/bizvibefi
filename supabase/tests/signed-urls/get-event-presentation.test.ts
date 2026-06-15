@@ -81,7 +81,7 @@ async function callFn(jwt: string | null, body: unknown) {
     body: body === undefined ? undefined : JSON.stringify(body),
   });
   const text = await res.text();
-  let json: any = null;
+  let json: Record<string, unknown> | null = null;
   try {
     json = text ? JSON.parse(text) : null;
   } catch {
