@@ -1533,11 +1533,23 @@ const Events = () => {
             })()}
 
             {isPastEvent && (
-              <EventPresentationsViewer
-                eventId={event.id}
-                lang={lang}
-                hasAccess={!!user}
-              />
+              <>
+                <EventPresentationsViewer
+                  eventId={event.id}
+                  lang={lang}
+                  hasAccess={!!user}
+                />
+                {(() => {
+                  // Feedback becomes public 2 days after the event ends
+                  // (the RPC also enforces this server-side).
+                  const endRef = event.ends_at
+                    ? new Date(event.ends_at)
+                    : new Date(new Date(event.starts_at).getTime() + 24 * 3600 * 1000);
+                  const visibleAt = new Date(endRef.getTime() + 2 * 24 * 3600 * 1000);
+                  if (new Date() < visibleAt) return null;
+                  return <EventFeedbackList eventId={event.id} lang={lang} />;
+                })()}
+              </>
             )}
           </div>
         </div>
