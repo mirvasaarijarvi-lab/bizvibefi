@@ -211,6 +211,25 @@ BEGIN
 END
 $$;
 
+-- Past event whose ends_at was >2 days ago — get_event_feedback_public should
+-- return feedback rows for this one.
+CREATE OR REPLACE FUNCTION rls_test.fx_past_event() RETURNS uuid
+LANGUAGE plpgsql AS $$
+DECLARE v uuid := rls_test._cached('event_past');
+BEGIN
+  IF v IS NOT NULL THEN RETURN v; END IF;
+  INSERT INTO public.events (title, slug, starts_at, ends_at, is_published, requires_signin)
+  VALUES ('RLS past event',
+          'rls-past-' || gen_random_uuid()::text,
+          now() - interval '10 days',
+          now() - interval '10 days' + interval '2 hours',
+          true, false)
+  RETURNING id INTO v;
+  RETURN rls_test._cache('event_past', v);
+END
+$$;
+
+
 -- Approved showcase item.
 CREATE OR REPLACE FUNCTION rls_test.fx_showcase_item() RETURNS uuid
 LANGUAGE plpgsql AS $$
