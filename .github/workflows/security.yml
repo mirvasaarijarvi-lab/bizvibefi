@@ -310,33 +310,55 @@ jobs:
 
 
 
-      # ----- Detect schema drift -----
-      # After a clean reset, the local DB should exactly match the migration
-      # history. `supabase db diff` prints any delta between the live local
-      # schema and what the migrations describe. A non-empty diff means
-      # someone changed the DB without committing a matching migration (or
-      # a migration is incomplete) — fail the PR so the drift is caught in
-      # review.
+      # ----- Detect schema drift after reset -----
+      # After a clean `supabase db reset`, the local DB == the committed
+      # migration history by construction. `supabase db diff` then prints any
+      # delta between that live schema and the migrations. A non-empty diff
+      # means someone changed the DB without committing a matching migration
+      # (or a migration is incomplete) — fail the PR so the drift is caught
+      # in review.
       - name: Check for schema drift (supabase db diff)
         id: dbdiff
         run: |
           set -o pipefail
-          # --schema public keeps the check focused on app-owned objects and
-          # skips noise from auth/storage/realtime/etc. which we never own.
-          supabase db diff --schema public --linked=false 2>&1 | tee db-diff.txt
-          # CLI exits 0 even when a diff exists; treat any non-empty,
-          # non-"No schema changes found" output as drift. Strip ANSI colour
-          # codes first so they don't fool the emptiness check.
+          # Diff app-owned schemas only. Skip Supabase-managed schemas
+          # (auth, storage, realtime, supabase_functions, vault, pgmq) which
+          # we never own and which change between CLI releases.
+          supabase db diff \
+            --schema public \
+            --linked=false 2>&1 | tee db-diff.txt
+
+          # The CLI exits 0 even when a diff exists, so we have to inspect
+          # the output. Strip ANSI colour codes, blank lines, and the
+          # "No schema changes found" banner before checking for content.
           BODY=$(sed -r 's/\x1B\[[0-9;]*[A-Za-z]//g' db-diff.txt \
                  | grep -vE '^\s*$|No schema changes found' || true)
-          if [ -n "$BODY" ]; then
-            echo "::error::Schema drift detected by 'supabase db diff' — commit a migration that captures these changes."
-            echo "::group::supabase db diff output"
-            cat db-diff.txt
-            echo "::endgroup::"
-            exit 1
+
+          if [ -z "$BODY" ]; then
+            echo "No schema drift detected."
+            exit 0
           fi
-          echo "No schema drift detected."
+
+          # Save the diff as a candidate migration so the artifact contains
+          # a ready-to-commit `.sql` file the author can drop into
+          # supabase/migrations/ after review.
+          TS=$(date -u +%Y%m%d%H%M%S)
+          CANDIDATE="suggested_${TS}_capture_drift.sql"
+          {
+            echo "-- Auto-generated from 'supabase db diff' on $(date -u +%FT%TZ)"
+            echo "-- Review carefully before committing to supabase/migrations/."
+            echo
+            sed -r 's/\x1B\[[0-9;]*[A-Za-z]//g' db-diff.txt
+          } > "$CANDIDATE"
+
+          # Inline preview (first 60 lines) for the PR run log.
+          {
+            echo "::error title=Schema drift detected::Local DB differs from migrations. A candidate migration was uploaded as ${CANDIDATE} in the supabase-db-reset-diff artifact."
+            echo "::group::supabase db diff (first 60 lines)"
+            head -n 60 "$CANDIDATE"
+            echo "::endgroup::"
+          }
+          exit 1
 
       - name: Upload db reset/diff output artifact
         if: always()
@@ -347,8 +369,10 @@ jobs:
             db-reset.txt
             db-diff.txt
             seed-run.txt
+            suggested_*_capture_drift.sql
           retention-days: 14
           if-no-files-found: ignore
+
 
 
       - name: Run db lint (JSON, fail on error-level)
