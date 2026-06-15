@@ -574,13 +574,104 @@ jobs:
         if: always() && hashFiles('rls-tests.txt') != ''
         uses: actions/upload-artifact@v4
         with:
-          name: supabase-rls-tests
+          name: supabase-rls-tests-pg${{ matrix.pg_major }}
           path: |
             rls-tests.txt
             rls-report.md
             rls-fixtures.md
+            rls-role-matrix.md
           retention-days: 14
           if-no-files-found: ignore
+
+      # ----- Connection-role matrix smoke -----
+      # The RLS tests above switch roles internally via SET LOCAL ROLE under
+      # a postgres-owned connection. This step re-runs the guest-facing
+      # surface (public RPCs + write attempts on PII tables) under real
+      # connection roles — anon, authenticated, service_role — so we catch
+      # GRANT-level regressions (e.g. someone accidentally revoking EXECUTE
+      # from anon on get_event_rsvp_count, or widening write privileges).
+      #
+      # Per-role expected behaviour:
+      #   anon, authenticated  → public RPCs OK, direct writes raise 42501
+      #   service_role         → public RPCs OK, direct writes also OK
+      #                          (service_role bypasses RLS by design)
+      - name: RLS smoke per connection role
+        if: hashFiles('supabase/tests/rls/*.sql') != ''
+        run: |
+          set +e
+          DB_URL=$(supabase status -o env 2>/dev/null | awk -F= '/^DB_URL=/{gsub(/"/,"",$2); print $2}')
+          if [ -z "$DB_URL" ]; then
+            echo "::error::Could not resolve local DB_URL from 'supabase status'."
+            exit 1
+          fi
+
+          {
+            echo "# RLS connection-role matrix (pg${{ matrix.pg_major }})"
+            echo
+            echo "Commit: \`${GITHUB_SHA:0:7}\` — run: $GITHUB_RUN_ID"
+            echo
+            echo "| Role | Public RPC (leaderboard) | Public RPC (RSVP count) | Direct write (event_signups) | Expected | Result |"
+            echo "| --- | --- | --- | --- | --- | --- |"
+          } > rls-role-matrix.md
+
+          FAILED=0
+          # event_signups guest INSERT path is intentionally open to anon,
+          # so we probe member_badges instead — that one MUST be denied for
+          # anon/authenticated and MUST succeed for service_role.
+          for ROLE in anon authenticated service_role; do
+            case "$ROLE" in
+              anon|authenticated) EXPECT_WRITE_SQLSTATE="42501"; EXPECT_LABEL="RPCs ok, write 42501" ;;
+              service_role)        EXPECT_WRITE_SQLSTATE="00000"; EXPECT_LABEL="RPCs ok, write ok" ;;
+            esac
+
+            OUT=$(psql "$DB_URL" --set ON_ERROR_STOP=0 -At <<SQL
+              SET ROLE $ROLE;
+              -- Public RPCs: both must return at least one tuple without error.
+              SELECT 'rpc_leaderboard_ok=' || (SELECT count(*) >= 0
+                FROM public.get_badge_leaderboard());
+              SELECT 'rpc_rsvp_count_ok=' || (
+                SELECT public.get_event_rsvp_count(id) IS NOT NULL
+                FROM public.events LIMIT 1
+              );
+              -- Direct write probe on a privileged table.
+              DO \$\$
+              DECLARE v_badge uuid; v_user uuid := gen_random_uuid();
+              BEGIN
+                SELECT id INTO v_badge FROM public.badge_catalog LIMIT 1;
+                BEGIN
+                  INSERT INTO public.member_badges(user_id, badge_id)
+                  VALUES (v_user, v_badge);
+                  RAISE NOTICE 'write_sqlstate=00000';
+                EXCEPTION WHEN OTHERS THEN
+                  RAISE NOTICE 'write_sqlstate=%', SQLSTATE;
+                END;
+              END
+              \$\$;
+SQL
+            ) 2>&1
+            echo "----- role=$ROLE -----"
+            echo "$OUT"
+
+            RPC_LB=$(echo "$OUT" | grep -Eo 'rpc_leaderboard_ok=(t|true)' | head -1)
+            RPC_RC=$(echo "$OUT" | grep -Eo 'rpc_rsvp_count_ok=(t|true)' | head -1)
+            WRITE_STATE=$(echo "$OUT" | grep -Eo 'write_sqlstate=[0-9A-Z]+' | tail -1 | cut -d= -f2)
+            WRITE_STATE=${WRITE_STATE:-unknown}
+
+            STATUS=":white_check_mark: pass"
+            if [ -z "$RPC_LB" ] || [ -z "$RPC_RC" ] || [ "$WRITE_STATE" != "$EXPECT_WRITE_SQLSTATE" ]; then
+              STATUS=":x: fail"
+              FAILED=$((FAILED+1))
+              echo "::error title=RLS role matrix failed (pg${{ matrix.pg_major }} / $ROLE)::leaderboard=${RPC_LB:-MISSING}, rsvp=${RPC_RC:-MISSING}, write=$WRITE_STATE (expected $EXPECT_WRITE_SQLSTATE)"
+            fi
+
+            echo "| \`$ROLE\` | ${RPC_LB:-MISSING} | ${RPC_RC:-MISSING} | \`$WRITE_STATE\` | $EXPECT_LABEL | $STATUS |" >> rls-role-matrix.md
+          done
+
+          echo "" >> rls-role-matrix.md
+          echo "_Failures: $FAILED_" >> rls-role-matrix.md
+          cat rls-role-matrix.md >> "$GITHUB_STEP_SUMMARY"
+
+          if [ "$FAILED" -gt 0 ]; then exit 1; fi
 
 
 
