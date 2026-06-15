@@ -55,6 +55,35 @@ refactor: extract form validation into shared hook
 3. **Add tests** — include unit tests for new logic and components
 4. **Update translations** — if adding user-facing text, update all language files (`en.ts`, `fi.ts`, `sv.ts`)
 5. **Ensure CI passes** — lint, typecheck, and tests must all be green
+6. **Complete the security review** — see the checklist below before approving
+
+## Required Reviewer Security Check
+
+Before approving any pull request, the reviewer **must** open the project in
+Lovable and confirm the **Security panel** is clean. CI covers `npm audit`,
+gitleaks, and CodeQL, but the Lovable platform scanners run outside of GitHub
+Actions and their findings are only visible inside the project.
+
+Open the project → **More → Security** and verify all three scanners report no
+actionable findings:
+
+| Scanner | What it covers | Required state to merge |
+| --- | --- | --- |
+| `agent_security` | Agent-authored code patterns, auth/RLS misuse, leaked secrets in app code | No findings, or every finding marked `ignore`/`mark_as_fixed` with a justification |
+| `supabase_lov` | RLS policies, GRANTs, exposed sensitive columns, edge function auth | Same as above |
+| `connector_security_scan` (**Wiz**) | Workspace-wide infra/dependency scan from the linked Wiz connector | Same as above |
+
+Reviewer checklist (paste into the PR review):
+
+- [ ] Opened Security panel and confirmed `agent_security` is clean or all findings triaged
+- [ ] Confirmed `supabase_lov` is clean or all findings triaged
+- [ ] Confirmed `connector_security_scan` (Wiz) is clean or all findings triaged
+- [ ] If any finding was ignored, the rationale is recorded in `@security-memory`
+- [ ] The CI `Security summary` job (or its sticky PR comment) shows all checks green
+
+If a scanner flags something new on this PR, do **not** approve. Either fix it,
+or — if it is intentional — ignore it via `manage_security_finding` with an
+explanation and update `@security-memory` so future scans don't re-raise it.
 
 ### PR Title Format
 
