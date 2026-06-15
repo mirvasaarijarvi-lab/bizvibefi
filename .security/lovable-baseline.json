@@ -1,0 +1,4 @@
+{
+  "_doc": "Snapshot of accepted Lovable platform findings. Refresh after triage by replacing `findings` with the current export filtered to known-and-accepted items.",
+  "findings": []
+}
