@@ -320,6 +320,7 @@ export function EventPresentationsViewer({
                 {p.file_size && (
                   <p className="text-xs text-muted-foreground font-body">{formatSize(p.file_size)}</p>
                 )}
+                <EventPresentationDownloadStats eventId={eventId} presentationId={p.id} />
               </div>
               <Button
                 type="button"
