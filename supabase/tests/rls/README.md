@@ -25,6 +25,8 @@ aborts the PR.
    - `rls_test.expect_equals(sql, expected_text, msg)` — pass `'NULL'` to assert SQL NULL
    - `rls_test.expect_sqlstate(sql, sqlstate, msg)` — e.g. `'42501'` for `insufficient_privilege`
    - `rls_test.expect_under_ms(sql, max_ms, msg [, runs=3])` — runs `runs` times and asserts the best (min) wall-clock duration is under `max_ms`. Use for performance regression checks; see `perf.sql`.
+   - `rls_test.snapshot(label, sql)` — runs `sql` as table owner (RLS bypassed) and emits one tagged NOTICE per row. CI harvests these into `rls-fixtures.md` so mismatched-count failures are debuggable without re-running locally.
+   - `rls_test.snapshot_fixtures()` — convenience snapshot of the cached fixture ids plus row counts on the hot tables. Call once near the top of every test file, right after fixtures are materialised.
 
 4. Reuse fixtures instead of inserting your own:
 
