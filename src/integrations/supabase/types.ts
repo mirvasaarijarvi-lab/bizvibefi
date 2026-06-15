@@ -956,6 +956,44 @@ export type Database = {
         }
         Relationships: []
       }
+      showcase_file_downloads: {
+        Row: {
+          created_at: string
+          file_name: string | null
+          file_url: string
+          id: string
+          item_id: string | null
+          user_email: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          file_name?: string | null
+          file_url: string
+          id?: string
+          item_id?: string | null
+          user_email?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          file_name?: string | null
+          file_url?: string
+          id?: string
+          item_id?: string | null
+          user_email?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "showcase_file_downloads_item_id_fkey"
+            columns: ["item_id"]
+            isOneToOne: false
+            referencedRelation: "showcase_items"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       showcase_items: {
         Row: {
           benefits: string[] | null
@@ -1359,6 +1397,17 @@ export type Database = {
         }[]
       }
       get_event_online_url: { Args: { _event_id: string }; Returns: string }
+      get_event_presentation_download_stats: {
+        Args: { _event_id: string }
+        Returns: {
+          denied: number
+          downloads: number
+          last_download_at: string
+          presentation_id: string
+          presentation_title: string
+          unique_downloaders: number
+        }[]
+      }
       get_event_rsvp_count: { Args: { _event_id: string }; Returns: number }
       get_membership_tier: {
         Args: { _user_id: string }
@@ -1402,6 +1451,16 @@ export type Database = {
           website_links: Json
         }[]
       }
+      get_showcase_download_stats: {
+        Args: { _item_id: string }
+        Returns: {
+          downloads: number
+          file_name: string
+          file_url: string
+          last_download_at: string
+          unique_downloaders: number
+        }[]
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -1431,6 +1490,10 @@ export type Database = {
           vibetor_type: Database["public"]["Enums"]["vibetor_type"]
           website_links: Json
         }[]
+      }
+      log_showcase_download: {
+        Args: { _file_name?: string; _file_url: string; _item_id: string }
+        Returns: string
       }
       move_to_dlq: {
         Args: {
