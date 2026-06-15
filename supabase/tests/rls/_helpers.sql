@@ -153,9 +153,46 @@ BEGIN
 END
 $$;
 
+-- Run `_sql` `_runs` times under the current role, take the MIN wall-clock
+-- duration (warm cache, ignores first-run JIT/plan cost), and fail if it
+-- exceeds `_max_ms`. Use min, not avg, so CI noise from a single GC pause
+-- on the runner doesn't flake the suite — a true regression makes EVERY
+-- run slow, so the min still moves.
+--
+-- The threshold is intentionally generous (sub-second) because the CI
+-- runner is a shared GitHub Actions VM. Tighten per-query when needed.
+CREATE OR REPLACE FUNCTION rls_test.expect_under_ms(
+  _sql text, _max_ms numeric, _msg text, _runs int DEFAULT 3
+) RETURNS void LANGUAGE plpgsql AS $$
+DECLARE
+  t0  timestamptz;
+  dur numeric;
+  best numeric := NULL;
+  i   int;
+BEGIN
+  FOR i IN 1.._runs LOOP
+    t0 := clock_timestamp();
+    EXECUTE _sql;
+    dur := extract(epoch FROM clock_timestamp() - t0) * 1000.0;
+    IF best IS NULL OR dur < best THEN best := dur; END IF;
+  END LOOP;
+
+  IF best > _max_ms THEN
+    RAISE NOTICE 'RLS-ASSERT|FAIL|expect_under_ms|%|best=%ms over threshold %ms',
+      _msg, round(best, 2), _max_ms;
+    RAISE EXCEPTION 'PERF FAIL: % — best of % runs was %ms, threshold %ms. SQL: %',
+      _msg, _runs, round(best, 2), _max_ms, _sql;
+  END IF;
+
+  RAISE NOTICE 'RLS-ASSERT|PASS|expect_under_ms|%|best=%ms (limit %ms)',
+    _msg, round(best, 2), _max_ms;
+END
+$$;
+
 
 -- ---- Fixtures (lazy, GUC-cached) ------------------------------------------
 -- Each fixture function returns the id and stores it in a transaction-local
+
 -- GUC so repeat calls inside the same test transaction reuse the same row.
 
 CREATE OR REPLACE FUNCTION rls_test._cached(_key text) RETURNS uuid
