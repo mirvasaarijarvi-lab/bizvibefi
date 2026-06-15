@@ -23,6 +23,7 @@ permissions:
   contents: read
   security-events: write
   actions: read
+  pull-requests: write
 
 concurrency:
   group: security-${{ github.ref }}
@@ -82,3 +83,79 @@ jobs:
           GITLEAKS_ENABLE_UPLOAD_ARTIFACT: "true"
           GITLEAKS_ENABLE_SUMMARY: "true"
 
+
+  summary:
+    name: Security summary
+    needs: [npm-audit, gitleaks]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Collect tool versions
+        id: versions
+        run: |
+          NODE_V=$(node -v 2>/dev/null || echo "n/a")
+          NPM_V=$(npm -v 2>/dev/null || echo "n/a")
+          GITLEAKS_V="action: gitleaks/gitleaks-action@v2"
+          echo "node=$NODE_V"     >> "$GITHUB_OUTPUT"
+          echo "npm=$NPM_V"       >> "$GITHUB_OUTPUT"
+          echo "gitleaks=$GITLEAKS_V" >> "$GITHUB_OUTPUT"
+
+      - name: Build markdown summary
+        id: md
+        env:
+          AUDIT_RESULT:    ${{ needs.npm-audit.result }}
+          GITLEAKS_RESULT: ${{ needs.gitleaks.result }}
+          NODE_V:          ${{ steps.versions.outputs.node }}
+          NPM_V:           ${{ steps.versions.outputs.npm }}
+          GITLEAKS_V:      ${{ steps.versions.outputs.gitleaks }}
+          REPO:            ${{ github.repository }}
+          RUN_ID:          ${{ github.run_id }}
+          SHA:             ${{ github.sha }}
+          SERVER:          ${{ github.server_url }}
+        run: |
+          icon() { case "$1" in
+            success) echo ":white_check_mark: pass" ;;
+            failure) echo ":x: fail" ;;
+            skipped) echo ":fast_forward: skipped" ;;
+            cancelled) echo ":no_entry: cancelled" ;;
+            *) echo ":grey_question: $1" ;;
+          esac; }
+
+          AUDIT_ICON=$(icon "$AUDIT_RESULT")
+          GITLEAKS_ICON=$(icon "$GITLEAKS_RESULT")
+          RUN_URL="$SERVER/$REPO/actions/runs/$RUN_ID"
+          ALERTS_URL="$SERVER/$REPO/security/code-scanning"
+          SECRETS_URL="$SERVER/$REPO/security/secret-scanning"
+          DEPS_URL="$SERVER/$REPO/security/dependabot"
+
+          {
+            echo "## Security status"
+            echo ""
+            echo "Commit: \`${SHA:0:7}\` — [run log]($RUN_URL)"
+            echo ""
+            echo "| Check | Tool / version | Severity gate | Result |"
+            echo "| --- | --- | --- | --- |"
+            echo "| npm audit | npm $NPM_V (node $NODE_V) | high+ | $AUDIT_ICON |"
+            echo "| Secret scan | $GITLEAKS_V | any non-allowlisted match | $GITLEAKS_ICON |"
+            echo "| CodeQL | GitHub default setup | Error / Security: High+ | see [Code scanning alerts]($ALERTS_URL) |"
+            echo "| Lovable platform scans | agent_security, supabase_lov, Wiz (connector_security_scan) | actionable only | see project Security panel |"
+            echo ""
+            echo "**Result links**"
+            echo "- [Code scanning alerts]($ALERTS_URL)"
+            echo "- [Secret scanning alerts]($SECRETS_URL)"
+            echo "- [Dependabot alerts]($DEPS_URL)"
+            echo "- Lovable platform scans: open the project in Lovable → Security panel"
+          } | tee "$GITHUB_STEP_SUMMARY" > summary.md
+
+          {
+            echo "body<<__EOF__"
+            cat summary.md
+            echo "__EOF__"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Comment on PR
+        if: github.event_name == 'pull_request'
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          header: security-status
+          message: ${{ steps.md.outputs.body }}
