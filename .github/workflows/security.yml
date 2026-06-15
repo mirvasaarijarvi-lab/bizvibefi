@@ -100,13 +100,16 @@ jobs:
           echo "npm=$NPM_V"       >> "$GITHUB_OUTPUT"
           echo "gitleaks=$GITLEAKS_V" >> "$GITHUB_OUTPUT"
 
-      - name: Download db lint artifact
+      - name: Download db lint artifacts
         if: needs.supabase-db-lint.result == 'failure'
         uses: actions/download-artifact@v4
         continue-on-error: true
         with:
-          name: supabase-db-lint
+          # Matrix produces one artifact per pg_major; merge them all under
+          # dblint-artifact/ for the summary tail step.
+          pattern: supabase-db-lint-pg*
           path: dblint-artifact
+          merge-multiple: true
 
       - name: Build markdown summary
         id: md
