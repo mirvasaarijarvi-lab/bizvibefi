@@ -11,6 +11,7 @@ import HeroAvatar from "@/components/HeroAvatar";
 import { useTranslation } from "@/i18n/useTranslation";
 import mascotEvents from "@/assets/mascot-events.png";
 import { EventPresentationsManager, EventPresentationsViewer } from "@/components/EventPresentations";
+import EventFeedbackList from "@/components/EventFeedbackList";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
