@@ -1,0 +1,46 @@
+# RLS regression tests
+
+Each `*.sql` file (except `_helpers.sql`) is a self-contained psql script run
+in CI by `.github/workflows/security.yml` against a freshly-reset local
+Supabase DB. They fail-fast on `ON_ERROR_STOP=1`, so any `RAISE EXCEPTION`
+aborts the PR.
+
+## Adding a new table or edge case
+
+1. Create `supabase/tests/rls/<table>.sql`.
+2. Start with:
+
+   ```sql
+   \set ON_ERROR_STOP on
+   \ir _helpers.sql
+   BEGIN;
+   ```
+
+3. Use the shared helpers in the `rls_test` schema:
+
+   - `rls_test.as_anon()` / `rls_test.as_authenticated(uuid)` / `rls_test.reset()`
+   - `rls_test.expect_allowed(sql, msg)`
+   - `rls_test.expect_denied(sql, msg)` — passes on `insufficient_privilege` or `check_violation`
+   - `rls_test.expect_count(sql, n, msg)`
+
+4. Reuse fixtures instead of inserting your own:
+
+   - `rls_test.fx_open_event()` — published, guest-signup OK
+   - `rls_test.fx_locked_event()` — published, requires sign-in
+   - `rls_test.fx_showcase_item()` — approved showcase row
+   - `rls_test.fx_user()` — fresh random uuid
+
+   Add new fixtures in `_helpers.sql` whenever a row is needed by 2+ tests.
+
+5. End with `ROLLBACK;` so the DB stays clean for the next file.
+
+## Running locally
+
+```bash
+supabase db reset --linked=false
+DB_URL=$(supabase status -o env | awk -F= '/^DB_URL=/{gsub(/"/,"",$2); print $2}')
+for f in supabase/tests/rls/*.sql; do
+  [ "$(basename "$f")" = "_helpers.sql" ] && continue
+  psql "$DB_URL" --set ON_ERROR_STOP=1 -f "$f" || exit 1
+done
+```
