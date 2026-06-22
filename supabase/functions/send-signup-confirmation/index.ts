@@ -5,6 +5,7 @@
 // the function from being abused as an open email relay.
 import { createClient } from 'npm:@supabase/supabase-js@2'
 import { corsHeaders } from 'npm:@supabase/supabase-js@2/cors'
+import { redactEmail } from '../_shared/redact.ts'
 
 interface Body {
   eventId?: string
