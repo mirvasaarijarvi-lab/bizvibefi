@@ -39,7 +39,7 @@ Deno.serve(async (req) => {
   const emailRaw = (body.email || '').trim().toLowerCase()
   const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailRaw)
   if (!eventId || !emailOk) {
-    console.log('signup-confirm: bad input', { eventId, emailRaw })
+    console.log('signup-confirm: bad input', { eventId, email: redactEmail(emailRaw) })
     return new Response(JSON.stringify({ ok: true }), {
       status: 200,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
