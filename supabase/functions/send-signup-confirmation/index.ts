@@ -95,7 +95,7 @@ Deno.serve(async (req) => {
   const intro = (event.description || '').replace(/\s+/g, ' ').trim().slice(0, 240)
 
   console.log('signup-confirm: invoking relay', {
-    recipient: signup.email,
+    recipient: redactEmail(signup.email),
     eventTitle: event.title,
   })
 
