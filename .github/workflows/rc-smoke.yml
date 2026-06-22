@@ -3,6 +3,7 @@ name: Release candidate smoke
 # Runs the SECURITY_CHECKLIST.md smoke checks (SQLSTATE/GRANT assertions +
 # signed-URL Vitest suite) against a release candidate. Triggered:
 #   - Automatically when a GitHub Release is published as a prerelease (rc.*)
+#   - Automatically when this workflow or smoke-check files change on main
 #   - Manually via workflow_dispatch (pick any ref/tag)
 #
 # Required repository secrets:
@@ -14,6 +15,15 @@ name: Release candidate smoke
 #                                   authenticated-role cross-user assertion
 
 on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/rc-smoke.yml"
+      - "scripts/security/**"
+      - "tests/**"
+      - "package.json"
+      - "bun.lock"
+      - "bun.lockb"
   release:
     types: [prereleased]
   workflow_dispatch:
@@ -27,7 +37,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: rc-smoke-${{ github.event.release.tag_name || inputs.ref }}
+  group: rc-smoke-${{ github.event.release.tag_name || inputs.ref || github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -38,7 +48,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.release.tag_name || inputs.ref }}
+          ref: ${{ github.event.release.tag_name || inputs.ref || github.ref }}
 
       - uses: oven-sh/setup-bun@v2
         with:
