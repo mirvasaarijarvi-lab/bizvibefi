@@ -264,10 +264,10 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # Supabase CLI 1.226.4 ships images for these two majors. Add 16
+        # Supabase CLI 2.40.7 ships images for these two majors. Add 16
         # here once Supabase publishes an image for it; the rest of the
         # job is version-agnostic.
-        pg_major: [15, 17]
+        pg_major: [17]
     steps:
       - uses: actions/checkout@v4
 
@@ -275,7 +275,7 @@ jobs:
         uses: supabase/setup-cli@v1
         with:
           # Pin to avoid transient "Gateway Time-out" from the latest-release resolver.
-          version: 1.226.4
+          version: 2.40.7
 
       # ----- Pin Postgres major version for this matrix cell -----
       # Supabase CLI reads `[db].major_version` from config.toml. The
@@ -307,9 +307,9 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ~/.cache/supabase-docker-images.tar
-          key: supabase-docker-${{ runner.os }}-cli-1.226.4-pg${{ matrix.pg_major }}-${{ hashFiles('supabase/config.toml') }}
+          key: supabase-docker-${{ runner.os }}-cli-2.40.7-pg${{ matrix.pg_major }}-${{ hashFiles('supabase/config.toml') }}
           restore-keys: |
-            supabase-docker-${{ runner.os }}-cli-1.226.4-pg${{ matrix.pg_major }}-
+            supabase-docker-${{ runner.os }}-cli-2.40.7-pg${{ matrix.pg_major }}-
 
       - name: Load cached Docker images
         if: steps.docker-cache.outputs.cache-hit == 'true'
