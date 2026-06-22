@@ -264,9 +264,9 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # Supabase CLI 2.40.7 ships images for these two majors. Add 16
-        # here once Supabase publishes an image for it; the rest of the
-        # job is version-agnostic.
+        # Supabase CLI 2.40.7 ships a pg17 image that bundles pgmq (used
+        # by the email queue migrations). pg15 stays out of the matrix
+        # until the CLI ships a 15.x image with pgmq pre-installed.
         pg_major: [17]
     steps:
       - uses: actions/checkout@v4
