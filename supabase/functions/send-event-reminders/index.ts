@@ -269,7 +269,7 @@ Deno.serve(async (req) => {
         if (data?.success === false) totalSkipped++
         else totalQueued++
       } catch (err) {
-        console.error('reminder send failed', { event: ev.id, email, err })
+        console.error('reminder send failed', { event: ev.id, email: redactEmail(email), err })
         totalSkipped++
       }
     }
