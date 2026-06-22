@@ -63,7 +63,7 @@ Deno.serve(async (req) => {
 
   if (lookupErr) console.warn('signup-confirm: lookup error', lookupErr)
   if (!signup) {
-    console.log('signup-confirm: no matching signup', { eventId, emailRaw })
+    console.log('signup-confirm: no matching signup', { eventId, email: redactEmail(emailRaw) })
 
     return new Response(JSON.stringify({ ok: true }), {
       status: 200,
