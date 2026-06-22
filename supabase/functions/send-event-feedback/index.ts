@@ -3,6 +3,7 @@
 import { createClient } from 'npm:@supabase/supabase-js@2'
 import { corsHeaders } from 'npm:@supabase/supabase-js@2/cors'
 import { signFeedbackToken } from '../_shared/feedback-token.ts'
+import { redactEmail } from '../_shared/redact.ts'
 
 const SITE_URL = 'https://goodvibescafe.org'
 
@@ -217,7 +218,7 @@ Deno.serve(async (req) => {
         if (data?.success === false) totalSkipped++
         else totalQueued++
       } catch (err) {
-        console.error('feedback send failed', { event: ev.id, email, err })
+        console.error('feedback send failed', { event: ev.id, email: redactEmail(email), err })
         totalSkipped++
       }
     }

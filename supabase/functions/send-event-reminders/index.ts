@@ -4,6 +4,7 @@
 // runs within the same UTC date do not double-send.
 import { createClient } from 'npm:@supabase/supabase-js@2'
 import { corsHeaders } from 'npm:@supabase/supabase-js@2/cors'
+import { redactEmail } from '../_shared/redact.ts'
 
 const SITE_URL = 'https://goodvibescafe.org'
 
@@ -268,7 +269,7 @@ Deno.serve(async (req) => {
         if (data?.success === false) totalSkipped++
         else totalQueued++
       } catch (err) {
-        console.error('reminder send failed', { event: ev.id, email, err })
+        console.error('reminder send failed', { event: ev.id, email: redactEmail(email), err })
         totalSkipped++
       }
     }

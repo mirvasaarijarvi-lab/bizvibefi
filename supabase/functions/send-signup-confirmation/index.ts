@@ -5,6 +5,7 @@
 // the function from being abused as an open email relay.
 import { createClient } from 'npm:@supabase/supabase-js@2'
 import { corsHeaders } from 'npm:@supabase/supabase-js@2/cors'
+import { redactEmail } from '../_shared/redact.ts'
 
 interface Body {
   eventId?: string
@@ -38,7 +39,7 @@ Deno.serve(async (req) => {
   const emailRaw = (body.email || '').trim().toLowerCase()
   const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailRaw)
   if (!eventId || !emailOk) {
-    console.log('signup-confirm: bad input', { eventId, emailRaw })
+    console.log('signup-confirm: bad input', { eventId, email: redactEmail(emailRaw) })
     return new Response(JSON.stringify({ ok: true }), {
       status: 200,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
@@ -62,7 +63,7 @@ Deno.serve(async (req) => {
 
   if (lookupErr) console.warn('signup-confirm: lookup error', lookupErr)
   if (!signup) {
-    console.log('signup-confirm: no matching signup', { eventId, emailRaw })
+    console.log('signup-confirm: no matching signup', { eventId, email: redactEmail(emailRaw) })
 
     return new Response(JSON.stringify({ ok: true }), {
       status: 200,
@@ -94,7 +95,7 @@ Deno.serve(async (req) => {
   const intro = (event.description || '').replace(/\s+/g, ' ').trim().slice(0, 240)
 
   console.log('signup-confirm: invoking relay', {
-    recipient: signup.email,
+    recipient: redactEmail(signup.email),
     eventTitle: event.title,
   })
 
