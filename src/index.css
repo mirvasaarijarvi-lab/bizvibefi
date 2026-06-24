@@ -1,5 +1,6 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap');
+/* Web fonts are preconnected and loaded via <link> tags in index.html
+   for a non-blocking, parallel fetch. Keep families in sync with the
+   --font-display / --font-body tokens below. */
 
 @tailwind base;
 @tailwind components;

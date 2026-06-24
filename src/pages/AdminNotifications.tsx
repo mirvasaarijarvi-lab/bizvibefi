@@ -237,7 +237,7 @@ const AdminNotifications = () => {
                         {n.message}
                       </p>
                       {(n.sender_name || n.sender_email) && (
-                        <div className="flex items-center gap-1.5 mt-2 text-xs text-muted-foreground/70 font-body">
+                        <div className="flex items-center gap-1.5 mt-2 text-xs text-muted-foreground font-body">
                           <Mail className="h-3 w-3 shrink-0" />
                           {n.sender_name && <span>{n.sender_name}</span>}
                           {n.sender_name && n.sender_email && <span>·</span>}
