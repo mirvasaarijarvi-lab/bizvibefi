@@ -313,7 +313,7 @@ const fi = {
     keyFigureLabelPlaceholder: "esim. Nopeampi toimitus",
     addKeyFigure: "Lisää luku",
     detail: {
-      readMore: "Lue lisää",
+      readMore: "Lue tapaus",
       backToShowcase: "Takaisin",
       notFound: "Kohdetta ei löytynyt.",
       challenge: "Haaste",
