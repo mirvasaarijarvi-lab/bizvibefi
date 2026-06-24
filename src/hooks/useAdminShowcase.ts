@@ -75,7 +75,7 @@ export const useUpdateShowcaseStatus = () => {
       }
       const { error } = await supabase
         .from("showcase_items")
-        .update(update)
+        .update(update as never)
         .eq("id", id);
       if (error) throw error;
     },
@@ -97,7 +97,7 @@ export const useBulkUpdateShowcaseStatus = () => {
       }
       const { error } = await supabase
         .from("showcase_items")
-        .update(update)
+        .update(update as never)
         .in("id", ids);
       if (error) throw error;
     },
@@ -165,7 +165,7 @@ export const useUpdateShowcaseFields = () => {
     mutationFn: async ({ id, fields }: { id: string; fields: ShowcaseFieldsUpdate }) => {
       const { error } = await supabase
         .from("showcase_items")
-        .update(fields as unknown as Record<string, unknown>)
+        .update(fields as never)
         .eq("id", id);
       if (error) throw error;
     },
