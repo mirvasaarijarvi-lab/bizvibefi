@@ -97,7 +97,7 @@ const NotificationBell = () => {
                             {n.message}
                           </p>
                           {n.sender_email && (
-                            <p className="text-[11px] text-muted-foreground/70 font-body mt-1">
+                            <p className="text-[11px] text-muted-foreground font-body mt-1">
                               {n.sender_name} · {n.sender_email}
                             </p>
                           )}
