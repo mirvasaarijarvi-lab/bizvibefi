@@ -313,7 +313,7 @@ const en = {
     keyFigureLabelPlaceholder: "e.g. Faster delivery",
     addKeyFigure: "Add figure",
     detail: {
-      readMore: "Read more",
+      readMore: "Read case study",
       backToShowcase: "Back to Showcase",
       notFound: "Showcase item not found.",
       challenge: "The Challenge",

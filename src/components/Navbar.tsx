@@ -233,7 +233,12 @@ const Navbar = () => {
               )}
             </AnimatePresence>
           </div>
-          <button className="text-foreground" onClick={() => setOpen(!open)}>
+          <button
+            className="text-foreground"
+            onClick={() => setOpen(!open)}
+            aria-label={open ? "Close menu" : "Open menu"}
+            aria-expanded={open}
+          >
             {open ? <X size={24} /> : <Menu size={24} />}
           </button>
         </div>

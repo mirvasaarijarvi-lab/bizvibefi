@@ -312,7 +312,7 @@ const sv = {
     keyFigureLabelPlaceholder: "t.ex. Snabbare leverans",
     addKeyFigure: "Lägg till nyckeltal",
     detail: {
-      readMore: "Läs mer",
+      readMore: "Läs fallstudien",
       backToShowcase: "Tillbaka till skyltfönstret",
       notFound: "Skyltfönsterobjektet hittades inte.",
       challenge: "Utmaningen",
