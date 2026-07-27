@@ -1255,6 +1255,7 @@ const Events = () => {
                     size="sm"
                     className="h-7 w-7 p-0"
                     onClick={() => setEditEvent(event)}
+                    aria-label={`Edit event ${localizedTitle}`}
                   >
                     <Pencil className="h-3.5 w-3.5" />
                   </Button>
@@ -1268,6 +1269,7 @@ const Events = () => {
                       }
                     }}
                     disabled={deleteMutation.isPending}
+                    aria-label={`Delete event ${localizedTitle}`}
                   >
                     <Trash2 className="h-3.5 w-3.5" />
                   </Button>
