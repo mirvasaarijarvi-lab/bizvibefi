@@ -66,7 +66,7 @@ const Unsubscribe = () => {
 
   return (
     <Layout>
-      <PageMeta title="Unsubscribe" description="Unsubscribe from Good Vibes Café emails" />
+      <PageMeta title="Unsubscribe — <Good Vibes Café/>" description="Unsubscribe from <Good Vibes Café/> newsletters and event emails. Confirm your preferences and stop future messages to your inbox." />
       <div className="container max-w-md py-16">
         <Card className="p-8 text-center space-y-4">
           {state === "loading" && (
