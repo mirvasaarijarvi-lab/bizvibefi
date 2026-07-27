@@ -51,7 +51,7 @@ const ResetPassword = () => {
 
   return (
     <Layout>
-      <PageMeta title="Reset Password — <Good Vibes Café/>" description="Set a new password." />
+      <PageMeta title="Reset Password — <Good Vibes Café/>" description="Set a new password for your <Good Vibes Café/> account and sign back in to the collective for builders." />
       <section className="py-20 px-4">
         <div className="max-w-md mx-auto">
           <h1 className="font-display text-3xl font-bold text-foreground mb-6 text-center">Set New Password</h1>
