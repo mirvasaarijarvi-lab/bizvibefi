@@ -110,7 +110,7 @@ const ApplyViber = () => {
   if (!user) {
     return (
       <Layout>
-        <PageMeta title="Apply for Viber — <Good Vibes Café/>" description="Become a Viber member of <Good Vibes Café/>." />
+        <PageMeta title="Apply for Viber — <Good Vibes Café/>" description="Become a Viber member of <Good Vibes Café/> to join the paid tier with vault access, exclusive events, and deeper builder connections." />
         <section className="py-24 md:py-36">
           <div className="container max-w-lg text-center">
             <h1 className="font-display text-3xl md:text-4xl font-bold mb-4">Sign in required</h1>

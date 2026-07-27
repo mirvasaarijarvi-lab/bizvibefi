@@ -262,7 +262,7 @@ const Profile = () => {
 
   return (
     <Layout>
-      <PageMeta title="Profile — <Good Vibes Café/>" description="Manage your <Good Vibes Café/> profile." />
+      <PageMeta title="Profile — <Good Vibes Café/>" description="Manage your <Good Vibes Café/> profile, view your membership status and badges, and update your builder details, links and visibility." />
       <section className="py-20 px-4">
         <div className="max-w-2xl mx-auto">
           <h1 className="font-display text-3xl font-bold text-foreground mb-8">Your Profile</h1>

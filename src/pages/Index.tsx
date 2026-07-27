@@ -445,8 +445,11 @@ const MetricsCounter = () => {
   ];
 
   return (
-    <section className="py-16 md:py-20 border-t border-border">
+    <section className="py-16 md:py-20 border-t border-border" aria-labelledby="community-metrics-heading">
       <div className="container">
+        <h2 id="community-metrics-heading" className="sr-only">
+          Community metrics
+        </h2>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 max-w-4xl mx-auto">
           {metrics.map((m, i) => (
             <MetricCard key={m.label} metric={m} index={i} />
