@@ -103,7 +103,7 @@ const Admin = () => {
 
   return (
     <Layout>
-      <PageMeta title="Admin" description="Administrative tools and operations" />
+      <PageMeta title="Admin — <Good Vibes Café/>" description="Administrative tools for <Good Vibes Café/>: moderate submissions, manage members and roles, review events, badges, notifications, and audit logs." />
       <div className="container max-w-5xl py-10">
         <div className="text-center mb-10">
           <p className="text-sm font-medium text-teal uppercase tracking-wider mb-2">
