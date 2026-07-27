@@ -132,8 +132,20 @@
     <priority>0.6</priority>
   </url>
   <url>
+    <loc>https://goodvibescafe.org/showcase/1c75a528-f373-4be2-9c5f-3ae8c50d119a</loc>
+    <lastmod>2026-06-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
     <loc>https://goodvibescafe.org/showcase/d58029b0-6dd4-4f59-82f4-011861f468f5</loc>
-    <lastmod>2026-06-15</lastmod>
+    <lastmod>2026-06-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://goodvibescafe.org/showcase/2538701c-0fc9-4dbe-8168-b7b19a5d16c5</loc>
+    <lastmod>2026-06-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
