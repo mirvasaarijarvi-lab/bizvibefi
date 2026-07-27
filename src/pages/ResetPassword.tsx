@@ -41,7 +41,7 @@ const ResetPassword = () => {
   if (!isRecovery) {
     return (
       <Layout>
-        <PageMeta title="Reset Password — <Good Vibes Café/>" description="Reset your password." />
+        <PageMeta title="Reset Password — <Good Vibes Café/>" description="Reset your <Good Vibes Café/> account password using the secure recovery link sent to your email inbox." />
         <section className="py-20 px-4 text-center">
           <p className="text-muted-foreground font-body">Invalid or expired reset link.</p>
         </section>
