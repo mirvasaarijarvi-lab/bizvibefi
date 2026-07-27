@@ -61,7 +61,7 @@ const ApplyStarter = () => {
   if (!user) {
     return (
       <Layout>
-        <PageMeta title="Join Starter — <Good Vibes Café/>" description="Join <Good Vibes Café/> Starter for free." />
+        <PageMeta title="Join Starter — <Good Vibes Café/>" description="Join <Good Vibes Café/> Starter for free. Get the WhatsApp community, free events, and #ShipHappens hackathons for builders in Finland." />
         <section className="py-24 md:py-36">
           <div className="container max-w-lg text-center">
             <h1 className="font-display text-3xl md:text-4xl font-bold mb-4">Sign in to continue</h1>
