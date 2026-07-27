@@ -46,6 +46,7 @@ const staticEntries: SitemapEntry[] = [
   { path: "/accessibility", changefreq: "yearly", priority: "0.3" },
   { path: "/privacy", changefreq: "yearly", priority: "0.3" },
   { path: "/terms", changefreq: "yearly", priority: "0.3" },
+  { path: "/cookies", changefreq: "yearly", priority: "0.3" },
 ];
 
 async function fetchRest<T>(path: string): Promise<T[]> {
@@ -100,6 +101,49 @@ async function buildDynamicEntries(): Promise<SitemapEntry[]> {
       path: `/members/${p.user_id}`,
       lastmod: toIso(p.updated_at),
       changefreq: "monthly",
+      priority: "0.4",
+    });
+  }
+
+  const events = await fetchRest<{ id: string; updated_at?: string }>(
+    "events?is_published=eq.true&select=id,updated_at",
+  );
+  for (const e of events) {
+    entries.push({
+      path: `/events/${e.id}/feedback`,
+      lastmod: toIso(e.updated_at),
+      changefreq: "monthly",
+      priority: "0.4",
+    });
+  }
+
+  const categories = await fetchRest<{ slug: string; updated_at?: string }>(
+    "forum_categories?select=slug,updated_at",
+  );
+  for (const c of categories) {
+    if (!c.slug) continue;
+    entries.push({
+      path: `/forum/${c.slug}`,
+      lastmod: toIso(c.updated_at),
+      changefreq: "weekly",
+      priority: "0.5",
+    });
+  }
+
+  const topics = await fetchRest<{
+    id: string;
+    updated_at?: string;
+    forum_categories?: { slug?: string } | null;
+  }>(
+    "forum_topics?select=id,updated_at,forum_categories(slug)",
+  );
+  for (const t of topics) {
+    const slug = t.forum_categories?.slug;
+    if (!slug || !t.id) continue;
+    entries.push({
+      path: `/forum/${slug}/${t.id}`,
+      lastmod: toIso(t.updated_at),
+      changefreq: "weekly",
       priority: "0.4",
     });
   }

@@ -76,7 +76,7 @@ const ApplyStarter = () => {
   if (submitted) {
     return (
       <Layout>
-        <PageMeta title="Welcome — <Good Vibes Café/>" description="You're in." />
+        <PageMeta title="Welcome — <Good Vibes Café/>" description="You're in the <Good Vibes Café/> Starter community. Check your inbox for next steps, WhatsApp invite, and upcoming builder events." />
         <section className="py-24 md:py-36">
           <div className="container max-w-lg text-center">
             <motion.div initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ duration: 0.5 }}>
