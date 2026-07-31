@@ -83,7 +83,7 @@ const Footer = () => {
             loading="lazy"
             width={48}
             height={48}
-            className="mx-auto mb-3 h-12 w-12 object-contain saturate-[.6] invert dark:invert-0"
+            className="mx-auto mb-3 h-12 w-12 object-contain saturate-[.6] opacity-40 invert dark:invert-0"
           />
           <p className="text-xs text-muted-foreground font-body">© {new Date().getFullYear()} {t("footer.rights")}</p>
         </div>
