@@ -3,6 +3,7 @@ import { useTranslation } from "@/i18n/useTranslation";
 import NewsletterSignup from "@/components/NewsletterSignup";
 import logoMarkDark from "@/assets/logo-mark-transparent.png";
 import logoMarkLight from "@/assets/logo-mark-light.png";
+import aiByCmimmio from "@/assets/ai-by-cmimmio.png.asset.json";
 
 const Footer = () => {
   const { t } = useTranslation();
@@ -76,6 +77,14 @@ const Footer = () => {
           </nav>
         </div>
         <div className="mt-8 pt-8 border-t border-border text-center">
+          <img
+            src={aiByCmimmio.url}
+            alt="AI by cmimmio"
+            loading="lazy"
+            width={48}
+            height={48}
+            className="mx-auto mb-3 h-12 w-12 object-contain saturate-[.6] invert dark:invert-0"
+          />
           <p className="text-xs text-muted-foreground font-body">© {new Date().getFullYear()} {t("footer.rights")}</p>
         </div>
       </div>
