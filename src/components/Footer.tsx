@@ -3,6 +3,7 @@ import { useTranslation } from "@/i18n/useTranslation";
 import NewsletterSignup from "@/components/NewsletterSignup";
 import logoMarkDark from "@/assets/logo-mark-transparent.png";
 import logoMarkLight from "@/assets/logo-mark-light.png";
+import aiByCmimmio from "@/assets/ai-by-cmimmio.png.asset.json";
 
 const Footer = () => {
   const { t } = useTranslation();
