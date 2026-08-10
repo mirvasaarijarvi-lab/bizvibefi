@@ -170,7 +170,7 @@ const RecruitmentPostCard = ({ post, authorName }: Props) => {
           <DialogHeader>
             <DialogTitle className="font-display">Message the poster</DialogTitle>
             <DialogDescription className="font-body">
-              Your message is delivered to their <Good Vibes Café/> inbox along with the post title.
+              Your message is delivered to their Good Vibes Café inbox along with the post title.
             </DialogDescription>
           </DialogHeader>
           <Textarea
