@@ -153,6 +153,45 @@ const GetGoing = () => {
           </motion.div>
         </div>
       </section>
+
+      {/* Case Examples — links to Showcase */}
+      <section className="pb-20 md:pb-28">
+        <div className="container">
+          <h2 className="font-display text-2xl md:text-4xl font-bold tracking-[-0.02em] text-center mb-12">
+            {t("getGoing.casesTitle")} <span className="text-gradient-prism">{t("getGoing.casesTitleHighlight")}</span> {lang === "fi" ? "tapahtumat" : ""}
+          </h2>
+          <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+            {[0, 1, 2].map((i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.1 }}
+                className="bg-card border border-border rounded-xl p-6 hover:glow-purple transition-all duration-300"
+              >
+                <span className="text-xs font-body font-semibold text-purple-soft bg-purple-vivid/10 px-3 py-1 rounded-full">
+                  {t(`getGoing.cases.${i}.category`)}
+                </span>
+                <h3 className="font-display text-lg font-semibold tracking-[-0.01em] mt-4">{t(`getGoing.cases.${i}.title`)}</h3>
+                <p className="mt-2 text-sm text-muted-foreground font-body">{t(`getGoing.cases.${i}.desc`)}</p>
+              </motion.div>
+            ))}
+          </div>
+
+          <div className="mt-10 text-center">
+            <Button variant="heroOutline" asChild>
+              <Link to="/showcase">
+                {t("getGoing.viewShowcase")} <ArrowRight className="ml-2 h-4 w-4" />
+              </Link>
+            </Button>
+          </div>
+
+          <div className="mt-16 text-center">
+            <p className="text-muted-foreground font-body">{t("getGoing.blogSoon")}</p>
+          </div>
+        </div>
+      </section>
     </Layout>
   );
 };
