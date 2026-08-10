@@ -25,6 +25,7 @@ interface Visibility {
   contact_email?: boolean;
   contact_phone?: boolean;
   website_links?: boolean;
+  ai_skills?: boolean;
 }
 
 interface MemberData {
@@ -40,6 +41,9 @@ interface MemberData {
   contact_phone: string | null;
   membership_tier: string;
   website_links: { label?: string; url: string }[] | null;
+  ai_skills: string[] | null;
+  skills_summary: string | null;
+  open_to_work: boolean | null;
   profile_visibility: Visibility | null;
   created_at: string;
   role?: string;
@@ -54,6 +58,7 @@ const defaultVisibility: Visibility = {
   contact_email: true,
   contact_phone: true,
   website_links: true,
+  ai_skills: true,
 };
 
 const MemberProfile = () => {
