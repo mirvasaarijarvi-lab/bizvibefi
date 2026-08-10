@@ -360,7 +360,7 @@ jobs:
         id: dbreset
         run: |
           set -o pipefail
-          if ! supabase db reset --linked=false 2>&1 | tee db-reset.txt; then
+          if ! supabase db reset --local 2>&1 | tee db-reset.txt; then
             echo "::error title=supabase db reset failed::Migrations or seed.sql raised a SQL error during reset. See db-reset.txt artifact and the log above."
             exit 1
           fi
@@ -410,7 +410,7 @@ jobs:
           # we never own and which change between CLI releases.
           supabase db diff \
             --schema public \
-            --linked=false 2>&1 | tee db-diff.txt
+            --local 2>&1 | tee db-diff.txt
 
           # The CLI exits 0 even when a diff exists, so we have to inspect
           # the output. Strip ANSI colour codes, blank lines, and the
@@ -714,9 +714,9 @@ jobs:
         run: |
           set -o pipefail
           # JSON output so we can emit precise GitHub annotations per finding.
-          supabase db lint --level error --linked=false --output json | tee lint.json
+          supabase db lint --level error --local --output json | tee lint.json
           # Human-readable form captured to a file for the summary/artifact.
-          supabase db lint --level error --linked=false 2>&1 | tee lint.txt || true
+          supabase db lint --level error --local 2>&1 | tee lint.txt || true
 
       - name: Upload db lint output artifact
         if: always() && hashFiles('lint.json') != ''
