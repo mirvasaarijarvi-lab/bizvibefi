@@ -45,6 +45,8 @@ const GetGoing = () => {
         </div>
       </section>
 
+      <RecruitmentSection />
+
       {/* Resources Grid */}
       <section className="pb-20">
         <div className="container">
