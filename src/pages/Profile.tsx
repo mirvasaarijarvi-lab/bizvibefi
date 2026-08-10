@@ -485,6 +485,65 @@ const Profile = () => {
                 </Button>
               </div>
 
+              {/* AI & Vibecoding Skills */}
+              <div className="border-t border-border pt-6 space-y-4">
+                <h2 className="font-display text-lg font-bold text-foreground flex items-center gap-2">
+                  <Sparkles className="h-5 w-5" /> AI & Vibecoding Skills
+                </h2>
+                <p className="text-sm text-muted-foreground font-body">
+                  Show what you build with. These appear on your public profile and help
+                  recruiters on the Get Going recruitment board find you.
+                </p>
+
+                <div className="flex flex-wrap gap-1.5">
+                  {AI_SKILL_TAGS.map((tag) => {
+                    const active = aiSkills.includes(tag);
+                    return (
+                      <button
+                        key={tag}
+                        type="button"
+                        aria-pressed={active}
+                        onClick={() =>
+                          setAiSkills((prev) =>
+                            prev.includes(tag) ? prev.filter((t) => t !== tag) : [...prev, tag]
+                          )
+                        }
+                      >
+                        <Badge
+                          variant={active ? "default" : "outline"}
+                          className="font-body text-[11px] cursor-pointer"
+                        >
+                          {tag}
+                        </Badge>
+                      </button>
+                    );
+                  })}
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="skills-summary" className="font-body">Skills summary</Label>
+                  <Textarea
+                    id="skills-summary"
+                    value={skillsSummary}
+                    onChange={(e) => setSkillsSummary(e.target.value)}
+                    rows={4}
+                    maxLength={1000}
+                    className="font-body"
+                    placeholder="What you have shipped with AI tools, the kind of work you are looking for, your experience level."
+                  />
+                </div>
+
+                <div className="flex items-center justify-between">
+                  <div>
+                    <Label className="font-body text-sm">Open to work</Label>
+                    <p className="text-xs text-muted-foreground font-body">
+                      Shows an "Open to work" badge on your profile.
+                    </p>
+                  </div>
+                  <Switch checked={openToWork} onCheckedChange={setOpenToWork} />
+                </div>
+              </div>
+
               {/* Visibility Settings */}
               <div className="border-t border-border pt-6 space-y-4">
                 <h2 className="font-display text-lg font-bold text-foreground">Profile Visibility</h2>
@@ -499,6 +558,7 @@ const Profile = () => {
                   { key: "contact_email", label: "Contact Email" },
                   { key: "contact_phone", label: "Phone Number" },
                   { key: "website_links", label: "Projects & Websites" },
+                  { key: "ai_skills", label: "AI & Vibecoding Skills" },
                 ] as const).map(({ key, label }) => (
                   <div key={key} className="flex items-center justify-between">
                     <Label className="font-body text-sm">{label}</Label>
