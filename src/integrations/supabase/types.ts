@@ -1570,6 +1570,29 @@ export type Database = {
           website_links: Json
         }[]
       }
+      list_public_recruitment_posts: {
+        Args: never
+        Returns: {
+          allow_contact_request: boolean
+          apply_email: string
+          apply_url: string
+          created_at: string
+          description: string
+          employment_type: string
+          expires_at: string
+          id: string
+          is_remote: boolean
+          location: string
+          organization: string
+          rejection_reason: string
+          status: Database["public"]["Enums"]["approval_status"]
+          tags: string[]
+          title: string
+          type: Database["public"]["Enums"]["recruitment_post_type"]
+          updated_at: string
+          user_id: string
+        }[]
+      }
       log_showcase_download: {
         Args: { _file_name?: string; _file_url: string; _item_id: string }
         Returns: string

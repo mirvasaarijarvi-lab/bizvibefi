@@ -47,28 +47,20 @@ export const RECRUITMENT_TYPE_LABELS: Record<RecruitmentPostType, string> = {
   seeking_work: "Seeking employment",
 };
 
-/** Approved posts, visible to everyone (including visitors). */
+/** Approved posts, visible to everyone (including visitors).
+ *  Served through an RPC so contact emails stay hidden from anonymous visitors. */
 export const useRecruitmentPosts = (type?: RecruitmentPostType | "all") => {
   return useQuery({
     queryKey: ["recruitment-posts", type ?? "all"],
     queryFn: async () => {
-      let query = supabase
-        .from("recruitment_posts")
-        .select("*")
-        .eq("status", "approved")
-        .order("created_at", { ascending: false });
-
-      if (type && type !== "all") query = query.eq("type", type);
-
-      const { data, error } = await query;
+      const { data, error } = await supabase.rpc("list_public_recruitment_posts");
       if (error) throw error;
-      const today = new Date().toISOString().slice(0, 10);
-      return ((data ?? []) as unknown as RecruitmentPost[]).filter(
-        (p) => !p.expires_at || p.expires_at >= today
-      );
+      const posts = (data ?? []) as unknown as RecruitmentPost[];
+      return type && type !== "all" ? posts.filter((p) => p.type === type) : posts;
     },
   });
 };
+
 
 /** The signed-in member's own posts, any status. */
 export const useMyRecruitmentPosts = () => {
