@@ -17,6 +17,7 @@ import {
   Activity,
   MessageSquare,
   FileSearch,
+  Briefcase,
 } from "lucide-react";
 
 const TILES: Array<{
