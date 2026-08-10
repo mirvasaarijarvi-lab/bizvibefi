@@ -1,0 +1,28 @@
+export const AI_SKILL_TAGS = [
+  "Lovable",
+  "Cursor",
+  "GitHub Copilot",
+  "Claude Code",
+  "Windsurf",
+  "Bolt",
+  "Replit",
+  "v0",
+  "Prompt engineering",
+  "AI agents",
+  "RAG",
+  "LLM fine-tuning",
+  "Supabase",
+  "React",
+  "TypeScript",
+  "Python",
+  "n8n / Make",
+  "Zapier",
+  "Data & analytics",
+  "UX / UI design",
+  "Product management",
+  "QA & testing",
+  "DevOps",
+  "No-code automation",
+] as const;
+
+export type AiSkillTag = (typeof AI_SKILL_TAGS)[number];

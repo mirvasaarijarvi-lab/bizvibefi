@@ -16,7 +16,8 @@ import Layout from "@/components/Layout";
 import PageMeta from "@/components/PageMeta";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { Camera, Linkedin, Building, User, Globe, Mail, Phone, Plus, Trash2, Inbox, CheckCheck, MessageSquare, Calendar, KeyRound } from "lucide-react";
+import { Camera, Linkedin, Building, User, Globe, Mail, Phone, Plus, Trash2, Inbox, CheckCheck, MessageSquare, Calendar, KeyRound, Sparkles } from "lucide-react";
+import { AI_SKILL_TAGS } from "@/lib/aiSkills";
 import { formatDistanceToNow } from "date-fns";
 
 const Profile = () => {
@@ -129,6 +130,9 @@ const Profile = () => {
   const [contactEmail, setContactEmail] = useState("");
   const [contactPhone, setContactPhone] = useState("");
   const [websiteLinks, setWebsiteLinks] = useState<WebsiteLink[]>([]);
+  const [aiSkills, setAiSkills] = useState<string[]>([]);
+  const [skillsSummary, setSkillsSummary] = useState("");
+  const [openToWork, setOpenToWork] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPasswordVal, setNewPasswordVal] = useState("");
@@ -142,6 +146,7 @@ const Profile = () => {
     contact_email: true,
     contact_phone: true,
     website_links: true,
+    ai_skills: true,
   });
 
   useEffect(() => {
@@ -158,6 +163,9 @@ const Profile = () => {
       setContactEmail(profile.contact_email ?? "");
       setContactPhone(profile.contact_phone ?? "");
       setWebsiteLinks(Array.isArray(profile.website_links) ? profile.website_links : []);
+      setAiSkills(Array.isArray(profile.ai_skills) ? profile.ai_skills : []);
+      setSkillsSummary(profile.skills_summary ?? "");
+      setOpenToWork(profile.open_to_work ?? false);
       const vis = profile.profile_visibility;
       if (vis && typeof vis === "object") {
         setVisibility((prev) => ({ ...prev, ...vis }));
@@ -209,6 +217,9 @@ const Profile = () => {
         contact_email: contactEmail.trim() || null,
         contact_phone: contactPhone.trim() || null,
         website_links: cleanLinks.length > 0 ? cleanLinks : [],
+        ai_skills: aiSkills,
+        skills_summary: skillsSummary.trim() || null,
+        open_to_work: openToWork,
         profile_visibility: visibility,
       } as never);
       toast({ title: "Profile updated!" });
@@ -475,6 +486,65 @@ const Profile = () => {
                 </Button>
               </div>
 
+              {/* AI & Vibecoding Skills */}
+              <div className="border-t border-border pt-6 space-y-4">
+                <h2 className="font-display text-lg font-bold text-foreground flex items-center gap-2">
+                  <Sparkles className="h-5 w-5" /> AI & Vibecoding Skills
+                </h2>
+                <p className="text-sm text-muted-foreground font-body">
+                  Show what you build with. These appear on your public profile and help
+                  recruiters on the Get Going recruitment board find you.
+                </p>
+
+                <div className="flex flex-wrap gap-1.5">
+                  {AI_SKILL_TAGS.map((tag) => {
+                    const active = aiSkills.includes(tag);
+                    return (
+                      <button
+                        key={tag}
+                        type="button"
+                        aria-pressed={active}
+                        onClick={() =>
+                          setAiSkills((prev) =>
+                            prev.includes(tag) ? prev.filter((t) => t !== tag) : [...prev, tag]
+                          )
+                        }
+                      >
+                        <Badge
+                          variant={active ? "default" : "outline"}
+                          className="font-body text-[11px] cursor-pointer"
+                        >
+                          {tag}
+                        </Badge>
+                      </button>
+                    );
+                  })}
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="skills-summary" className="font-body">Skills summary</Label>
+                  <Textarea
+                    id="skills-summary"
+                    value={skillsSummary}
+                    onChange={(e) => setSkillsSummary(e.target.value)}
+                    rows={4}
+                    maxLength={1000}
+                    className="font-body"
+                    placeholder="What you have shipped with AI tools, the kind of work you are looking for, your experience level."
+                  />
+                </div>
+
+                <div className="flex items-center justify-between">
+                  <div>
+                    <Label className="font-body text-sm">Open to work</Label>
+                    <p className="text-xs text-muted-foreground font-body">
+                      Shows an "Open to work" badge on your profile.
+                    </p>
+                  </div>
+                  <Switch checked={openToWork} onCheckedChange={setOpenToWork} />
+                </div>
+              </div>
+
               {/* Visibility Settings */}
               <div className="border-t border-border pt-6 space-y-4">
                 <h2 className="font-display text-lg font-bold text-foreground">Profile Visibility</h2>
@@ -489,6 +559,7 @@ const Profile = () => {
                   { key: "contact_email", label: "Contact Email" },
                   { key: "contact_phone", label: "Phone Number" },
                   { key: "website_links", label: "Projects & Websites" },
+                  { key: "ai_skills", label: "AI & Vibecoding Skills" },
                 ] as const).map(({ key, label }) => (
                   <div key={key} className="flex items-center justify-between">
                     <Label className="font-body text-sm">{label}</Label>

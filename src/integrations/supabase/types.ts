@@ -892,6 +892,7 @@ export type Database = {
       }
       profiles: {
         Row: {
+          ai_skills: string[]
           avatar_url: string | null
           bio: string | null
           company: string | null
@@ -903,7 +904,9 @@ export type Database = {
           id: string
           linkedin_url: string | null
           membership_tier: Database["public"]["Enums"]["membership_tier"]
+          open_to_work: boolean
           profile_visibility: Json
+          skills_summary: string | null
           updated_at: string
           user_id: string
           viber_access_override: boolean
@@ -913,6 +916,7 @@ export type Database = {
           website_links: Json | null
         }
         Insert: {
+          ai_skills?: string[]
           avatar_url?: string | null
           bio?: string | null
           company?: string | null
@@ -924,7 +928,9 @@ export type Database = {
           id?: string
           linkedin_url?: string | null
           membership_tier?: Database["public"]["Enums"]["membership_tier"]
+          open_to_work?: boolean
           profile_visibility?: Json
+          skills_summary?: string | null
           updated_at?: string
           user_id: string
           viber_access_override?: boolean
@@ -934,6 +940,7 @@ export type Database = {
           website_links?: Json | null
         }
         Update: {
+          ai_skills?: string[]
           avatar_url?: string | null
           bio?: string | null
           company?: string | null
@@ -945,7 +952,9 @@ export type Database = {
           id?: string
           linkedin_url?: string | null
           membership_tier?: Database["public"]["Enums"]["membership_tier"]
+          open_to_work?: boolean
           profile_visibility?: Json
+          skills_summary?: string | null
           updated_at?: string
           user_id?: string
           viber_access_override?: boolean
@@ -953,6 +962,69 @@ export type Database = {
           viber_started_at?: string | null
           vibetor_type?: Database["public"]["Enums"]["vibetor_type"] | null
           website_links?: Json | null
+        }
+        Relationships: []
+      }
+      recruitment_posts: {
+        Row: {
+          allow_contact_request: boolean
+          apply_email: string | null
+          apply_url: string | null
+          created_at: string
+          description: string
+          employment_type: string | null
+          expires_at: string | null
+          id: string
+          is_remote: boolean
+          location: string | null
+          organization: string | null
+          rejection_reason: string | null
+          status: Database["public"]["Enums"]["approval_status"]
+          tags: string[]
+          title: string
+          type: Database["public"]["Enums"]["recruitment_post_type"]
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          allow_contact_request?: boolean
+          apply_email?: string | null
+          apply_url?: string | null
+          created_at?: string
+          description: string
+          employment_type?: string | null
+          expires_at?: string | null
+          id?: string
+          is_remote?: boolean
+          location?: string | null
+          organization?: string | null
+          rejection_reason?: string | null
+          status?: Database["public"]["Enums"]["approval_status"]
+          tags?: string[]
+          title: string
+          type: Database["public"]["Enums"]["recruitment_post_type"]
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          allow_contact_request?: boolean
+          apply_email?: string | null
+          apply_url?: string | null
+          created_at?: string
+          description?: string
+          employment_type?: string | null
+          expires_at?: string | null
+          id?: string
+          is_remote?: boolean
+          location?: string | null
+          organization?: string | null
+          rejection_reason?: string | null
+          status?: Database["public"]["Enums"]["approval_status"]
+          tags?: string[]
+          title?: string
+          type?: Database["public"]["Enums"]["recruitment_post_type"]
+          updated_at?: string
+          user_id?: string
         }
         Relationships: []
       }
@@ -1433,6 +1505,7 @@ export type Database = {
       get_public_profile: {
         Args: { _user_id: string }
         Returns: {
+          ai_skills: string[]
           avatar_url: string
           bio: string
           company: string
@@ -1444,7 +1517,9 @@ export type Database = {
           id: string
           linkedin_url: string
           membership_tier: Database["public"]["Enums"]["membership_tier"]
+          open_to_work: boolean
           profile_visibility: Json
+          skills_summary: string
           updated_at: string
           user_id: string
           viber_access_override: boolean
@@ -1473,6 +1548,7 @@ export type Database = {
       list_public_profiles: {
         Args: never
         Returns: {
+          ai_skills: string[]
           avatar_url: string
           bio: string
           company: string
@@ -1484,7 +1560,9 @@ export type Database = {
           id: string
           linkedin_url: string
           membership_tier: Database["public"]["Enums"]["membership_tier"]
+          open_to_work: boolean
           profile_visibility: Json
+          skills_summary: string
           updated_at: string
           user_id: string
           viber_access_override: boolean
@@ -1547,6 +1625,7 @@ export type Database = {
         | "other"
       event_type: "meetup" | "webinar" | "workshop" | "hackathon"
       membership_tier: "starter" | "viber" | "vibetor"
+      recruitment_post_type: "open_position" | "training" | "seeking_work"
       rsvp_status: "going" | "maybe" | "cancelled"
       showcase_type:
         | "case_study"
@@ -1702,6 +1781,7 @@ export const Constants = {
       ],
       event_type: ["meetup", "webinar", "workshop", "hackathon"],
       membership_tier: ["starter", "viber", "vibetor"],
+      recruitment_post_type: ["open_position", "training", "seeking_work"],
       rsvp_status: ["going", "maybe", "cancelled"],
       showcase_type: [
         "case_study",

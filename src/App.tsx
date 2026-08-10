@@ -47,6 +47,7 @@ const AdminEventRegistrations = lazy(() => import("./pages/AdminEventRegistratio
 const AdminEventFeedback = lazy(() => import("./pages/AdminEventFeedback.tsx"));
 const AdminPresentationAccess = lazy(() => import("./pages/AdminPresentationAccess.tsx"));
 const AdminMessages = lazy(() => import("./pages/AdminMessages.tsx"));
+const AdminRecruitment = lazy(() => import("./pages/AdminRecruitment.tsx"));
 const Unsubscribe = lazy(() => import("./pages/Unsubscribe.tsx"));
 const EventFeedback = lazy(() => import("./pages/EventFeedback.tsx"));
 const NotFound = lazy(() => import("./pages/NotFound.tsx"));
@@ -102,6 +103,7 @@ const App = () => (
                 <Route path="/admin/event-registrations" element={<AdminEventRegistrations />} />
                 <Route path="/admin/event-feedback" element={<AdminEventFeedback />} />
                 <Route path="/admin/messages" element={<AdminMessages />} />
+                <Route path="/admin/recruitment" element={<AdminRecruitment />} />
                 <Route path="/admin/presentation-access" element={<AdminPresentationAccess />} />
                 <Route path="/unsubscribe" element={<Unsubscribe />} />
                 <Route path="*" element={<NotFound />} />

@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import Layout from "@/components/Layout";
 import PageMeta from "@/components/PageMeta";
 import HeroAvatar from "@/components/HeroAvatar";
+import RecruitmentSection from "@/components/recruitment/RecruitmentSection";
 import mascotRunning from "@/assets/mascot-running.png";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -142,6 +143,9 @@ const GetGoing = () => {
           </div>
         </div>
       </section>
+
+      <RecruitmentSection />
+
 
       {/* Viber Upgrade CTA */}
       <section className="pb-20 md:pb-28">

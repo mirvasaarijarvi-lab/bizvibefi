@@ -17,6 +17,7 @@ import {
   Activity,
   MessageSquare,
   FileSearch,
+  Briefcase,
 } from "lucide-react";
 
 const TILES: Array<{
@@ -54,6 +55,12 @@ const TILES: Array<{
     label: "Event Feedback",
     description: "Read ratings, comments, and survey responses.",
     Icon: MessageSquare,
+  },
+  {
+    to: "/admin/recruitment",
+    label: "Recruitment Moderation",
+    description: "Approve jobs, trainings, and members seeking work.",
+    Icon: Briefcase,
   },
   {
     to: "/admin/messages",

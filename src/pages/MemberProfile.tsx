@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
-import { Building2, Linkedin, ExternalLink, Globe, Mail, Phone, ArrowLeft, MessageSquare, Send } from "lucide-react";
+import { Building2, Linkedin, ExternalLink, Globe, Mail, Phone, ArrowLeft, MessageSquare, Send, Sparkles } from "lucide-react";
 import { motion } from "framer-motion";
 import { useState } from "react";
 import { safeUrl } from "@/lib/safeUrl";
@@ -25,6 +25,7 @@ interface Visibility {
   contact_email?: boolean;
   contact_phone?: boolean;
   website_links?: boolean;
+  ai_skills?: boolean;
 }
 
 interface MemberData {
@@ -40,6 +41,9 @@ interface MemberData {
   contact_phone: string | null;
   membership_tier: string;
   website_links: { label?: string; url: string }[] | null;
+  ai_skills: string[] | null;
+  skills_summary: string | null;
+  open_to_work: boolean | null;
   profile_visibility: Visibility | null;
   created_at: string;
   role?: string;
@@ -54,6 +58,7 @@ const defaultVisibility: Visibility = {
   contact_email: true,
   contact_phone: true,
   website_links: true,
+  ai_skills: true,
 };
 
 const MemberProfile = () => {
@@ -212,6 +217,11 @@ const MemberProfile = () => {
                       {member.membership_tier === "viber" && (
                         <Badge variant="default" className="text-[10px] px-1.5 py-0">VIBER</Badge>
                       )}
+                      {member.open_to_work && (
+                        <Badge variant="outline" className="text-[10px] px-1.5 py-0 border-primary/50 text-primary">
+                          OPEN TO WORK
+                        </Badge>
+                      )}
                     </div>
                     {showField("company") && member.company && (
                       <p className="text-muted-foreground flex items-center gap-1.5 mt-1 min-w-0">
@@ -245,6 +255,32 @@ const MemberProfile = () => {
                     </p>
                   </div>
                 )}
+
+                {/* AI & Vibecoding skills */}
+                {showField("ai_skills") &&
+                  ((member.ai_skills?.length ?? 0) > 0 || member.skills_summary) && (
+                    <div className="mb-6 border border-border rounded-xl p-4">
+                      <h2 className="font-display text-sm font-bold uppercase tracking-wider text-muted-foreground mb-3 flex items-center gap-2">
+                        <Sparkles className="h-4 w-4" /> AI & Vibecoding skills
+                      </h2>
+                      {(member.ai_skills?.length ?? 0) > 0 && (
+                        <div className="flex flex-wrap gap-1.5 mb-3">
+                          {member.ai_skills!.map((tag) => (
+                            <Badge key={tag} variant="outline" className="font-body text-[11px]">
+                              {tag}
+                            </Badge>
+                          ))}
+                        </div>
+                      )}
+                      {member.skills_summary && (
+                        <p className="text-sm text-muted-foreground font-body whitespace-pre-line break-words">
+                          {member.skills_summary}
+                        </p>
+                      )}
+                    </div>
+                  )}
+
+
 
                 {/* Contact & Links */}
                 <div className="space-y-3">
