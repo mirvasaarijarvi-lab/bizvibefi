@@ -251,6 +251,32 @@ const MemberProfile = () => {
                   </div>
                 )}
 
+                {/* AI & Vibecoding skills */}
+                {showField("ai_skills") &&
+                  ((member.ai_skills?.length ?? 0) > 0 || member.skills_summary) && (
+                    <div className="mb-6 border border-border rounded-xl p-4">
+                      <h2 className="font-display text-sm font-bold uppercase tracking-wider text-muted-foreground mb-3 flex items-center gap-2">
+                        <Sparkles className="h-4 w-4" /> AI & Vibecoding skills
+                      </h2>
+                      {(member.ai_skills?.length ?? 0) > 0 && (
+                        <div className="flex flex-wrap gap-1.5 mb-3">
+                          {member.ai_skills!.map((tag) => (
+                            <Badge key={tag} variant="outline" className="font-body text-[11px]">
+                              {tag}
+                            </Badge>
+                          ))}
+                        </div>
+                      )}
+                      {member.skills_summary && (
+                        <p className="text-sm text-muted-foreground font-body whitespace-pre-line break-words">
+                          {member.skills_summary}
+                        </p>
+                      )}
+                    </div>
+                  )}
+
+
+
                 {/* Contact & Links */}
                 <div className="space-y-3">
                   {showField("contact_email") && member.contact_email && (
