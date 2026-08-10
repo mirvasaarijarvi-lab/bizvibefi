@@ -216,6 +216,9 @@ const Profile = () => {
         contact_email: contactEmail.trim() || null,
         contact_phone: contactPhone.trim() || null,
         website_links: cleanLinks.length > 0 ? cleanLinks : [],
+        ai_skills: aiSkills,
+        skills_summary: skillsSummary.trim() || null,
+        open_to_work: openToWork,
         profile_visibility: visibility,
       } as never);
       toast({ title: "Profile updated!" });
