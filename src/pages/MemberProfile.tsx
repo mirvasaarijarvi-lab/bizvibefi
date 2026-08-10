@@ -217,6 +217,11 @@ const MemberProfile = () => {
                       {member.membership_tier === "viber" && (
                         <Badge variant="default" className="text-[10px] px-1.5 py-0">VIBER</Badge>
                       )}
+                      {member.open_to_work && (
+                        <Badge variant="outline" className="text-[10px] px-1.5 py-0 border-primary/50 text-primary">
+                          OPEN TO WORK
+                        </Badge>
+                      )}
                     </div>
                     {showField("company") && member.company && (
                       <p className="text-muted-foreground flex items-center gap-1.5 mt-1 min-w-0">
