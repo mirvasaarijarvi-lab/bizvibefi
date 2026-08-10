@@ -16,7 +16,8 @@ import Layout from "@/components/Layout";
 import PageMeta from "@/components/PageMeta";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { Camera, Linkedin, Building, User, Globe, Mail, Phone, Plus, Trash2, Inbox, CheckCheck, MessageSquare, Calendar, KeyRound } from "lucide-react";
+import { Camera, Linkedin, Building, User, Globe, Mail, Phone, Plus, Trash2, Inbox, CheckCheck, MessageSquare, Calendar, KeyRound, Sparkles } from "lucide-react";
+import { AI_SKILL_TAGS } from "@/lib/aiSkills";
 import { formatDistanceToNow } from "date-fns";
 
 const Profile = () => {
