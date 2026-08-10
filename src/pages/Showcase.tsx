@@ -94,7 +94,7 @@ const ShowcaseCard = ({ item }: { item: ShowcaseItem }) => {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
     >
-      <Link to={`/showcase/${item.id}`} className="block">
+      <Link to={`/showcase/${item.id}`} className="block" aria-label={`${t("showcase.detail.readMore")}: ${item.title}`}>
         <Card className="h-full flex flex-col hover:border-primary/40 transition-colors group">
           {item.image_url ? (
             <div className="aspect-video w-full overflow-hidden rounded-t-lg bg-muted">
@@ -165,16 +165,26 @@ const ShowcaseCard = ({ item }: { item: ShowcaseItem }) => {
               const all = [...(item.link_urls ?? []), ...(item.link_url ? [{ url: item.link_url }] : [])];
               const safe = all[0] ? safeUrl(all[0].url) : null;
               return safe ? (
-                <Button variant="outline" size="sm" asChild onClick={(e) => e.stopPropagation()}>
-                  <a href={safe} target="_blank" rel="noopener noreferrer">
-                    {all[0].label || t("showcase.visitLink")} <ExternalLink className="ml-1 h-3 w-3" />
-                  </a>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  type="button"
+                  aria-label={`${all[0].label || t("showcase.visitLink")}: ${item.title}`}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    window.open(safe, "_blank", "noopener,noreferrer");
+                  }}
+                >
+                  {all[0].label || t("showcase.visitLink")} <ExternalLink className="ml-1 h-3 w-3" />
                 </Button>
               ) : null;
             })()}
-            <Button variant="ghost" size="sm" className="ml-auto">
-              {t("showcase.detail.readMore")} <ArrowRight className="ml-1 h-3 w-3" />
-            </Button>
+            <span className="ml-auto inline-flex items-center text-sm font-medium text-foreground/80 group-hover:text-primary transition-colors">
+              {t("showcase.detail.readMore")}
+              <span className="sr-only">: {item.title}</span>
+              <ArrowRight className="ml-1 h-3 w-3" />
+            </span>
           </CardFooter>
         </Card>
       </Link>
