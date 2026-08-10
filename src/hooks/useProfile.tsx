@@ -20,6 +20,9 @@ export interface Profile {
   contact_email: string | null;
   contact_phone: string | null;
   membership_tier: "starter" | "viber" | "vibetor";
+  ai_skills: string[] | null;
+  skills_summary: string | null;
+  open_to_work: boolean | null;
   profile_visibility: Record<string, boolean> | null;
   created_at: string;
   updated_at: string;
