@@ -56,6 +56,12 @@ const TILES: Array<{
     Icon: MessageSquare,
   },
   {
+    to: "/admin/recruitment",
+    label: "Recruitment Moderation",
+    description: "Approve jobs, trainings, and members seeking work.",
+    Icon: Briefcase,
+  },
+  {
     to: "/admin/messages",
     label: "Send Messages",
     description: "Compose and send emails to members.",
