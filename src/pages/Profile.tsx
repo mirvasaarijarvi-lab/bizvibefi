@@ -129,6 +129,9 @@ const Profile = () => {
   const [contactEmail, setContactEmail] = useState("");
   const [contactPhone, setContactPhone] = useState("");
   const [websiteLinks, setWebsiteLinks] = useState<WebsiteLink[]>([]);
+  const [aiSkills, setAiSkills] = useState<string[]>([]);
+  const [skillsSummary, setSkillsSummary] = useState("");
+  const [openToWork, setOpenToWork] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPasswordVal, setNewPasswordVal] = useState("");
@@ -142,6 +145,7 @@ const Profile = () => {
     contact_email: true,
     contact_phone: true,
     website_links: true,
+    ai_skills: true,
   });
 
   useEffect(() => {
