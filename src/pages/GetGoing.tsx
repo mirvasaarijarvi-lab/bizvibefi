@@ -143,6 +143,9 @@ const GetGoing = () => {
         </div>
       </section>
 
+      <RecruitmentSection />
+
+
       {/* Viber Upgrade CTA */}
       <section className="pb-20 md:pb-28">
         <div className="container max-w-4xl">
