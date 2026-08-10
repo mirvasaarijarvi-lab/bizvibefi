@@ -162,6 +162,9 @@ const Profile = () => {
       setContactEmail(profile.contact_email ?? "");
       setContactPhone(profile.contact_phone ?? "");
       setWebsiteLinks(Array.isArray(profile.website_links) ? profile.website_links : []);
+      setAiSkills(Array.isArray(profile.ai_skills) ? profile.ai_skills : []);
+      setSkillsSummary(profile.skills_summary ?? "");
+      setOpenToWork(profile.open_to_work ?? false);
       const vis = profile.profile_visibility;
       if (vis && typeof vis === "object") {
         setVisibility((prev) => ({ ...prev, ...vis }));
