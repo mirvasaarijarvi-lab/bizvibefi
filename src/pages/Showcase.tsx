@@ -94,7 +94,7 @@ const ShowcaseCard = ({ item }: { item: ShowcaseItem }) => {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
     >
-      <Link to={`/showcase/${item.id}`} className="block">
+      <Link to={`/showcase/${item.id}`} className="block" aria-label={`${t("showcase.detail.readMore")}: ${item.title}`}>
         <Card className="h-full flex flex-col hover:border-primary/40 transition-colors group">
           {item.image_url ? (
             <div className="aspect-video w-full overflow-hidden rounded-t-lg bg-muted">
