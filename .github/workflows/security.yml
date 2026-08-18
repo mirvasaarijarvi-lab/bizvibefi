@@ -120,7 +120,7 @@ jobs:
 
       - name: Upload full report + baseline
         if: always() && steps.report.outputs.present == 'true'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: lovable-security-report
           path: |
@@ -447,7 +447,7 @@ jobs:
 
       - name: Upload db reset/diff output artifact
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: supabase-db-reset-diff-pg${{ matrix.pg_major }}
           path: |
@@ -627,7 +627,7 @@ jobs:
 
       - name: Upload RLS test output artifact
         if: always() && hashFiles('rls-tests.txt') != ''
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: supabase-rls-tests-pg${{ matrix.pg_major }}
           path: |
@@ -721,7 +721,7 @@ jobs:
 
       - name: Upload db lint output artifact
         if: always() && hashFiles('lint.json') != ''
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: supabase-db-lint-pg${{ matrix.pg_major }}
           path: |

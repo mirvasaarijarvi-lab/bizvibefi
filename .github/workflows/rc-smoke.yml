@@ -80,7 +80,7 @@ jobs:
 
       - name: Upload smoke logs
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: security-smoke-logs
           path: /tmp/security-smoke/
