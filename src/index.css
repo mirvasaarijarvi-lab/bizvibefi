@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=OpenDyslexic&display=swap');
 /* Web fonts are preconnected and loaded via <link> tags in index.html
    for a non-blocking, parallel fetch. Keep families in sync with the
    --font-display / --font-body tokens below. */
@@ -220,7 +221,6 @@
 }
 
 /* ===== Accessibility Widget Overrides ===== */
-@import url('https://fonts.googleapis.com/css2?family=OpenDyslexic&display=swap');
 
 .a11y-dyslexia * {
   font-family: 'OpenDyslexic', sans-serif !important;
