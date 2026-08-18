@@ -38,6 +38,10 @@ const vibetorBenefits = [
 
 const Community = () => {
   const { t } = useTranslation();
+  const { data: testimonialItems = [] } = useShowcaseItems("testimonial");
+  const { data: caseStudyItems = [] } = useShowcaseItems("case_study");
+  const realStories = [...testimonialItems, ...caseStudyItems].slice(0, 6);
+
 
   return (
     <Layout>
