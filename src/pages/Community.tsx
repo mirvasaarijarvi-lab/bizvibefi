@@ -199,10 +199,13 @@ const Community = () => {
             <p className="mt-4 text-muted-foreground font-body">{t("community.testimonials.subtitle")}</p>
           </motion.div>
 
+          {realStories.length === 0 ? (
+            <p className="text-center font-body text-muted-foreground">{t("community.testimonials.empty")}</p>
+          ) : (
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {[0, 1, 2, 3, 4, 5].map((i) => (
+            {realStories.map((item, i) => (
               <motion.div
-                key={i}
+                key={item.id}
                 initial={{ opacity: 0, y: 16 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
@@ -212,28 +215,24 @@ const Community = () => {
                 <div>
                   <Quote className="h-5 w-5 text-purple-soft mb-3 opacity-60" />
                   <p className="font-body text-sm text-foreground/90 leading-relaxed italic">
-                    "{t(`community.testimonials.items.${i}.quote`)}"
+                    "{item.description}"
                   </p>
                 </div>
-                <div className="mt-5 flex items-center justify-between">
-                  <div>
-                    <p className="font-display text-sm font-semibold text-foreground">
-                      {t(`community.testimonials.items.${i}.name`)}
-                    </p>
-                    <p className="font-body text-xs text-muted-foreground">
-                      {t(`community.testimonials.items.${i}.role`)}
-                    </p>
-                  </div>
-                  <Badge
-                    variant={t(`community.testimonials.items.${i}.tier`) === "Viber" ? "default" : "secondary"}
-                    className="text-xs"
+                <div className="mt-5 flex items-center justify-between gap-3">
+                  <p className="font-display text-sm font-semibold text-foreground">{item.title}</p>
+                  <Link
+                    to={`/showcase/${item.id}`}
+                    className="font-body text-xs text-purple-vivid hover:underline shrink-0"
+                    aria-label={`Read the full story: ${item.title}`}
                   >
-                    {t(`community.testimonials.items.${i}.tier`)}
-                  </Badge>
+                    Read story
+                  </Link>
                 </div>
               </motion.div>
             ))}
           </div>
+          )}
+
 
           {/* Cross-links */}
           <div className="flex flex-wrap justify-center gap-4 mt-12">
