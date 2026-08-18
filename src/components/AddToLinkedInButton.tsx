@@ -1,5 +1,5 @@
+import { LinkedInIcon } from "@/components/icons/LinkedInIcon";
 import { Button } from "@/components/ui/button";
-import { Linkedin } from "lucide-react";
 import { linkedInAddToProfileUrl } from "@/lib/certificate";
 
 interface Props {
@@ -30,7 +30,7 @@ const AddToLinkedInButton = ({ name, issueDate, certUrl, certId, className, size
   return (
     <Button asChild variant="outline" size={size} className={className}>
       <a href={url} target="_blank" rel="noopener noreferrer">
-        <Linkedin className="h-4 w-4" />
+        <LinkedInIcon className="h-4 w-4" />
         {label}
       </a>
     </Button>

@@ -1,3 +1,4 @@
+import { LinkedInIcon } from "@/components/icons/LinkedInIcon";
 import { useParams, Navigate, Link } from "react-router-dom";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -10,7 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
-import { Building2, Linkedin, ExternalLink, Globe, Mail, Phone, ArrowLeft, MessageSquare, Send, Sparkles } from "lucide-react";
+import { Building2, ExternalLink, Globe, Mail, Phone, ArrowLeft, MessageSquare, Send, Sparkles } from "lucide-react";
 import { motion } from "framer-motion";
 import { useState } from "react";
 import { safeUrl } from "@/lib/safeUrl";
@@ -309,7 +310,7 @@ const MemberProfile = () => {
                       rel="noopener noreferrer"
                       className="flex items-center gap-2 text-primary hover:underline font-body min-w-0"
                     >
-                      <Linkedin className="h-4 w-4 shrink-0" />
+                      <LinkedInIcon className="h-4 w-4 shrink-0" />
                       <span className="truncate">LinkedIn</span>
                       <ExternalLink className="h-3 w-3 shrink-0" />
                     </a>

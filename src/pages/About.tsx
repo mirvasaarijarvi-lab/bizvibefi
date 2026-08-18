@@ -1,3 +1,4 @@
+import { LinkedInIcon } from "@/components/icons/LinkedInIcon";
 import Layout from "@/components/Layout";
 import PageMeta from "@/components/PageMeta";
 import JsonLd from "@/components/JsonLd";
@@ -5,7 +6,7 @@ import HeroAvatar from "@/components/HeroAvatar";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { ArrowRight, Linkedin, Gem, Sparkles, Star, Target, Eye, Compass, Rocket, Heart, Feather, HelpCircle } from "lucide-react";
+import { ArrowRight, Gem, Sparkles, Star, Target, Eye, Compass, Rocket, Heart, Feather, HelpCircle } from "lucide-react";
 import { useTranslation } from "@/i18n/useTranslation";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -174,7 +175,7 @@ const About = () => {
                   <p className="mt-3 text-sm text-muted-foreground font-body">{t(`about.founders.${i}.bio`)}</p>
                   <div className="flex items-center justify-center gap-3 mt-4">
                     <span className="inline-flex items-center gap-1.5 text-sm font-body font-medium text-electric group-hover:text-electric-light transition-colors">
-                      <Linkedin className="h-4 w-4" /> LinkedIn <ArrowRight className="h-3 w-3 group-hover:translate-x-1 transition-transform" />
+                      <LinkedInIcon className="h-4 w-4" /> LinkedIn <ArrowRight className="h-3 w-3 group-hover:translate-x-1 transition-transform" />
                     </span>
                   </div>
                   {userId && (

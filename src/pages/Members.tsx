@@ -1,3 +1,4 @@
+import { LinkedInIcon } from "@/components/icons/LinkedInIcon";
 import { useState } from "react";
 import Layout from "@/components/Layout";
 import PageMeta from "@/components/PageMeta";
@@ -10,7 +11,7 @@ import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
-import { Search, Users, Linkedin, Building2, ExternalLink, ShieldCheck, Zap, Globe, Mail, Phone, Briefcase, Gem } from "lucide-react";
+import { Search, Users, Building2, ExternalLink, ShieldCheck, Zap, Globe, Mail, Phone, Briefcase, Gem } from "lucide-react";
 import Leaderboard from "@/components/Leaderboard";
 import { Switch } from "@/components/ui/switch";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -366,7 +367,7 @@ const Members = () => {
                               rel="noopener noreferrer"
                               className="inline-flex items-center gap-1.5 text-sm text-primary hover:underline"
                             >
-                              <Linkedin className="h-4 w-4 shrink-0" />
+                              <LinkedInIcon className="h-4 w-4 shrink-0" />
                               LinkedIn
                               <ExternalLink className="h-3 w-3" />
                             </a>
