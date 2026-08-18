@@ -361,10 +361,28 @@ jobs:
         id: dbreset
         run: |
           set -o pipefail
-          if ! supabase db reset --local 2>&1 | tee db-reset.txt; then
-            echo "::error title=supabase db reset failed::Migrations or seed.sql raised a SQL error during reset. See db-reset.txt artifact and the log above."
+          : > db-reset.txt
+          for attempt in 1 2; do
+            echo "==> supabase db reset attempt ${attempt}/2" | tee -a db-reset.txt
+            if supabase db reset --local 2>&1 | tee -a db-reset.txt; then
+              exit 0
+            fi
+
+            # The local stack can briefly return 502 while db reset restarts
+            # its containers after all migrations have applied. Retry only
+            # that infrastructure failure. SQL/migration errors fail at once.
+            if [ "$attempt" -eq 1 ] && tail -n 20 db-reset.txt | grep -qE 'Error status 502|invalid response.*upstream server'; then
+              echo "::warning title=Transient local stack restart::db reset reached the container restart but received HTTP 502; retrying once."
+              for i in $(seq 1 30); do
+                supabase status >/dev/null 2>&1 && break
+                sleep 2
+              done
+              continue
+            fi
+
+            echo "::error title=supabase db reset failed::Database reset failed. See db-reset.txt for the exact migration, seed, or local-stack error."
             exit 1
-          fi
+          done
 
       # ----- Run any extra seed scripts under supabase/seeds/ -----
       # `supabase db reset` only runs the single supabase/seed.sql file.
