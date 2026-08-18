@@ -1,3 +1,4 @@
+import { LinkedInIcon } from "@/components/icons/LinkedInIcon";
 import { useState, useEffect } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { useProfile, useUpdateProfile, type WebsiteLink } from "@/hooks/useProfile";
@@ -16,7 +17,7 @@ import Layout from "@/components/Layout";
 import PageMeta from "@/components/PageMeta";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { Camera, Linkedin, Building, User, Globe, Mail, Phone, Plus, Trash2, Inbox, CheckCheck, MessageSquare, Calendar, KeyRound, Sparkles } from "lucide-react";
+import { Camera, Building, User, Globe, Mail, Phone, Plus, Trash2, Inbox, CheckCheck, MessageSquare, Calendar, KeyRound, Sparkles } from "lucide-react";
 import { AI_SKILL_TAGS } from "@/lib/aiSkills";
 import { formatDistanceToNow } from "date-fns";
 
@@ -397,7 +398,7 @@ const Profile = () => {
 
                 <div className="space-y-2">
                   <Label htmlFor="linkedin" className="font-body flex items-center gap-2">
-                    <Linkedin className="h-4 w-4" /> LinkedIn URL
+                    <LinkedInIcon className="h-4 w-4" /> LinkedIn URL
                   </Label>
                   <Input
                     id="linkedin"
