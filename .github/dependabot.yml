@@ -15,11 +15,17 @@ updates:
       prefix: "chore(deps)"
       prefix-development: "chore(deps-dev)"
       include: "scope"
+    ignore:
+      # Lovable platform packages are managed by the Lovable build system and
+      # publish frequently; the Dependabot release-age cooldown cannot resolve
+      # their latest versions, which fails every other update in the run.
+      - dependency-name: "@lovable.dev/*"
     groups:
       minor-and-patch:
         update-types:
           - "minor"
           - "patch"
+
 
   - package-ecosystem: "github-actions"
     directory: "/"
