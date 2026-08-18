@@ -63,9 +63,11 @@ const ShowcaseFileField = ({ files, pathPrefix, onChange, label, max = 20 }: Pro
           toast({ title: t("showcase.file.invalidType"), description: file.name, variant: "destructive" });
           continue;
         }
-        const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
+        const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, "_").slice(-80);
         const path = `${pathPrefix}/${Date.now()}-${Math.random().toString(36).slice(2, 6)}-${safeName}`;
-        const { error: upErr } = await supabase.storage.from("showcase-files").upload(path, file, { upsert: true });
+        const { error: upErr } = await supabase.storage
+          .from("showcase-files")
+          .upload(path, file, { upsert: true, contentType: file.type || "application/octet-stream" });
         if (upErr) throw upErr;
         const { data: urlData } = supabase.storage.from("showcase-files").getPublicUrl(path);
         uploaded.push({ url: urlData.publicUrl, name: file.name });
@@ -74,8 +76,12 @@ const ShowcaseFileField = ({ files, pathPrefix, onChange, label, max = 20 }: Pro
         await onChange([...files, ...uploaded]);
         toast({ title: t("showcase.file.uploaded") });
       }
-    } catch {
-      toast({ title: t("showcase.file.uploadFailed"), variant: "destructive" });
+    } catch (err) {
+      toast({
+        title: t("showcase.file.uploadFailed"),
+        description: err instanceof Error ? err.message : undefined,
+        variant: "destructive",
+      });
     } finally {
       setBusy(false);
       if (inputRef.current) inputRef.current.value = "";
