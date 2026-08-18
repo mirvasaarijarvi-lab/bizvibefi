@@ -409,15 +409,20 @@ jobs:
           # Diff app-owned schemas only. Skip Supabase-managed schemas
           # (auth, storage, realtime, supabase_functions, vault, pgmq) which
           # we never own and which change between CLI releases.
+          # Keep stderr out of db-diff.txt: the CLI writes progress lines
+          # ("Finished supabase db diff...", update banners, docker pull
+          # output) there, and they would otherwise look like schema drift.
           supabase db diff \
             --schema public \
-            --local 2>&1 | tee db-diff.txt
+            --local > db-diff.txt 2> db-diff.log || { cat db-diff.log; exit 1; }
+          cat db-diff.log
 
           # The CLI exits 0 even when a diff exists, so we have to inspect
-          # the output. Strip ANSI colour codes, blank lines, and the
-          # "No schema changes found" banner before checking for content.
+          # the output. Strip ANSI colour codes, blank lines, SQL comments,
+          # and CLI banners before checking for real DDL content.
           BODY=$(sed -r 's/\x1B\[[0-9;]*[A-Za-z]//g' db-diff.txt \
-                 | grep -vE '^\s*$|No schema changes found' || true)
+                 | grep -vE '^\s*$|^\s*--|No schema changes found|^Finished supabase db diff|^A new version of Supabase CLI|^We recommend updating regularly' || true)
+
 
           if [ -z "$BODY" ]; then
             echo "No schema drift detected."
