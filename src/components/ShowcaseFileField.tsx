@@ -67,7 +67,7 @@ const ShowcaseFileField = ({ files, pathPrefix, onChange, label, max = 20 }: Pro
         const path = `${pathPrefix}/${Date.now()}-${Math.random().toString(36).slice(2, 6)}-${safeName}`;
         const { error: upErr } = await supabase.storage
           .from("showcase-files")
-          .upload(path, file, { upsert: true, contentType: file.type || "application/octet-stream" });
+          .upload(path, file, { contentType: file.type || "application/octet-stream" });
         if (upErr) throw upErr;
         const { data: urlData } = supabase.storage.from("showcase-files").getPublicUrl(path);
         uploaded.push({ url: urlData.publicUrl, name: file.name });
