@@ -48,8 +48,12 @@ const ShowcaseImagesField = ({ images, onChange, pathPrefix, max = 10 }: Showcas
         uploaded.push(data.publicUrl);
       }
       onChange([...images, ...uploaded]);
-    } catch {
-      toast({ title: t("showcase.submitError"), variant: "destructive" });
+    } catch (err) {
+      toast({
+        title: t("showcase.submitError"),
+        description: err instanceof Error ? err.message : undefined,
+        variant: "destructive",
+      });
     } finally {
       setUploading(false);
     }
