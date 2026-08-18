@@ -7,7 +7,6 @@ import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { Users, Rocket, Zap, MessageCircle, Calendar, TrendingUp, GraduationCap, Handshake, ArrowRight, Quote, Gem, Award, Download, Gift, BookOpen, Webhook, Shield, Briefcase } from "lucide-react";
 import { useTranslation } from "@/i18n/useTranslation";
-import { Badge } from "@/components/ui/badge";
 import { useShowcaseItems } from "@/hooks/useShowcase";
 
 const freeBenefits = [
