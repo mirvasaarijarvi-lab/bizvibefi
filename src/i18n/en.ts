@@ -132,14 +132,7 @@ const en = {
       title: "Success",
       titleHighlight: "stories",
       subtitle: "Real builders. Real results. Here's what our community members have achieved.",
-      items: [
-        { quote: "I joined <Good Vibes Café/> with just an idea and a half-built prototype. Within three months, the collective helped me validate, rebuild, and launch to 1,200 users. I couldn't have done it alone.", name: "Antti K.", role: "SaaS Founder", tier: "Viber" },
-        { quote: "The WhatsApp community alone is worth it. I posted a quick question about pricing strategy and got five thoughtful replies within an hour — from people who've actually done it.", name: "Sara L.", role: "Freelance Developer", tier: "Starter" },
-        { quote: "Through a <Good Vibes Café/> investor event, I connected with the angel who ended up funding my seed round. The network effect here is real.", name: "Mikael R.", role: "Startup CEO", tier: "Viber" },
-        { quote: "The #ShipHappens hackathon pushed me to build and launch a tool I'd been procrastinating on for months. 48 hours, done. Now it has paying customers.", name: "Liisa T.", role: "Product Builder", tier: "Starter" },
-        { quote: "I went from solo freelancer to running a small agency, largely thanks to the leads and partnerships I found through <Good Vibes Café/> Viber.", name: "Janne H.", role: "Agency Owner", tier: "Viber" },
-        { quote: "As a non-technical founder, the builder network was a game-changer. I found my technical co-founder at a <Good Vibes Café/> meetup.", name: "Emma V.", role: "Co-Founder", tier: "Starter" },
-      ],
+      empty: "No published member stories yet. Share yours from the Showcase page.",
     },
   },
   getGoing: {

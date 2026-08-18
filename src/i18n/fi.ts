@@ -132,14 +132,7 @@ const fi = {
       title: "Menestys",
       titleHighlight: "tarinat",
       subtitle: "Oikeita rakentajia. Oikeita tuloksia. Tässä mitä yhteisömme jäsenet ovat saavuttaneet.",
-      items: [
-        { quote: "Liityin <Good Vibes Café/>en pelkällä idealla ja puolivalmiilla prototyypillä. Kolmessa kuukaudessa kollektiivi auttoi validoimaan, rakentamaan uudelleen ja julkaisemaan 1 200 käyttäjälle.", name: "Antti K.", role: "SaaS-perustaja", tier: "Viber" },
-        { quote: "Pelkästään WhatsApp-yhteisö on sen arvoinen. Postasin nopean kysymyksen hinnoittelustrategiasta ja sain viisi harkittua vastausta tunnissa.", name: "Sara L.", role: "Freelance-kehittäjä", tier: "Starter" },
-        { quote: "<Good Vibes Café/>n sijoittajatapahtuman kautta löysin enkelisijoittajan, joka rahoitti siemenkierroksen. Verkostovaikutus on todellinen.", name: "Mikael R.", role: "Startup-toimitusjohtaja", tier: "Viber" },
-        { quote: "#ShipHappens-hackathon pakotti minut rakentamaan ja julkaisemaan työkalun, jota olin viivytellyt kuukausia. 48 tuntia, valmis. Nyt sillä on maksavia asiakkaita.", name: "Liisa T.", role: "Tuoterakentaja", tier: "Starter" },
-        { quote: "Siirryin yksittäisestä freelancerista pienen toimiston pyörittäjäksi pitkälti <Good Vibes Café/> Viberin liidien ja kumppanuuksien ansiosta.", name: "Janne H.", role: "Toimiston omistaja", tier: "Viber" },
-        { quote: "Ei-teknisenä perustajana rakentajien verkosto oli käänteentekevä. Löysin teknisen perustajani <Good Vibes Café/>-tapaamisesta.", name: "Emma V.", role: "Kanssaperustaja", tier: "Starter" },
-      ],
+      empty: "Ei vielä julkaistuja jäsentarinoita. Jaa omasi Showcase-sivulta.",
     },
   },
   getGoing: {
