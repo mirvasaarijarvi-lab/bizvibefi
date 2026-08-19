@@ -1509,7 +1509,7 @@ const Events = () => {
                           locale: lang === "fi" ? fi : lang === "sv" ? sv : enUS,
                         })}
                         {" · "}
-                        {t("events.timeTba") || "Time TBA"}
+                        {lang === "fi" ? "Kellonaika ilmoitetaan myöhemmin" : lang === "sv" ? "Tid meddelas senare" : "Time TBA"}
                       </>
                     )
                     : (
