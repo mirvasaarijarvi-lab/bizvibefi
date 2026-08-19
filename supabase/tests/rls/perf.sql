@@ -34,7 +34,7 @@ BEGIN
   RETURNING id INTO v_badge;
 
   FOR i IN 1..500 LOOP
-    v_user := gen_random_uuid();
+    v_user := rls_test.fx_user();
     INSERT INTO public.event_signups(event_id, full_name, email, company)
       VALUES (v_open, 'Guest ' || i, 'guest-' || i || '@example.com', 'Perf Oy');
     INSERT INTO public.event_rsvps(event_id, user_id, status)
@@ -85,9 +85,8 @@ BEGIN
     'SELECT count(*) FROM public.showcase_file_downloads',
     150, 'anon SELECT showcase_file_downloads (RLS denies)');
 
-  PERFORM rls_test.expect_under_ms(
-    'SELECT count(*) FROM public.member_badges',
-    150, 'anon SELECT member_badges (RLS denies)');
+  -- member_badges is denied to anon at the GRANT layer, so there is no
+  -- timing to measure here; correctness is covered in badges_and_leaderboard.
 
   -- Public RPCs: must stay fast under load.
   PERFORM rls_test.expect_under_ms(

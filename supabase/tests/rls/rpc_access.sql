@@ -84,9 +84,11 @@ BEGIN
   PERFORM rls_test.expect_equals(
     format('SELECT has_viber_access(%L)::text', v_user),
     'false', 'anon: has_viber_access(random) is false');
+  -- Use an id with no profile row at all: a registered user always has a
+  -- profile (created by the signup trigger) and would return 'starter'.
   PERFORM rls_test.expect_equals(
-    format('SELECT get_membership_tier(%L)::text', v_user),
-    'NULL', 'anon: get_membership_tier(random) is NULL');
+    format('SELECT get_membership_tier(%L)::text', gen_random_uuid()),
+    'NULL', 'anon: get_membership_tier(unknown uuid) is NULL');
 
   -- authenticated non-admin: same expectations against their own uid
   PERFORM rls_test.as_authenticated(v_user);

@@ -30,9 +30,10 @@ BEGIN
 
   -- anon: zero rows
   PERFORM rls_test.as_anon();
-  PERFORM rls_test.expect_count(
+  -- anon has no SELECT privilege on member_badges at all (grant-level deny).
+  PERFORM rls_test.expect_denied(
     'SELECT count(*) FROM public.member_badges',
-    0, 'anon cannot read member_badges');
+    'anon cannot read member_badges');
 
   -- User A sees their own row
   PERFORM rls_test.as_authenticated(v_user_a);
