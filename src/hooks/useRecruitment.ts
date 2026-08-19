@@ -80,10 +80,7 @@ export const useAllRecruitmentPosts = (enabled = true) => {
   return useQuery({
     queryKey: ["admin-recruitment-posts"],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from("recruitment_posts")
-        .select("*")
-        .order("created_at", { ascending: false });
+      const { data, error } = await supabase.rpc("list_all_recruitment_posts_admin");
       if (error) throw error;
       return (data ?? []) as unknown as RecruitmentPost[];
     },
