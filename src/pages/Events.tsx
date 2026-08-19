@@ -654,12 +654,15 @@ const EventFormDialog = ({
           {/* Cover Image */}
           <div>
             <Label className="font-body text-sm">Cover Image</Label>
+            <p className="text-xs text-muted-foreground font-body mt-1">
+              Recommended 1200 x 675 px (16:9), max 10 MB. You can crop and resize after choosing a file.
+            </p>
             {form.image_url ? (
               <div className="relative mt-1">
                 <img
                   src={form.image_url}
                   alt="Event cover"
-                  className="w-full h-40 object-cover rounded-lg border border-border"
+                  className="w-full aspect-video object-cover rounded-lg border border-border"
                 />
                 <Button
                   type="button"
@@ -670,6 +673,19 @@ const EventFormDialog = ({
                 >
                   <X className="h-3.5 w-3.5" />
                 </Button>
+                <label className="absolute bottom-2 right-2 text-xs font-body bg-background/90 border border-border rounded-md px-2 py-1 cursor-pointer hover:bg-muted transition-colors">
+                  {uploading ? "Uploading..." : "Replace / recrop"}
+                  <input
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    onChange={(e) => {
+                      handleImagePick(e);
+                      e.target.value = "";
+                    }}
+                    disabled={uploading}
+                  />
+                </label>
               </div>
             ) : (
               <label className="flex items-center gap-2 mt-1 px-4 py-3 border border-dashed border-border rounded-lg cursor-pointer hover:bg-muted/50 transition-colors">
@@ -681,12 +697,26 @@ const EventFormDialog = ({
                   type="file"
                   accept="image/*"
                   className="hidden"
-                  onChange={handleImageUpload}
+                  onChange={(e) => {
+                    handleImagePick(e);
+                    e.target.value = "";
+                  }}
                   disabled={uploading}
                 />
               </label>
             )}
           </div>
+          <ImageCropDialog
+            file={cropFile}
+            open={cropOpen}
+            onOpenChange={(o) => {
+              setCropOpen(o);
+              if (!o) setCropFile(null);
+            }}
+            onCropComplete={(cropped) => {
+              void handleImageUpload(cropped);
+            }}
+          />
 
           {/* Speakers */}
           <div className="rounded-md border border-border bg-muted/20 p-3 space-y-3">
