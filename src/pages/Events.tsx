@@ -189,6 +189,7 @@ const EventFormDialog = ({
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const isSuperadmin = useIsSuperadmin();
+  const isAdminUser = useIsAdmin() || isSuperadmin;
 
   const [form, setForm] = useState<EventFormData>(() => {
     if (editEvent) {
@@ -830,13 +831,23 @@ const EventFormDialog = ({
 
           <EventPresentationsManager eventId={editEvent?.id} lang={lang} />
 
-          <div className="flex items-center gap-3">
-            <Switch
-              checked={form.is_published}
-              onCheckedChange={(v) => set("is_published", v)}
-            />
-            <Label className="font-body text-sm">Published (visible to everyone)</Label>
-          </div>
+          {isAdminUser ? (
+            <div className="flex items-center gap-3">
+              <Switch
+                checked={form.is_published}
+                onCheckedChange={(v) => set("is_published", v)}
+              />
+              <Label className="font-body text-sm">Published (visible to everyone)</Label>
+            </div>
+          ) : (
+            <div className="rounded-md border border-border bg-muted/30 p-3 text-sm font-body text-muted-foreground">
+              {lang === "fi"
+                ? "Tapahtumasi tallennetaan luonnoksena ja julkaistaan, kun ylläpitäjä on hyväksynyt sen."
+                : lang === "sv"
+                ? "Ditt evenemang sparas som utkast och publiceras när en administratör har godkänt det."
+                : "Your event is saved as a draft and goes live once an admin approves it."}
+            </div>
+          )}
           <div className="rounded-md border border-border bg-muted/30 p-3 space-y-2">
             <div className="flex items-center gap-3">
               <Switch
@@ -867,22 +878,22 @@ const EventFormDialog = ({
           </div>
           {(() => {
             const isCreator = !!editEvent && editEvent.created_by === user?.id;
-            const canSave = isSuperadmin || (editEvent ? isCreator : false);
+            const canSave = isAdminUser || (editEvent ? isCreator : !!user);
             return (
               <>
                 {!canSave && (
                   <div className="rounded-md border border-destructive/30 bg-destructive/5 p-3 text-sm font-body text-destructive">
                     {editEvent
                       ? (lang === "fi"
-                          ? "Vain pääylläpitäjät tai tapahtuman luoja voivat muokata tätä tapahtumaa."
+                          ? "Vain ylläpitäjät tai tapahtuman luoja voivat muokata tätä tapahtumaa."
                           : lang === "sv"
                           ? "Endast superadministratörer eller evenemangets skapare kan redigera detta evenemang."
-                          : "Only superadmins or the event creator can edit this event.")
+                          : "Only admins or the event creator can edit this event.")
                       : (lang === "fi"
-                          ? "Vain pääylläpitäjät voivat luoda tapahtumia."
+                          ? "Kirjaudu sisään luodaksesi tapahtuman."
                           : lang === "sv"
-                          ? "Endast superadministratörer kan skapa evenemang."
-                          : "Only superadmins can create events.")}
+                          ? "Logga in för att skapa ett evenemang."
+                          : "Sign in to create an event.")}
                   </div>
                 )}
                 <div className="flex gap-2 pt-2">
@@ -1337,7 +1348,7 @@ const Events = () => {
                 </Badge>
               )}
               {/* Admin actions */}
-              {(isSuperadmin || event.created_by === user?.id) && (
+              {(isSuperadmin || isAdmin || event.created_by === user?.id) && (
                 <div className="ml-auto flex items-center gap-1">
                   <Button
                     variant="ghost"
@@ -1696,13 +1707,24 @@ const Events = () => {
             <p className="mt-4 text-muted-foreground font-body text-lg max-w-xl mx-auto">
               {t("events.subtitle")}
             </p>
-            {isSuperadmin && (
-              <Button
-                className="mt-6 bg-gradient-storm hover:opacity-90 font-body"
-                onClick={() => setCreateOpen(true)}
-              >
-                <Plus className="h-4 w-4 mr-2" /> {t("events.createEvent")}
-              </Button>
+            {user && (
+              <div className="mt-6 flex flex-col items-center gap-2">
+                <Button
+                  className="bg-gradient-storm hover:opacity-90 font-body"
+                  onClick={() => setCreateOpen(true)}
+                >
+                  <Plus className="h-4 w-4 mr-2" /> {t("events.createEvent")}
+                </Button>
+                {!(isAdmin || isSuperadmin) && (
+                  <p className="text-xs text-muted-foreground font-body">
+                    {lang === "fi"
+                      ? "Tapahtumat julkaistaan ylläpitäjän hyväksynnän jälkeen."
+                      : lang === "sv"
+                      ? "Evenemang publiceras efter godkännande av en administratör."
+                      : "Submitted events go live after an admin approves them."}
+                  </p>
+                )}
+              </div>
             )}
           </div>
 

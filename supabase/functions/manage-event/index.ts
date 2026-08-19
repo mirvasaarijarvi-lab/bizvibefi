@@ -182,14 +182,16 @@ Deno.serve(async (req) => {
   const userId = claimsData.claims.sub as string;
 
   // Authorization: superadmin OR (for update/delete) the event creator
-  const { data: isSuperadmin, error: roleErr } = await supabase.rpc("has_role", {
-    _user_id: userId,
-    _role: "superadmin",
-  });
-  if (roleErr) {
-    console.error("manage-event role check failed:", roleErr);
+  const [{ data: isSuperadmin, error: roleErr }, { data: isAdminRole, error: adminErr }] =
+    await Promise.all([
+      supabase.rpc("has_role", { _user_id: userId, _role: "superadmin" }),
+      supabase.rpc("has_role", { _user_id: userId, _role: "admin" }),
+    ]);
+  if (roleErr || adminErr) {
+    console.error("manage-event role check failed:", roleErr ?? adminErr);
     return json(500, { error: "An internal error occurred" });
   }
+  const isAdmin = Boolean(isSuperadmin) || Boolean(isAdminRole);
 
   let body: unknown;
   try {
@@ -209,12 +211,11 @@ Deno.serve(async (req) => {
 
   const payload = parsed.data;
 
-  // Per-action authorization
-  if (payload.action === "create" && !isSuperadmin) {
-    return json(403, { error: "Forbidden: superadmin role required to create events" });
-  }
+  // Per-action authorization.
+  // Any signed-in member may submit an event; the database forces it to stay a
+  // draft until an admin publishes it.
   if (payload.action === "update" || payload.action === "delete") {
-    if (!isSuperadmin) {
+    if (!isAdmin) {
       const { data: existing, error: fetchErr } = await supabase
         .from("events")
         .select("created_by")
@@ -226,13 +227,16 @@ Deno.serve(async (req) => {
       }
       if (!existing) return json(404, { error: "Event not found" });
       if (existing.created_by !== userId) {
-        return json(403, { error: "Forbidden: only the event creator or a superadmin can modify this event" });
+        return json(403, { error: "Forbidden: only the event creator or an admin can modify this event" });
       }
     }
   }
 
   // Auto-translate missing FI/SV fields from EN source
   await autoTranslateFields(payload.data);
+
+  // Only admins may publish. Members' submissions stay drafts pending approval.
+  if (!isAdmin) payload.data.is_published = false;
 
   try {
     if (payload.action === "create") {
