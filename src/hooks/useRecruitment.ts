@@ -68,11 +68,7 @@ export const useMyRecruitmentPosts = () => {
   return useQuery({
     queryKey: ["my-recruitment-posts", user?.id],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from("recruitment_posts")
-        .select("*")
-        .eq("user_id", user!.id)
-        .order("created_at", { ascending: false });
+      const { data, error } = await supabase.rpc("list_my_recruitment_posts");
       if (error) throw error;
       return (data ?? []) as unknown as RecruitmentPost[];
     },
