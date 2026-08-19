@@ -366,9 +366,14 @@ const EventFormDialog = ({
   const set = (field: keyof EventFormData, value: string | boolean) =>
     setForm((prev) => ({ ...prev, [field]: value }));
 
-  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImagePick = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
+    setCropFile(file);
+    setCropOpen(true);
+  };
+
+  const handleImageUpload = async (file: File) => {
     setUploading(true);
     try {
       const ext = file.name.split(".").pop();
