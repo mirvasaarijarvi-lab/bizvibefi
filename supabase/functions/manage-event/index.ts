@@ -28,6 +28,9 @@ const EventFields = z.object({
   is_published: z.boolean(),
   image_url: z.string().trim().url().regex(/^https?:\/\//i, "URL must start with http(s)").max(1000).nullable().optional().or(z.literal("").transform(() => null)),
   requires_signin: z.boolean().optional().default(true),
+  // Events hosted by someone else: we only store a promo link + organiser name.
+  external_url: z.string().trim().url("external_url must be a valid URL").regex(/^https?:\/\//i, "URL must start with http(s)").max(1000).nullable().optional().or(z.literal("").transform(() => null)),
+  external_host: z.string().trim().max(200).nullable().optional(),
   title_fi: z.string().trim().max(200).nullable().optional(),
   title_sv: z.string().trim().max(200).nullable().optional(),
   description_fi: z.string().trim().max(2000).nullable().optional(),
@@ -52,6 +55,8 @@ const EventFields = z.object({
   if (v.ends_at && new Date(v.ends_at) <= new Date(v.starts_at)) {
     ctx.addIssue({ code: z.ZodIssueCode.custom, path: ["ends_at"], message: "ends_at must be after starts_at" });
   }
+  // External events are just a link out; venue/online details are optional.
+  if (v.external_url) return;
   if (v.is_online && !v.online_url) {
     ctx.addIssue({ code: z.ZodIssueCode.custom, path: ["online_url"], message: "online_url is required for online events" });
   }

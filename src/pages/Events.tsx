@@ -89,6 +89,8 @@ interface EventFormData {
   is_published: boolean;
   image_url: string;
   requires_signin: boolean;
+  external_url: string;
+  external_host: string;
   speakers: Speaker[];
   sponsors: Sponsor[];
 }
@@ -165,6 +167,8 @@ const emptyForm: EventFormData = {
   is_published: true,
   image_url: "",
   requires_signin: true,
+  external_url: "",
+  external_host: "",
   speakers: [],
   sponsors: [],
 };
@@ -209,6 +213,8 @@ const EventFormDialog = ({
         is_published: editEvent.is_published,
         image_url: editEvent.image_url || "",
         requires_signin: (editEvent as { requires_signin?: boolean | null }).requires_signin ?? true,
+        external_url: (editEvent as { external_url?: string | null }).external_url || "",
+        external_host: (editEvent as { external_host?: string | null }).external_host || "",
         speakers: parseSpeakers((editEvent as LocalizedEvent).speakers),
         sponsors: parseSponsors((editEvent as LocalizedEvent).sponsors),
       };
@@ -216,6 +222,9 @@ const EventFormDialog = ({
     return emptyForm;
   });
   const [uploading, setUploading] = useState(false);
+  const [isExternal, setIsExternal] = useState<boolean>(
+    !!(editEvent as { external_url?: string | null } | null | undefined)?.external_url,
+  );
 
   // Fetch online_url on demand for the edit form (column-level RLS hides it from direct SELECT).
   useEffect(() => {
@@ -267,6 +276,8 @@ const EventFormDialog = ({
         is_published: form.is_published,
         image_url: form.image_url.trim() || null,
         requires_signin: form.requires_signin,
+        external_url: normalizeUrl(form.external_url) || null,
+        external_host: form.external_host.trim() || null,
         speakers: cleanSpeakers,
         sponsors: cleanSponsors,
         title_fi: form.title_fi.trim() || null,
@@ -548,6 +559,43 @@ const EventFormDialog = ({
               placeholder="Plats (SV) - optional, auto-translated if empty"
               className="font-body"
             />
+          </div>
+          <div className="rounded-md border border-border bg-muted/20 p-3 space-y-3">
+            <div className="flex items-center gap-3">
+              <Switch
+                checked={isExternal}
+                onCheckedChange={(v) => {
+                  setIsExternal(v);
+                  if (!v) setForm((f) => ({ ...f, external_url: "", external_host: "" }));
+                }}
+              />
+              <Label className="font-body text-sm">Event by someone else (link only)</Label>
+            </div>
+            {isExternal && (
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <Label className="font-body text-sm">Event link *</Label>
+                  <Input
+                    value={form.external_url}
+                    onChange={(e) => set("external_url", e.target.value)}
+                    placeholder="https://organiser.example/event"
+                    className="font-body"
+                  />
+                </div>
+                <div>
+                  <Label className="font-body text-sm">Organiser</Label>
+                  <Input
+                    value={form.external_host}
+                    onChange={(e) => set("external_host", e.target.value)}
+                    placeholder="Who is hosting this event"
+                    className="font-body"
+                  />
+                </div>
+                <p className="sm:col-span-2 text-xs text-muted-foreground font-body">
+                  We only promote the event: no sign-up is collected here, visitors go to the organiser's page.
+                </p>
+              </div>
+            )}
           </div>
           <div className="flex items-center gap-3">
             <Switch
@@ -1009,7 +1057,7 @@ const Events = () => {
       // (creator, admins, RSVPed/signed-up attendees) fetch it on demand
       // via the public.get_event_online_url() RPC.
       const cols =
-        "id,title,description,event_type,starts_at,ends_at,location,is_online,max_attendees,image_url,is_published,created_by,created_at,updated_at,title_fi,title_sv,description_fi,description_sv,location_fi,location_sv,agenda,agenda_fi,agenda_sv,requires_signin,speakers,sponsors";
+        "id,title,description,event_type,starts_at,ends_at,location,is_online,max_attendees,image_url,is_published,created_by,created_at,updated_at,title_fi,title_sv,description_fi,description_sv,location_fi,location_sv,agenda,agenda_fi,agenda_sv,requires_signin,speakers,sponsors,external_url,external_host";
       const { data, error } = await supabase.from("events").select(cols).order("starts_at");
       if (error) throw error;
       return (data ?? []).map((e) => ({ online_url: null, ...(e as Record<string, unknown>) })) as unknown as Tables<"events">[];
@@ -1185,6 +1233,8 @@ const Events = () => {
     const localizedDescription = localizedEventValue(e, lang, "description");
     const localizedLocation = localizedEventValue(e, lang, "location");
     const localizedAgenda = localizedEventValue(e, lang, "agenda");
+    const externalUrl = (event as { external_url?: string | null }).external_url || "";
+    const externalHost = (event as { external_host?: string | null }).external_host || "";
     const speakers = parseSpeakers(e.speakers);
     const sponsors = parseSponsors(e.sponsors);
     const partnerCompanies = sponsors.filter((s) => s.kind === "partner");
@@ -1444,7 +1494,12 @@ const Events = () => {
                   <ExternalLink className="h-3 w-3" />
                 </a>
               )}
-              {!isPastEvent && (
+              {externalUrl && externalHost && (
+                <span className="flex items-center gap-1">
+                  {lang === "fi" ? "Järjestäjä" : lang === "sv" ? "Arrangör" : "Hosted by"}: {externalHost}
+                </span>
+              )}
+              {!isPastEvent && !externalUrl && (
                 <span className="flex items-center gap-1">
                   <Users className="h-3.5 w-3.5" />
                   {event.max_attendees
@@ -1452,7 +1507,7 @@ const Events = () => {
                     : `${attendeeCount} ${attendeeCount === 1 ? t("events.going") : t("events.goingPlural")}`}
                 </span>
               )}
-              {!isPastEvent && isFull && (
+              {!isPastEvent && !externalUrl && isFull && (
                 <Badge variant="destructive" className="font-body text-xs">
                   {lang === "fi" ? "Tapahtuma on täynnä" : lang === "sv" ? "Evenemanget är fullt" : "Event is full"}
                 </Badge>
@@ -1460,7 +1515,20 @@ const Events = () => {
             </div>
 
             {/* Sign up CTAs - upcoming only */}
-            {!isPastEvent && (() => {
+            {!isPastEvent && externalUrl && (
+              <Button asChild size="sm" className="bg-gradient-storm hover:opacity-90 font-body">
+                <a href={externalUrl} target="_blank" rel="noopener noreferrer">
+                  {lang === "fi"
+                    ? "Katso tapahtuma"
+                    : lang === "sv"
+                    ? "Visa evenemanget"
+                    : "View event"}
+                  <ExternalLink className="h-3.5 w-3.5 ml-1" />
+                </a>
+              </Button>
+            )}
+
+            {!isPastEvent && !externalUrl && (() => {
               const requiresSignin = (event as { requires_signin?: boolean | null }).requires_signin ?? true;
               const signUpLabel = lang === "fi"
                 ? "Ilmoittaudu tapahtumaan"
