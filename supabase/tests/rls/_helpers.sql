@@ -231,10 +231,8 @@ BEGIN
    WHERE is_published = true AND requires_signin = false
    LIMIT 1;
   IF v IS NULL THEN
-    INSERT INTO public.events (title, slug, starts_at, is_published, requires_signin)
-    VALUES ('RLS open event',
-            'rls-open-' || gen_random_uuid()::text,
-            now() + interval '7 days', true, false)
+    INSERT INTO public.events (title, starts_at, is_published, requires_signin)
+    VALUES ('RLS open event', now() + interval '7 days', true, false)
     RETURNING id INTO v;
   END IF;
   RETURN rls_test._cache('event_open', v);
@@ -247,10 +245,8 @@ LANGUAGE plpgsql AS $$
 DECLARE v uuid := rls_test._cached('event_locked');
 BEGIN
   IF v IS NOT NULL THEN RETURN v; END IF;
-  INSERT INTO public.events (title, slug, starts_at, is_published, requires_signin)
-  VALUES ('RLS locked event',
-          'rls-locked-' || gen_random_uuid()::text,
-          now() + interval '7 days', true, true)
+  INSERT INTO public.events (title, starts_at, is_published, requires_signin)
+  VALUES ('RLS locked event', now() + interval '7 days', true, true)
   RETURNING id INTO v;
   RETURN rls_test._cache('event_locked', v);
 END
@@ -263,9 +259,8 @@ LANGUAGE plpgsql AS $$
 DECLARE v uuid := rls_test._cached('event_past');
 BEGIN
   IF v IS NOT NULL THEN RETURN v; END IF;
-  INSERT INTO public.events (title, slug, starts_at, ends_at, is_published, requires_signin)
+  INSERT INTO public.events (title, starts_at, ends_at, is_published, requires_signin)
   VALUES ('RLS past event',
-          'rls-past-' || gen_random_uuid()::text,
           now() - interval '10 days',
           now() - interval '10 days' + interval '2 hours',
           true, false)
@@ -283,10 +278,9 @@ BEGIN
   IF v IS NOT NULL THEN RETURN v; END IF;
   SELECT id INTO v FROM public.showcase_items LIMIT 1;
   IF v IS NULL THEN
-    INSERT INTO public.showcase_items (title, slug, status)
-    VALUES ('RLS showcase item',
-            'rls-showcase-' || gen_random_uuid()::text,
-            'approved')
+    INSERT INTO public.showcase_items (user_id, type, title, description, status)
+    VALUES (gen_random_uuid(), 'case_study', 'RLS showcase item',
+            'Seeded by the RLS regression suite', 'approved')
     RETURNING id INTO v;
   END IF;
   RETURN rls_test._cache('showcase_item', v);
