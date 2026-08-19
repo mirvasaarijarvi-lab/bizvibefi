@@ -1,0 +1,1 @@
+REVOKE ALL ON FUNCTION public.enforce_event_publish_permission() FROM PUBLIC, anon, authenticated;
