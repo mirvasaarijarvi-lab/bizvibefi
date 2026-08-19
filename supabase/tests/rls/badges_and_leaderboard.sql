@@ -36,15 +36,16 @@ BEGIN
     'anon cannot read member_badges');
 
   -- User A sees their own row
+  -- Scope to the seeded badge: signup also auto-awards a welcome badge.
   PERFORM rls_test.as_authenticated(v_user_a);
   PERFORM rls_test.expect_count(
-    'SELECT count(*) FROM public.member_badges',
+    format('SELECT count(*) FROM public.member_badges WHERE badge_id = %L', v_badge),
     1, 'user A reads their own member_badges');
 
   -- User B sees nothing belonging to A
   PERFORM rls_test.as_authenticated(v_user_b);
   PERFORM rls_test.expect_count(
-    'SELECT count(*) FROM public.member_badges',
+    format('SELECT count(*) FROM public.member_badges WHERE badge_id = %L', v_badge),
     0, 'user B cannot read user A''s member_badges');
 
   -- Non-admin cannot award badges
