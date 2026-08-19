@@ -238,7 +238,7 @@ Deno.serve(async (req) => {
       const { data, error } = await supabase
         .from("events")
         .insert([{ ...payload.data, created_by: userId }])
-        .select()
+        .select(RETURN_COLS)
         .single();
       if (error) return json(400, { error: error.message });
       return json(200, { event: data });
@@ -249,7 +249,7 @@ Deno.serve(async (req) => {
         .from("events")
         .update(payload.data)
         .eq("id", payload.id)
-        .select()
+        .select(RETURN_COLS)
         .maybeSingle();
       if (error) return json(400, { error: error.message });
       if (!data) return json(404, { error: "Event not found" });
