@@ -28,6 +28,7 @@ const EventFields = z.object({
   is_published: z.boolean(),
   image_url: z.string().trim().url().regex(/^https?:\/\//i, "URL must start with http(s)").max(1000).nullable().optional().or(z.literal("").transform(() => null)),
   requires_signin: z.boolean().optional().default(true),
+  is_all_day: z.boolean().optional().default(false),
   // Events hosted by someone else: we only store a promo link + organiser name.
   external_url: z.string().trim().url("external_url must be a valid URL").regex(/^https?:\/\//i, "URL must start with http(s)").max(1000).nullable().optional().or(z.literal("").transform(() => null)),
   external_host: z.string().trim().max(200).nullable().optional(),
@@ -69,7 +70,7 @@ const EventFields = z.object({
 const RETURN_COLS = [
   "id", "title", "description", "agenda", "event_type", "starts_at", "ends_at",
   "location", "is_online", "max_attendees", "image_url", "is_published",
-  "requires_signin", "external_url", "external_host", "speakers", "sponsors",
+  "requires_signin", "is_all_day", "external_url", "external_host", "speakers", "sponsors",
   "title_fi", "title_sv", "description_fi", "description_sv",
   "location_fi", "location_sv", "agenda_fi", "agenda_sv",
   "created_by", "created_at", "updated_at",
