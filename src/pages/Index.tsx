@@ -136,7 +136,7 @@ const Index = () => {
             </div>
             <NextEventTeaser />
             <p className="mt-8 text-xs text-muted-foreground font-body max-w-lg mx-auto leading-relaxed">
-              {"<Good Vibes Café /> in cooperation with Startup Hub Turku & Business Turku and local universities"}
+              {"\n"}
             </p>
           </motion.div>
         </div>
