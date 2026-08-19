@@ -35,8 +35,8 @@ BEGIN
 
   FOR i IN 1..500 LOOP
     v_user := gen_random_uuid();
-    INSERT INTO public.event_signups(event_id, full_name, email)
-      VALUES (v_open, 'Guest ' || i, 'guest-' || i || '@example.com');
+    INSERT INTO public.event_signups(event_id, full_name, email, company)
+      VALUES (v_open, 'Guest ' || i, 'guest-' || i || '@example.com', 'Perf Oy');
     INSERT INTO public.event_rsvps(event_id, user_id, status)
       VALUES (v_open, v_user, 'going');
     INSERT INTO public.event_feedback(event_id, name, email, overall_rating, comments)
