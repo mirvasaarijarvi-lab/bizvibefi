@@ -221,6 +221,45 @@ BEGIN
 END
 $$;
 
+-- Insert an event bypassing the publish-permission trigger.
+-- public.events carries a BEFORE INSERT/UPDATE trigger that forces
+-- is_published = false unless auth.uid() is an admin. Test fixtures run
+-- without a JWT, so seed rows would always come out unpublished. Disable
+-- the trigger for the insert only (inside the test transaction, rolled back).
+CREATE OR REPLACE FUNCTION rls_test._seed_event(
+  _title text,
+  _starts timestamptz,
+  _ends timestamptz,
+  _published boolean,
+  _requires_signin boolean
+) RETURNS uuid LANGUAGE plpgsql AS $$
+DECLARE
+  v uuid;
+  saved text;
+BEGIN
+  saved := current_setting('role', true);
+  RESET ROLE;
+  BEGIN
+    EXECUTE 'ALTER TABLE public.events DISABLE TRIGGER trg_enforce_event_publish_permission';
+  EXCEPTION WHEN OTHERS THEN NULL;
+  END;
+
+  INSERT INTO public.events (title, starts_at, ends_at, is_published, requires_signin)
+  VALUES (_title, _starts, _ends, _published, _requires_signin)
+  RETURNING id INTO v;
+
+  BEGIN
+    EXECUTE 'ALTER TABLE public.events ENABLE TRIGGER trg_enforce_event_publish_permission';
+  EXCEPTION WHEN OTHERS THEN NULL;
+  END;
+
+  IF saved IS NOT NULL AND saved <> '' AND saved <> 'none' THEN
+    EXECUTE 'SET LOCAL ROLE ' || quote_ident(saved);
+  END IF;
+  RETURN v;
+END
+$$;
+
 -- Published event with open guest signups.
 CREATE OR REPLACE FUNCTION rls_test.fx_open_event() RETURNS uuid
 LANGUAGE plpgsql AS $$
@@ -232,9 +271,8 @@ BEGIN
      AND starts_at > now()
    LIMIT 1;
   IF v IS NULL THEN
-    INSERT INTO public.events (title, starts_at, is_published, requires_signin)
-    VALUES ('RLS open event', now() + interval '7 days', true, false)
-    RETURNING id INTO v;
+    v := rls_test._seed_event('RLS open event', now() + interval '7 days',
+                              NULL, true, false);
   END IF;
   RETURN rls_test._cache('event_open', v);
 END
@@ -246,9 +284,8 @@ LANGUAGE plpgsql AS $$
 DECLARE v uuid := rls_test._cached('event_locked');
 BEGIN
   IF v IS NOT NULL THEN RETURN v; END IF;
-  INSERT INTO public.events (title, starts_at, is_published, requires_signin)
-  VALUES ('RLS locked event', now() + interval '7 days', true, true)
-  RETURNING id INTO v;
+  v := rls_test._seed_event('RLS locked event', now() + interval '7 days',
+                            NULL, true, true);
   RETURN rls_test._cache('event_locked', v);
 END
 $$;
@@ -260,15 +297,14 @@ LANGUAGE plpgsql AS $$
 DECLARE v uuid := rls_test._cached('event_past');
 BEGIN
   IF v IS NOT NULL THEN RETURN v; END IF;
-  INSERT INTO public.events (title, starts_at, ends_at, is_published, requires_signin)
-  VALUES ('RLS past event',
-          now() - interval '10 days',
-          now() - interval '10 days' + interval '2 hours',
-          true, false)
-  RETURNING id INTO v;
+  v := rls_test._seed_event('RLS past event',
+                            now() - interval '10 days',
+                            now() - interval '10 days' + interval '2 hours',
+                            true, false);
   RETURN rls_test._cache('event_past', v);
 END
 $$;
+
 
 
 -- Approved showcase item.
