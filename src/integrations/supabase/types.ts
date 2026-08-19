@@ -577,6 +577,8 @@ export type Database = {
           description_sv: string | null
           ends_at: string | null
           event_type: Database["public"]["Enums"]["event_type"]
+          external_host: string | null
+          external_url: string | null
           id: string
           image_url: string | null
           is_online: boolean
@@ -606,6 +608,8 @@ export type Database = {
           description_sv?: string | null
           ends_at?: string | null
           event_type?: Database["public"]["Enums"]["event_type"]
+          external_host?: string | null
+          external_url?: string | null
           id?: string
           image_url?: string | null
           is_online?: boolean
@@ -635,6 +639,8 @@ export type Database = {
           description_sv?: string | null
           ends_at?: string | null
           event_type?: Database["public"]["Enums"]["event_type"]
+          external_host?: string | null
+          external_url?: string | null
           id?: string
           image_url?: string | null
           is_online?: boolean
