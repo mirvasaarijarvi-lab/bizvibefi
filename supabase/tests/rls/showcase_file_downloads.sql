@@ -27,11 +27,11 @@ BEGIN
            v_item, 'https://evil.test/x', v_user, 'spoof@example.com'),
     'authenticated cannot INSERT into showcase_file_downloads');
 
-  PERFORM rls_test.expect_denied(
+  PERFORM rls_test.expect_no_rows_affected(
     'UPDATE public.showcase_file_downloads SET file_name = ''tampered''',
     'authenticated cannot UPDATE showcase_file_downloads');
 
-  PERFORM rls_test.expect_denied(
+  PERFORM rls_test.expect_no_rows_affected(
     'DELETE FROM public.showcase_file_downloads',
     'authenticated cannot DELETE showcase_file_downloads');
 

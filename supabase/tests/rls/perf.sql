@@ -28,9 +28,9 @@ DECLARE
   i int;
 BEGIN
   -- One catalog badge, awarded to many users.
-  INSERT INTO public.badge_catalog (code, name, category, is_active)
+  INSERT INTO public.badge_catalog (code, name, description, category, is_active)
   VALUES ('rls_perf_badge_' || substr(gen_random_uuid()::text,1,8),
-          'RLS Perf Badge', 'community', true)
+          'RLS Perf Badge', 'Seeded by the RLS regression suite', 'community', true)
   RETURNING id INTO v_badge;
 
   FOR i IN 1..500 LOOP

@@ -75,9 +75,9 @@ BEGIN
   -- table owner so the INSERT assertions have a valid FK target.
   SELECT id INTO v_badge FROM public.badge_catalog LIMIT 1;
   IF v_badge IS NULL THEN
-    INSERT INTO public.badge_catalog (code, name, category, is_active)
+    INSERT INTO public.badge_catalog (code, name, description, category, is_active)
     VALUES ('rls_probe_' || substr(gen_random_uuid()::text,1,8),
-            'RLS Probe', 'community', true)
+            'RLS Probe', 'Seeded by the RLS regression suite', 'community', true)
     RETURNING id INTO v_badge;
   END IF;
 
@@ -102,9 +102,8 @@ BEGIN
     '42501',
     'anon cannot INSERT into member_badges');
 
-  PERFORM rls_test.expect_sqlstate(
+  PERFORM rls_test.expect_no_rows_affected(
     'DELETE FROM public.member_badges WHERE true',
-    '42501',
     'anon cannot DELETE from member_badges');
 
   PERFORM rls_test.expect_sqlstate(
@@ -113,9 +112,8 @@ BEGIN
     '42501',
     'anon cannot INSERT into event_rsvps');
 
-  PERFORM rls_test.expect_sqlstate(
+  PERFORM rls_test.expect_no_rows_affected(
     'DELETE FROM public.event_rsvps WHERE true',
-    '42501',
     'anon cannot DELETE from event_rsvps');
 
   -- ----- authenticated non-admin: cross-user writes must fail with 42501 -----

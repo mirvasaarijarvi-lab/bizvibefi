@@ -20,9 +20,9 @@ DECLARE
   v_badge  uuid;
 BEGIN
   -- Seed a badge in the catalog and award it to user A as the postgres role.
-  INSERT INTO public.badge_catalog (code, name, category, is_active)
+  INSERT INTO public.badge_catalog (code, name, description, category, is_active)
   VALUES ('rls_test_badge_' || substr(gen_random_uuid()::text,1,8),
-          'RLS Test Badge', 'community', true)
+          'RLS Test Badge', 'Seeded by the RLS regression suite', 'community', true)
   RETURNING id INTO v_badge;
 
   INSERT INTO public.member_badges (user_id, badge_id, notes)
@@ -52,7 +52,7 @@ BEGIN
             VALUES (%L, %L)', v_user_b, v_badge),
     'authenticated non-admin cannot INSERT into member_badges');
 
-  PERFORM rls_test.expect_denied(
+  PERFORM rls_test.expect_no_rows_affected(
     'DELETE FROM public.member_badges',
     'authenticated non-admin cannot DELETE from member_badges');
 
@@ -71,12 +71,12 @@ BEGIN
     'SELECT 1 FROM public.badge_catalog WHERE is_active LIMIT 1',
     'anon may read active badges');
   PERFORM rls_test.expect_denied(
-    'INSERT INTO public.badge_catalog(code, name, category) VALUES (''x'',''X'',''community'')',
+    'INSERT INTO public.badge_catalog(code, name, description, category) VALUES (''x'',''X'',''d'',''community'')',
     'anon cannot INSERT into badge_catalog');
 
   PERFORM rls_test.as_authenticated(v_user);
   PERFORM rls_test.expect_denied(
-    'INSERT INTO public.badge_catalog(code, name, category) VALUES (''y'',''Y'',''community'')',
+    'INSERT INTO public.badge_catalog(code, name, description, category) VALUES (''y'',''Y'',''d'',''community'')',
     'authenticated non-admin cannot INSERT into badge_catalog');
 
   PERFORM rls_test.reset();

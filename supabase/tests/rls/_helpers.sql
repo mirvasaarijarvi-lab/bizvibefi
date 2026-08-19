@@ -229,6 +229,7 @@ BEGIN
   IF v IS NOT NULL THEN RETURN v; END IF;
   SELECT id INTO v FROM public.events
    WHERE is_published = true AND requires_signin = false
+     AND starts_at > now()
    LIMIT 1;
   IF v IS NULL THEN
     INSERT INTO public.events (title, starts_at, is_published, requires_signin)
@@ -287,10 +288,51 @@ BEGIN
 END
 $$;
 
--- Fresh random user id (not cached — most tests want a brand-new identity).
+-- Fresh user identity (not cached — most tests want a brand-new identity).
+-- The row is created in auth.users because several tables (event_rsvps,
+-- forum_*) carry a FK to it; a bare random uuid would fail the constraint.
 CREATE OR REPLACE FUNCTION rls_test.fx_user() RETURNS uuid
 LANGUAGE plpgsql AS $$
-BEGIN RETURN gen_random_uuid(); END
+DECLARE
+  v uuid := gen_random_uuid();
+  saved text;
+BEGIN
+  saved := current_setting('role', true);
+  RESET ROLE;
+  BEGIN
+    INSERT INTO auth.users (id, email)
+    VALUES (v, 'rls-test-' || v::text || '@example.com')
+    ON CONFLICT (id) DO NOTHING;
+  EXCEPTION WHEN OTHERS THEN
+    -- If auth.users is not writable in this environment, fall back to a bare
+    -- uuid: tables without the FK still work.
+    NULL;
+  END;
+  IF saved IS NOT NULL AND saved <> '' AND saved <> 'none' THEN
+    EXECUTE 'SET LOCAL ROLE ' || quote_ident(saved);
+  END IF;
+  RETURN v;
+END
+$$;
+
+-- Run a DML statement under the current role and assert it touched zero rows.
+-- Under RLS a DELETE/UPDATE that matches no *visible* row succeeds with 0 rows
+-- rather than raising 42501, so this is the correct assertion for "the policy
+-- hides the row" (use expect_denied / expect_sqlstate for INSERTs, which do
+-- raise on a WITH CHECK failure).
+CREATE OR REPLACE FUNCTION rls_test.expect_no_rows_affected(_sql text, _msg text)
+RETURNS void LANGUAGE plpgsql AS $$
+DECLARE v_n bigint;
+BEGIN
+  EXECUTE 'WITH d AS (' || _sql || ' RETURNING 1) SELECT count(*) FROM d' INTO v_n;
+  IF v_n <> 0 THEN
+    RAISE NOTICE 'RLS-ASSERT|FAIL|expect_no_rows_affected|%|% row(s) affected', _msg, v_n;
+    RAISE EXCEPTION 'FAIL: % — % row(s) affected, expected 0. SQL: %', _msg, v_n, _sql;
+  END IF;
+  RAISE NOTICE 'RLS-ASSERT|PASS|expect_no_rows_affected|%|0 rows affected', _msg;
+EXCEPTION WHEN insufficient_privilege OR check_violation THEN
+  RAISE NOTICE 'RLS-ASSERT|PASS|expect_no_rows_affected|%|denied (%)', _msg, SQLSTATE;
+END
 $$;
 
 
