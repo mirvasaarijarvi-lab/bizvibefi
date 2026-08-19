@@ -1310,10 +1310,22 @@ const Events = () => {
           {/* Content */}
           <div className="flex-1">
             <div className="flex items-center gap-2 mb-2 flex-wrap">
-              <Badge variant="secondary" className={`${config.color} border-0 font-body text-xs`}>
-                <Icon className="h-3 w-3 mr-1" />
-                {config.label}
-              </Badge>
+              {externalUrl ? (
+                <Badge
+                  variant="outline"
+                  className="border-dashed font-body text-xs text-muted-foreground"
+                >
+                  <ExternalLink className="h-3 w-3 mr-1" />
+                  {externalHost
+                    ? `External event by ${externalHost}`
+                    : "External event, not hosted by Good Vibes Café"}
+                </Badge>
+              ) : (
+                <Badge variant="secondary" className={`${config.color} border-0 font-body text-xs`}>
+                  <Icon className="h-3 w-3 mr-1" />
+                  {config.label}
+                </Badge>
+              )}
               {event.is_online && (
                 <Badge variant="outline" className="font-body text-xs">
                   <Globe className="h-3 w-3 mr-1" /> Online
