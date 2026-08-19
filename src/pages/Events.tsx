@@ -78,6 +78,7 @@ interface EventFormData {
   agenda_fi: string;
   agenda_sv: string;
   event_type: "meetup" | "webinar" | "workshop" | "hackathon";
+  is_all_day: boolean;
   starts_at: string;
   ends_at: string;
   location: string;
@@ -156,6 +157,7 @@ const emptyForm: EventFormData = {
   agenda_fi: "",
   agenda_sv: "",
   event_type: "meetup" as const,
+  is_all_day: false,
   starts_at: "",
   ends_at: "",
   location: "",
@@ -202,8 +204,13 @@ const EventFormDialog = ({
         agenda_fi: event.agenda_fi || "",
         agenda_sv: event.agenda_sv || "",
         event_type: editEvent.event_type,
-        starts_at: editEvent.starts_at ? format(new Date(editEvent.starts_at), "yyyy-MM-dd'T'HH:mm") : "",
-        ends_at: editEvent.ends_at ? format(new Date(editEvent.ends_at), "yyyy-MM-dd'T'HH:mm") : "",
+        is_all_day: (editEvent as { is_all_day?: boolean | null }).is_all_day ?? false,
+        starts_at: editEvent.starts_at
+          ? format(new Date(editEvent.starts_at), (editEvent as { is_all_day?: boolean | null }).is_all_day ? "yyyy-MM-dd" : "yyyy-MM-dd'T'HH:mm")
+          : "",
+        ends_at: editEvent.ends_at
+          ? format(new Date(editEvent.ends_at), (editEvent as { is_all_day?: boolean | null }).is_all_day ? "yyyy-MM-dd" : "yyyy-MM-dd'T'HH:mm")
+          : "",
         location: event.location || "",
         location_fi: event.location_fi || "",
         location_sv: event.location_sv || "",
@@ -267,8 +274,11 @@ const EventFormDialog = ({
         description: form.description.trim() || null,
         agenda: form.agenda.trim() || null,
         event_type: form.event_type,
-        starts_at: new Date(form.starts_at).toISOString(),
-        ends_at: form.ends_at ? new Date(form.ends_at).toISOString() : null,
+        is_all_day: form.is_all_day,
+        starts_at: new Date(form.is_all_day ? `${form.starts_at}T09:00` : form.starts_at).toISOString(),
+        ends_at: form.ends_at
+          ? new Date(form.is_all_day ? `${form.ends_at}T18:00` : form.ends_at).toISOString()
+          : null,
         location: form.location.trim() || null,
         is_online: form.is_online,
         online_url: form.online_url.trim() || null,
@@ -518,11 +528,28 @@ const EventFormDialog = ({
               />
             </div>
           </div>
+          <div className="flex items-center gap-3">
+            <Switch
+              id="all-day"
+              checked={form.is_all_day}
+              onCheckedChange={(checked) => {
+                setForm((f) => ({
+                  ...f,
+                  is_all_day: checked,
+                  starts_at: f.starts_at ? f.starts_at.slice(0, 10) : "",
+                  ends_at: f.ends_at ? f.ends_at.slice(0, 10) : "",
+                }));
+              }}
+            />
+            <Label htmlFor="all-day" className="font-body text-sm">
+              Date only (time to be announced)
+            </Label>
+          </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <Label className="font-body text-sm">Starts At *</Label>
               <Input
-                type="datetime-local"
+                type={form.is_all_day ? "date" : "datetime-local"}
                 value={form.starts_at}
                 onChange={(e) => set("starts_at", e.target.value)}
                 required
@@ -532,7 +559,7 @@ const EventFormDialog = ({
             <div>
               <Label className="font-body text-sm">Ends At</Label>
               <Input
-                type="datetime-local"
+                type={form.is_all_day ? "date" : "datetime-local"}
                 value={form.ends_at}
                 onChange={(e) => set("ends_at", e.target.value)}
                 className="font-body"
@@ -1057,7 +1084,7 @@ const Events = () => {
       // (creator, admins, RSVPed/signed-up attendees) fetch it on demand
       // via the public.get_event_online_url() RPC.
       const cols =
-        "id,title,description,event_type,starts_at,ends_at,location,is_online,max_attendees,image_url,is_published,created_by,created_at,updated_at,title_fi,title_sv,description_fi,description_sv,location_fi,location_sv,agenda,agenda_fi,agenda_sv,requires_signin,speakers,sponsors,external_url,external_host";
+        "id,title,description,event_type,starts_at,ends_at,location,is_online,max_attendees,image_url,is_published,is_all_day,created_by,created_at,updated_at,title_fi,title_sv,description_fi,description_sv,location_fi,location_sv,agenda,agenda_fi,agenda_sv,requires_signin,speakers,sponsors,external_url,external_host";
       const { data, error } = await supabase.from("events").select(cols).order("starts_at");
       if (error) throw error;
       return (data ?? []).map((e) => ({ online_url: null, ...(e as Record<string, unknown>) })) as unknown as Tables<"events">[];
@@ -1475,12 +1502,22 @@ const Events = () => {
                       locale: lang === "fi" ? fi : 
                               lang === "sv" ? sv : enUS 
                     })
-                  : (
-                    <>
-                      {format(new Date(event.starts_at), "HH:mm")}
-                      {event.ends_at && ` – ${format(new Date(event.ends_at), "HH:mm")}`}
-                    </>
-                  )}
+                  : (event as { is_all_day?: boolean | null }).is_all_day
+                    ? (
+                      <>
+                        {format(new Date(event.starts_at), "MMM dd, yyyy", {
+                          locale: lang === "fi" ? fi : lang === "sv" ? sv : enUS,
+                        })}
+                        {" · "}
+                        {t("events.timeTba") || "Time TBA"}
+                      </>
+                    )
+                    : (
+                      <>
+                        {format(new Date(event.starts_at), "HH:mm")}
+                        {event.ends_at && ` – ${format(new Date(event.ends_at), "HH:mm")}`}
+                      </>
+                    )}
               </span>
               {localizedLocation && (
                 <a
