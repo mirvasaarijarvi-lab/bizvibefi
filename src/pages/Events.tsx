@@ -231,6 +231,8 @@ const EventFormDialog = ({
     return emptyForm;
   });
   const [uploading, setUploading] = useState(false);
+  const [cropFile, setCropFile] = useState<File | null>(null);
+  const [cropOpen, setCropOpen] = useState(false);
   const [isExternal, setIsExternal] = useState<boolean>(
     !!(editEvent as { external_url?: string | null } | null | undefined)?.external_url,
   );
