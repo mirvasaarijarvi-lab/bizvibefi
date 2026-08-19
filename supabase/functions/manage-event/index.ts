@@ -65,6 +65,16 @@ const EventFields = z.object({
   }
 });
 
+// online_url is column-level revoked for anon/authenticated, so never `select("*")`.
+const RETURN_COLS = [
+  "id", "title", "description", "agenda", "event_type", "starts_at", "ends_at",
+  "location", "is_online", "max_attendees", "image_url", "is_published",
+  "requires_signin", "external_url", "external_host", "speakers", "sponsors",
+  "title_fi", "title_sv", "description_fi", "description_sv",
+  "location_fi", "location_sv", "agenda_fi", "agenda_sv",
+  "created_by", "created_at", "updated_at",
+].join(", ");
+
 const RequestSchema = z.discriminatedUnion("action", [
   z.object({ action: z.literal("create"), data: EventFields }),
   z.object({ action: z.literal("update"), id: z.string().uuid(), data: EventFields }),
