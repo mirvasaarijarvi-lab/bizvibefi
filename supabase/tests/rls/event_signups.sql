@@ -41,16 +41,16 @@ BEGIN
   -- anon INSERT allowed for open event
   PERFORM rls_test.as_anon();
   PERFORM rls_test.expect_allowed(
-    format('INSERT INTO public.event_signups(event_id, full_name, email)
-            VALUES (%L, %L, %L)',
-           v_open, 'Anon Guest', 'anon-guest@example.com'),
+    format('INSERT INTO public.event_signups(event_id, full_name, email, company)
+            VALUES (%L, %L, %L, %L)',
+           v_open, 'Anon Guest', 'anon-guest@example.com', 'Anon Oy'),
     'anon may submit guest signup to open event');
 
   -- anon INSERT denied for signin-required event
   PERFORM rls_test.expect_denied(
-    format('INSERT INTO public.event_signups(event_id, full_name, email)
-            VALUES (%L, %L, %L)',
-           v_locked, 'Sneaky', 'sneaky@example.com'),
+    format('INSERT INTO public.event_signups(event_id, full_name, email, company)
+            VALUES (%L, %L, %L, %L)',
+           v_locked, 'Sneaky', 'sneaky@example.com', 'Sneaky Oy'),
     'anon cannot submit guest signup to signin-required event');
 
   PERFORM rls_test.reset();

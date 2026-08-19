@@ -113,8 +113,8 @@ BEGIN
   INSERT INTO public.event_rsvps(event_id, user_id, status)
   VALUES (v_event, v_user_a, 'going'),
          (v_event, v_user_b, 'going');
-  INSERT INTO public.event_signups(event_id, full_name, email)
-  VALUES (v_event, 'Guest', 'guest@example.com');
+  INSERT INTO public.event_signups(event_id, full_name, email, company)
+  VALUES (v_event, 'Guest', 'guest@example.com', 'Guest Oy');
 
   PERFORM rls_test.as_anon();
   PERFORM rls_test.expect_equals(
