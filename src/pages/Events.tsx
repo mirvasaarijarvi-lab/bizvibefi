@@ -1057,7 +1057,7 @@ const Events = () => {
       // (creator, admins, RSVPed/signed-up attendees) fetch it on demand
       // via the public.get_event_online_url() RPC.
       const cols =
-        "id,title,description,event_type,starts_at,ends_at,location,is_online,max_attendees,image_url,is_published,created_by,created_at,updated_at,title_fi,title_sv,description_fi,description_sv,location_fi,location_sv,agenda,agenda_fi,agenda_sv,requires_signin,speakers,sponsors";
+        "id,title,description,event_type,starts_at,ends_at,location,is_online,max_attendees,image_url,is_published,created_by,created_at,updated_at,title_fi,title_sv,description_fi,description_sv,location_fi,location_sv,agenda,agenda_fi,agenda_sv,requires_signin,speakers,sponsors,external_url,external_host";
       const { data, error } = await supabase.from("events").select(cols).order("starts_at");
       if (error) throw error;
       return (data ?? []).map((e) => ({ online_url: null, ...(e as Record<string, unknown>) })) as unknown as Tables<"events">[];
