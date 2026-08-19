@@ -65,6 +65,16 @@ const EventFields = z.object({
   }
 });
 
+// online_url is column-level revoked for anon/authenticated, so never `select("*")`.
+const RETURN_COLS = [
+  "id", "title", "description", "agenda", "event_type", "starts_at", "ends_at",
+  "location", "is_online", "max_attendees", "image_url", "is_published",
+  "requires_signin", "external_url", "external_host", "speakers", "sponsors",
+  "title_fi", "title_sv", "description_fi", "description_sv",
+  "location_fi", "location_sv", "agenda_fi", "agenda_sv",
+  "created_by", "created_at", "updated_at",
+].join(", ");
+
 const RequestSchema = z.discriminatedUnion("action", [
   z.object({ action: z.literal("create"), data: EventFields }),
   z.object({ action: z.literal("update"), id: z.string().uuid(), data: EventFields }),
@@ -228,7 +238,7 @@ Deno.serve(async (req) => {
       const { data, error } = await supabase
         .from("events")
         .insert([{ ...payload.data, created_by: userId }])
-        .select()
+        .select(RETURN_COLS)
         .single();
       if (error) return json(400, { error: error.message });
       return json(200, { event: data });
@@ -239,7 +249,7 @@ Deno.serve(async (req) => {
         .from("events")
         .update(payload.data)
         .eq("id", payload.id)
-        .select()
+        .select(RETURN_COLS)
         .maybeSingle();
       if (error) return json(400, { error: error.message });
       if (!data) return json(404, { error: "Event not found" });
