@@ -419,9 +419,10 @@ const MetricsCounter = () => {
   const { data: eventCount } = useQuery({
     queryKey: ["metrics-events"],
     queryFn: async () => {
+      // online_url is column-restricted at the DB level, so "*" is denied.
       const { count, error } = await supabase
         .from("events")
-        .select("*", { count: "exact", head: true })
+        .select("id", { count: "exact", head: true })
         .eq("is_published", true);
       if (error) throw error;
       return count ?? 0;
