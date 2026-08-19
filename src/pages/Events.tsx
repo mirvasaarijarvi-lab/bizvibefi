@@ -1233,6 +1233,8 @@ const Events = () => {
     const localizedDescription = localizedEventValue(e, lang, "description");
     const localizedLocation = localizedEventValue(e, lang, "location");
     const localizedAgenda = localizedEventValue(e, lang, "agenda");
+    const externalUrl = (event as { external_url?: string | null }).external_url || "";
+    const externalHost = (event as { external_host?: string | null }).external_host || "";
     const speakers = parseSpeakers(e.speakers);
     const sponsors = parseSponsors(e.sponsors);
     const partnerCompanies = sponsors.filter((s) => s.kind === "partner");
@@ -1492,7 +1494,12 @@ const Events = () => {
                   <ExternalLink className="h-3 w-3" />
                 </a>
               )}
-              {!isPastEvent && (
+              {externalUrl && externalHost && (
+                <span className="flex items-center gap-1">
+                  {lang === "fi" ? "Järjestäjä" : lang === "sv" ? "Arrangör" : "Hosted by"}: {externalHost}
+                </span>
+              )}
+              {!isPastEvent && !externalUrl && (
                 <span className="flex items-center gap-1">
                   <Users className="h-3.5 w-3.5" />
                   {event.max_attendees
@@ -1500,7 +1507,7 @@ const Events = () => {
                     : `${attendeeCount} ${attendeeCount === 1 ? t("events.going") : t("events.goingPlural")}`}
                 </span>
               )}
-              {!isPastEvent && isFull && (
+              {!isPastEvent && !externalUrl && isFull && (
                 <Badge variant="destructive" className="font-body text-xs">
                   {lang === "fi" ? "Tapahtuma on täynnä" : lang === "sv" ? "Evenemanget är fullt" : "Event is full"}
                 </Badge>
@@ -1508,7 +1515,20 @@ const Events = () => {
             </div>
 
             {/* Sign up CTAs - upcoming only */}
-            {!isPastEvent && (() => {
+            {!isPastEvent && externalUrl && (
+              <Button asChild size="sm" className="bg-gradient-storm hover:opacity-90 font-body">
+                <a href={externalUrl} target="_blank" rel="noopener noreferrer">
+                  {lang === "fi"
+                    ? "Katso tapahtuma"
+                    : lang === "sv"
+                    ? "Visa evenemanget"
+                    : "View event"}
+                  <ExternalLink className="h-3.5 w-3.5 ml-1" />
+                </a>
+              </Button>
+            )}
+
+            {!isPastEvent && !externalUrl && (() => {
               const requiresSignin = (event as { requires_signin?: boolean | null }).requires_signin ?? true;
               const signUpLabel = lang === "fi"
                 ? "Ilmoittaudu tapahtumaan"
