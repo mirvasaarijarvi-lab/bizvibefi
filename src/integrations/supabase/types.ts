@@ -1554,6 +1554,64 @@ export type Database = {
         Returns: boolean
       }
       has_viber_access: { Args: { _user_id: string }; Returns: boolean }
+      list_all_recruitment_posts_admin: {
+        Args: never
+        Returns: {
+          allow_contact_request: boolean
+          apply_email: string | null
+          apply_url: string | null
+          created_at: string
+          description: string
+          employment_type: string | null
+          expires_at: string | null
+          id: string
+          is_remote: boolean
+          location: string | null
+          organization: string | null
+          rejection_reason: string | null
+          status: Database["public"]["Enums"]["approval_status"]
+          tags: string[]
+          title: string
+          type: Database["public"]["Enums"]["recruitment_post_type"]
+          updated_at: string
+          user_id: string
+        }[]
+        SetofOptions: {
+          from: "*"
+          to: "recruitment_posts"
+          isOneToOne: false
+          isSetofReturn: true
+        }
+      }
+      list_my_recruitment_posts: {
+        Args: never
+        Returns: {
+          allow_contact_request: boolean
+          apply_email: string | null
+          apply_url: string | null
+          created_at: string
+          description: string
+          employment_type: string | null
+          expires_at: string | null
+          id: string
+          is_remote: boolean
+          location: string | null
+          organization: string | null
+          rejection_reason: string | null
+          status: Database["public"]["Enums"]["approval_status"]
+          tags: string[]
+          title: string
+          type: Database["public"]["Enums"]["recruitment_post_type"]
+          updated_at: string
+          user_id: string
+        }[]
+        SetofOptions: {
+          from: "*"
+          to: "recruitment_posts"
+          isOneToOne: false
+          isSetofReturn: true
+        }
+      }
       list_public_profiles: {
         Args: never
         Returns: {
