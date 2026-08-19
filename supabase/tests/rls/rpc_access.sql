@@ -108,9 +108,8 @@ DECLARE
   v_event uuid;
   v_user  uuid := rls_test.fx_user();
 BEGIN
-  INSERT INTO public.events (title, slug, starts_at, is_published, requires_signin, online_url)
+  INSERT INTO public.events (title, starts_at, is_published, requires_signin, online_url)
   VALUES ('RLS online event',
-          'rls-online-' || gen_random_uuid()::text,
           now() + interval '7 days', true, true,
           'https://meet.test/secret-room')
   RETURNING id INTO v_event;
