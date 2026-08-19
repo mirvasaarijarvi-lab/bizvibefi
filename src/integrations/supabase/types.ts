@@ -581,6 +581,7 @@ export type Database = {
           external_url: string | null
           id: string
           image_url: string | null
+          is_all_day: boolean
           is_online: boolean
           is_published: boolean
           location: string | null
@@ -612,6 +613,7 @@ export type Database = {
           external_url?: string | null
           id?: string
           image_url?: string | null
+          is_all_day?: boolean
           is_online?: boolean
           is_published?: boolean
           location?: string | null
@@ -643,6 +645,7 @@ export type Database = {
           external_url?: string | null
           id?: string
           image_url?: string | null
+          is_all_day?: boolean
           is_online?: boolean
           is_published?: boolean
           location?: string | null
