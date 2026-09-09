@@ -362,27 +362,49 @@ jobs:
         run: |
           set -o pipefail
           : > db-reset.txt
-          for attempt in 1 2; do
-            echo "==> supabase db reset attempt ${attempt}/2" | tee -a db-reset.txt
+
+          # Returns 0 when Postgres is up and every committed migration is
+          # recorded as applied, regardless of what the API containers did.
+          db_is_healthy() {
+            local url
+            url=$(supabase status -o env 2>/dev/null | awk -F= '/^DB_URL=/{gsub(/"/,"",$2); print $2}')
+            [ -n "$url" ] || url="postgresql://postgres:postgres@127.0.0.1:54322/postgres"
+            local applied expected
+            applied=$(psql "$url" -tAc "select count(*) from supabase_migrations.schema_migrations" 2>/dev/null || echo "")
+            expected=$(ls supabase/migrations/*.sql 2>/dev/null | wc -l | tr -d ' ')
+            [ -n "$applied" ] && [ "$applied" -ge "$expected" ]
+          }
+
+          for attempt in 1 2 3; do
+            echo "==> supabase db reset attempt ${attempt}/3" | tee -a db-reset.txt
             if supabase db reset --local 2>&1 | tee -a db-reset.txt; then
               exit 0
             fi
 
-            # The local stack can briefly return 502 while db reset restarts
-            # its containers after all migrations have applied. Retry only
-            # that infrastructure failure. SQL/migration errors fail at once.
-            if [ "$attempt" -eq 1 ] && tail -n 20 db-reset.txt | grep -qE 'Error status 502|invalid response.*upstream server'; then
-              echo "::warning title=Transient local stack restart::db reset reached the container restart but received HTTP 502; retrying once."
-              for i in $(seq 1 30); do
-                supabase status >/dev/null 2>&1 && break
+            # The local stack can return 502 while db reset restarts its
+            # containers *after* all migrations have applied. That is an
+            # infrastructure hiccup, not a schema problem: if Postgres is up
+            # and every migration is recorded, accept the run. Otherwise retry,
+            # then fail. SQL/migration errors fail at once.
+            if tail -n 20 db-reset.txt | grep -qE 'Error status 502|invalid response.*upstream server'; then
+              for i in $(seq 1 45); do
+                db_is_healthy && break
                 sleep 2
               done
-              continue
+              if db_is_healthy; then
+                echo "::warning title=Transient local stack restart::db reset returned HTTP 502 while restarting containers, but Postgres is up with all migrations applied; continuing."
+                exit 0
+              fi
+              if [ "$attempt" -lt 3 ]; then
+                echo "::warning title=Transient local stack restart::db reset hit HTTP 502 and the database is not ready yet; retrying."
+                continue
+              fi
             fi
 
             echo "::error title=supabase db reset failed::Database reset failed. See db-reset.txt for the exact migration, seed, or local-stack error."
             exit 1
           done
+
 
       # ----- Run any extra seed scripts under supabase/seeds/ -----
       # `supabase db reset` only runs the single supabase/seed.sql file.
