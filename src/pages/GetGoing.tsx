@@ -53,8 +53,10 @@ const GetGoing = () => {
       <section className="pb-20">
         <div className="container">
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
-            {toolDefs.map(({ icon: Icon, tier, href, external }, i) => {
+            {toolDefs.map(({ icon: Icon, tier, href, external, comingSoon }, i) => {
               const isViber = tier === "viber";
+              const comingSoonLabel =
+                lang === "fi" ? "WhatsApp-ryhmä tulossa" : lang === "sv" ? "WhatsApp-grupp kommer snart" : "WhatsApp group coming soon";
               const cardContent = (
                 <motion.div
                   key={i}
@@ -89,11 +91,25 @@ const GetGoing = () => {
                   </div>
                   <h3 className="font-display text-xl font-bold tracking-[-0.01em]">{t(`getGoing.tools.${i}.title`)}</h3>
                   <p className="mt-2 text-sm text-muted-foreground font-body">{t(`getGoing.tools.${i}.desc`)}</p>
-                  <span className={`mt-4 inline-flex items-center font-body text-sm ${isViber ? "text-primary group-hover:text-primary/80" : "text-electric group-hover:text-electric-light"}`}>
-                    {t("getGoing.explore")} {external ? <ExternalLink className="ml-1 h-3 w-3" /> : <ArrowRight className="ml-1 h-3 w-3" />}
-                  </span>
+                  {comingSoon ? (
+                    <span className="mt-4 inline-flex items-center font-body text-sm text-muted-foreground">
+                      {comingSoonLabel}
+                    </span>
+                  ) : (
+                    <span className={`mt-4 inline-flex items-center font-body text-sm ${isViber ? "text-primary group-hover:text-primary/80" : "text-electric group-hover:text-electric-light"}`}>
+                      {t("getGoing.explore")} {external ? <ExternalLink className="ml-1 h-3 w-3" /> : <ArrowRight className="ml-1 h-3 w-3" />}
+                    </span>
+                  )}
                 </motion.div>
               );
+
+              if (comingSoon || !href) {
+                return (
+                  <div key={i} className="block">
+                    {cardContent}
+                  </div>
+                );
+              }
 
               return external ? (
                 <a key={i} href={href} target="_blank" rel="noopener noreferrer" className="block">
@@ -106,6 +122,7 @@ const GetGoing = () => {
               );
             })}
           </div>
+
         </div>
       </section>
 
