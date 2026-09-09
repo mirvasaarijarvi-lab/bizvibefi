@@ -276,7 +276,7 @@ const Members = () => {
                               {member.display_name || "Anonymous"}
                             </h3>
                             {member.role === "superadmin" && (
-                              <Badge className="text-[10px] px-1.5 py-0 bg-gradient-to-r from-primary to-secondary text-primary-foreground">
+                              <Badge className="text-[10px] px-1.5 py-0 bg-linear-to-r from-primary to-secondary text-primary-foreground">
                                 SUPERADMIN
                               </Badge>
                             )}

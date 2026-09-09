@@ -51,7 +51,7 @@ const Leaderboard = () => {
                     to={`/members/${row.user_id}`}
                     className={`block p-3 rounded-lg transition-all ${
                       isFirst
-                        ? "bg-gradient-to-r from-primary/15 via-vibetor/10 to-turquoise/10 border border-primary/40 shadow-md hover:shadow-lg"
+                        ? "bg-linear-to-r from-primary/15 via-vibetor/10 to-turquoise/10 border border-primary/40 shadow-md hover:shadow-lg"
                         : "hover:bg-muted/50 border border-transparent"
                     }`}
                   >

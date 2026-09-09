@@ -25,9 +25,6 @@ updates:
       # typescript-eslint ships TypeScript 7 support.
       - dependency-name: "typescript"
         update-types: ["version-update:semver-major"]
-      # Tailwind 4 needs a CSS-first config migration; handle it manually.
-      - dependency-name: "tailwindcss"
-        update-types: ["version-update:semver-major"]
     groups:
       minor-and-patch:
         update-types:

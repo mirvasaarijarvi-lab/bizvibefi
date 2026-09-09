@@ -90,12 +90,12 @@ const RecruitmentPostCard = ({ post, authorName }: Props) => {
         )}
       </div>
 
-      <h3 className="font-display text-lg font-bold tracking-[-0.01em] break-words">
+      <h3 className="font-display text-lg font-bold tracking-[-0.01em] wrap-break-word">
         {post.title}
       </h3>
 
       <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-muted-foreground font-body">
-        {post.organization && <span className="break-words">{post.organization}</span>}
+        {post.organization && <span className="wrap-break-word">{post.organization}</span>}
         {post.location && (
           <span className="inline-flex items-center gap-1">
             <MapPin className="h-3.5 w-3.5" /> {post.location}
@@ -109,7 +109,7 @@ const RecruitmentPostCard = ({ post, authorName }: Props) => {
         {post.employment_type && <span>{post.employment_type}</span>}
       </div>
 
-      <p className="mt-3 text-sm text-muted-foreground font-body whitespace-pre-line break-words">
+      <p className="mt-3 text-sm text-muted-foreground font-body whitespace-pre-line wrap-break-word">
         {post.description}
       </p>
 

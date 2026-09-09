@@ -70,7 +70,7 @@ const CertificateVerify = () => {
           </div>
 
           <Card className="border-primary/20 overflow-hidden">
-            <div className="h-2 bg-gradient-to-r from-purple-vivid via-electric to-turquoise" />
+            <div className="h-2 bg-linear-to-r from-purple-vivid via-electric to-turquoise" />
             <CardContent className="p-6 md:p-8 space-y-5">
               <div>
                 <p className="text-xs font-body font-semibold uppercase tracking-widest text-muted-foreground mb-1">Course content</p>

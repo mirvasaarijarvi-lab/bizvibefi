@@ -200,7 +200,7 @@ const MemberProfile = () => {
                         {member.display_name || "Anonymous"}
                       </h1>
                       {member.role === "superadmin" && (
-                        <Badge className="text-[10px] px-1.5 py-0 bg-gradient-to-r from-primary to-secondary text-primary-foreground">
+                        <Badge className="text-[10px] px-1.5 py-0 bg-linear-to-r from-primary to-secondary text-primary-foreground">
                           SUPERADMIN
                         </Badge>
                       )}
@@ -251,7 +251,7 @@ const MemberProfile = () => {
                 {/* Bio */}
                 {showField("bio") && member.bio && (
                   <div className="mb-6">
-                    <p className="text-muted-foreground font-body leading-relaxed break-words whitespace-pre-line">
+                    <p className="text-muted-foreground font-body leading-relaxed wrap-break-word whitespace-pre-line">
                       {member.bio}
                     </p>
                   </div>
@@ -274,7 +274,7 @@ const MemberProfile = () => {
                         </div>
                       )}
                       {member.skills_summary && (
-                        <p className="text-sm text-muted-foreground font-body whitespace-pre-line break-words">
+                        <p className="text-sm text-muted-foreground font-body whitespace-pre-line wrap-break-word">
                           {member.skills_summary}
                         </p>
                       )}

@@ -241,7 +241,7 @@ const Forum = () => {
                         <div className="min-w-0 flex-1">
                           <div className="flex items-center gap-2">
                             {topic.is_pinned && (
-                              <Pin className="h-3.5 w-3.5 text-primary flex-shrink-0" />
+                              <Pin className="h-3.5 w-3.5 text-primary shrink-0" />
                             )}
                             <h3 className="font-display font-semibold text-foreground truncate">
                               {topic.title}

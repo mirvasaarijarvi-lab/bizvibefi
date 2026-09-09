@@ -141,7 +141,7 @@ const AdminRecruitment = () => {
                         {new Date(p.created_at).toLocaleDateString()}
                       </span>
                     </div>
-                    <h2 className="font-display text-lg font-bold break-words">{p.title}</h2>
+                    <h2 className="font-display text-lg font-bold wrap-break-word">{p.title}</h2>
                     <div className="mt-1 flex flex-wrap gap-x-3 gap-y-1 text-sm text-muted-foreground font-body">
                       {p.organization && <span>{p.organization}</span>}
                       {p.location && (
@@ -156,7 +156,7 @@ const AdminRecruitment = () => {
                       )}
                       {p.employment_type && <span>{p.employment_type}</span>}
                     </div>
-                    <p className="mt-3 text-sm text-muted-foreground font-body whitespace-pre-line break-words">
+                    <p className="mt-3 text-sm text-muted-foreground font-body whitespace-pre-line wrap-break-word">
                       {p.description}
                     </p>
                     {p.tags?.length > 0 && (
