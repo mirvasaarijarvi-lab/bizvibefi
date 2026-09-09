@@ -131,7 +131,7 @@ const AdminRecruitment = () => {
                             ? "default"
                             : p.status === "rejected"
                               ? "destructive"
-                              : "outline-solid"
+                              : "outline"
                         }
                         className="font-body text-xs"
                       >

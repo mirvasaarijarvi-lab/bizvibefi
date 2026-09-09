@@ -71,7 +71,7 @@ const Leaderboard = () => {
                           {row.badge_count} {row.badge_count === 1 ? t("badges.leaderboard.badge") : t("badges.leaderboard.badges")}
                         </p>
                       </div>
-                      <Badge variant={isFirst ? "default" : "outline-solid"} className={isFirst ? "bg-primary text-primary-foreground" : ""}>
+                      <Badge variant={isFirst ? "default" : "outline"} className={isFirst ? "bg-primary text-primary-foreground" : ""}>
                         {row.total_points} pts
                       </Badge>
                     </div>

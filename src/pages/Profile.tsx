@@ -512,7 +512,7 @@ const Profile = () => {
                         }
                       >
                         <Badge
-                          variant={active ? "default" : "outline-solid"}
+                          variant={active ? "default" : "outline"}
                           className="font-body text-[11px] cursor-pointer"
                         >
                           {tag}

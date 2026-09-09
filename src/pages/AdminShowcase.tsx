@@ -178,7 +178,7 @@ const AdminShowcase = () => {
                   {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
                     <Button
                       key={p}
-                      variant={p === safePage ? "default" : "outline-solid"}
+                      variant={p === safePage ? "default" : "outline"}
                       size="icon"
                       onClick={() => setPage(p)}
                       className="w-9 h-9"
