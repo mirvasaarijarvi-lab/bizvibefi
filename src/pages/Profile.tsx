@@ -308,7 +308,7 @@ const Profile = () => {
                 <div className="flex items-center gap-2 flex-wrap">
                   <p className="font-display font-bold text-foreground">{displayName || "Set your name"}</p>
                   {isSuperAdmin && (
-                    <Badge className="bg-gradient-to-r from-primary to-secondary text-primary-foreground text-[10px] px-1.5 py-0">SUPERADMIN</Badge>
+                    <Badge className="bg-linear-to-r from-primary to-secondary text-primary-foreground text-[10px] px-1.5 py-0">SUPERADMIN</Badge>
                   )}
                   {!isSuperAdmin && profile?.membership_tier === "vibetor" && (
                     <Badge className="bg-vibetor/90 hover:bg-vibetor text-primary-foreground text-[10px] px-1.5 py-0">VIBETOR</Badge>

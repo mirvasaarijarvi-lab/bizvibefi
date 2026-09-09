@@ -1343,7 +1343,7 @@ const Events = () => {
         <div className="flex flex-col md:flex-row gap-6">
           {/* Date block */}
           {!isPastEvent && (
-            <div className="flex-shrink-0 w-20 text-center">
+            <div className="shrink-0 w-20 text-center">
               <div className="bg-muted rounded-xl p-3">
                 <p className="text-xs text-muted-foreground font-body uppercase">
                   {format(new Date(event.starts_at), "MMM", { 

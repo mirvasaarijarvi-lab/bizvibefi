@@ -43,8 +43,8 @@ const Navbar = () => {
         <Link to="/" aria-label="<Good Vibes Café/> — home" className="font-display text-[13px] sm:text-[15px] md:text-[17px] font-extrabold tracking-[-0.04em] leading-[0.92] shrink-0">
           <span className="text-gradient-storm flex flex-col items-start">
             <span>{"<Good"}</span>
-            <span className="-mt-[1px]">Vibes</span>
-            <span className="-mt-[1px] tracking-[-0.02em]">{"Café />"}</span>
+            <span className="-mt-px">Vibes</span>
+            <span className="-mt-px tracking-[-0.02em]">{"Café />"}</span>
           </span>
         </Link>
 

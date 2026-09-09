@@ -152,7 +152,7 @@ const BadgesPage = () => {
                               type="button"
                               onClick={() => { setSelectedBadge(b); setEvidence(""); setPeerId(""); }}
                               disabled={ownedIds.has(b.id)}
-                              className={`text-left p-3 rounded-lg border transition-all ${ownedIds.has(b.id) ? "opacity-60 cursor-not-allowed bg-muted/30" : "hover:border-primary hover:shadow-sm cursor-pointer"}`}
+                              className={`text-left p-3 rounded-lg border transition-all ${ownedIds.has(b.id) ? "opacity-60 cursor-not-allowed bg-muted/30" : "hover:border-primary hover:shadow-xs cursor-pointer"}`}
                             >
                               <div className="flex items-center gap-3">
                                 <BadgePill badge={b} size="md" />

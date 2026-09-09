@@ -149,7 +149,7 @@ const AccessibilityWidget = () => {
       <button
         onClick={() => setOpen(true)}
         aria-label="Open accessibility menu"
-        className="fixed bottom-20 left-4 z-[70] w-12 h-12 rounded-full bg-primary text-primary-foreground shadow-lg flex items-center justify-center hover:scale-110 transition-transform"
+        className="fixed bottom-20 left-4 z-70 w-12 h-12 rounded-full bg-primary text-primary-foreground shadow-lg flex items-center justify-center hover:scale-110 transition-transform"
       >
         <Accessibility className="h-6 w-6" />
       </button>
@@ -162,7 +162,7 @@ const AccessibilityWidget = () => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 0.4 }}
               exit={{ opacity: 0 }}
-              className="fixed inset-0 z-[80] bg-foreground/60"
+              className="fixed inset-0 z-80 bg-foreground/60"
               onClick={() => setOpen(false)}
             />
             <motion.div
@@ -170,7 +170,7 @@ const AccessibilityWidget = () => {
               animate={{ x: 0 }}
               exit={{ x: -320 }}
               transition={{ type: "spring", damping: 25, stiffness: 300 }}
-              className="fixed top-0 left-0 bottom-0 z-[90] w-80 max-w-[90vw] bg-background border-r border-border overflow-y-auto"
+              className="fixed top-0 left-0 bottom-0 z-90 w-80 max-w-[90vw] bg-background border-r border-border overflow-y-auto"
             >
               {/* Header */}
               <div className="flex items-center justify-between p-4 bg-primary text-primary-foreground">

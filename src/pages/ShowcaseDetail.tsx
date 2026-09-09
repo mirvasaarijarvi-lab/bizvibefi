@@ -68,7 +68,7 @@ const StarRating = ({ value, onChange }: { value: number; onChange?: (v: number)
         key={star}
         type="button"
         onClick={() => onChange?.(star)}
-        className={onChange ? "focus:outline-none cursor-pointer" : "cursor-default"}
+        className={onChange ? "focus:outline-hidden cursor-pointer" : "cursor-default"}
         disabled={!onChange}
       >
         <Star className={`h-5 w-5 ${star <= value ? "text-yellow-500 fill-yellow-500" : "text-muted-foreground"}`} />
@@ -249,7 +249,7 @@ const ShowcaseDetail = () => {
                     {fields.filter((f) => f.value).map((f) => (
                       <div key={f.label}>
                         <p className="text-xs text-muted-foreground">{f.label}</p>
-                        <p className="text-sm whitespace-pre-wrap break-words">{f.value}</p>
+                        <p className="text-sm whitespace-pre-wrap wrap-break-word">{f.value}</p>
                       </div>
                     ))}
                   </div>
@@ -283,7 +283,7 @@ const ShowcaseDetail = () => {
                       </div>
                     ) : null
                   ) : (
-                    <Button key={i} size="lg" asChild variant="outline" className="shadow-sm">
+                    <Button key={i} size="lg" asChild variant="outline" className="shadow-xs">
                       <Link to="/apply-viber">
                         <Lock className="mr-2 h-5 w-5" />
                         {t("showcase.lockedViber")}

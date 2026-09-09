@@ -139,7 +139,7 @@ export default function EventFeedbackList({ eventId, lang }: Props) {
                       key={i}
                       className="text-xs text-muted-foreground font-body flex items-center gap-1"
                     >
-                      <span className="truncate max-w-[14rem]">{p.label ?? `#${i + 1}`}</span>
+                      <span className="truncate max-w-56">{p.label ?? `#${i + 1}`}</span>
                       <Stars value={Math.round(p.rating ?? 0)} />
                     </li>
                   ))}

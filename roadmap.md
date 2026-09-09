@@ -9,5 +9,5 @@
 - [x] #61 lucide-react v1 (pin + override removed)
 - [x] #65 vitest v5
 - [x] #66 js-yaml override 4.3.2
-- [ ] #58 typescript 7 — blocked: typescript-eslint requires typescript <6.1. Bumped to 5.9.3 instead.
-- [ ] #59 tailwindcss v4 — not applied: Lovable stack targets Tailwind v3; v4 needs a CSS-first config rewrite and risks visual regressions.
+- [ ] #58 typescript 7 — still blocked upstream: typescript-eslint refuses to load with TS 7 (needs the TS 6 JS API, which has no stable release). Staying on 5.9.3; Dependabot ignores the major.
+- [x] #59 tailwindcss v4 — migrated with the official upgrade tool: CSS-first config in src/index.css (@theme, @plugin, @custom-variant dark, @utility container), @tailwindcss/postcss, tailwind.config.ts removed, autoprefixer dropped, typography plugin re-registered. Light/dark screenshots verified.

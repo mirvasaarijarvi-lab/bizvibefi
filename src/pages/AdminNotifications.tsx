@@ -209,7 +209,7 @@ const AdminNotifications = () => {
                   key={n.id}
                   className={`bg-card border rounded-xl p-5 transition-colors ${
                     !n.is_read
-                      ? "border-primary/30 bg-primary/[0.03]"
+                      ? "border-primary/30 bg-primary/3"
                       : "border-border"
                   }`}
                 >
