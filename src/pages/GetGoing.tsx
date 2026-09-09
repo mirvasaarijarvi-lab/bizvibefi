@@ -14,13 +14,15 @@ import {
 import { useTranslation } from "@/i18n/useTranslation";
 
 const toolDefs = [
-  { icon: Wrench, tier: "starter" as const, href: "/showcase", external: false },
-  { icon: BookOpen, tier: "viber" as const, href: "/community", external: false },
-  { icon: MessageCircle, tier: "starter" as const, href: "https://chat.whatsapp.com/STARTER_PLACEHOLDER", external: true },
-  { icon: Users, tier: "viber" as const, href: "https://chat.whatsapp.com/VIBER_PLACEHOLDER", external: true },
-  { icon: Headphones, tier: "viber" as const, href: "/contact", external: false },
-  { icon: TrendingUp, tier: "viber" as const, href: "/community", external: false },
+  { icon: Wrench, tier: "starter" as const, href: "/showcase", external: false, comingSoon: false },
+  { icon: BookOpen, tier: "viber" as const, href: "/community", external: false, comingSoon: false },
+  // WhatsApp community groups are not open yet: shown as coming soon instead of a placeholder link.
+  { icon: MessageCircle, tier: "starter" as const, href: null, external: false, comingSoon: true },
+  { icon: Users, tier: "viber" as const, href: null, external: false, comingSoon: true },
+  { icon: Headphones, tier: "viber" as const, href: "/contact", external: false, comingSoon: false },
+  { icon: TrendingUp, tier: "viber" as const, href: "/community", external: false, comingSoon: false },
 ];
+
 
 const GetGoing = () => {
   const { t, lang } = useTranslation();
