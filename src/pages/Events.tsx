@@ -7,6 +7,8 @@ import { useAuth } from "@/hooks/useAuth";
 import { useIsAdmin, useIsSuperadmin } from "@/hooks/useAdminShowcase";
 import Layout from "@/components/Layout";
 import PageMeta from "@/components/PageMeta";
+import JsonLd from "@/components/JsonLd";
+
 import HeroAvatar from "@/components/HeroAvatar";
 import { useTranslation } from "@/i18n/useTranslation";
 import mascotEvents from "@/assets/mascot-events.png";
@@ -1734,6 +1736,40 @@ const Events = () => {
         title={`${t("events.tag")} — <Good Vibes Café/>`}
         description={t("events.subtitle")}
       />
+      <JsonLd
+        id="events-list"
+        data={
+          upcomingEvents.length > 0
+            ? {
+                "@context": "https://schema.org",
+                "@type": "ItemList",
+                name: "Upcoming Good Vibes Café events",
+                itemListElement: upcomingEvents.map((event, index) => ({
+                  "@type": "ListItem",
+                  position: index + 1,
+                  item: {
+                    "@type": "Event",
+                    name: event.title,
+                    description: event.description ?? undefined,
+                    startDate: event.starts_at,
+                    endDate: event.ends_at ?? undefined,
+                    eventAttendanceMode: event.is_online
+                      ? "https://schema.org/OnlineEventAttendanceMode"
+                      : "https://schema.org/OfflineEventAttendanceMode",
+                    eventStatus: "https://schema.org/EventScheduled",
+                    image: event.image_url ?? undefined,
+                    url: `https://goodvibescafe.org/events#event-${event.id}`,
+                    location: event.location
+                      ? { "@type": "Place", name: event.location, address: event.location }
+                      : { "@type": "VirtualLocation", url: "https://goodvibescafe.org/events" },
+                    organizer: { "@id": "https://goodvibescafe.org/#organization" },
+                  },
+                })),
+              }
+            : null
+        }
+      />
+
       <section className="py-20 px-4">
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-12">
