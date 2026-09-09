@@ -6,6 +6,8 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "@/hooks/use-toast";
+import PageMeta from "@/components/PageMeta";
+
 import robotPeek from "@/assets/robot-peek.png.asset.json";
 import robotHeart from "@/assets/robot-heart.png.asset.json";
 import robotWave from "@/assets/robot-wave.png.asset.json";
@@ -307,7 +309,12 @@ export default function EventFeedback() {
 
   return (
     <div className="min-h-screen bg-background py-10 px-4">
+      <PageMeta
+        title={`Feedback: ${event.title} — <Good Vibes Café/>`}
+        description={`Share your feedback on ${event.title}. Your ratings and comments help Good Vibes Café shape better events for the Finnish builder community.`}
+      />
       <div className="max-w-2xl mx-auto">
+
         <Card className="relative overflow-hidden">
           <img
             src={robotPeek.url}
