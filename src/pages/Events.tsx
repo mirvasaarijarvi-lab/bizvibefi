@@ -323,7 +323,9 @@ const EventFormDialog = ({
           body: JSON.stringify(requestBody),
         });
       } catch (networkErr) {
-        throw new Error(`Network error: ${networkErr instanceof Error ? networkErr.message : String(networkErr)}`);
+        throw new Error(`Network error: ${networkErr instanceof Error ? networkErr.message : String(networkErr)}`, {
+          cause: networkErr,
+        });
       }
 
       const rawText = await res.text();
