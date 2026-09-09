@@ -20,6 +20,14 @@ updates:
       # publish frequently; the Dependabot release-age cooldown cannot resolve
       # their latest versions, which fails every other update in the run.
       - dependency-name: "@lovable.dev/*"
+      # TypeScript 7 is not supported by typescript-eslint yet; the update job
+      # cannot resolve the peer range and fails the whole run. Re-enable once
+      # typescript-eslint ships TypeScript 7 support.
+      - dependency-name: "typescript"
+        update-types: ["version-update:semver-major"]
+      # Tailwind 4 needs a CSS-first config migration; handle it manually.
+      - dependency-name: "tailwindcss"
+        update-types: ["version-update:semver-major"]
     groups:
       minor-and-patch:
         update-types:
