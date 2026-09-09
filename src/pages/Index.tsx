@@ -92,7 +92,7 @@ const Index = () => {
 
   return (
     <Layout>
-      <PageMeta title="<Good Vibes Café/> — Builder Collective in Finland" description="A Finland-based collective for Nordic builders: build resources in the Vault, a Showcase for your work, events and peers who help you ship faster." />
+      <PageMeta title="Good Vibes Café — Builder Collective for the Finnish Tech Community" description="Good Vibes Café is a Finland-based builder collective for the Nordic tech community: Vault build resources, a Showcase for your work, meetups and peers who help you ship faster." />
       {/* Hero */}
       <section className="relative overflow-hidden py-24 md:py-36">
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-purple-vivid/10 blur-[120px] pointer-events-none" />
@@ -135,9 +135,6 @@ const Index = () => {
               </Button>
             </div>
             <NextEventTeaser />
-            <p className="mt-8 text-xs text-muted-foreground font-body max-w-lg mx-auto leading-relaxed">
-              {"\n"}
-            </p>
           </motion.div>
         </div>
       </section>

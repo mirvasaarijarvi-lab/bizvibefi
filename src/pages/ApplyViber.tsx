@@ -125,7 +125,7 @@ const ApplyViber = () => {
   if (submitted) {
     return (
       <Layout>
-        <PageMeta title="Application Submitted — <Good Vibes Café/>" description="Your Viber application has been submitted." />
+        <PageMeta title="Viber Application Submitted — <Good Vibes Café/>" description="Your Viber membership application has been submitted. We confirm membership and send the invoice by email." />
         <section className="py-24 md:py-36">
           <div className="container max-w-lg text-center">
             <motion.div initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ duration: 0.5 }}>

@@ -2,6 +2,8 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import Layout from "@/components/Layout";
 import PageMeta from "@/components/PageMeta";
+import JsonLd from "@/components/JsonLd";
+
 import HeroAvatar from "@/components/HeroAvatar";
 import mascotShowcase from "@/assets/mascot-showcase.png";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -534,6 +536,32 @@ const Showcase = () => {
         title={`${t("showcase.pageTitle")} — <Good Vibes Café/>`}
         description={t("showcase.pageDesc")}
       />
+      <JsonLd
+        id="showcase-list"
+        data={
+          items && items.length > 0
+            ? {
+                "@context": "https://schema.org",
+                "@type": "ItemList",
+                name: "Good Vibes Café community showcase",
+                itemListElement: items.map((item, index) => ({
+                  "@type": "ListItem",
+                  position: index + 1,
+                  item: {
+                    "@type": "CreativeWork",
+                    name: item.title,
+                    description: item.description ?? undefined,
+                    image: item.image_url ?? undefined,
+                    url: `https://goodvibescafe.org/showcase/${item.id}`,
+                    dateCreated: item.created_at ?? undefined,
+                    publisher: { "@id": "https://goodvibescafe.org/#organization" },
+                  },
+                })),
+              }
+            : null
+        }
+      />
+
 
       <section className="py-24 md:py-32">
         <div className="container">
