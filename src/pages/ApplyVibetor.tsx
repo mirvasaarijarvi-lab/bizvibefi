@@ -36,7 +36,7 @@ const formSchema = z.object({
   full_name: z.string().trim().min(2, "Name is required").max(100),
   email: z.string().trim().email("Valid email required").max(255),
   vibetor_type: z.union([z.literal("innovator"), z.literal("investor"), z.literal("partner")], { message: "Please select a type" }),
-  is_company: z.boolean().default(false),
+  is_company: z.boolean(),
   company_name: z.string().trim().max(200).optional(),
   representative_name: z.string().trim().max(100).optional(),
   linkedin_url: z.string().trim().url("Please enter a valid URL").optional().or(z.literal("")),
