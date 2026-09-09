@@ -120,7 +120,7 @@ const DateField = ({
           mode="single"
           selected={date}
           onSelect={(d) => onChange(d ? format(d, "yyyy-MM-dd") : null)}
-          initialFocus
+          autoFocus
           className={cn("p-3 pointer-events-auto")}
         />
       </PopoverContent>
