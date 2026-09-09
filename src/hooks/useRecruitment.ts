@@ -100,10 +100,12 @@ export const useCreateRecruitmentPost = () => {
   return useMutation({
     mutationFn: async (input: RecruitmentPostInput) => {
       if (!user) throw new Error("Not authenticated");
+      // Only select back non-protected columns: apply_email is column-revoked
+      // from authenticated and must be read through the gating RPCs.
       const { data, error } = await supabase
         .from("recruitment_posts")
         .insert({ ...input, user_id: user.id } as never)
-        .select()
+        .select("id, type, title, status, created_at")
         .single();
       if (error) throw error;
       return data;
