@@ -21,7 +21,7 @@ const formSchema = z.object({
   full_name: z.string().trim().min(2, "Name is required").max(100),
   email: z.string().trim().email("Valid email required").max(255),
   phone: z.string().trim().max(50).optional().or(z.literal("")),
-  is_company: z.boolean().default(false),
+  is_company: z.boolean(),
   company_name: z.string().trim().max(200).optional().or(z.literal("")),
   representative_name: z.string().trim().max(100).optional().or(z.literal("")),
   notes: z.string().trim().max(2000).optional().or(z.literal("")),
