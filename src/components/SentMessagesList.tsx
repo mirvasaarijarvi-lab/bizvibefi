@@ -241,7 +241,7 @@ const SentMessagesList = () => {
                             key={r.email}
                             variant={
                               r.status === "sent"
-                                ? "outline"
+                                ? "outline-solid"
                                 : r.status === "pending"
                                 ? "secondary"
                                 : "destructive"

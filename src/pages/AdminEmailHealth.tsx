@@ -128,7 +128,7 @@ const AdminEmailHealth = () => {
                           <Badge variant="secondary" className="text-xs">Optional</Badge>
                         )}
                       </div>
-                      <p className="text-xs text-muted-foreground font-body mt-1 break-words">{c.expected}</p>
+                      <p className="text-xs text-muted-foreground font-body mt-1 wrap-break-word">{c.expected}</p>
                     </div>
                   </Card>
                 ))}

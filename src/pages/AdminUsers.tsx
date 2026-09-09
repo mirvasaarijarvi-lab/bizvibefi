@@ -55,7 +55,7 @@ const roleBadge = (role: string) => {
   switch (role) {
     case "superadmin":
       return (
-        <Badge className="bg-gradient-to-r from-primary to-secondary text-primary-foreground text-[10px] px-1.5 py-0">
+        <Badge className="bg-linear-to-r from-primary to-secondary text-primary-foreground text-[10px] px-1.5 py-0">
           SUPERADMIN
         </Badge>
       );

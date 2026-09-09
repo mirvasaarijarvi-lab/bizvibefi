@@ -143,7 +143,7 @@ const SupportChat = () => {
             exit={{ scale: 0 }}
             onClick={() => setOpen(true)}
             aria-label="Open support chat"
-            className="fixed bottom-4 left-4 z-[70] w-14 h-14 rounded-full bg-secondary shadow-lg flex items-center justify-center hover:scale-110 transition-transform overflow-hidden"
+            className="fixed bottom-4 left-4 z-70 w-14 h-14 rounded-full bg-secondary shadow-lg flex items-center justify-center hover:scale-110 transition-transform overflow-hidden"
           >
             <img src={botAvatar} alt="" className="w-12 h-12 object-contain" />
           </motion.button>
@@ -157,7 +157,7 @@ const SupportChat = () => {
             initial={{ opacity: 0, y: 20, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
-            className="fixed bottom-4 left-4 z-[70] w-[360px] max-w-[calc(100vw-2rem)] h-[500px] max-h-[calc(100vh-6rem)] bg-card border border-border rounded-2xl shadow-2xl flex flex-col overflow-hidden"
+            className="fixed bottom-4 left-4 z-70 w-[360px] max-w-[calc(100vw-2rem)] h-[500px] max-h-[calc(100vh-6rem)] bg-card border border-border rounded-2xl shadow-2xl flex flex-col overflow-hidden"
           >
             {/* Header */}
             <div className="flex items-center justify-between px-4 py-3 bg-secondary text-secondary-foreground rounded-t-2xl">
@@ -254,7 +254,7 @@ const SupportChat = () => {
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 placeholder="Type a message..."
-                className="flex-1 bg-muted rounded-lg px-3 py-2 text-sm font-body text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary"
+                className="flex-1 bg-muted rounded-lg px-3 py-2 text-sm font-body text-foreground placeholder:text-muted-foreground focus:outline-hidden focus:ring-1 focus:ring-primary"
                 disabled={loading}
               />
               <Button type="submit" size="icon" variant="hero" disabled={loading || !input.trim()} className="shrink-0 h-9 w-9">

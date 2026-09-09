@@ -456,8 +456,8 @@ const ForumCategory = () => {
                         </Avatar>
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2">
-                            {topic.is_pinned && <Pin className="h-3.5 w-3.5 text-primary flex-shrink-0" />}
-                            {topic.is_locked && <Lock className="h-3.5 w-3.5 text-muted-foreground flex-shrink-0" />}
+                            {topic.is_pinned && <Pin className="h-3.5 w-3.5 text-primary shrink-0" />}
+                            {topic.is_locked && <Lock className="h-3.5 w-3.5 text-muted-foreground shrink-0" />}
                             <h3 className="font-display font-semibold text-foreground truncate">{topic.title}</h3>
                             {pendingForUser && (
                               <Badge variant="outline" className="text-vibetor border-vibetor/30 text-xs gap-1">

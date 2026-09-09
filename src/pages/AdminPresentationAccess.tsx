@@ -73,9 +73,9 @@ const sourceVariant = (s: AllowedUser["source"]) => {
     case "creator":
       return "secondary";
     case "rsvp":
-      return "outline";
+      return "outline-solid";
     case "signup":
-      return "outline";
+      return "outline-solid";
   }
 };
 

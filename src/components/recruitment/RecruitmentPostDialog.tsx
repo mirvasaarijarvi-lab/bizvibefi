@@ -288,7 +288,7 @@ const RecruitmentPostDialog = ({ open, onOpenChange, post }: Props) => {
               {AI_SKILL_TAGS.map((tag) => (
                 <button key={tag} type="button" onClick={() => toggleTag(tag)}>
                   <Badge
-                    variant={form.tags.includes(tag) ? "default" : "outline"}
+                    variant={form.tags.includes(tag) ? "default" : "outline-solid"}
                     className="font-body text-[11px] cursor-pointer"
                   >
                     {tag}

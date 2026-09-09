@@ -91,7 +91,7 @@ function ChoiceRow({
               onClick={() => onChange(opt.value)}
               className={`rounded-full border px-4 py-2 text-sm transition-all ${
                 selected
-                  ? "border-primary bg-primary text-primary-foreground shadow-sm"
+                  ? "border-primary bg-primary text-primary-foreground shadow-xs"
                   : "border-border bg-background text-foreground hover:border-primary/50"
               }`}
             >

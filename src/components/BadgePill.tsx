@@ -29,7 +29,7 @@ const BadgePill = ({ badge, size = "md", className, earned = true }: Props) => {
             !earned
               ? "bg-muted/40 border-border text-muted-foreground/50 opacity-60 grayscale"
               : isDiamond
-                ? "bg-gradient-to-br from-turquoise/30 to-primary/20 border-turquoise/60 text-turquoise shadow-md"
+                ? "bg-linear-to-br from-turquoise/30 to-primary/20 border-turquoise/60 text-turquoise shadow-md"
                 : badge.color === "vibetor"
                   ? "bg-vibetor/15 border-vibetor/40 text-vibetor"
                   : "bg-primary/10 border-primary/30 text-primary",

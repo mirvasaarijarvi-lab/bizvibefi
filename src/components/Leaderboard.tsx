@@ -51,7 +51,7 @@ const Leaderboard = () => {
                     to={`/members/${row.user_id}`}
                     className={`block p-3 rounded-lg transition-all ${
                       isFirst
-                        ? "bg-gradient-to-r from-primary/15 via-vibetor/10 to-turquoise/10 border border-primary/40 shadow-md hover:shadow-lg"
+                        ? "bg-linear-to-r from-primary/15 via-vibetor/10 to-turquoise/10 border border-primary/40 shadow-md hover:shadow-lg"
                         : "hover:bg-muted/50 border border-transparent"
                     }`}
                   >
@@ -71,7 +71,7 @@ const Leaderboard = () => {
                           {row.badge_count} {row.badge_count === 1 ? t("badges.leaderboard.badge") : t("badges.leaderboard.badges")}
                         </p>
                       </div>
-                      <Badge variant={isFirst ? "default" : "outline"} className={isFirst ? "bg-primary text-primary-foreground" : ""}>
+                      <Badge variant={isFirst ? "default" : "outline-solid"} className={isFirst ? "bg-primary text-primary-foreground" : ""}>
                         {row.total_points} pts
                       </Badge>
                     </div>
