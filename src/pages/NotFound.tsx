@@ -1,5 +1,6 @@
 import { useLocation } from "react-router-dom";
 import { useEffect } from "react";
+import PageMeta from "@/components/PageMeta";
 
 const NotFound = () => {
   const location = useLocation();
@@ -10,6 +11,10 @@ const NotFound = () => {
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-muted">
+      <PageMeta
+        title="Page not found — <Good Vibes Café/>"
+        description="This page does not exist. Head back to the Good Vibes Café home page to find events, the community and builder resources."
+      />
       <div className="text-center">
         <h1 className="mb-4 text-4xl font-bold">404</h1>
         <p className="mb-4 text-xl text-muted-foreground">Oops! Page not found</p>

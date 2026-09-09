@@ -135,9 +135,6 @@ const Index = () => {
               </Button>
             </div>
             <NextEventTeaser />
-            <p className="mt-8 text-xs text-muted-foreground font-body max-w-lg mx-auto leading-relaxed">
-              {"\n"}
-            </p>
           </motion.div>
         </div>
       </section>
