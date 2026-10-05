@@ -25,6 +25,17 @@ updates:
       # typescript-eslint ships TypeScript 7 support.
       - dependency-name: "typescript"
         update-types: ["version-update:semver-major"]
+      # React must move in lockstep with react-dom and its types. Dependabot
+      # bumps them separately, leaving react 19 with react-dom 18, which
+      # crashes every component test. Upgrade React majors manually.
+      - dependency-name: "react"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "react-dom"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "@types/react"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "@types/react-dom"
+        update-types: ["version-update:semver-major"]
     groups:
       minor-and-patch:
         update-types:
