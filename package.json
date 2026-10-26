@@ -72,7 +72,7 @@
     "tailwind-merge": "^2.6.0",
     "tailwindcss-animate": "^1.0.7",
     "vaul": "^1.1.2",
-    "zod": "^4.5.4"
+    "zod": "^4.6.7"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
@@ -104,7 +104,7 @@
   },
   "overrides": {
     "@tootallnate/once": "^2.0.1",
-    "dompurify": "^3.4.16",
+    "dompurify": "^3.4.17",
     "esbuild": "^0.28.1",
     "form-data": "^4.0.6",
     "rollup": "^4.59.0",
