@@ -5,6 +5,7 @@
 import { createClient } from 'npm:@supabase/supabase-js@2'
 import { corsHeaders } from 'npm:@supabase/supabase-js@2/cors'
 import { redactEmail } from '../_shared/redact.ts'
+import { authorizeEventEmail, verifySchedulerToken } from '../_shared/event-email-auth.ts'
 
 const SITE_URL = 'https://goodvibescafe.org'
 
@@ -62,23 +63,30 @@ Deno.serve(async (req) => {
     return new Response('ok', { headers: corsHeaders })
   }
 
-  const supabaseUrl = Deno.env.get('SUPABASE_URL')!
-  const serviceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
-  const anonKey = Deno.env.get('SUPABASE_ANON_KEY')!
+  const supabaseUrl = Deno.env.get('SUPABASE_URL')
+  const serviceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')
+  const anonKey = Deno.env.get('SUPABASE_ANON_KEY')
+  if (!supabaseUrl || !serviceKey || !anonKey) {
+    console.error('send-event-reminders: missing server configuration')
+    return new Response(JSON.stringify({ error: 'Server configuration error' }), {
+      status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    })
+  }
 
   // Auth: allow callers presenting either the service-role key or the queue's
   // service-role key from Vault (used by pg_cron via net.http_post). Verify
   // any other bearer token as a valid JWT belonging to an admin user.
   const authHeader = req.headers.get('Authorization') || ''
-  const bearer = authHeader.startsWith('Bearer ') ? authHeader.slice(7) : ''
+  const bearer = authHeader.startsWith('Bearer ') ? authHeader.slice(7).trim() : ''
 
-  let authorized = false
-  if (bearer && bearer === serviceKey) {
-    authorized = true
-  } else if (bearer) {
-    try {
+  const authorized = await authorizeEventEmail(
+    bearer,
+    serviceKey,
+    (token) => verifySchedulerToken(token, supabaseUrl, anonKey),
+    async (token) => {
       const verifier = createClient(supabaseUrl, anonKey)
-      const { data: claimsData } = await verifier.auth.getClaims(bearer)
+      const { data: claimsData, error } = await verifier.auth.getClaims(token)
+      if (error) return false
       const uid = claimsData?.claims?.sub
       if (uid) {
         const admin = createClient(supabaseUrl, serviceKey)
@@ -88,17 +96,17 @@ Deno.serve(async (req) => {
           .eq('user_id', uid)
         const roles = (rolesData ?? []).map((r: { role: string }) => r.role)
         if (roles.includes('admin') || roles.includes('superadmin')) {
-          authorized = true
+          return true
         }
       }
-    } catch (_e) {
-      // fall through to unauthorized
-    }
-  }
+      return false
+    },
+  )
 
   if (!authorized) {
-    return new Response(JSON.stringify({ ok: true }), {
-      status: 200,
+    console.error('send-event-reminders: unauthorized request, no emails queued')
+    return new Response(JSON.stringify({ error: 'Unauthorized' }), {
+      status: 401,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     })
   }

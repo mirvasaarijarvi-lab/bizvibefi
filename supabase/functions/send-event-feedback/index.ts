@@ -4,6 +4,7 @@ import { createClient } from 'npm:@supabase/supabase-js@2'
 import { corsHeaders } from 'npm:@supabase/supabase-js@2/cors'
 import { signFeedbackToken } from '../_shared/feedback-token.ts'
 import { redactEmail } from '../_shared/redact.ts'
+import { authorizeEventEmail, verifySchedulerToken } from '../_shared/event-email-auth.ts'
 
 const SITE_URL = 'https://goodvibescafe.org'
 
@@ -46,21 +47,30 @@ Deno.serve(async (req) => {
     return new Response('ok', { headers: corsHeaders })
   }
 
-  const serviceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
+  const serviceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')
+  const supabaseUrl = Deno.env.get('SUPABASE_URL')
+  const anonKey = Deno.env.get('SUPABASE_ANON_KEY')
+  if (!serviceKey || !supabaseUrl || !anonKey) {
+    console.error('send-event-feedback: missing server configuration')
+    return new Response(JSON.stringify({ error: 'Server configuration error' }), {
+      status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    })
+  }
 
-  // Auth: accept the cron's vault token, the raw service-role key, or an
-  // admin-user JWT. Silent fallback returns 200 so unauth probes don't 500.
+  // Verify the cron's service JWT through PostgREST, or an admin via Auth.
   const authHeader = req.headers.get('Authorization') || ''
   const bearer = authHeader.startsWith('Bearer ')
     ? authHeader.slice(7).trim()
     : ''
 
-  let authed = false
-  if (bearer && bearer === serviceKey) {
-    authed = true
-  } else if (bearer) {
-    const probe = createClient(Deno.env.get('SUPABASE_URL')!, serviceKey)
-    const { data: userRes } = await probe.auth.getUser(bearer)
+  const authed = await authorizeEventEmail(
+    bearer,
+    serviceKey,
+    (token) => verifySchedulerToken(token, supabaseUrl, anonKey),
+    async (token) => {
+    const probe = createClient(supabaseUrl, serviceKey)
+    const { data: userRes, error } = await probe.auth.getUser(token)
+    if (error) return false
     const uid = userRes?.user?.id
     if (uid) {
       const { data: roleRow } = await probe
@@ -69,18 +79,21 @@ Deno.serve(async (req) => {
         .eq('user_id', uid)
         .eq('role', 'admin')
         .maybeSingle()
-      if (roleRow) authed = true
+      return Boolean(roleRow)
     }
-  }
+    return false
+    },
+  )
   if (!authed) {
-    return new Response(JSON.stringify({ ok: true }), {
-      status: 200,
+    console.error('send-event-feedback: unauthorized request, no emails queued')
+    return new Response(JSON.stringify({ error: 'Unauthorized' }), {
+      status: 401,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     })
   }
 
   const supabase = createClient(
-    Deno.env.get('SUPABASE_URL')!,
+    supabaseUrl,
     serviceKey,
   )
   const secret = serviceKey
