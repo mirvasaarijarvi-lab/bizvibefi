@@ -1,4 +1,3 @@
-// @vitest-environment node
 import { describe, expect, it, vi, afterEach } from 'vitest'
 import { authorizeEventEmail, verifySchedulerToken } from '../../supabase/functions/_shared/event-email-auth'
 
