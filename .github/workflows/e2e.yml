@@ -3,11 +3,19 @@ name: E2E Tests
 on:
   workflow_dispatch:
   schedule:
-    - cron: '0 4 * * *'
+    # Weekly, Monday 04:00 UTC (after CI). Push and pull_request still run on
+    # every change; the daily cron was the other large source of idle runs.
+    - cron: '0 4 * * 1'
   push:
     branches: [main]
   pull_request:
     branches: [main]
+
+# Playwright builds the app locally and uploads a report. Nothing is deployed,
+# so cancelling a superseded run on the same ref is safe.
+concurrency:
+  group: e2e-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   e2e:

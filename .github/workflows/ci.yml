@@ -3,11 +3,19 @@ name: CI
 on:
   workflow_dispatch:
   schedule:
-    - cron: '0 3 * * *'  # Nightly at 3:00 AM UTC
+    # Weekly, Monday 03:00 UTC. Push and pull_request still run on every change;
+    # a nightly cron was burning minutes on an unchanged main branch.
+    - cron: '0 3 * * 1'
   push:
     branches: [main]
   pull_request:
     branches: [main]
+
+# Same ref only. Lint, typecheck, unit tests, and build do not mutate shared
+# state, so cancelling a superseded run is safe.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   lint:
